@@ -1,24 +1,26 @@
 import 'package:flutter/material.dart';
 
-import '../../constants.dart';
+import '../../constants/colors/color_constants.dart';
 
 class CustomTextfield extends StatelessWidget {
   final IconData icon;
   final bool obsecureText;
   final String hintText;
+  final TextInputType inputType;
 
   const CustomTextfield({
     super.key,
     required this.icon,
     required this.obsecureText,
     required this.hintText,
+    required this.inputType,
   });
 
   @override
   Widget build(BuildContext context) {
     return TextField(
       obscureText: obsecureText,
-      style: TextStyle(
+      style: const TextStyle(
         color: textColor,
       ),
       decoration: InputDecoration(
@@ -30,6 +32,7 @@ class CustomTextfield extends StatelessWidget {
         labelText: hintText,
       ),
       cursorColor: textColor.withOpacity(.8),
+      keyboardType: inputType,
     );
   }
 }
