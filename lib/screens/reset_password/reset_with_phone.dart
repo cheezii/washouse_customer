@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 
-import '../../../constants/colors/color_constants.dart';
-import '../../started/login.dart';
-import '../../widgets/custom_textfield.dart';
+import '../../constants/colors/color_constants.dart';
+import '../started/login.dart';
+import '../widgets/custom_textfield.dart';
 import 'send_otp.dart';
 
 class ResetWithPhone extends StatelessWidget {
@@ -42,7 +42,7 @@ class ResetWithPhone extends StatelessWidget {
                     icon: Icons.mobile_friendly_rounded,
                     obsecureText: false,
                     hintText: 'Số điện thoại',
-                    inputType: TextInputType.none,
+                    inputType: TextInputType.number,
                   ),
                   const SizedBox(height: 20),
                   SizedBox(

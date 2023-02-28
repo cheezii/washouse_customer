@@ -4,7 +4,7 @@ import 'package:washouse_customer/constants/colors/color_constants.dart';
 import 'package:washouse_customer/screens/started/signup.dart';
 
 import '../home/home_screen.dart';
-import '../profile/reset_password/widgets/forget_password_modal_bottom_sheet.dart';
+import '../reset_password/widgets/forget_password_modal_bottom_sheet.dart';
 import '../widgets/custom_textfield.dart';
 
 class Login extends StatelessWidget {
@@ -35,13 +35,13 @@ class Login extends StatelessWidget {
                   icon: Icons.alternate_email,
                   obsecureText: false,
                   hintText: 'Email/số điện thoại',
-                  inputType: TextInputType.none,
+                  inputType: TextInputType.text,
                 ),
                 const CustomTextfield(
                   icon: Icons.password,
                   obsecureText: true,
                   hintText: 'Mật khẩu',
-                  inputType: TextInputType.none,
+                  inputType: TextInputType.text,
                 ),
                 const SizedBox(height: 20),
                 SizedBox(
@@ -65,7 +65,7 @@ class Login extends StatelessWidget {
                     ),
                   ),
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 5),
                 Align(
                   alignment: Alignment.centerRight,
                   child: TextButton(
@@ -81,7 +81,7 @@ class Login extends StatelessWidget {
                     ),
                   ),
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 5),
                 Row(
                   children: const [
                     Expanded(child: Divider()),

@@ -33,7 +33,7 @@ class SignUp extends StatelessWidget {
                   icon: Icons.account_circle_outlined,
                   obsecureText: false,
                   hintText: 'Họ và tên',
-                  inputType: TextInputType.none,
+                  inputType: TextInputType.text,
                 ),
                 const CustomTextfield(
                   icon: Icons.phone_android,
@@ -45,7 +45,7 @@ class SignUp extends StatelessWidget {
                   icon: Icons.password,
                   obsecureText: true,
                   hintText: 'Mật khẩu',
-                  inputType: TextInputType.none,
+                  inputType: TextInputType.text,
                 ),
                 const SizedBox(height: 20),
                 SizedBox(

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:washouse_customer/constants/colors/color_constants.dart';
 
-import '../../started/login.dart';
+import '../started/login.dart';
 import 'change_password.dart';
 import 'widgets/otp_text_field.dart';
 

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:washouse_customer/screens/started/login.dart';
 
-import '../../../constants/colors/color_constants.dart';
-import '../../widgets/custom_textfield.dart';
+import '../../constants/colors/color_constants.dart';
+import '../widgets/custom_textfield.dart';
 
 class ChangePwdScreen extends StatelessWidget {
   const ChangePwdScreen({super.key});

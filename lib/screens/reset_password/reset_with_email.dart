@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:washouse_customer/screens/profile/reset_password/send_otp.dart';
+import 'package:washouse_customer/screens/reset_password/send_otp.dart';
 
-import '../../../constants/colors/color_constants.dart';
-import '../../started/login.dart';
-import '../../widgets/custom_textfield.dart';
+import '../../constants/colors/color_constants.dart';
+import '../started/login.dart';
+import '../widgets/custom_textfield.dart';
 
 class ResetWithEmail extends StatelessWidget {
   const ResetWithEmail({super.key});
@@ -42,7 +42,7 @@ class ResetWithEmail extends StatelessWidget {
                     icon: Icons.alternate_email,
                     obsecureText: false,
                     hintText: 'Email',
-                    inputType: TextInputType.none,
+                    inputType: TextInputType.text,
                   ),
                   const SizedBox(height: 20),
                   SizedBox(
