@@ -7,9 +7,15 @@ import '../home/home_screen.dart';
 import '../reset_password/widgets/forget_password_modal_bottom_sheet.dart';
 import '../widgets/custom_textfield.dart';
 
-class Login extends StatelessWidget {
+class Login extends StatefulWidget {
   const Login({super.key});
 
+  @override
+  State<Login> createState() => _LoginState();
+}
+
+class _LoginState extends State<Login> {
+  bool _isHidden = true;
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -37,11 +43,26 @@ class Login extends StatelessWidget {
                   hintText: 'Email/số điện thoại',
                   inputType: TextInputType.text,
                 ),
-                const CustomTextfield(
-                  icon: Icons.password,
-                  obsecureText: true,
-                  hintText: 'Mật khẩu',
-                  inputType: TextInputType.text,
+                TextFormField(
+                  obscureText: _isHidden,
+                  style: const TextStyle(
+                    color: textColor,
+                  ),
+                  decoration: InputDecoration(
+                      border: InputBorder.none,
+                      prefixIcon: Icon(
+                        Icons.password_rounded,
+                        color: textColor.withOpacity(.5),
+                      ),
+                      labelText: 'Mật khẩu',
+                      suffix: InkWell(
+                        onTap: _togglePasswordView,
+                        child: Icon(
+                          _isHidden ? Icons.visibility : Icons.visibility_off,
+                        ),
+                      )),
+                  cursorColor: textColor.withOpacity(.8),
+                  keyboardType: TextInputType.text,
                 ),
                 const SizedBox(height: 20),
                 SizedBox(
@@ -158,5 +179,11 @@ class Login extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void _togglePasswordView() {
+    setState(() {
+      _isHidden = !_isHidden;
+    });
   }
 }
