@@ -22,7 +22,7 @@ class SignUp extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Image.asset('assets/images/phone-security.png'),
+                Image.asset('assets/images/started/phone-security.png'),
                 const SizedBox(height: 20),
                 const Text(
                   'Đăng ký',

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:washouse_customer/constants/colors/color_constants.dart';
 
@@ -24,7 +23,7 @@ class OTPScreen extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Image.asset('assets/images/started/phone-verify.png'),
+                  Image.asset('assets/images/started/authenticate.png'),
                   const SizedBox(height: 20),
                   const Text(
                     'Nhập mã xác minh',

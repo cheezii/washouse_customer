@@ -188,10 +188,10 @@ class CreatePage extends StatelessWidget {
           Text(
             desscription,
             textAlign: TextAlign.center,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.w400,
-              color: Colors.grey,
+              color: Colors.grey.shade800,
             ),
           ),
           const SizedBox(height: 20),

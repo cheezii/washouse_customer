@@ -23,7 +23,7 @@ class ResetWithEmail extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Image.asset('assets/images/started/phone-verify.png'),
+                  Image.asset('assets/images/started/forgotpw.png'),
                   const SizedBox(height: 20),
                   const Text(
                     'Đặt lại mật khẩu',
