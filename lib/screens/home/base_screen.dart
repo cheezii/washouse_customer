@@ -4,7 +4,10 @@ import 'package:page_transition/page_transition.dart';
 import 'package:washouse_customer/constants/color_constants.dart';
 import 'package:washouse_customer/screens/home/home_screen.dart';
 
-import '../cart/cart_page.dart';
+import '../cart/cart_screen.dart';
+import '../chat/chat_screen.dart';
+import '../order/order_screen.dart';
+import '../profile/profile_screen.dart';
 
 class BaseScreen extends StatefulWidget {
   const BaseScreen({super.key});
@@ -18,9 +21,9 @@ class _BaseScreenState extends State<BaseScreen> {
 
   List<Widget> pages = const [
     Homescreen(),
-    Homescreen(),
-    Homescreen(),
-    Homescreen(),
+    OrderScreen(),
+    ChatScreen(),
+    ProfileScreen(),
   ];
 
   List<IconData> iconList = [
@@ -43,7 +46,7 @@ class _BaseScreenState extends State<BaseScreen> {
           Navigator.push(
             context,
             PageTransition(
-              child: const CartPage(),
+              child: const CartScreen(),
               type: PageTransitionType.bottomToTop,
             ),
           );
