@@ -22,8 +22,8 @@ class _OnboardingState extends State<Onboarding> {
       child: Scaffold(
         backgroundColor: kBackgroundColor,
         appBar: AppBar(
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           elevation: 0.0,
-          backgroundColor: kBackgroundColor,
           actions: [
             Padding(
               padding: const EdgeInsets.only(

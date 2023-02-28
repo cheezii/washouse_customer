@@ -31,5 +31,6 @@ flutter:
     - assets/images/logo/
     - assets/images/order/
     - assets/images/post/
+    - assets/images/profile/
     - assets/images/service_flow/
     - assets/images/started/
