@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:washouse_customer/constants/colors/color_constants.dart';
+import 'package:washouse_customer/constants/color_constants.dart';
+import 'package:washouse_customer/constants/size.dart';
 
 import '../started/login.dart';
 import 'change_password.dart';
@@ -18,28 +19,31 @@ class OTPScreen extends StatelessWidget {
         backgroundColor: kBackgroundColor,
         body: SingleChildScrollView(
           child: Container(
-            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+            padding: const EdgeInsets.symmetric(
+              vertical: kDefaultPadding,
+              horizontal: kDefaultPadding,
+            ),
             child: SingleChildScrollView(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Image.asset('assets/images/started/authenticate.png'),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: kDefaultPadding),
                   const Text(
                     'Nhập mã xác minh',
                     style:
                         TextStyle(fontSize: 40.0, fontWeight: FontWeight.bold),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: kDefaultPadding),
                   const Text(
                     'Nhập mã OTP được gửi đến email/số điện thoại của bạn.',
                     style:
                         TextStyle(fontSize: 18.0, fontWeight: FontWeight.w400),
                     textAlign: TextAlign.center,
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: kDefaultPadding),
                   const CreateOTP(),
-                  const SizedBox(height: 30),
+                  const SizedBox(height: kDefaultPadding * 1.5),
                   SizedBox(
                     width: size.width,
                     height: 45,
@@ -61,7 +65,7 @@ class OTPScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: kDefaultPadding / 2),
                   Align(
                     alignment: Alignment.centerRight,
                     child: TextButton(

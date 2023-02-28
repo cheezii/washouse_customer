@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:washouse_customer/constants/colors/color_constants.dart';
+import 'package:washouse_customer/constants/color_constants.dart';
+import 'package:washouse_customer/constants/size.dart';
+import 'package:washouse_customer/screens/home/base_screen.dart';
 import 'package:washouse_customer/screens/started/signup.dart';
 
-import '../home/home_screen.dart';
 import '../reset_password/widgets/forget_password_modal_bottom_sheet.dart';
 import '../widgets/custom_textfield.dart';
 
@@ -24,19 +25,22 @@ class _LoginState extends State<Login> {
         resizeToAvoidBottomInset: false,
         backgroundColor: kBackgroundColor,
         body: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+          padding: const EdgeInsets.symmetric(
+            vertical: kDefaultPadding,
+            horizontal: kDefaultPadding,
+          ),
           child: SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Image.asset('assets/images/started/phone-verify.png'),
-                const SizedBox(height: 20),
+                const SizedBox(height: kDefaultPadding),
                 const Text(
                   'Đăng nhập',
                   style: TextStyle(fontSize: 40.0, fontWeight: FontWeight.w700),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: kDefaultPadding),
                 const CustomTextfield(
                   icon: Icons.alternate_email,
                   obsecureText: false,
@@ -64,7 +68,7 @@ class _LoginState extends State<Login> {
                   cursorColor: textColor.withOpacity(.8),
                   keyboardType: TextInputType.text,
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: kDefaultPadding),
                 SizedBox(
                   width: size.width,
                   height: 45,
@@ -73,7 +77,7 @@ class _LoginState extends State<Login> {
                       Navigator.push(
                           context,
                           PageTransition(
-                              child: const Homescreen(),
+                              child: const BaseScreen(),
                               type: PageTransitionType.fade));
                     },
                     style: ElevatedButton.styleFrom(
@@ -86,7 +90,7 @@ class _LoginState extends State<Login> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 5),
+                const SizedBox(height: kDefaultPadding / 4),
                 Align(
                   alignment: Alignment.centerRight,
                   child: TextButton(
@@ -102,31 +106,34 @@ class _LoginState extends State<Login> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 5),
+                const SizedBox(height: kDefaultPadding / 4),
                 Row(
                   children: const [
                     Expanded(child: Divider()),
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 10),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: kDefaultPadding / 2),
                       child: Text('HOẶC'),
                     ),
                     Expanded(child: Divider()),
                   ],
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: kDefaultPadding),
                 Container(
                   width: size.width,
                   decoration: BoxDecoration(
                     border: Border.all(color: kPrimaryColor),
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: kDefaultPadding / 2,
+                    vertical: kDefaultPadding / 2,
+                  ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       SizedBox(
-                        height: 30,
+                        height: kDefaultPadding * 1.5,
                         child: Image.asset('assets/images/google.png'),
                       ),
                       const Text(
@@ -140,7 +147,7 @@ class _LoginState extends State<Login> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: kDefaultPadding),
                 GestureDetector(
                   onTap: () {
                     Navigator.push(

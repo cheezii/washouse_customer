@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:washouse_customer/constants/colors/color_constants.dart';
+import 'package:washouse_customer/constants/color_constants.dart';
+import 'package:washouse_customer/constants/size.dart';
 import 'package:washouse_customer/screens/started/login.dart';
 
 import '../widgets/custom_textfield.dart';
@@ -22,19 +23,22 @@ class _SignUpState extends State<SignUp> {
         resizeToAvoidBottomInset: false,
         backgroundColor: kBackgroundColor,
         body: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+          padding: const EdgeInsets.symmetric(
+            vertical: kDefaultPadding,
+            horizontal: kDefaultPadding,
+          ),
           child: SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Image.asset('assets/images/started/phone-security.png'),
-                const SizedBox(height: 20),
+                const SizedBox(height: kDefaultPadding),
                 const Text(
                   'Đăng ký',
                   style: TextStyle(fontSize: 40.0, fontWeight: FontWeight.w700),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: kDefaultPadding),
                 const CustomTextfield(
                   icon: Icons.account_circle_outlined,
                   obsecureText: false,
@@ -68,7 +72,7 @@ class _SignUpState extends State<SignUp> {
                   cursorColor: textColor.withOpacity(.8),
                   keyboardType: TextInputType.text,
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: kDefaultPadding),
                 SizedBox(
                   width: size.width,
                   height: 45,
@@ -90,18 +94,19 @@ class _SignUpState extends State<SignUp> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: kDefaultPadding),
                 Row(
                   children: const [
                     Expanded(child: Divider()),
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 10),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: kDefaultPadding / 2),
                       child: Text('HOẶC'),
                     ),
                     Expanded(child: Divider()),
                   ],
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: kDefaultPadding),
                 Container(
                   width: size.width,
                   decoration: BoxDecoration(
@@ -128,7 +133,7 @@ class _SignUpState extends State<SignUp> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: kDefaultPadding),
                 GestureDetector(
                   onTap: () {
                     Navigator.push(

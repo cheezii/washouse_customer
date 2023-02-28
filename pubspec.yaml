@@ -14,6 +14,7 @@ dependencies:
   flutter_svg: ^0.17.4
   page_transition: ^2.0.9
   flutter_otp_text_field: ^1.1.1
+  animated_bottom_navigation_bar: ^1.1.0+1
 
 dev_dependencies:
   flutter_test:
@@ -24,8 +25,11 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
+    - assets/icons/
     - assets/images/
+    - assets/images/category/
     - assets/images/logo/
+    - assets/images/order/
+    - assets/images/post/
     - assets/images/service_flow/
     - assets/images/started/
-    - assets/icons/

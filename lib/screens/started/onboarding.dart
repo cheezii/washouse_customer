@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:washouse_customer/constants/colors/color_constants.dart';
+import 'package:washouse_customer/constants/color_constants.dart';
+import 'package:washouse_customer/constants/size.dart';
 import 'package:washouse_customer/screens/started/login.dart';
 
-import '../../constants/text/text_constants.dart';
+import '../../constants/text_constants.dart';
 
 class Onboarding extends StatefulWidget {
   const Onboarding({super.key});
@@ -25,7 +26,8 @@ class _OnboardingState extends State<Onboarding> {
           backgroundColor: kBackgroundColor,
           actions: [
             Padding(
-              padding: const EdgeInsets.only(right: 20, top: 20),
+              padding: const EdgeInsets.only(
+                  right: kDefaultPadding, top: kDefaultPadding),
               child: InkWell(
                 onTap: () {
                   Navigator.pushReplacement(
@@ -75,15 +77,15 @@ class _OnboardingState extends State<Onboarding> {
               ],
             ),
             Positioned(
-              bottom: 80,
-              left: 30,
+              bottom: kDefaultPadding * 4,
+              left: kDefaultPadding * 1.5,
               child: Row(
                 children: _buildIndicator(),
               ),
             ),
             Positioned(
-              bottom: 60,
-              right: 30,
+              bottom: kDefaultPadding * 3,
+              right: kDefaultPadding * 1.5,
               child: Container(
                 padding: const EdgeInsets.all(4),
                 decoration: const BoxDecoration(
@@ -127,7 +129,7 @@ class _OnboardingState extends State<Onboarding> {
   Widget _indicator(bool isActive) {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
-      height: 10.0,
+      height: kDefaultPadding / 2,
       width: isActive ? 20 : 8,
       margin: const EdgeInsets.only(right: 5.0),
       decoration: BoxDecoration(
@@ -174,7 +176,7 @@ class CreatePage extends StatelessWidget {
             height: 350,
             child: Image.asset(image),
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: kDefaultPadding),
           Text(
             title,
             textAlign: TextAlign.center,
@@ -184,7 +186,7 @@ class CreatePage extends StatelessWidget {
               fontWeight: FontWeight.bold,
             ),
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: kDefaultPadding),
           Text(
             desscription,
             textAlign: TextAlign.center,
@@ -194,7 +196,7 @@ class CreatePage extends StatelessWidget {
               color: Colors.grey.shade800,
             ),
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: kDefaultPadding),
         ],
       ),
     );

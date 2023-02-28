@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:washouse_customer/constants/size.dart';
 import 'package:washouse_customer/screens/started/login.dart';
 
-import '../../constants/colors/color_constants.dart';
+import '../../constants/color_constants.dart';
 import '../widgets/custom_textfield.dart';
 
 class ChangePwdScreen extends StatelessWidget {
@@ -17,26 +18,29 @@ class ChangePwdScreen extends StatelessWidget {
         backgroundColor: kBackgroundColor,
         body: SingleChildScrollView(
           child: Container(
-            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+            padding: const EdgeInsets.symmetric(
+              vertical: kDefaultPadding,
+              horizontal: kDefaultPadding,
+            ),
             child: SingleChildScrollView(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Image.asset('assets/images/started/privacy.png'),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: kDefaultPadding),
                   const Text(
                     'Tạo mật khẩu mới',
                     style:
                         TextStyle(fontSize: 40.0, fontWeight: FontWeight.bold),
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: kDefaultPadding / 2),
                   const Text(
                     'Mật khẩu mới của bạn phải khác với mật khẩu đã tạo trước đó.',
                     style:
                         TextStyle(fontSize: 18.0, fontWeight: FontWeight.w400),
                     textAlign: TextAlign.center,
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: kDefaultPadding),
                   const CustomTextfield(
                     icon: Icons.password,
                     obsecureText: true,
@@ -49,7 +53,7 @@ class ChangePwdScreen extends StatelessWidget {
                     hintText: 'Xác nhận mật khẩu',
                     inputType: TextInputType.none,
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: kDefaultPadding),
                   SizedBox(
                     width: size.width,
                     height: 45,
@@ -71,7 +75,7 @@ class ChangePwdScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: kDefaultPadding / 2),
                   Align(
                     alignment: Alignment.centerRight,
                     child: TextButton(
