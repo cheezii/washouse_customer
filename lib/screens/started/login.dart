@@ -20,16 +20,16 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return SafeArea(
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        backgroundColor: kBackgroundColor,
-        body: Padding(
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      backgroundColor: kBackgroundColor,
+      body: SingleChildScrollView(
+        child: Padding(
           padding: const EdgeInsets.symmetric(
             vertical: kDefaultPadding,
             horizontal: kDefaultPadding,
           ),
-          child: SingleChildScrollView(
+          child: SafeArea(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,

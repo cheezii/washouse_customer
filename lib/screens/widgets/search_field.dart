@@ -4,9 +4,11 @@ import '../../constants/color_constants.dart';
 
 class SearchTextField extends StatelessWidget {
   final String searchString;
+  final IconData suffixIcon;
   const SearchTextField({
     super.key,
     required this.searchString,
+    required this.suffixIcon,
   });
 
   @override
@@ -21,6 +23,9 @@ class SearchTextField extends StatelessWidget {
             decoration: InputDecoration(
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(40),
+                borderSide: const BorderSide(
+                  color: kPrimaryColor,
+                ),
               ),
               prefixIcon: const Icon(
                 Icons.search,
@@ -38,15 +43,15 @@ class SearchTextField extends StatelessWidget {
         ),
         const Spacer(),
         Container(
-          height: 50,
-          width: 50,
+          height: 45,
+          width: 45,
           decoration: const BoxDecoration(
-            color: Colors.white,
+            color: kPrimaryColor,
             shape: BoxShape.circle,
           ),
-          child: const Icon(
-            Icons.filter_alt_rounded,
-            color: kPrimaryColor,
+          child: Icon(
+            suffixIcon,
+            color: Colors.white,
           ),
         ),
       ],

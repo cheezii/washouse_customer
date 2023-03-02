@@ -13,31 +13,29 @@ class ProfileScreen extends StatelessWidget {
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              padding: const EdgeInsets.only(top: 50, left: 20, right: 20),
-              height: 125,
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: const [
-                      Text(
-                        'Tài khoản',
-                        style: TextStyle(
-                          color: textColor,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 24,
-                        ),
-                      ),
-                      Icon(
-                        Icons.notifications,
+            SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.only(top: 18, left: 16, right: 16),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: const [
+                    Text(
+                      'Tài khoản',
+                      style: TextStyle(
                         color: textColor,
-                        size: 30.0,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 30,
                       ),
-                    ],
-                  )
-                ],
+                    ),
+                    Icon(
+                      Icons.notifications,
+                      color: textColor,
+                      size: 30.0,
+                    ),
+                  ],
+                ),
               ),
             ),
             Container(
@@ -87,17 +85,35 @@ class ProfileScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: const [
                         ProfileWidget(
-                            icon: Icons.person, title: 'Hồ sơ của tôi'),
+                          icon: Icons.person,
+                          title: 'Hồ sơ của tôi',
+                          txtColor: textColor,
+                          iconColor: textColor,
+                        ),
                         ProfileWidget(
-                            icon: Icons.feedback_rounded, title: 'Đánh giá'),
+                          icon: Icons.feedback_rounded,
+                          title: 'Đánh giá',
+                          txtColor: textColor,
+                          iconColor: textColor,
+                        ),
                         ProfileWidget(
-                            icon: Icons.help_rounded,
-                            title: 'Trung tâm hỗ trợ'),
+                          icon: Icons.help_rounded,
+                          title: 'Trung tâm hỗ trợ',
+                          txtColor: textColor,
+                          iconColor: textColor,
+                        ),
                         ProfileWidget(
-                            icon: Icons.info_outline_rounded,
-                            title: 'Về chúng tôi'),
+                          icon: Icons.info_outline_rounded,
+                          title: 'Về chúng tôi',
+                          txtColor: textColor,
+                          iconColor: textColor,
+                        ),
                         ProfileWidget(
-                            icon: Icons.logout_rounded, title: 'Đăng xuất'),
+                          icon: Icons.logout_rounded,
+                          title: 'Đăng xuất',
+                          txtColor: Colors.red,
+                          iconColor: Colors.red,
+                        ),
                       ],
                     ),
                   )

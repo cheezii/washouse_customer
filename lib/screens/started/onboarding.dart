@@ -18,110 +18,108 @@ class _OnboardingState extends State<Onboarding> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: kBackgroundColor,
-        appBar: AppBar(
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          elevation: 0.0,
-          actions: [
-            Padding(
-              padding: const EdgeInsets.only(
-                  right: kDefaultPadding, top: kDefaultPadding),
-              child: InkWell(
-                onTap: () {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const Login(),
-                    ),
-                  ); //vào trang login
-                },
-                child: const Text(
-                  'Skip',
-                  style: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 16.0,
+    return Scaffold(
+      backgroundColor: kBackgroundColor,
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        elevation: 0.0,
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(
+                right: kDefaultPadding, top: kDefaultPadding),
+            child: InkWell(
+              onTap: () {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const Login(),
                   ),
-                ),
-              ),
-            ),
-          ],
-        ),
-        body: Stack(
-          alignment: Alignment.bottomCenter,
-          children: [
-            PageView(
-              onPageChanged: (int page) {
-                setState(() {
-                  currentIndex = page;
-                });
+                ); //vào trang login
               },
-              controller: _pageController,
-              children: const [
-                CreatePage(
-                  image: 'assets/images/logo/laundry_center.png',
-                  title: titleOne,
-                  desscription: descriptionOne,
+              child: const Text(
+                'Skip',
+                style: TextStyle(
+                  color: Colors.grey,
+                  fontSize: 16.0,
                 ),
-                CreatePage(
-                  image: 'assets/images/logo/washouse-banner.png',
-                  title: titleTwo,
-                  desscription: descriptionTwo,
-                ),
-                CreatePage(
-                  image: 'assets/images/service_flow/step2.png',
-                  title: titleThree,
-                  desscription: descriptionThree,
-                ),
-              ],
-            ),
-            Positioned(
-              bottom: kDefaultPadding * 4,
-              left: kDefaultPadding * 1.5,
-              child: Row(
-                children: _buildIndicator(),
               ),
             ),
-            Positioned(
-              bottom: kDefaultPadding * 3,
-              right: kDefaultPadding * 1.5,
-              child: Container(
-                padding: const EdgeInsets.all(4),
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: kPrimaryColor,
-                ),
-                child: IconButton(
-                  onPressed: () {
-                    setState(() {
-                      if (currentIndex < 2) {
-                        currentIndex++;
-                        if (currentIndex < 3) {
-                          _pageController.nextPage(
-                              duration: const Duration(microseconds: 300),
-                              curve: Curves.easeIn);
-                        }
-                      } else {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => const Login(),
-                          ),
-                        );
+          ),
+        ],
+      ),
+      body: Stack(
+        alignment: Alignment.bottomCenter,
+        children: [
+          PageView(
+            onPageChanged: (int page) {
+              setState(() {
+                currentIndex = page;
+              });
+            },
+            controller: _pageController,
+            children: const [
+              CreatePage(
+                image: 'assets/images/logo/laundry_center.png',
+                title: titleOne,
+                desscription: descriptionOne,
+              ),
+              CreatePage(
+                image: 'assets/images/logo/washouse-banner.png',
+                title: titleTwo,
+                desscription: descriptionTwo,
+              ),
+              CreatePage(
+                image: 'assets/images/service_flow/step2.png',
+                title: titleThree,
+                desscription: descriptionThree,
+              ),
+            ],
+          ),
+          Positioned(
+            bottom: kDefaultPadding * 4,
+            left: kDefaultPadding * 1.5,
+            child: Row(
+              children: _buildIndicator(),
+            ),
+          ),
+          Positioned(
+            bottom: kDefaultPadding * 3,
+            right: kDefaultPadding * 1.5,
+            child: Container(
+              padding: const EdgeInsets.all(4),
+              decoration: const BoxDecoration(
+                shape: BoxShape.circle,
+                color: kPrimaryColor,
+              ),
+              child: IconButton(
+                onPressed: () {
+                  setState(() {
+                    if (currentIndex < 2) {
+                      currentIndex++;
+                      if (currentIndex < 3) {
+                        _pageController.nextPage(
+                            duration: const Duration(microseconds: 300),
+                            curve: Curves.easeIn);
                       }
-                    });
-                  },
-                  icon: const Icon(
-                    Icons.arrow_forward_ios,
-                    size: 24,
-                    color: Colors.white,
-                  ),
+                    } else {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const Login(),
+                        ),
+                      );
+                    }
+                  });
+                },
+                icon: const Icon(
+                  Icons.arrow_forward_ios,
+                  size: 24,
+                  color: Colors.white,
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

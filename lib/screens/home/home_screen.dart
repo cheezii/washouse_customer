@@ -140,7 +140,10 @@ class AppBar extends StatelessWidget {
             ],
           ),
           const SizedBox(height: kDefaultPadding),
-          const SearchTextField(searchString: 'Tìm tiệm giặt'),
+          const SearchTextField(
+            searchString: 'Tìm tiệm giặt',
+            suffixIcon: Icons.filter_alt_rounded,
+          ),
         ],
       ),
     );
