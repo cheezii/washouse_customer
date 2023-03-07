@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:washouse_customer/constants/color_constants.dart';
+import 'package:washouse_customer/components/constants/color_constants.dart';
 import 'package:washouse_customer/models/chat_user.dart';
 import 'package:washouse_customer/screens/chat/components/chat.dart';
 

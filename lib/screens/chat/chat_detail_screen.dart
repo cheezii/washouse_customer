@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:washouse_customer/constants/color_constants.dart';
+import 'package:washouse_customer/components/constants/color_constants.dart';
 import 'package:washouse_customer/models/chat_message.dart';
 import 'package:washouse_customer/models/send_menu_item.dart';
 import 'package:washouse_customer/screens/chat/components/chat_bubble.dart';
@@ -14,7 +14,7 @@ enum MessageType {
 }
 
 class ChatDetailPage extends StatefulWidget {
-  ChatDetailPage({super.key});
+  const ChatDetailPage({super.key});
 
   @override
   State<ChatDetailPage> createState() => _ChatDetailPageState();
@@ -133,7 +133,7 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
       builder: (context) {
         return Container(
           height: MediaQuery.of(context).size.height / 2,
-          color: Color(0xff737373),
+          color: const Color(0xff737373),
           child: Container(
             decoration: const BoxDecoration(
               color: Colors.white,

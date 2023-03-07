@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../constants/color_constants.dart';
+import '../../components/constants/color_constants.dart';
 
 class CustomTextfield extends StatefulWidget {
   final IconData icon;

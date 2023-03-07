@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:washouse_customer/constants/color_constants.dart';
+import 'package:washouse_customer/components/constants/color_constants.dart';
 import 'package:washouse_customer/models/category.dart';
 import 'package:washouse_customer/screens/home/components/post_card.dart';
 
-import '../../constants/size.dart';
+import '../../components/constants/size.dart';
 import '../../models/post.dart';
 import '../widgets/search_field.dart';
 import 'components/category_card.dart';

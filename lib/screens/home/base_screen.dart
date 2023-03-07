@@ -1,7 +1,6 @@
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:page_transition/page_transition.dart';
-import 'package:washouse_customer/constants/color_constants.dart';
+import 'package:washouse_customer/components/constants/color_constants.dart';
 import 'package:washouse_customer/screens/home/home_screen.dart';
 
 import '../cart/cart_screen.dart';
@@ -45,10 +44,7 @@ class _BaseScreenState extends State<BaseScreen> {
         onPressed: () {
           Navigator.push(
             context,
-            PageTransition(
-              child: const CartScreen(),
-              type: PageTransitionType.bottomToTop,
-            ),
+            MaterialPageRoute(builder: (context) => const CartScreen()),
           );
         },
         backgroundColor: kPrimaryColor,

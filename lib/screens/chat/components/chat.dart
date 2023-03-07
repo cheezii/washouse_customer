@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../chat_detail_screen.dart';
 
+// ignore: must_be_immutable
 class ChatUserList extends StatefulWidget {
   String text;
   String secondaryText;
@@ -31,7 +32,7 @@ class _ChatUserListState extends State<ChatUserList> {
           context,
           MaterialPageRoute(
             builder: (context) {
-              return ChatDetailPage();
+              return const ChatDetailPage();
             },
           ),
         );

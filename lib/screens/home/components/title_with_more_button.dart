@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:washouse_customer/constants/size.dart';
+import 'package:washouse_customer/components/constants/size.dart';
 
-import '../../../constants/color_constants.dart';
+import '../../../components/constants/color_constants.dart';
 
 class TitleWithMoreBtn extends StatelessWidget {
   const TitleWithMoreBtn({

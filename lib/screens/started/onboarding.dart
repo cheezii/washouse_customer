@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:washouse_customer/constants/color_constants.dart';
-import 'package:washouse_customer/constants/size.dart';
+import 'package:washouse_customer/components/constants/color_constants.dart';
+import 'package:washouse_customer/components/constants/size.dart';
 import 'package:washouse_customer/screens/started/login.dart';
 
-import '../../constants/text_constants.dart';
+import '../../components/constants/text_constants.dart';
 
 class Onboarding extends StatefulWidget {
   const Onboarding({super.key});
@@ -23,6 +23,15 @@ class _OnboardingState extends State<Onboarding> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         elevation: 0.0,
+        leading: const SizedBox(child: Icon(Icons.arrow_back_ios)),
+        title: Align(
+          alignment: Alignment.center,
+          child: SizedBox(
+            height: 150,
+            width: 150,
+            child: Image.asset('assets/images/logo/logo_nocontent.png'),
+          ),
+        ),
         actions: [
           Padding(
             padding: const EdgeInsets.only(

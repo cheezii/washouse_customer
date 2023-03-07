@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:washouse_customer/constants/color_constants.dart';
-import 'package:washouse_customer/constants/size.dart';
+import 'package:washouse_customer/components/constants/color_constants.dart';
+import 'package:washouse_customer/components/constants/size.dart';
 import 'package:washouse_customer/screens/home/base_screen.dart';
 import 'package:washouse_customer/screens/started/signup.dart';
 

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:washouse_customer/constants/color_constants.dart';
+import 'package:washouse_customer/components/constants/color_constants.dart';
 import 'package:washouse_customer/models/chat_message.dart';
 import 'package:washouse_customer/screens/chat/chat_detail_screen.dart';
 
+// ignore: must_be_immutable
 class ChatBubble extends StatefulWidget {
   ChatMessage chatMessage;
   ChatBubble({super.key, required this.chatMessage});

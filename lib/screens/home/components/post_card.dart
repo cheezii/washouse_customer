@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:washouse_customer/constants/color_constants.dart';
-import 'package:washouse_customer/constants/size.dart';
+import 'package:washouse_customer/components/constants/color_constants.dart';
+import 'package:washouse_customer/components/constants/size.dart';
 import 'package:washouse_customer/models/post.dart';
 
 class PostCard extends StatelessWidget {

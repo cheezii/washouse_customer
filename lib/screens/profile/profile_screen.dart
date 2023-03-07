@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:washouse_customer/constants/color_constants.dart';
-import 'package:washouse_customer/constants/size.dart';
+import 'package:washouse_customer/components/constants/color_constants.dart';
+import 'package:washouse_customer/components/constants/size.dart';
 
 import 'components/profile_widget.dart';
 

@@ -13,7 +13,7 @@ class Category {
 
 List<Category> categoryList = [
   Category(
-    thumbnail: 'assets/images/category/suit.png',
+    thumbnail: 'assets/images/category/vest.png',
     name: 'Giặt hấp',
     noOfService: 23,
   ),
@@ -28,7 +28,7 @@ List<Category> categoryList = [
     noOfService: 23,
   ),
   Category(
-    thumbnail: 'assets/images/category/shoes.png',
+    thumbnail: 'assets/images/category/sneaker.png',
     name: 'Chăm sóc giày',
     noOfService: 23,
   ),
