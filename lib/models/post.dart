@@ -1,9 +1,11 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 class Post {
+  int id;
   String thumbnail;
   String title;
 
   Post({
+    required this.id,
     required this.thumbnail,
     required this.title,
   });
@@ -11,11 +13,18 @@ class Post {
 
 List<Post> postList = [
   Post(
-    thumbnail: 'assets/images/post/service.png',
-    title: 'Cách để giữ cho tủ quần áo của bạn luôn thơm tho',
+    id: 1,
+    thumbnail: 'assets/images/post/laundry-room.jpg',
+    title: 'Cách giữ quần áo luôn thơm tho',
   ),
   Post(
+    id: 2,
     thumbnail: 'assets/images/placeholder.png',
     title: 'Làm sao để giặt giày sạch sẽ',
+  ),
+  Post(
+    id: 3,
+    thumbnail: 'assets/images/post/service.png',
+    title: 'Bao lâu bạn giặt đồ một lần?',
   ),
 ];

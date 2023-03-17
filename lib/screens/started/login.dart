@@ -21,7 +21,7 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+      //resizeToAvoidBottomInset: false,
       backgroundColor: kBackgroundColor,
       body: SingleChildScrollView(
         child: Padding(
@@ -35,12 +35,12 @@ class _LoginState extends State<Login> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Image.asset('assets/images/started/phone-verify.png'),
-                const SizedBox(height: kDefaultPadding),
+                const SizedBox(height: 16),
                 const Text(
                   'Đăng nhập',
                   style: TextStyle(fontSize: 40.0, fontWeight: FontWeight.w700),
                 ),
-                const SizedBox(height: kDefaultPadding),
+                const SizedBox(height: 16),
                 const CustomTextfield(
                   icon: Icons.alternate_email,
                   obsecureText: false,
@@ -68,7 +68,7 @@ class _LoginState extends State<Login> {
                   cursorColor: textColor.withOpacity(.8),
                   keyboardType: TextInputType.text,
                 ),
-                const SizedBox(height: kDefaultPadding),
+                const SizedBox(height: 16),
                 SizedBox(
                   width: size.width,
                   height: 45,
@@ -85,7 +85,7 @@ class _LoginState extends State<Login> {
                             borderRadius: BorderRadius.circular(10.0)),
                         backgroundColor: kPrimaryColor),
                     child: const Text(
-                      'ĐĂNG NHẬP',
+                      'Đăng nhập',
                       style: TextStyle(fontSize: 18.0),
                     ),
                   ),
@@ -118,7 +118,7 @@ class _LoginState extends State<Login> {
                     Expanded(child: Divider()),
                   ],
                 ),
-                const SizedBox(height: kDefaultPadding),
+                const SizedBox(height: 16),
                 Container(
                   width: size.width,
                   decoration: BoxDecoration(
@@ -147,7 +147,7 @@ class _LoginState extends State<Login> {
                     ],
                   ),
                 ),
-                const SizedBox(height: kDefaultPadding),
+                const SizedBox(height: 16),
                 GestureDetector(
                   onTap: () {
                     Navigator.push(

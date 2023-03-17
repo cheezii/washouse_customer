@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:washouse_customer/components/constants/color_constants.dart';
 import 'package:washouse_customer/components/constants/size.dart';
+import 'package:washouse_customer/screens/started/login.dart';
 
 import 'components/profile_widget.dart';
 
@@ -11,6 +13,7 @@ class ProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -83,36 +86,47 @@ class ProfileScreen extends StatelessWidget {
                     width: size.width,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
-                      children: const [
+                      children: [
                         ProfileWidget(
                           icon: Icons.person,
                           title: 'Hồ sơ của tôi',
                           txtColor: textColor,
                           iconColor: textColor,
+                          press: () {},
                         ),
                         ProfileWidget(
                           icon: Icons.feedback_rounded,
                           title: 'Đánh giá',
                           txtColor: textColor,
                           iconColor: textColor,
+                          press: () {},
                         ),
                         ProfileWidget(
                           icon: Icons.help_rounded,
                           title: 'Trung tâm hỗ trợ',
                           txtColor: textColor,
                           iconColor: textColor,
+                          press: () {},
                         ),
                         ProfileWidget(
                           icon: Icons.info_outline_rounded,
                           title: 'Về chúng tôi',
                           txtColor: textColor,
                           iconColor: textColor,
+                          press: () {},
                         ),
                         ProfileWidget(
                           icon: Icons.logout_rounded,
                           title: 'Đăng xuất',
                           txtColor: Colors.red,
                           iconColor: Colors.red,
+                          press: () {
+                            Navigator.push(
+                                context,
+                                PageTransition(
+                                    child: const Login(),
+                                    type: PageTransitionType.fade));
+                          },
                         ),
                       ],
                     ),

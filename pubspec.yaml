@@ -17,6 +17,9 @@ dependencies:
   animated_bottom_navigation_bar: ^1.1.0+1
   json_annotation: ^4.8.0
   http: ^0.13.5
+  flutter_rating_bar: ^4.0.1
+  qr_flutter: ^4.0.0
+  flutter_barcode_scanner: ^2.0.0
 
 dev_dependencies:
   flutter_test:

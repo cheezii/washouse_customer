@@ -5,6 +5,7 @@ import 'package:washouse_customer/components/constants/size.dart';
 import '../../components/constants/color_constants.dart';
 import '../started/login.dart';
 import '../widgets/custom_textfield.dart';
+import 'reset_with_email.dart';
 import 'send_otp.dart';
 
 class ResetWithPhone extends StatelessWidget {
@@ -68,24 +69,42 @@ class ResetWithPhone extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: kDefaultPadding / 2),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: TextButton(
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          PageTransition(
-                              child: const Login(),
-                              type: PageTransitionType.fade));
-                    },
-                    child: const Text(
-                      'Quay lại trang đăng nhập',
-                      style: TextStyle(
-                        color: kPrimaryColor,
-                        fontWeight: FontWeight.bold,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            PageTransition(
+                                child: const ResetWithEmail(),
+                                type: PageTransitionType.fade));
+                      },
+                      child: const Text(
+                        'Đặt lại bằng email',
+                        style: TextStyle(
+                          color: kPrimaryColor,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
-                  ),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            PageTransition(
+                                child: const Login(),
+                                type: PageTransitionType.fade));
+                      },
+                      child: const Text(
+                        'Quay lại trang đăng nhập',
+                        style: TextStyle(
+                          color: kPrimaryColor,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),

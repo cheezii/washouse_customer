@@ -20,7 +20,7 @@ class _SignUpState extends State<SignUp> {
     Size size = MediaQuery.of(context).size;
     return SafeArea(
       child: Scaffold(
-        resizeToAvoidBottomInset: false,
+        //resizeToAvoidBottomInset: false,
         backgroundColor: kBackgroundColor,
         body: Padding(
           padding: const EdgeInsets.symmetric(
@@ -89,7 +89,7 @@ class _SignUpState extends State<SignUp> {
                             borderRadius: BorderRadius.circular(10.0)),
                         backgroundColor: kPrimaryColor),
                     child: const Text(
-                      'ĐĂNG KÝ',
+                      'Đăng ký',
                       style: TextStyle(fontSize: 18.0),
                     ),
                   ),

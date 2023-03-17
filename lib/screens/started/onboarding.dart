@@ -78,7 +78,7 @@ class _OnboardingState extends State<Onboarding> {
                 desscription: descriptionTwo,
               ),
               CreatePage(
-                image: 'assets/images/service_flow/step2.png',
+                image: 'assets/images/logo/onboarding-banner.png',
                 title: titleThree,
                 desscription: descriptionThree,
               ),

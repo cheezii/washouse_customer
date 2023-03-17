@@ -6,3 +6,8 @@ const String descriptionTwo =
 const String titleThree = 'Việc giặt trở nên dễ dàng hơn';
 const String descriptionThree =
     'Tìm kiếm và liên hệ với các tiệm giặt ủi gần nhất.';
+const String cancel = 'Đã hủy';
+const String confirming = 'Chờ xác nhận';
+const String processing = 'Chờ xử lý';
+const String shipping = 'Chờ giao';
+const String complete = 'Hoàn thành';

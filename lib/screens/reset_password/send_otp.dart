@@ -15,7 +15,21 @@ class OTPScreen extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
     return SafeArea(
       child: Scaffold(
-        resizeToAvoidBottomInset: false,
+        //resizeToAvoidBottomInset: false,
+        appBar: AppBar(
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          elevation: 0,
+          leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: const Icon(
+              Icons.arrow_back_ios_new_rounded,
+              color: Colors.black,
+              size: 26,
+            ),
+          ),
+        ),
         backgroundColor: kBackgroundColor,
         body: SingleChildScrollView(
           child: Container(
@@ -65,7 +79,7 @@ class OTPScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const SizedBox(height: kDefaultPadding / 2),
+                  const SizedBox(height: 5),
                   Align(
                     alignment: Alignment.centerRight,
                     child: TextButton(

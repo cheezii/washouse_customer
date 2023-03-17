@@ -26,9 +26,9 @@ class _BaseScreenState extends State<BaseScreen> {
   ];
 
   List<IconData> iconList = [
-    Icons.other_houses_rounded,
+    Icons.home_rounded,
     Icons.assignment,
-    Icons.chat_rounded,
+    Icons.chat,
     Icons.person,
   ];
 
