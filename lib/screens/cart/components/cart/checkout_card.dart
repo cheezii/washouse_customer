@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:washouse_customer/screens/cart/information/shipping/fill_shipping_address.dart';
 
 import '../../../../components/constants/color_constants.dart';
 import '../../../../models/cart.dart';
 import '../../checkout_screen.dart';
+import 'add_voucher.dart';
 
 class CheckOutCard extends StatefulWidget {
   const CheckOutCard({
@@ -43,31 +45,40 @@ class _CheckOutCardState extends State<CheckOutCard> {
       ),
       child: Column(
         children: [
-          Row(
-            children: [
-              Container(
-                height: 40,
-                width: 40,
-                decoration: BoxDecoration(
-                  color: const Color(0xfff5f6f9),
-                  borderRadius: BorderRadius.circular(10),
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                  context,
+                  PageTransition(
+                      child: const AddVoucherScreen(),
+                      type: PageTransitionType.rightToLeftWithFade));
+            },
+            child: Row(
+              children: [
+                Container(
+                  height: 40,
+                  width: 40,
+                  decoration: BoxDecoration(
+                    color: const Color(0xfff5f6f9),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(5),
+                    child: SvgPicture.asset('assets/icons/coupon.svg'),
+                  ),
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.all(5),
-                  child: SvgPicture.asset('assets/icons/coupon.svg'),
+                const SizedBox(width: 10),
+                const Text('Mã khuyến mãi'),
+                const Spacer(),
+                const Text(
+                  'Nhập hoặc chọn mã',
+                  style: TextStyle(color: textNoteColor),
                 ),
-              ),
-              const SizedBox(width: 10),
-              const Text('Mã khuyến mãi'),
-              const Spacer(),
-              const Text(
-                'Nhập hoặc chọn mã',
-                style: TextStyle(color: textNoteColor),
-              ),
-              const SizedBox(width: 10),
-              const Icon(Icons.arrow_forward_ios,
-                  size: 12, color: textNoteColor),
-            ],
+                const SizedBox(width: 10),
+                const Icon(Icons.arrow_forward_ios,
+                    size: 12, color: textNoteColor),
+              ],
+            ),
           ),
           const SizedBox(height: 20),
           Row(
@@ -104,9 +115,7 @@ class _CheckOutCardState extends State<CheckOutCard> {
                     Navigator.push(
                       context,
                       PageTransition(
-                          child: CheckoutScreen(
-                            cart: demoCarts[0],
-                          ),
+                          child: const FillAddressScreen(),
                           type: PageTransitionType.rightToLeftWithFade),
                     );
                   },

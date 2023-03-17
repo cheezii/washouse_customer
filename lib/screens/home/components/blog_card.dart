@@ -1,16 +1,14 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 
-import 'package:washouse_customer/models/category.dart';
-
-class CategoryCard extends StatelessWidget {
-  final String icon;
-  final String text;
+class BlogCard extends StatelessWidget {
+  final String image;
+  final String title;
   final GestureTapCallback press;
-  const CategoryCard({
+  const BlogCard({
     Key? key,
-    required this.icon,
-    required this.text,
+    required this.image,
+    required this.title,
     required this.press,
   }) : super(key: key);
 
@@ -19,25 +17,23 @@ class CategoryCard extends StatelessWidget {
     return GestureDetector(
       onTap: press,
       child: SizedBox(
-        width: 50,
+        width: 150,
         child: Column(
           children: [
             AspectRatio(
               aspectRatio: 1,
               child: Container(
-                padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  //color: Colors.white,
-                  borderRadius: BorderRadius.circular(10),
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
                 ),
-                child: Image.asset(icon),
+                child: Image.asset(image),
               ),
             ),
             const SizedBox(height: 5),
             Text(
-              text,
-              textAlign: TextAlign.center,
-              style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
+              title,
+              style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
             )
           ],
         ),
