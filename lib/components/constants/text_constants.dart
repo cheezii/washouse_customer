@@ -11,3 +11,7 @@ const String confirming = 'Chờ xác nhận';
 const String processing = 'Chờ xử lý';
 const String shipping = 'Chờ giao';
 const String complete = 'Hoàn thành';
+
+//Api constant
+const String baseUrl = 'https://washouse.azurewebsites.net/api';
+const String apiKey = 'AIzaSyDkPbok7azcZ9mht1nD-RjJy1wJOkhlo7M';

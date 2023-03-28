@@ -1,6 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
-import 'package:washouse_customer/models/service.dart';
+import 'package:washouse_customer/resource/models/service.dart';
 
 class Cart {
   Service service;

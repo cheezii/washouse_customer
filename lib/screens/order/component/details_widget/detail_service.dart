@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../components/constants/color_constants.dart';
-import '../../../../models/cart.dart';
+import '../../../../resource/models/cart.dart';
 import 'detail_item_card.dart';
 
 class DetailService extends StatelessWidget {

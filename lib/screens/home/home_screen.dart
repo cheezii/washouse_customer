@@ -1,17 +1,34 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:dio/dio.dart';
 
 import 'package:washouse_customer/components/constants/color_constants.dart';
-import 'package:washouse_customer/models/category.dart';
-import '../../models/center.dart';
-import '../../models/post.dart';
+import 'package:washouse_customer/resource/controller/center_controller.dart';
+import 'package:washouse_customer/screens/home/components/nearby_center_home_skeleton.dart';
+import '../../resource/models/category.dart';
+import '../../resource/models/post.dart';
+import 'package:washouse_customer/resource/models/center.dart';
 import '../center/list_center_screen.dart';
 import 'components/category_card.dart';
 import 'components/home_header.dart';
 
-class Homescreen extends StatelessWidget {
+class Homescreen extends StatefulWidget {
   const Homescreen({super.key});
+
+  @override
+  State<Homescreen> createState() => _HomescreenState();
+}
+
+class _HomescreenState extends State<Homescreen> {
+  CenterController centerController = CenterController();
+  Position? _currentPosition;
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -85,7 +102,11 @@ class Homescreen extends StatelessWidget {
                             Navigator.push(
                                 context,
                                 PageTransition(
-                                    child: const ListCenterScreen(),
+                                    child: const ListCenterScreen(
+                                      pageName: 'Tiệm giặt gần đây',
+                                      isNearby: true,
+                                      isSearch: false,
+                                    ),
                                     type: PageTransitionType
                                         .rightToLeftWithFade));
                           },
@@ -96,66 +117,111 @@ class Homescreen extends StatelessWidget {
                         ),
                       ],
                     ),
-                    SizedBox(
-                      height: size.height * .28,
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        scrollDirection: Axis.horizontal,
-                        itemCount: centerList.length,
-                        itemBuilder: ((context, index) {
-                          return GestureDetector(
-                            onTap: () {},
-                            child: Container(
-                              width: 150,
-                              margin:
-                                  const EdgeInsets.symmetric(horizontal: 10),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  AspectRatio(
-                                    aspectRatio: 1,
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(20),
-                                      ),
-                                      child: Image.asset(
-                                          centerList[index].image[0]),
+                    FutureBuilder<List<LaundryCenter>>(
+                      future: centerController.getCenterNearby(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const NearbyCenterHomeSkeleton();
+                        } else if (snapshot.hasData) {
+                          List<LaundryCenter> centerList = snapshot.data!;
+                          return SizedBox(
+                            height: size.height * .25,
+                            child: ListView.builder(
+                              shrinkWrap: true,
+                              scrollDirection: Axis.horizontal,
+                              itemCount: snapshot.data!.length,
+                              itemBuilder: ((context, index) {
+                                String? fulladdress =
+                                    centerList[index].centerAddress;
+                                List<String?> address = fulladdress!.split(",");
+                                String? currentAddress = address[0];
+                                bool hasRating =
+                                    centerList[index].rating != null
+                                        ? true
+                                        : false;
+                                return GestureDetector(
+                                  onTap: () {},
+                                  child: Container(
+                                    width: 170,
+                                    margin: const EdgeInsets.symmetric(
+                                        horizontal: 10),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        AspectRatio(
+                                          aspectRatio: 1.5,
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                            ),
+                                            child: Image.network(
+                                                centerList[index].thumbnail!),
+                                          ),
+                                        ),
+                                        const SizedBox(height: 5),
+                                        Text(
+                                          centerList[index].title!,
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: 18),
+                                        ),
+                                        Text(
+                                          currentAddress!,
+                                          style: TextStyle(
+                                              color: Colors.grey.shade600),
+                                        ),
+                                        Row(
+                                          children: [
+                                            Text(
+                                                '${centerList[index].distance} km'),
+                                            const SizedBox(width: 5),
+                                            hasRating
+                                                ? Row(
+                                                    children: [
+                                                      const Icon(
+                                                          Icons.circle_rounded,
+                                                          size: 5),
+                                                      const SizedBox(width: 5),
+                                                      const Icon(
+                                                          Icons.star_rounded,
+                                                          color: kPrimaryColor),
+                                                      Text(
+                                                          '${centerList[index].rating}')
+                                                    ],
+                                                  )
+                                                : Container(),
+                                          ],
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                  const SizedBox(height: 5),
-                                  Text(
-                                    centerList[index].centerName,
-                                    style: const TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 18),
-                                  ),
-                                  Text(
-                                    centerList[index].location,
-                                    style:
-                                        TextStyle(color: Colors.grey.shade600),
-                                  ),
-                                  Row(
-                                    children: [
-                                      Text('${centerList[index].distance} km'),
-                                      const SizedBox(width: 5),
-                                      const Icon(Icons.circle_rounded, size: 5),
-                                      const SizedBox(width: 5),
-                                      const Icon(Icons.star_rounded,
-                                          color: kPrimaryColor),
-                                      Text('${centerList[index].rating}')
-                                    ],
-                                  ),
-                                ],
-                              ),
+                                );
+                              }),
                             ),
                           );
-                        }),
-                      ),
-                    )
+                        } else if (snapshot.hasError) {
+                          //return Container();
+                          // if (snapshot.error.runtimeType == DioError) {
+                          //   DioError _error = snapshot.error as DioError;
+
+                          // }
+                          return Column(
+                            children: [
+                              Text('Oops'),
+                              Text('Có lỗi xảy ra rồi!'),
+                            ],
+                          );
+                        }
+                        return Container();
+                      },
+                    ),
                   ],
                 ),
               ),
@@ -182,48 +248,97 @@ class Homescreen extends StatelessWidget {
                         ),
                       ],
                     ),
-                    SizedBox(
-                      height: size.height * .3,
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        scrollDirection: Axis.horizontal,
-                        itemCount: postList.length,
-                        itemBuilder: ((context, index) {
-                          return Container(
-                            width: 200,
-                            margin: const EdgeInsets.symmetric(horizontal: 10),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: Column(
-                              children: [
-                                AspectRatio(
-                                  aspectRatio: 1,
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                    child:
-                                        Image.asset(postList[index].thumbnail),
-                                  ),
-                                ),
-                                const SizedBox(height: 5),
-                                Text(
-                                  postList[index].title,
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 18),
-                                )
-                              ],
-                            ),
-                          );
-                        }),
-                      ),
-                    )
                   ],
                 ),
-              )
+              ),
+              SizedBox(
+                height: size.height * 0.27,
+                child: PageView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: postList.length,
+                  itemBuilder: (context, index) {
+                    return SizedBox(
+                      height: 230,
+                      child: Stack(
+                        children: [
+                          Positioned(
+                            top: 35,
+                            left: 15,
+                            child: Material(
+                              child: Container(
+                                height: 150,
+                                width: size.width * 0.88,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(0.0),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.withOpacity(0.3),
+                                      offset: const Offset(-10.0, 10.0),
+                                      blurRadius: 20.0,
+                                      spreadRadius: 4.0,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          Positioned(
+                            top: 10,
+                            left: 25,
+                            child: Card(
+                              elevation: 10,
+                              shadowColor: Colors.grey.withOpacity(0.5),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              child: Container(
+                                height: 150,
+                                width: 150,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  image: DecorationImage(
+                                    fit: BoxFit.cover,
+                                    image:
+                                        AssetImage(postList[index].thumbnail),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          Positioned(
+                            top: 60,
+                            left: 187,
+                            child: SizedBox(
+                              height: 150,
+                              width: 180,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    postList[index].title,
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 18),
+                                  ),
+                                  const SizedBox(height: 5),
+                                  Text(
+                                    postList[index].content,
+                                    style: const TextStyle(
+                                        fontSize: 15, color: textNoteColor),
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 2,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              ),
             ],
           ),
         ),

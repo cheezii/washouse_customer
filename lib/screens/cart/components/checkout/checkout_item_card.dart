@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../components/constants/color_constants.dart';
-import '../../../../models/cart.dart';
+import '../../../../resource/models/cart.dart';
 
 class CheckoutItemCard extends StatelessWidget {
   final Cart cart;

@@ -4,6 +4,8 @@ import 'package:washouse_customer/components/constants/size.dart';
 import 'package:washouse_customer/screens/started/login.dart';
 
 import '../../components/constants/text_constants.dart';
+import '../../resource/controller/address_controller.dart';
+import '../../resource/controller/center_controller.dart';
 
 class Onboarding extends StatefulWidget {
   const Onboarding({super.key});
@@ -14,7 +16,14 @@ class Onboarding extends StatefulWidget {
 
 class _OnboardingState extends State<Onboarding> {
   final PageController _pageController = PageController(initialPage: 0);
+  CenterController centerController = CenterController();
   int currentIndex = 0;
+
+  @override
+  void initState() {
+    //centerController.getCenterListSearch('Dr');
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

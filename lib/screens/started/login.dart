@@ -1,12 +1,16 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:washouse_customer/components/constants/color_constants.dart';
 import 'package:washouse_customer/components/constants/size.dart';
+import 'package:washouse_customer/components/constants/text_constants.dart';
 import 'package:washouse_customer/screens/home/base_screen.dart';
 import 'package:washouse_customer/screens/started/signup.dart';
 
+import '../home/home_screen.dart';
 import '../reset_password/widgets/forget_password_modal_bottom_sheet.dart';
-import '../widgets/custom_textfield.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -14,6 +18,9 @@ class Login extends StatefulWidget {
   @override
   State<Login> createState() => _LoginState();
 }
+
+TextEditingController phoneController = TextEditingController();
+TextEditingController passwordController = TextEditingController();
 
 class _LoginState extends State<Login> {
   bool _isHidden = true;
@@ -41,11 +48,21 @@ class _LoginState extends State<Login> {
                   style: TextStyle(fontSize: 40.0, fontWeight: FontWeight.w700),
                 ),
                 const SizedBox(height: 16),
-                const CustomTextfield(
-                  icon: Icons.alternate_email,
-                  obsecureText: false,
-                  hintText: 'Email/số điện thoại',
-                  inputType: TextInputType.text,
+                TextFormField(
+                  obscureText: false,
+                  style: const TextStyle(
+                    color: textColor,
+                  ),
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    prefixIcon: Icon(
+                      Icons.phone_android_rounded,
+                      color: textColor.withOpacity(.5),
+                    ),
+                    labelText: 'Số điện thoại',
+                  ),
+                  cursorColor: textColor.withOpacity(.8),
+                  controller: phoneController,
                 ),
                 TextFormField(
                   obscureText: _isHidden,
@@ -66,7 +83,7 @@ class _LoginState extends State<Login> {
                         ),
                       )),
                   cursorColor: textColor.withOpacity(.8),
-                  keyboardType: TextInputType.text,
+                  controller: passwordController,
                 ),
                 const SizedBox(height: 16),
                 SizedBox(
@@ -74,11 +91,20 @@ class _LoginState extends State<Login> {
                   height: 45,
                   child: ElevatedButton(
                     onPressed: () {
+                      // var phone = phoneController.text;
+                      // var pwd = passwordController.text;
+
+                      // var jwt = await login(phone, pwd);
+                      // if (jwt != null) {
                       Navigator.push(
                           context,
                           PageTransition(
                               child: const BaseScreen(),
                               type: PageTransitionType.fade));
+                      // } else {
+                      //   displayDialog(context, "An error occured",
+                      //       "No account was found");
+                      // }
                     },
                     style: ElevatedButton.styleFrom(
                         shape: RoundedRectangleBorder(
@@ -187,6 +213,33 @@ class _LoginState extends State<Login> {
       ),
     );
   }
+
+  Future login(String phone, String password) async {
+    try {
+      Response response = await post(
+          //Uri.parse('https://localhost:44360/api/account/login'),
+          Uri.parse('$baseUrl/accounts/login'),
+          body: {'phone': phone, 'password': password});
+      if (response.statusCode == 200) return response.body;
+      return null;
+      // if (response.statusCode == 200) {
+      //   var data = json.decode(response.body);
+      //   print(data);
+      // } else {
+      //   print(response.body);
+      // }
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  void displayDialog(context, title, text) => showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text(title),
+          content: Text(text),
+        ),
+      );
 
   void _togglePasswordView() {
     setState(() {

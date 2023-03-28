@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 
 import '../../components/constants/color_constants.dart';
-import '../../models/cart.dart';
+import '../../resource/models/cart.dart';
 import 'components/checkout/order_card.dart';
 import 'components/checkout/service_ordered.dart';
 import 'information/shipping/shipping_address.dart';

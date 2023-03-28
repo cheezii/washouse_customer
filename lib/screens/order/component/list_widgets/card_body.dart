@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../components/constants/color_constants.dart';
-import '../../../../models/order.dart';
+import '../../../../resource/models/order.dart';
 
 class CardBody extends StatelessWidget {
   final int status;

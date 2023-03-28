@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../components/constants/color_constants.dart';
-import '../../../../models/shipping.dart';
+import '../../../../resource/models/shipping.dart';
 import 'fill_shipping_address.dart';
 
 class ShippingAddress extends StatelessWidget {

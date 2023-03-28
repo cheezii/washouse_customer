@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:washouse_customer/components/constants/color_constants.dart';
 import 'package:washouse_customer/components/constants/text_constants.dart';
-import 'package:washouse_customer/models/order.dart';
+import 'package:washouse_customer/resource/models/order.dart';
 import 'package:washouse_customer/screens/order/component/no_order.dart';
 
 import 'list_widgets/order_card.dart';

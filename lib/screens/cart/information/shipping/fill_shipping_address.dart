@@ -2,11 +2,12 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:washouse_customer/models/cart.dart';
+import 'package:http/http.dart';
+import 'package:washouse_customer/resource/models/cart.dart';
 import 'package:washouse_customer/screens/cart/checkout_screen.dart';
 
 import '../../../../components/constants/color_constants.dart';
+import '../../../../components/constants/text_constants.dart';
 
 class FillAddressScreen extends StatefulWidget {
   const FillAddressScreen({super.key});
@@ -16,28 +17,44 @@ class FillAddressScreen extends StatefulWidget {
 }
 
 class _FillAddressScreenState extends State<FillAddressScreen> {
-  List _districtsList = [];
-  List _wardsList = [];
+  List districtList = [];
+  List wardList = [];
 
-  // Fetch content from the json file
-  Future<void> readJson() async {
-    final String response =
-        await rootBundle.loadString('assets/json/location.json');
-    final data = await json.decode(response);
-    //final data = jsonDecode(response);
-    setState(() {
-      _districtsList = data['districts'];
-      _wardsList = data['wards'];
-    });
+  String? myDistrict;
+  String? myWard;
+
+  var isSelectedDistrict = false;
+
+  Future getDistrictList() async {
+    Response response = await get(Uri.parse('$baseUrl/districts'));
+    if (response.statusCode == 200) {
+      var data = jsonDecode(response.body);
+      setState(() {
+        districtList = data['data'];
+      });
+    } else {
+      throw Exception("Lỗi khi load Json");
+    }
   }
 
-  String _myDistrict = '';
-  String _myWard = '';
+  Future getWardsList() async {
+    int districtId = int.parse(myDistrict!);
+    Response response =
+        await get(Uri.parse('$baseUrl/districts/$districtId/wards'));
+    if (response.statusCode == 200) {
+      var data = json.decode(response.body);
+      setState(() {
+        wardList = data['data'];
+      });
+    } else {
+      throw Exception("Lỗi khi load Json");
+    }
+  }
 
   @override
   void initState() {
+    getDistrictList();
     super.initState();
-    readJson();
   }
 
   @override
@@ -76,6 +93,7 @@ class _FillAddressScreenState extends State<FillAddressScreen> {
         padding: const EdgeInsets.all(16),
         child: Form(
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const FillingShippingInfo(
                 lableText: 'Tên người nhận',
@@ -92,54 +110,61 @@ class _FillAddressScreenState extends State<FillAddressScreen> {
                 hintText: 'Nhập số nhà, tên đường...',
               ),
               const SizedBox(height: 20),
-              // DropdownButton(
-              //   items: _districtsList
-              //       .map<DropdownMenuItem>((value) =>
-              //           DropdownMenuItem(value: value, child: Text(value)))
-              //       .toList(),
-              //   value: _dropdownDistrict,
-              //   hint: Text('Chọn quận/huyện'),
-              //   style: TextStyle(color: textNoteColor),
-              //   onChanged: (value) {
-              //     setState(() {
-              //       if (value != null) _dropdownDistrict = value;
-              //     });
-              //   },
-              // ),
+              const Text(
+                'Quận/huyện',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 14,
+                ),
+              ),
+              const SizedBox(height: 5),
               DropdownButton(
-                items: _districtsList.map((item) {
+                isDense: true,
+                isExpanded: true,
+                items: districtList.map((item) {
                   return DropdownMenuItem(
-                    value: item['district_id'].toString(),
-                    child: Text(item['district_name']),
+                    value: item['districtId'].toString(),
+                    child: Text(item['districtName']),
                   );
                 }).toList(),
                 icon: const Icon(Icons.keyboard_arrow_down_rounded),
                 iconSize: 30,
-                value: _myDistrict,
+                value: myDistrict,
                 hint: const Text('Chọn quận/huyện'),
                 style: const TextStyle(color: textColor),
-                onChanged: (newValue) {
+                onChanged: (String? newValue) {
                   setState(() {
-                    if (newValue != null) _myDistrict = newValue;
+                    myDistrict = newValue!;
+                    getWardsList();
+                    isSelectedDistrict = true;
                   });
                 },
               ),
               const SizedBox(height: 20),
-              DropdownButton<String>(
-                items: _districtsList.map((item) {
+              const Text(
+                'Phường/xã',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 14,
+                ),
+              ),
+              //if (isSelectedDistrict)
+              DropdownButton(
+                isExpanded: true,
+                items: wardList.map((item) {
                   return DropdownMenuItem(
-                    value: item['ward_id'].toString(),
-                    child: Text(item['ward_name']),
+                    value: item['wardId'].toString(),
+                    child: Text(item['wardName']),
                   );
                 }).toList(),
                 icon: const Icon(Icons.keyboard_arrow_down_rounded),
                 iconSize: 30,
-                value: _myWard,
+                value: myWard,
                 hint: const Text('Chọn phường/xã'),
                 style: const TextStyle(color: textColor),
                 onChanged: (newValue) {
                   setState(() {
-                    if (newValue != null) _myWard = newValue;
+                    myWard = newValue!;
                   });
                 },
               ),

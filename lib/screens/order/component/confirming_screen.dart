@@ -3,7 +3,7 @@ import 'package:washouse_customer/components/constants/color_constants.dart';
 import 'package:washouse_customer/components/constants/text_constants.dart';
 import 'package:washouse_customer/screens/order/component/no_order.dart';
 
-import '../../../models/order.dart';
+import '../../../resource/models/order.dart';
 import 'list_widgets/order_card.dart';
 
 class OrderConfirmingScreen extends StatelessWidget {

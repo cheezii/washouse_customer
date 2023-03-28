@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:washouse_customer/components/constants/color_constants.dart';
 
-import '../../../../models/order.dart';
+import '../../../../resource/models/order.dart';
 
 class CardHeading extends StatelessWidget {
   const CardHeading({

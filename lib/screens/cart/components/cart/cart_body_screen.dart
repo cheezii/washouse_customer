@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:washouse_customer/components/constants/color_constants.dart';
 
-import 'package:washouse_customer/models/cart.dart';
+import 'package:washouse_customer/resource/models/cart.dart';
 
 import 'cart_item_card.dart';
 

@@ -2,8 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 
-import 'package:washouse_customer/models/order.dart';
-import 'package:washouse_customer/models/shipping.dart';
+import 'package:washouse_customer/resource/models/order.dart';
+import 'package:washouse_customer/resource/models/shipping.dart';
 import 'package:washouse_customer/screens/order/component/details_widget/detail_heading.dart';
 
 import '../../components/constants/color_constants.dart';

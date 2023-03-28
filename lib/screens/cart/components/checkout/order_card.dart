@@ -3,7 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:page_transition/page_transition.dart';
 
 import '../../../../components/constants/color_constants.dart';
-import '../../../../models/cart.dart';
+import '../../../../resource/models/cart.dart';
 import '../../checkout_screen.dart';
 
 class OrderCard extends StatelessWidget {

@@ -1,20 +1,23 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 
 import '../../../components/constants/color_constants.dart';
 
 class ListCenter extends StatelessWidget {
-  final String thumbnail;
-  final String name;
-  final double distance;
-  final double rating;
+  final String? thumbnail;
+  final String? name;
+  final int? distance;
+  final num? rating;
   final GestureTapCallback press;
+  final bool hasRating;
   const ListCenter({
     Key? key,
-    required this.thumbnail,
-    required this.name,
-    required this.distance,
-    required this.rating,
+    this.thumbnail,
+    this.name,
+    this.distance,
+    this.rating,
     required this.press,
+    required this.hasRating,
   }) : super(key: key);
 
   @override
@@ -34,7 +37,7 @@ class ListCenter extends StatelessWidget {
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(20),
                     ),
-                    child: Image.asset(thumbnail),
+                    child: Image.network(thumbnail!),
                   ),
                 ),
               ),
@@ -44,7 +47,7 @@ class ListCenter extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      name,
+                      name!,
                       style: const TextStyle(
                           fontWeight: FontWeight.w600, fontSize: 18),
                     ),
@@ -53,10 +56,17 @@ class ListCenter extends StatelessWidget {
                       children: [
                         Text('$distance km'),
                         const SizedBox(width: 5),
-                        const Icon(Icons.circle_rounded, size: 5),
-                        const SizedBox(width: 5),
-                        const Icon(Icons.star_rounded, color: kPrimaryColor),
-                        Text('$rating')
+                        hasRating
+                            ? Row(
+                                children: [
+                                  const Icon(Icons.circle_rounded, size: 5),
+                                  const SizedBox(width: 5),
+                                  const Icon(Icons.star_rounded,
+                                      color: kPrimaryColor),
+                                  Text('$rating'),
+                                ],
+                              )
+                            : Container(),
                       ],
                     ),
                     const SizedBox(height: 3),
@@ -66,7 +76,7 @@ class ListCenter extends StatelessWidget {
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: const Padding(
-                        padding: EdgeInsets.all(8),
+                        padding: EdgeInsets.all(6),
                         child: Text('Giặt hấp'),
                       ),
                     ),

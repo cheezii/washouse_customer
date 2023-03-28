@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:washouse_customer/components/constants/color_constants.dart';
-import 'package:washouse_customer/models/chat_message.dart';
-import 'package:washouse_customer/models/send_menu_item.dart';
+import 'package:washouse_customer/resource/models/chat_message.dart';
+import 'package:washouse_customer/resource/models/send_menu_item.dart';
 import 'package:washouse_customer/screens/chat/components/chat_bubble.dart';
 
 import 'components/chat_detail_page_appbar.dart';

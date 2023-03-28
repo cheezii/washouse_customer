@@ -4,7 +4,7 @@ import 'package:page_transition/page_transition.dart';
 import 'package:washouse_customer/screens/cart/information/shipping/fill_shipping_address.dart';
 
 import '../../../../components/constants/color_constants.dart';
-import '../../../../models/cart.dart';
+import '../../../../resource/models/cart.dart';
 import '../../checkout_screen.dart';
 import 'add_voucher.dart';
 
