@@ -12,7 +12,7 @@ class SortModalBottomSheet {
                 Row(
                   children: const [
                     Icon(Icons.close_rounded),
-                    SizedBox(width: 100),
+                    SizedBox(width: 110),
                     Text(
                       'Sắp xếp theo',
                       textAlign: TextAlign.center,
@@ -21,6 +21,7 @@ class SortModalBottomSheet {
                   ],
                 ),
                 Divider(thickness: 1, color: Colors.grey.shade300),
+                const SizedBox(height: 20),
               ],
             ),
           )),
