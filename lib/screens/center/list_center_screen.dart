@@ -71,11 +71,14 @@ class _ListCenterScreenState extends State<ListCenterScreen> {
   Widget build(BuildContext context) {
     if (widget.isNearby) {
       listAction = centerController.getCenterNearby();
-    } else if (searchController.text.isNotEmpty) {
-      listAction = centerController.getCenterListSearch(searchController.text);
-    } else if (widget.searchString != null) {
-      listAction = centerController.getCenterListSearch(widget.searchString!);
-    } else {
+    }
+    // else if (searchController.text.isNotEmpty) {
+    //   listAction = centerController.getCenterListSearch(searchController.text);
+    // }
+    // else if (widget.searchString != null) {
+    //   listAction = centerController.getCenterListSearch(widget.searchString!);
+    // }
+    else {
       listAction = centerController.getCenterList();
     }
     return Scaffold(

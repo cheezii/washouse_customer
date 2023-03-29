@@ -22,7 +22,8 @@ class SignUp extends StatefulWidget {
 
 class _SignUpState extends State<SignUp> {
   String? _errorMessage;
-  bool _isHidden = true;
+  bool _isPassHidden = true;
+  bool _isConHidden = true;
   AccountController accountController = AccountController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
@@ -53,23 +54,23 @@ class _SignUpState extends State<SignUp> {
                   style: TextStyle(fontSize: 40.0, fontWeight: FontWeight.w700),
                 ),
                 const SizedBox(height: kDefaultPadding),
-                TextFormField(
-                  obscureText: false,
-                  style: const TextStyle(
-                    color: textColor,
-                  ),
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    prefixIcon: Icon(
-                      //Icons.account_circle_outlined,
-                      Icons.alternate_email_rounded,
-                      color: textColor.withOpacity(.5),
-                    ),
-                    labelText: 'Email',
-                  ),
-                  cursorColor: textColor.withOpacity(.8),
-                  controller: emailController,
-                ),
+                // TextFormField(
+                //   obscureText: false,
+                //   style: const TextStyle(
+                //     color: textColor,
+                //   ),
+                //   decoration: InputDecoration(
+                //     border: InputBorder.none,
+                //     prefixIcon: Icon(
+                //       //Icons.account_circle_outlined,
+                //       Icons.alternate_email_rounded,
+                //       color: textColor.withOpacity(.5),
+                //     ),
+                //     labelText: 'Email',
+                //   ),
+                //   cursorColor: textColor.withOpacity(.8),
+                //   controller: emailController,
+                // ),
                 TextFormField(
                   obscureText: false,
                   style: const TextStyle(
@@ -83,11 +84,12 @@ class _SignUpState extends State<SignUp> {
                     ),
                     labelText: 'Số điện thoại',
                   ),
+                  keyboardType: TextInputType.number,
                   cursorColor: textColor.withOpacity(.8),
                   controller: phoneController,
                 ),
                 TextFormField(
-                  obscureText: _isHidden,
+                  obscureText: _isPassHidden,
                   style: const TextStyle(
                     color: textColor,
                   ),
@@ -101,7 +103,9 @@ class _SignUpState extends State<SignUp> {
                       suffix: InkWell(
                         onTap: _togglePasswordView,
                         child: Icon(
-                          _isHidden ? Icons.visibility : Icons.visibility_off,
+                          _isPassHidden
+                              ? Icons.visibility
+                              : Icons.visibility_off,
                         ),
                       )),
                   cursorColor: textColor.withOpacity(.8),
@@ -109,7 +113,7 @@ class _SignUpState extends State<SignUp> {
                   controller: passwordController,
                 ),
                 TextFormField(
-                  obscureText: _isHidden,
+                  obscureText: _isConHidden,
                   style: const TextStyle(
                     color: textColor,
                   ),
@@ -123,7 +127,9 @@ class _SignUpState extends State<SignUp> {
                       suffix: InkWell(
                         onTap: _togglePasswordView,
                         child: Icon(
-                          _isHidden ? Icons.visibility : Icons.visibility_off,
+                          _isConHidden
+                              ? Icons.visibility
+                              : Icons.visibility_off,
                         ),
                       )),
                   cursorColor: textColor.withOpacity(.8),
@@ -136,52 +142,64 @@ class _SignUpState extends State<SignUp> {
                   height: 45,
                   child: ElevatedButton(
                     onPressed: () {
-                      register(
+                      if (phoneController.text.isEmpty) {
+                        _errorMessage = "Số điện thoại không được để trống!";
+                      }
+                      if (passwordController.text.isEmpty) {
+                        _errorMessage = "Mật khẩu không được  để trống!";
+                      }
+                      if (conpasswordController.text
+                              .compareTo(passwordController.text) !=
+                          0) {
+                        _errorMessage = "Xác nhận mật khẩu không khớp!";
+                      }
+
+                      accountController.register(
                           //emailController.text,
                           phoneController.text,
                           passwordController.text,
                           conpasswordController.text);
-                      // if (message.compareTo("success") == 0) {
-                      //   Navigator.push(
-                      //       context,
-                      //       PageTransition(
-                      //           child: const Login(),
-                      //           type: PageTransitionType.fade));
-                      // } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Container(
-                            padding: const EdgeInsets.all(16),
-                            height: 90,
-                            decoration: const BoxDecoration(
-                              color: Color(0xffc72c41),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(20)),
+                      if (_errorMessage?.compareTo("success") == 0) {
+                        Navigator.push(
+                            context,
+                            PageTransition(
+                                child: const Login(),
+                                type: PageTransitionType.fade));
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Container(
+                              padding: const EdgeInsets.all(16),
+                              height: 90,
+                              decoration: const BoxDecoration(
+                                color: Color(0xffc72c41),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(20)),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    'Oops',
+                                    style: TextStyle(
+                                        fontSize: 18, color: Colors.white),
+                                  ),
+                                  Text(
+                                    "$_errorMessage",
+                                    style: const TextStyle(
+                                        fontSize: 12, color: Colors.white),
+                                    maxLines: 2,
+                                    overflow: TextOverflow.clip,
+                                  )
+                                ],
+                              ),
                             ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text(
-                                  'Oops',
-                                  style: TextStyle(
-                                      fontSize: 18, color: Colors.white),
-                                ),
-                                Text(
-                                  "$_errorMessage",
-                                  style: const TextStyle(
-                                      fontSize: 12, color: Colors.white),
-                                  maxLines: 2,
-                                  overflow: TextOverflow.clip,
-                                )
-                              ],
-                            ),
+                            behavior: SnackBarBehavior.floating,
+                            backgroundColor: Colors.transparent,
+                            elevation: 0,
                           ),
-                          behavior: SnackBarBehavior.floating,
-                          backgroundColor: Colors.transparent,
-                          elevation: 0,
-                        ),
-                      );
-                      //}
+                        );
+                      }
                     },
                     style: ElevatedButton.styleFrom(
                         shape: RoundedRectangleBorder(
@@ -193,7 +211,7 @@ class _SignUpState extends State<SignUp> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 20),
                 Row(
                   children: const [
                     Expanded(child: Divider()),
@@ -205,7 +223,7 @@ class _SignUpState extends State<SignUp> {
                     Expanded(child: Divider()),
                   ],
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 20),
                 // ElevatedButton.icon(
                 //   onPressed: signUp,
                 //   style: ElevatedButton.styleFrom(
@@ -250,7 +268,7 @@ class _SignUpState extends State<SignUp> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 20),
                 GestureDetector(
                   onTap: () {
                     Navigator.push(
@@ -333,42 +351,6 @@ class _SignUpState extends State<SignUp> {
     }
   }
 
-  Future<String?> register(String phone, pass, conpass) async {
-    Map data = {
-      "phone": phone,
-      "email": "",
-      "password": pass,
-      "confirmPass": conpass
-    };
-    print(data);
-
-    String body = json.encode(data);
-    var url = '$baseUrl/accounts/registerAsCustomer';
-    var response = await post(
-      Uri.parse(url),
-      body: body,
-      headers: {
-        "Content-Type": "application/json",
-        "accept": "application/json",
-        "Access-Control-Allow-Origin": "*"
-      },
-    );
-    print(response.body);
-
-    var jsonResponse = jsonDecode(response.body);
-    if (response.statusCode == 200) {
-      print('success');
-      setState(() {
-        _errorMessage = 'success';
-      });
-    } else {
-      setState(() {
-        _errorMessage = jsonResponse(data['message']);
-      });
-      print("Message 2: " + _errorMessage!);
-    }
-  }
-
   void displayDialog(context, title, text) => showDialog(
         context: context,
         builder: (context) => AlertDialog(
@@ -379,7 +361,8 @@ class _SignUpState extends State<SignUp> {
 
   void _togglePasswordView() {
     setState(() {
-      _isHidden = !_isHidden;
+      _isPassHidden = !_isPassHidden;
+      _isConHidden = !_isConHidden;
     });
   }
 }

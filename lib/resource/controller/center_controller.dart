@@ -9,6 +9,7 @@ import '../../components/constants/text_constants.dart';
 
 class CenterController {
   List<LaundryCenter> centerList = [];
+
   Future<List<LaundryCenter>> getCenterList() async {
     Response response = await get(Uri.parse('$baseUrl/centers'));
     try {
@@ -24,9 +25,13 @@ class CenterController {
     return centerList;
   }
 
-  Future<List<LaundryCenter>> getCenterListSearch(String query) async {
-    Response response =
-        await get(Uri.parse('$baseUrl/centers?SearchString=$query'));
+  Future<List<LaundryCenter>> getCenterListHasCondition(String? searchString,
+      String? sortSring, String? budgetRange, String? categoryService) async {
+    Position position = await Geolocator.getCurrentPosition();
+    double lat = position.latitude;
+    double long = position.longitude;
+    Response response = await get(Uri.parse(
+        '$baseUrl/centers?Sort=$sortSring&BudgetRange=$budgetRange&CategoryServices=$categoryService&SearchString=$searchString&CurrentUserLatitude=$lat&CurrentUserLongitude=$long'));
     print(response.body);
     try {
       if (response.statusCode == 200) {

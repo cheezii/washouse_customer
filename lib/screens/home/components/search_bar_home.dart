@@ -7,6 +7,7 @@ import '../../center/component/screen_list.dart';
 
 class CustomSearch extends SearchDelegate {
   CenterController centerController = CenterController();
+  List<LaundryCenter> centers = [];
 
   @override
   List<Widget>? buildActions(BuildContext context) {
@@ -52,57 +53,65 @@ class CustomSearch extends SearchDelegate {
     //     );
     //   },
     // );
-    return Container();
+    return Text('Suggess');
+  }
+
+  Future getList() async {
+    centers = await centerController.getCenterList();
   }
 
   @override
   Widget buildResults(BuildContext context) {
-    return FutureBuilder<List<LaundryCenter>>(
-      future: centerController.getCenterListSearch(query),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const ListCentersSkeleton();
-        } else if (snapshot.hasData) {
-          List<LaundryCenter> centerList = snapshot.data!;
-          return Expanded(
-            child: ListView.builder(
-              shrinkWrap: true,
-              itemCount: centerList.length,
-              itemBuilder: ((context, index) {
-                bool hasRating =
-                    centerList[index].rating != null ? true : false;
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                  child: ListCenter(
-                      thumbnail: centerList[index].thumbnail!,
-                      name: centerList[index].title!,
-                      distance: centerList[index].distance!,
-                      rating: hasRating ? centerList[index].rating! : null,
-                      hasRating: hasRating,
-                      press: () {}),
-                );
-              }),
-            ),
-          );
-        } else if (snapshot.hasError) {
-          //return Container();
-          return Column(
-            children: const [
-              SizedBox(height: 20),
-              Text(
-                'Oops',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 7),
-              Text(
-                'Có lỗi xảy ra rồi!',
-                style: TextStyle(fontSize: 16),
-              ),
-            ],
-          );
-        }
-        return Container();
-      },
-    );
+    return Text(query);
+    // return Column(
+    //   children: [
+    //     FutureBuilder<List<LaundryCenter>>(
+    //       future: centerController.getCenterListSearch(query),
+    //       builder: (context, snapshot) {
+    //         if (snapshot.connectionState == ConnectionState.waiting) {
+    //           return const ListCentersSkeleton();
+    //         } else if (snapshot.hasData) {
+    //           List<LaundryCenter> centerList = snapshot.data!;
+    //           return ListView.builder(
+    //             shrinkWrap: true,
+    //             itemCount: centerList.length,
+    //             itemBuilder: ((context, index) {
+    //               bool hasRating =
+    //                   centerList[index].rating != null ? true : false;
+
+    //               // return Padding(
+    //               //   padding: const EdgeInsets.symmetric(vertical: 10),
+    //               //   child: ListCenter(
+    //               //       thumbnail: centerList[index].thumbnail!,
+    //               //       name: centerList[index].title!,
+    //               //       distance: centerList[index].distance!,
+    //               //       rating: hasRating ? centerList[index].rating! : null,
+    //               //       hasRating: hasRating,
+    //               //       press: () {}),
+    //               // );
+    //             }),
+    //           );
+    //         } else if (snapshot.hasError) {
+    //           //return Container();
+    //           return Column(
+    //             children: const [
+    //               SizedBox(height: 20),
+    //               Text(
+    //                 'Oops',
+    //                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+    //               ),
+    //               SizedBox(height: 7),
+    //               Text(
+    //                 'Có lỗi xảy ra rồi!',
+    //                 style: TextStyle(fontSize: 16),
+    //               ),
+    //             ],
+    //           );
+    //         }
+    //         return Text('Search');
+    //       },
+    //     ),
+    //   ],
+    // );
   }
 }

@@ -54,7 +54,7 @@ class _OnboardingState extends State<Onboarding> {
                 ); //vào trang login
               },
               child: const Text(
-                'Skip',
+                'Bỏ qua',
                 style: TextStyle(
                   color: Colors.grey,
                   fontSize: 16.0,

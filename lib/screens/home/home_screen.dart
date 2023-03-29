@@ -125,7 +125,7 @@ class _HomescreenState extends State<Homescreen> {
                         } else if (snapshot.hasData) {
                           List<LaundryCenter> centerList = snapshot.data!;
                           return SizedBox(
-                            height: size.height * .23,
+                            height: size.height * .25,
                             child: ListView.builder(
                               shrinkWrap: true,
                               scrollDirection: Axis.horizontal,

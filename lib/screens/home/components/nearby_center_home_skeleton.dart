@@ -6,9 +6,13 @@ class NearbyCentersHomeSkeleton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: 2,
-      itemBuilder: (context, index) => const NearbyCenterHomeSkeleton(),
+    Size size = MediaQuery.of(context).size;
+    return SizedBox(
+      height: size.height * .3,
+      child: ListView.builder(
+        itemCount: 2,
+        itemBuilder: (context, index) => const NearbyCenterHomeSkeleton(),
+      ),
     );
   }
 }
@@ -25,7 +29,7 @@ class NearbyCenterHomeSkeleton extends StatelessWidget {
           children: [
             const SkeletonAvatar(
               style: SkeletonAvatarStyle(
-                width: 170,
+                width: 160,
                 height: 100,
               ),
             ),

@@ -1,15 +1,13 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:washouse_customer/components/constants/color_constants.dart';
 import 'package:washouse_customer/components/constants/size.dart';
-import 'package:washouse_customer/components/constants/text_constants.dart';
+import 'package:washouse_customer/resource/controller/account_controller.dart';
 import 'package:washouse_customer/screens/home/base_screen.dart';
 import 'package:washouse_customer/screens/started/signup.dart';
 
-import '../home/home_screen.dart';
 import '../reset_password/widgets/forget_password_modal_bottom_sheet.dart';
 
 class Login extends StatefulWidget {
@@ -21,9 +19,12 @@ class Login extends StatefulWidget {
 
 TextEditingController phoneController = TextEditingController();
 TextEditingController passwordController = TextEditingController();
+AccountController accountController = AccountController();
 
 class _LoginState extends State<Login> {
   bool _isHidden = true;
+  String? _errorMessage;
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -61,6 +62,7 @@ class _LoginState extends State<Login> {
                     ),
                     labelText: 'Số điện thoại',
                   ),
+                  keyboardType: TextInputType.number,
                   cursorColor: textColor.withOpacity(.8),
                   controller: phoneController,
                 ),
@@ -90,21 +92,57 @@ class _LoginState extends State<Login> {
                   width: size.width,
                   height: 45,
                   child: ElevatedButton(
-                    onPressed: () {
-                      // var phone = phoneController.text;
-                      // var pwd = passwordController.text;
+                    onPressed: () async {
+                      if (phoneController.text.isEmpty) {
+                        _errorMessage = "Số điện thoại không được để trống";
+                      }
+                      if (passwordController.text.isEmpty) {
+                        _errorMessage = "Mật khẩu không được để trống";
+                      }
 
-                      // var jwt = await login(phone, pwd);
-                      // if (jwt != null) {
-                      Navigator.push(
-                          context,
-                          PageTransition(
-                              child: const BaseScreen(),
-                              type: PageTransitionType.fade));
-                      // } else {
-                      //   displayDialog(context, "An error occured",
-                      //       "No account was found");
-                      // }
+                      _errorMessage = await accountController.login(
+                          phoneController.text, passwordController.text);
+                      if (_errorMessage?.compareTo("success") == 0) {
+                        Navigator.push(
+                            context,
+                            PageTransition(
+                                child: const BaseScreen(),
+                                type: PageTransitionType.fade));
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Container(
+                              padding: const EdgeInsets.all(16),
+                              height: 90,
+                              decoration: const BoxDecoration(
+                                color: Color(0xffc72c41),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(20)),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    'Oops',
+                                    style: TextStyle(
+                                        fontSize: 18, color: Colors.white),
+                                  ),
+                                  Text(
+                                    "$_errorMessage",
+                                    style: const TextStyle(
+                                        fontSize: 12, color: Colors.white),
+                                    maxLines: 2,
+                                    overflow: TextOverflow.clip,
+                                  )
+                                ],
+                              ),
+                            ),
+                            behavior: SnackBarBehavior.floating,
+                            backgroundColor: Colors.transparent,
+                            elevation: 0,
+                          ),
+                        );
+                      }
                     },
                     style: ElevatedButton.styleFrom(
                         shape: RoundedRectangleBorder(
@@ -212,25 +250,6 @@ class _LoginState extends State<Login> {
         ),
       ),
     );
-  }
-
-  Future login(String phone, String password) async {
-    try {
-      Response response = await post(
-          //Uri.parse('https://localhost:44360/api/account/login'),
-          Uri.parse('$baseUrl/accounts/login'),
-          body: {'phone': phone, 'password': password});
-      if (response.statusCode == 200) return response.body;
-      return null;
-      // if (response.statusCode == 200) {
-      //   var data = json.decode(response.body);
-      //   print(data);
-      // } else {
-      //   print(response.body);
-      // }
-    } catch (e) {
-      print(e.toString());
-    }
   }
 
   void displayDialog(context, title, text) => showDialog(
