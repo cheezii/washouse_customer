@@ -7,11 +7,9 @@ import 'package:dio/dio.dart';
 import 'package:washouse_customer/components/constants/color_constants.dart';
 import 'package:washouse_customer/resource/controller/center_controller.dart';
 import 'package:washouse_customer/screens/home/components/nearby_center_home_skeleton.dart';
-import '../../resource/models/category.dart';
 import '../../resource/models/post.dart';
 import 'package:washouse_customer/resource/models/center.dart';
 import '../center/list_center_screen.dart';
-import 'components/category_card.dart';
 import 'components/home_header.dart';
 
 class Homescreen extends StatefulWidget {
@@ -23,11 +21,6 @@ class Homescreen extends StatefulWidget {
 
 class _HomescreenState extends State<Homescreen> {
   CenterController centerController = CenterController();
-
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -208,11 +201,6 @@ class _HomescreenState extends State<Homescreen> {
                             ),
                           );
                         } else if (snapshot.hasError) {
-                          //return Container();
-                          // if (snapshot.error.runtimeType == DioError) {
-                          //   DioError _error = snapshot.error as DioError;
-
-                          // }
                           return Column(
                             children: [
                               Text('Oops'),

@@ -6,7 +6,9 @@ class ListCentersSkeleton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
+    Size size = MediaQuery.of(context).size;
+    return SizedBox(
+      height: size.height * 0.8,
       child: ListView.builder(
         itemCount: 5,
         itemBuilder: (context, index) => const CenterSkeleton(),

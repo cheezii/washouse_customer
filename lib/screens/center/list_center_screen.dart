@@ -1,28 +1,28 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:washouse_customer/resource/controller/category_controller.dart';
 
 import 'package:washouse_customer/resource/controller/center_controller.dart';
 import 'package:washouse_customer/resource/models/category.dart';
+import 'package:washouse_customer/screens/home/base_screen.dart';
 
 import '../../components/constants/color_constants.dart';
 import '../../resource/models/center.dart';
-import '../home/components/search_bar_home.dart';
+import 'search_center_screen.dart';
 import 'component/list_center_skeleton.dart';
 import 'component/screen_list.dart';
 import 'component/sort_model_bottom.dart';
 
 class ListCenterScreen extends StatefulWidget {
-  final String pageName;
+  final String? pageName;
   final bool isNearby;
   final bool isSearch;
-  final String? searchString;
   const ListCenterScreen({
     Key? key,
-    required this.pageName,
+    this.pageName,
     required this.isNearby,
     required this.isSearch,
-    this.searchString,
   }) : super(key: key);
 
   @override
@@ -38,15 +38,9 @@ class _ListCenterScreenState extends State<ListCenterScreen> {
   List<ServiceCategory> cateList = [];
   List<String> sortList = ["location", "rating"];
 
-  final TextEditingController searchController = TextEditingController();
-
   String sortChoosen = 'Sắp xếp theo';
 
-  @override
-  void dispose() {
-    searchController.dispose();
-    super.dispose();
-  }
+  TextEditingController searchController = TextEditingController();
 
   void suggestionList(String value) {
     setState(() {
@@ -62,6 +56,12 @@ class _ListCenterScreenState extends State<ListCenterScreen> {
   }
 
   @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
+  }
+
+  @override
   void initState() {
     getCategory();
     super.initState();
@@ -69,16 +69,13 @@ class _ListCenterScreenState extends State<ListCenterScreen> {
 
   @override
   Widget build(BuildContext context) {
+    searchController.text = widget.pageName!;
     if (widget.isNearby) {
       listAction = centerController.getCenterNearby();
-    }
-    // else if (searchController.text.isNotEmpty) {
-    //   listAction = centerController.getCenterListSearch(searchController.text);
-    // }
-    // else if (widget.searchString != null) {
-    //   listAction = centerController.getCenterListSearch(widget.searchString!);
-    // }
-    else {
+    } else if (searchController.text.isNotEmpty) {
+      listAction = centerController.getCenterListHasCondition(
+          searchController.text, '', '', '');
+    } else {
       listAction = centerController.getCenterList();
     }
     return Scaffold(
@@ -88,39 +85,71 @@ class _ListCenterScreenState extends State<ListCenterScreen> {
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           leading: IconButton(
             onPressed: () {
-              Navigator.pop(context);
+              widget.isNearby
+                  ? Navigator.pop(context)
+                  : Navigator.push(
+                      context,
+                      PageTransition(
+                          child: BaseScreen(),
+                          type: PageTransitionType.leftToRightWithFade));
             },
             icon: const Icon(
-              Icons.arrow_back_ios_new_rounded,
+              Icons.arrow_back_rounded,
               color: textColor,
               size: 24,
             ),
           ),
-          centerTitle: true,
-          title: Text(widget.pageName,
-              style: const TextStyle(color: textColor, fontSize: 27)),
+          centerTitle: widget.isSearch ? false : true,
+          title: widget.isSearch
+              ? TextField(
+                  textInputAction: TextInputAction.search,
+                  controller: searchController,
+                  textAlign: TextAlign.left,
+                  decoration: const InputDecoration(
+                    enabledBorder: InputBorder.none,
+                  ),
+                  onSubmitted: (value) {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ListCenterScreen(
+                                pageName: value,
+                                isNearby: false,
+                                isSearch: true)));
+                  },
+                )
+              : Text(widget.pageName!,
+                  style: const TextStyle(color: textColor, fontSize: 23)),
           actions: [
-            // GestureDetector(
-            //   onTap: () {},
-            //   child: const Padding(
-            //     padding: EdgeInsets.only(right: 16),
-            //     child: Icon(
-            //       Icons.filter_alt_rounded,
-            //       color: textColor,
-            //       size: 30,
-            //     ),
-            //   ),
-            // ),
-            IconButton(
-              onPressed: () {
-                showSearch(
-                  context: context,
-                  delegate: CustomSearch(),
-                );
-              },
-              icon:
-                  const Icon(Icons.search_rounded, color: textColor, size: 30),
-            ),
+            widget.isSearch
+                ? IconButton(
+                    onPressed: () {
+                      if (searchController.text.isEmpty) {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const BaseScreen()));
+                      } else {
+                        searchController.text = '';
+                      }
+                    },
+                    icon: const Icon(
+                      Icons.close_rounded,
+                      color: textColor,
+                      size: 24,
+                    ),
+                  )
+                : IconButton(
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  const SearchCenterScreen()));
+                    },
+                    icon: const Icon(Icons.search_rounded,
+                        color: textColor, size: 30),
+                  ),
           ],
         ),
         body: Padding(
@@ -128,26 +157,6 @@ class _ListCenterScreenState extends State<ListCenterScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Container(
-              //   height: 40,
-              //   width: double.infinity,
-              //   decoration: BoxDecoration(
-              //     color: Colors.grey.shade200,
-              //     borderRadius: BorderRadius.circular(30),
-              //   ),
-              //   child: TextField(
-              //     onChanged: (value) => suggestionList(value),
-              //     textInputAction: TextInputAction.search,
-              //     controller: searchController,
-              //     autofocus: widget.isSearch ? true : false,
-              //     decoration: const InputDecoration(
-              //       enabledBorder: InputBorder.none,
-              //       focusedBorder: InputBorder.none,
-              //       hintText: 'Tìm kiếm tiệm giặt',
-              //       prefixIcon: Icon(Icons.search_rounded),
-              //     ),
-              //   ),
-              // ),
               const SizedBox(height: 10),
               GestureDetector(
                 onTap: () =>
@@ -177,32 +186,26 @@ class _ListCenterScreenState extends State<ListCenterScreen> {
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const ListCentersSkeleton();
-                  } else if (snapshot.hasData) {
+                  } else if (snapshot.data != null) {
                     List<LaundryCenter> centerList = snapshot.data!;
-                    if (!widget.isNearby || searchController.text.isEmpty) {
-                      allCenter = centerList;
-                    }
-                    return Expanded(
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: centerList.length,
-                        itemBuilder: ((context, index) {
-                          bool hasRating =
-                              centerList[index].rating != null ? true : false;
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 10),
-                            child: ListCenter(
-                                thumbnail: centerList[index].thumbnail!,
-                                name: centerList[index].title!,
-                                distance: centerList[index].distance!,
-                                rating: hasRating
-                                    ? centerList[index].rating!
-                                    : null,
-                                hasRating: hasRating,
-                                press: () {}),
-                          );
-                        }),
-                      ),
+                    return ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: centerList.length,
+                      itemBuilder: ((context, index) {
+                        bool hasRating =
+                            centerList[index].rating != null ? true : false;
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 10),
+                          child: ListCenter(
+                              thumbnail: centerList[index].thumbnail!,
+                              name: centerList[index].title!,
+                              distance: centerList[index].distance!,
+                              rating:
+                                  hasRating ? centerList[index].rating! : null,
+                              hasRating: hasRating,
+                              press: () {}),
+                        );
+                      }),
                     );
                   } else if (snapshot.hasError) {
                     //return Container();

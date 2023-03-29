@@ -15,6 +15,7 @@ class CenterController {
     try {
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body)['data']['items'] as List;
+
         centerList = data.map((e) => LaundryCenter.fromJson(e)).toList();
       } else {
         throw Exception("Lỗi khi load Json");
@@ -32,13 +33,12 @@ class CenterController {
     double long = position.longitude;
     Response response = await get(Uri.parse(
         '$baseUrl/centers?Sort=$sortSring&BudgetRange=$budgetRange&CategoryServices=$categoryService&SearchString=$searchString&CurrentUserLatitude=$lat&CurrentUserLongitude=$long'));
-    print(response.body);
+    //print(response.body);
     try {
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body)['data']['items'] as List;
-        print(data);
-        List<LaundryCenter> centerList =
-            data.map((e) => LaundryCenter.fromJson(e)).toList();
+        //print(data);
+        centerList = data.map((e) => LaundryCenter.fromJson(e)).toList();
       } else {
         throw Exception("Lỗi khi load Json");
       }

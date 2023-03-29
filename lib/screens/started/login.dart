@@ -93,56 +93,56 @@ class _LoginState extends State<Login> {
                   height: 45,
                   child: ElevatedButton(
                     onPressed: () async {
-                      if (phoneController.text.isEmpty) {
-                        _errorMessage = "Số điện thoại không được để trống";
-                      }
-                      if (passwordController.text.isEmpty) {
-                        _errorMessage = "Mật khẩu không được để trống";
-                      }
+                      // if (phoneController.text.isEmpty) {
+                      //   _errorMessage = "Số điện thoại không được để trống";
+                      // }
+                      // if (passwordController.text.isEmpty) {
+                      //   _errorMessage = "Mật khẩu không được để trống";
+                      // }
 
-                      _errorMessage = await accountController.login(
-                          phoneController.text, passwordController.text);
-                      if (_errorMessage?.compareTo("success") == 0) {
-                        Navigator.push(
-                            context,
-                            PageTransition(
-                                child: const BaseScreen(),
-                                type: PageTransitionType.fade));
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Container(
-                              padding: const EdgeInsets.all(16),
-                              height: 90,
-                              decoration: const BoxDecoration(
-                                color: Color(0xffc72c41),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(20)),
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Text(
-                                    'Oops',
-                                    style: TextStyle(
-                                        fontSize: 18, color: Colors.white),
-                                  ),
-                                  Text(
-                                    "$_errorMessage",
-                                    style: const TextStyle(
-                                        fontSize: 12, color: Colors.white),
-                                    maxLines: 2,
-                                    overflow: TextOverflow.clip,
-                                  )
-                                ],
-                              ),
-                            ),
-                            behavior: SnackBarBehavior.floating,
-                            backgroundColor: Colors.transparent,
-                            elevation: 0,
-                          ),
-                        );
-                      }
+                      // _errorMessage = await accountController.login(
+                      //     phoneController.text, passwordController.text);
+                      // if (_errorMessage?.compareTo("success") == 0) {
+                      Navigator.push(
+                          context,
+                          PageTransition(
+                              child: const BaseScreen(),
+                              type: PageTransitionType.fade));
+                      // } else {
+                      //   ScaffoldMessenger.of(context).showSnackBar(
+                      //     SnackBar(
+                      //       content: Container(
+                      //         padding: const EdgeInsets.all(16),
+                      //         height: 90,
+                      //         decoration: const BoxDecoration(
+                      //           color: Color(0xffc72c41),
+                      //           borderRadius:
+                      //               BorderRadius.all(Radius.circular(20)),
+                      //         ),
+                      //         child: Column(
+                      //           crossAxisAlignment: CrossAxisAlignment.start,
+                      //           children: [
+                      //             const Text(
+                      //               'Oops',
+                      //               style: TextStyle(
+                      //                   fontSize: 18, color: Colors.white),
+                      //             ),
+                      //             Text(
+                      //               "$_errorMessage",
+                      //               style: const TextStyle(
+                      //                   fontSize: 12, color: Colors.white),
+                      //               maxLines: 2,
+                      //               overflow: TextOverflow.clip,
+                      //             )
+                      //           ],
+                      //         ),
+                      //       ),
+                      //       behavior: SnackBarBehavior.floating,
+                      //       backgroundColor: Colors.transparent,
+                      //       elevation: 0,
+                      //     ),
+                      //   );
+                      // }
                     },
                     style: ElevatedButton.styleFrom(
                         shape: RoundedRectangleBorder(
