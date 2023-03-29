@@ -7,10 +7,10 @@ class LaundryCenter {
   String? description;
   List<CenterServices>? centerServices;
   num? rating;
-  int? numOfRating;
+  num? numOfRating;
   String? phone;
   String? centerAddress;
-  int? distance;
+  num? distance;
   num? minPrice;
   num? maxPrice;
   bool? monthOff;
@@ -73,15 +73,18 @@ class LaundryCenter {
 class CenterServices {
   int? serviceCategoryID;
   String? serviceCategoryName;
-  Null? services;
+  //Null? services;
 
-  CenterServices(
-      {this.serviceCategoryID, this.serviceCategoryName, this.services});
+  CenterServices({
+    this.serviceCategoryID,
+    this.serviceCategoryName,
+    //this.services,
+  });
 
   CenterServices.fromJson(Map<String, dynamic> json) {
     serviceCategoryID = json['serviceCategoryID'];
     serviceCategoryName = json['serviceCategoryName'];
-    services = json['services'];
+    //services = json['services'];
   }
 }
 

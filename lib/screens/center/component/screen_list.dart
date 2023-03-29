@@ -6,7 +6,7 @@ import '../../../components/constants/color_constants.dart';
 class ListCenter extends StatelessWidget {
   final String? thumbnail;
   final String? name;
-  final int? distance;
+  final num? distance;
   final num? rating;
   final GestureTapCallback press;
   final bool hasRating;

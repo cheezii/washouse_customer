@@ -4,7 +4,6 @@ import 'package:washouse_customer/components/constants/size.dart';
 import 'package:washouse_customer/screens/started/login.dart';
 
 import '../../components/constants/text_constants.dart';
-import '../../resource/controller/address_controller.dart';
 import '../../resource/controller/center_controller.dart';
 
 class Onboarding extends StatefulWidget {

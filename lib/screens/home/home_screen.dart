@@ -23,7 +23,6 @@ class Homescreen extends StatefulWidget {
 
 class _HomescreenState extends State<Homescreen> {
   CenterController centerController = CenterController();
-  Position? _currentPosition;
 
   @override
   void initState() {
@@ -62,24 +61,24 @@ class _HomescreenState extends State<Homescreen> {
                         )
                       ],
                     ),
-                    GridView.builder(
-                      shrinkWrap: true,
-                      itemCount: 12,
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 4,
-                        childAspectRatio: 0.8,
-                        crossAxisSpacing: 15,
-                        mainAxisSpacing: 15,
-                      ),
-                      itemBuilder: ((context, index) {
-                        return CategoryCard(
-                          icon: categoryList[index].thumbnail,
-                          text: categoryList[index].name,
-                          press: () {},
-                        );
-                      }),
-                    ),
+                    // GridView.builder(
+                    //   shrinkWrap: true,
+                    //   itemCount: 12,
+                    //   gridDelegate:
+                    //       const SliverGridDelegateWithFixedCrossAxisCount(
+                    //     crossAxisCount: 4,
+                    //     childAspectRatio: 0.8,
+                    //     crossAxisSpacing: 15,
+                    //     mainAxisSpacing: 15,
+                    //   ),
+                    //   itemBuilder: ((context, index) {
+                    //     return CategoryCard(
+                    //       icon: categoryList[index].thumbnail,
+                    //       text: categoryList[index].name,
+                    //       press: () {},
+                    //     );
+                    //   }),
+                    // ),
                   ],
                 ),
               ),
@@ -126,7 +125,7 @@ class _HomescreenState extends State<Homescreen> {
                         } else if (snapshot.hasData) {
                           List<LaundryCenter> centerList = snapshot.data!;
                           return SizedBox(
-                            height: size.height * .25,
+                            height: size.height * .23,
                             child: ListView.builder(
                               shrinkWrap: true,
                               scrollDirection: Axis.horizontal,
@@ -165,18 +164,20 @@ class _HomescreenState extends State<Homescreen> {
                                                 centerList[index].thumbnail!),
                                           ),
                                         ),
-                                        const SizedBox(height: 5),
+                                        const SizedBox(height: 4),
                                         Text(
                                           centerList[index].title!,
                                           style: const TextStyle(
                                               fontWeight: FontWeight.w600,
                                               fontSize: 18),
                                         ),
+                                        const SizedBox(height: 2),
                                         Text(
                                           currentAddress!,
                                           style: TextStyle(
                                               color: Colors.grey.shade600),
                                         ),
+                                        const SizedBox(height: 2),
                                         Row(
                                           children: [
                                             Text(
