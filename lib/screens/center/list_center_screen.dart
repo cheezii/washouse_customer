@@ -6,6 +6,7 @@ import 'package:skeletons/skeletons.dart';
 import 'package:washouse_customer/resource/controller/category_controller.dart';
 
 import 'package:washouse_customer/resource/controller/center_controller.dart';
+import 'package:washouse_customer/resource/controller/map_controller.dart';
 import 'package:washouse_customer/resource/models/category.dart';
 import 'package:washouse_customer/screens/center/component/list_category_checkbox_skeleton.dart';
 import 'package:washouse_customer/screens/home/base_screen.dart';
@@ -34,6 +35,8 @@ class ListCenterScreen extends StatefulWidget {
 class _ListCenterScreenState extends State<ListCenterScreen> {
   CenterController centerController = CenterController();
   CategoryController categoryController = CategoryController();
+  MapUserController mapUserController = MapUserController();
+
   TextEditingController searchController = TextEditingController();
   TextEditingController minBudgetController = TextEditingController();
   TextEditingController maxBudgetController = TextEditingController();
@@ -53,11 +56,23 @@ class _ListCenterScreenState extends State<ListCenterScreen> {
   Color boxSortColor = Colors.white;
   Color boxCateColor = Colors.white;
   Color boxRangeColor = Colors.white;
+  Color boxDeliveryColor = Colors.white;
   Color selectedColor = Colors.grey.shade300;
 
-  bool isLoading = true;
+  bool isLoadingCate = true;
+  bool isLoadingLocation = true;
+  bool isAcceptLocation = false;
 
   int countCateChoosen = 0;
+
+  void getPermissionLocation() async {
+    isAcceptLocation = await mapUserController.handleLocationPermission();
+    if (isAcceptLocation) {
+      setState(() {
+        isLoadingLocation = false;
+      });
+    }
+  }
 
   void suggestionList(String value) {
     setState(() {
@@ -72,7 +87,7 @@ class _ListCenterScreenState extends State<ListCenterScreen> {
     cateList = await categoryController.getCategoriesList();
     if (cateList.isNotEmpty) {
       setState(() {
-        isLoading = false;
+        isLoadingCate = false;
       });
     }
   }
@@ -88,6 +103,7 @@ class _ListCenterScreenState extends State<ListCenterScreen> {
   @override
   void initState() {
     getCategory();
+    getPermissionLocation();
     super.initState();
   }
 
@@ -103,6 +119,7 @@ class _ListCenterScreenState extends State<ListCenterScreen> {
     } else {
       listAction = centerController.getCenterList('', '', '', '', '');
     }
+    //if (isAcceptLocation) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -290,59 +307,102 @@ class _ListCenterScreenState extends State<ListCenterScreen> {
                           ),
                         ),
                       ),
+                      const SizedBox(width: 15),
+                      GestureDetector(
+                        onTap: () {
+                          if (boxDeliveryColor.value == selectedColor.value) {
+                            setState(() {
+                              boxDeliveryColor = Colors.white;
+                            });
+                          } else {
+                            setState(() {
+                              boxDeliveryColor = selectedColor;
+                            });
+                          }
+                        },
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 200),
+                          width: 100,
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey.shade300),
+                            borderRadius: BorderRadius.circular(20),
+                            color: boxDeliveryColor,
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(10),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: const [
+                                Text(
+                                  'Vận chuyển',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                //SizedBox(width: 4),
+                                //Icon(Icons.keyboard_arrow_down_rounded)
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ],
               ),
             ),
             const SizedBox(height: 10),
-            FutureBuilder<List<LaundryCenter>>(
-              future: listAction,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const ListCentersSkeleton();
-                } else if (snapshot.data != null) {
-                  List<LaundryCenter> centerList = snapshot.data!;
-                  return ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: centerList.length,
-                    itemBuilder: ((context, index) {
-                      bool hasRating =
-                          centerList[index].rating != null ? true : false;
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 10),
-                        child: ListCenter(
-                            thumbnail: centerList[index].thumbnail!,
-                            name: centerList[index].title!,
-                            distance: centerList[index].distance!,
-                            rating:
-                                hasRating ? centerList[index].rating! : null,
-                            hasRating: hasRating,
-                            press: () {}),
-                      );
-                    }),
-                  );
-                } else if (snapshot.hasError) {
-                  //return Container();
-                  return Column(
-                    children: const [
-                      SizedBox(height: 20),
-                      Text(
-                        'Oops',
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
-                      ),
-                      SizedBox(height: 7),
-                      Text(
-                        'Có lỗi xảy ra rồi!',
-                        style: TextStyle(fontSize: 16),
-                      ),
-                    ],
-                  );
-                }
-                return Container();
-              },
-            )
+            Skeleton(
+              isLoading: isLoadingLocation,
+              skeleton: const ListCentersSkeleton(),
+              child: FutureBuilder<List<LaundryCenter>>(
+                future: listAction,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const ListCentersSkeleton();
+                  } else if (snapshot.data != null) {
+                    List<LaundryCenter> centerList = snapshot.data!;
+                    return ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: centerList.length,
+                      itemBuilder: ((context, index) {
+                        bool hasRating =
+                            centerList[index].rating != null ? true : false;
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 10),
+                          child: ListCenter(
+                              thumbnail: centerList[index].thumbnail!,
+                              name: centerList[index].title!,
+                              distance: centerList[index].distance!,
+                              rating:
+                                  hasRating ? centerList[index].rating! : null,
+                              hasRating: hasRating,
+                              press: () {}),
+                        );
+                      }),
+                    );
+                  } else if (snapshot.hasError) {
+                    //return Container();
+                    return Column(
+                      children: const [
+                        SizedBox(height: 20),
+                        Text(
+                          'Oops',
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold),
+                        ),
+                        SizedBox(height: 7),
+                        Text(
+                          'Có lỗi xảy ra rồi!',
+                          style: TextStyle(fontSize: 16),
+                        ),
+                      ],
+                    );
+                  }
+                  return Container();
+                },
+              ),
+            ),
           ],
         ),
       ),
@@ -495,33 +555,27 @@ class _ListCenterScreenState extends State<ListCenterScreen> {
                         errorMsg = 'Giá cả không thể bé hơn 0!';
                       }
                       if (errorMsg.isNotEmpty) {
-                        showDialog(
-                          context: context,
-                          barrierDismissible: false, // user must tap button!
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: const Text('Oops'),
-                              content: SingleChildScrollView(
-                                child: ListBody(
-                                  children: <Widget>[
-                                    Text(errorMsg),
-                                  ],
-                                ),
-                              ),
-                              actions: <Widget>[
-                                TextButton(
-                                  style: TextButton.styleFrom(
-                                    textStyle:
-                                        Theme.of(context).textTheme.labelLarge,
-                                  ),
-                                  child: const Text('Tôi hiểu rồi'),
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                ),
+                        AlertDialog(
+                          title: const Text('Oops'),
+                          content: SingleChildScrollView(
+                            child: ListBody(
+                              children: <Widget>[
+                                Text(errorMsg),
                               ],
-                            );
-                          },
+                            ),
+                          ),
+                          actions: <Widget>[
+                            TextButton(
+                              style: TextButton.styleFrom(
+                                textStyle:
+                                    Theme.of(context).textTheme.labelLarge,
+                              ),
+                              child: const Text('Tôi hiểu rồi'),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                          ],
                         );
                       } else {
                         setState(() {
@@ -555,7 +609,7 @@ class _ListCenterScreenState extends State<ListCenterScreen> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
       builder: (context) => Container(
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-        height: 500,
+        height: 900,
         child: StatefulBuilder(
           builder: (context, setState) => Stack(children: [
             CustomScrollView(
@@ -593,7 +647,7 @@ class _ListCenterScreenState extends State<ListCenterScreen> {
                 ),
                 SliverList(
                   delegate: SliverChildBuilderDelegate((context, index) {
-                    return isLoading
+                    return isLoadingCate
                         ? ListCategoriesCheckboxSkeleton()
                         : CheckboxListTile(
                             value: cateListChoose.contains(cateList[index]),

@@ -3,9 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:dio/dio.dart';
+import 'package:skeletons/skeletons.dart';
 
 import 'package:washouse_customer/components/constants/color_constants.dart';
 import 'package:washouse_customer/resource/controller/center_controller.dart';
+import 'package:washouse_customer/resource/controller/location_controller.dart';
+import 'package:washouse_customer/resource/controller/map_controller.dart';
 import 'package:washouse_customer/screens/home/components/nearby_center_home_skeleton.dart';
 import '../../resource/models/post.dart';
 import 'package:washouse_customer/resource/models/center.dart';
@@ -21,6 +24,54 @@ class Homescreen extends StatefulWidget {
 
 class _HomescreenState extends State<Homescreen> {
   CenterController centerController = CenterController();
+  bool isLoading = true;
+  bool isAcceptLocation = true;
+
+  Future<bool> _handleLocationPermission() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text(
+              'Location services are disabled. Please enable the services')));
+      return false;
+    }
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Location permissions are denied')));
+        return false;
+      }
+    }
+    if (permission == LocationPermission.deniedForever) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text(
+              'Location permissions are permanently denied, we cannot request permissions.')));
+      return false;
+    }
+    return true;
+  }
+
+  void getPermissionLocation() async {
+    print(isLoading);
+    isAcceptLocation = await _handleLocationPermission();
+    if (isAcceptLocation) {
+      setState(() {
+        isLoading = false;
+        print(isLoading);
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    getPermissionLocation();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -109,107 +160,115 @@ class _HomescreenState extends State<Homescreen> {
                         ),
                       ],
                     ),
-                    FutureBuilder<List<LaundryCenter>>(
-                      future: centerController.getCenterNearby(),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return const NearbyCenterHomeSkeleton();
-                        } else if (snapshot.hasData) {
-                          List<LaundryCenter> centerList = snapshot.data!;
-                          return SizedBox(
-                            height: size.height * .25,
-                            child: ListView.builder(
-                              shrinkWrap: true,
-                              scrollDirection: Axis.horizontal,
-                              itemCount: snapshot.data!.length,
-                              itemBuilder: ((context, index) {
-                                String? fulladdress =
-                                    centerList[index].centerAddress;
-                                List<String?> address = fulladdress!.split(",");
-                                String? currentAddress = address[0];
-                                bool hasRating =
-                                    centerList[index].rating != null
-                                        ? true
-                                        : false;
-                                return GestureDetector(
-                                  onTap: () {},
-                                  child: Container(
-                                    width: 170,
-                                    margin: const EdgeInsets.symmetric(
-                                        horizontal: 10),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        AspectRatio(
-                                          aspectRatio: 1.5,
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                              color: Colors.white,
-                                              borderRadius:
-                                                  BorderRadius.circular(20),
+                    Skeleton(
+                      isLoading: isLoading,
+                      skeleton: const NearbyCentersHomeSkeleton(),
+                      child: FutureBuilder<List<LaundryCenter>>(
+                        future: centerController.getCenterNearby(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const NearbyCenterHomeSkeleton();
+                          } else if (snapshot.hasData) {
+                            List<LaundryCenter> centerList = snapshot.data!;
+                            return SizedBox(
+                              height: size.height * .25,
+                              child: ListView.builder(
+                                shrinkWrap: true,
+                                scrollDirection: Axis.horizontal,
+                                itemCount: snapshot.data!.length,
+                                itemBuilder: ((context, index) {
+                                  String? fulladdress =
+                                      centerList[index].centerAddress;
+                                  List<String?> address =
+                                      fulladdress!.split(",");
+                                  String? currentAddress = address[0];
+                                  bool hasRating =
+                                      centerList[index].rating != null
+                                          ? true
+                                          : false;
+                                  return GestureDetector(
+                                    onTap: () {},
+                                    child: Container(
+                                      width: 170,
+                                      margin: const EdgeInsets.symmetric(
+                                          horizontal: 10),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          AspectRatio(
+                                            aspectRatio: 1.5,
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
+                                              ),
+                                              child: Image.network(
+                                                  centerList[index].thumbnail!),
                                             ),
-                                            child: Image.network(
-                                                centerList[index].thumbnail!),
                                           ),
-                                        ),
-                                        const SizedBox(height: 4),
-                                        Text(
-                                          centerList[index].title!,
-                                          style: const TextStyle(
-                                              fontWeight: FontWeight.w600,
-                                              fontSize: 18),
-                                        ),
-                                        const SizedBox(height: 2),
-                                        Text(
-                                          currentAddress!,
-                                          style: TextStyle(
-                                              color: Colors.grey.shade600),
-                                        ),
-                                        const SizedBox(height: 2),
-                                        Row(
-                                          children: [
-                                            Text(
-                                                '${centerList[index].distance} km'),
-                                            const SizedBox(width: 5),
-                                            hasRating
-                                                ? Row(
-                                                    children: [
-                                                      const Icon(
-                                                          Icons.circle_rounded,
-                                                          size: 5),
-                                                      const SizedBox(width: 5),
-                                                      const Icon(
-                                                          Icons.star_rounded,
-                                                          color: kPrimaryColor),
-                                                      Text(
-                                                          '${centerList[index].rating}')
-                                                    ],
-                                                  )
-                                                : Container(),
-                                          ],
-                                        ),
-                                      ],
+                                          const SizedBox(height: 4),
+                                          Text(
+                                            centerList[index].title!,
+                                            style: const TextStyle(
+                                                fontWeight: FontWeight.w600,
+                                                fontSize: 18),
+                                          ),
+                                          const SizedBox(height: 2),
+                                          Text(
+                                            currentAddress!,
+                                            style: TextStyle(
+                                                color: Colors.grey.shade600),
+                                          ),
+                                          const SizedBox(height: 2),
+                                          Row(
+                                            children: [
+                                              Text(
+                                                  '${centerList[index].distance} km'),
+                                              const SizedBox(width: 5),
+                                              hasRating
+                                                  ? Row(
+                                                      children: [
+                                                        const Icon(
+                                                            Icons
+                                                                .circle_rounded,
+                                                            size: 5),
+                                                        const SizedBox(
+                                                            width: 5),
+                                                        const Icon(
+                                                            Icons.star_rounded,
+                                                            color:
+                                                                kPrimaryColor),
+                                                        Text(
+                                                            '${centerList[index].rating}')
+                                                      ],
+                                                    )
+                                                  : Container(),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                );
-                              }),
-                            ),
-                          );
-                        } else if (snapshot.hasError) {
-                          return Column(
-                            children: [
-                              Text('Oops'),
-                              Text('Có lỗi xảy ra rồi!'),
-                            ],
-                          );
-                        }
-                        return Container();
-                      },
+                                  );
+                                }),
+                              ),
+                            );
+                          } else if (snapshot.hasError) {
+                            return Column(
+                              children: [
+                                Text('Oops'),
+                                Text('Có lỗi xảy ra rồi!'),
+                              ],
+                            );
+                          }
+                          return Container();
+                        },
+                      ),
                     ),
                   ],
                 ),
