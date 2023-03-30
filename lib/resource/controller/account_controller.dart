@@ -92,7 +92,7 @@ class AccountController {
       if (statusCode == 17) {
         return new LoginResponseModel(
             statusCode: 17,
-            message: "admin can not login on mobile",
+            message: "Admin không thể đăng nhập vào mobile",
             data: null);
       }
       if (statusCode == 0) {

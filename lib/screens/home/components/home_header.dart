@@ -163,47 +163,35 @@ class _HomeHeaderState extends State<HomeHeader> {
             width: size.width,
             height: 45,
             child: ElevatedButton(
-                onPressed: () {
-                  // Navigator.push(
-                  //     context,
-                  //     PageTransition(
-                  //         child: const ListCenterScreen(
-                  //           pageName: 'Tìm tiệm giặt',
-                  //           isNearby: false,
-                  //           isSearch: true,
-                  //         ),
-                  //         type: PageTransitionType.fade));
-                  // showSearch(
-                  //   context: context,
-                  //   delegate: CustomSearch(),
-                  // );
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const SearchCenterScreen()));
-                },
-                style: ElevatedButton.styleFrom(
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30)),
-                    backgroundColor: Colors.grey.shade200),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.search_rounded,
-                      color: kPrimaryColor,
-                    ),
-                    SizedBox(width: 10),
-                    Text(
-                      'Tìm tiệm giặt',
-                      style: TextStyle(
-                          fontSize: 18.0,
-                          color: Colors.grey.shade500,
-                          fontWeight: FontWeight.w400),
-                    ),
-                  ],
-                )),
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const SearchCenterScreen()));
+              },
+              style: ElevatedButton.styleFrom(
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30)),
+                  backgroundColor: Colors.grey.shade200),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(
+                    Icons.search_rounded,
+                    color: kPrimaryColor,
+                  ),
+                  SizedBox(width: 10),
+                  Text(
+                    'Tìm tiệm giặt',
+                    style: TextStyle(
+                        fontSize: 18.0,
+                        color: Colors.grey.shade700,
+                        fontWeight: FontWeight.w400),
+                  ),
+                ],
+              ),
+            ),
           ),
         ],
       ),

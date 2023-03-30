@@ -20,6 +20,7 @@ class _OnboardingState extends State<Onboarding> {
 
   @override
   void initState() {
+    //centerController.getCenterResponseModel('', '', '', '');
     super.initState();
   }
 

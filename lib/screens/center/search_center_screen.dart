@@ -26,7 +26,7 @@ class _SearchCenterScreenState extends State<SearchCenterScreen> {
   List<LaundryCenter> suggetsList = [];
 
   void getListCenter() async {
-    centerList = await centerController.getCenterList();
+    centerList = await centerController.getCenterList('', '', '', '', '');
   }
 
   void getSuggest(String value) {
