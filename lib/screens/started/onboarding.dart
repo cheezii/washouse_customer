@@ -20,7 +20,6 @@ class _OnboardingState extends State<Onboarding> {
 
   @override
   void initState() {
-    //centerController.getCenterListSearch('Dr');
     super.initState();
   }
 

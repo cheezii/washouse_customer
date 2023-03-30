@@ -13,7 +13,7 @@ import '../../../resource/controller/map_controller.dart';
 import '../../center/component/list_center_skeleton.dart';
 import '../../center/list_center_screen.dart';
 import '../current_location_screen.dart';
-import 'search_bar_home.dart';
+import '../../center/search_center_screen.dart';
 
 class HomeHeader extends StatefulWidget {
   const HomeHeader({
@@ -26,12 +26,12 @@ class HomeHeader extends StatefulWidget {
 
 class _HomeHeaderState extends State<HomeHeader> {
   final mapController = MapUserController();
+  CenterController centerController = CenterController();
 
   List<LaundryCenter> centerLists = [];
 
   Position? _currentPosition;
   String _currentAddress = "";
-  String _searchText = "";
   bool isLoading = true;
 
   List<LaundryCenter>? centers;
@@ -173,10 +173,14 @@ class _HomeHeaderState extends State<HomeHeader> {
                   //           isSearch: true,
                   //         ),
                   //         type: PageTransitionType.fade));
-                  showSearch(
-                    context: context,
-                    delegate: CustomSearch(),
-                  );
+                  // showSearch(
+                  //   context: context,
+                  //   delegate: CustomSearch(),
+                  // );
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const SearchCenterScreen()));
                 },
                 style: ElevatedButton.styleFrom(
                     elevation: 0,
