@@ -105,7 +105,7 @@ class _HomeHeaderState extends State<HomeHeader> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Padding(
-      padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
+      padding: const EdgeInsets.only(left: 16, right: 16, top: 10),
       child: Column(
         children: [
           Row(

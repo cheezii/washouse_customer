@@ -99,97 +99,97 @@ class _LoginState extends State<Login> {
                   height: 45,
                   child: ElevatedButton(
                     onPressed: () async {
-                      _errorMessage = null;
-                      _responseMessage = null;
-                      if (phoneController.text.isEmpty &&
-                          passwordController.text.isEmpty) {
-                        _errorMessage =
-                            "Số điện thoại và mật khẩu không được để trống";
-                      } else if (phoneController.text.isEmpty &&
-                          !passwordController.text.isEmpty) {
-                        _errorMessage = "Số điện thoại không được để trống";
-                      }
-                      if (!phoneController.text.isEmpty &&
-                          passwordController.text.isEmpty) {
-                        _errorMessage = "Mật khẩu không được để trống";
-                      }
+                      // _errorMessage = null;
+                      // _responseMessage = null;
+                      // if (phoneController.text.isEmpty &&
+                      //     passwordController.text.isEmpty) {
+                      //   _errorMessage =
+                      //       "Số điện thoại và mật khẩu không được để trống";
+                      // } else if (phoneController.text.isEmpty &&
+                      //     !passwordController.text.isEmpty) {
+                      //   _errorMessage = "Số điện thoại không được để trống";
+                      // }
+                      // if (!phoneController.text.isEmpty &&
+                      //     passwordController.text.isEmpty) {
+                      //   _errorMessage = "Mật khẩu không được để trống";
+                      // }
 
-                      LoginResponseModel? responseModel =
-                          await accountController.login(
-                              phoneController.text, passwordController.text);
-                      if (responseModel != null) {
-                        if (responseModel.statusCode == 17) {
-                          _responseMessage =
-                              "Admin không thể đăng nhập trên mobile";
-                        } else if (responseModel.statusCode == 10) {
-                          _responseMessage = "Sai số điện thoại hoặc mật khẩu";
-                          print(_responseMessage);
-                        } else {
-                          CurrentUser currentUserModel =
-                              await accountController.getCurrentUser();
-                          if (currentUserModel != null) {
-                            baseController.saveStringtoSharedPreference(
-                                "CURRENT_USER_NAME", currentUserModel.name);
-                            baseController.saveStringtoSharedPreference(
-                                "CURRENT_USER_EMAIL", currentUserModel.email);
-                            baseController.saveStringtoSharedPreference(
-                                "CURRENT_USER_AVATAR", currentUserModel.avatar);
-                            baseController.saveStringtoSharedPreference(
-                                "CURRENT_USER_ID", currentUserModel.accountId);
-                          }
-                          Navigator.push(
-                              context,
-                              PageTransition(
-                                  child: const BaseScreen(),
-                                  type: PageTransitionType.fade));
-                        }
-                      }
-                      if (_errorMessage == null) {
-                        _errorMessage = "";
-                      }
-                      if (_responseMessage == null) {
-                        _responseMessage = "";
-                      }
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Container(
-                            padding: const EdgeInsets.all(16),
-                            height: 90,
-                            decoration: const BoxDecoration(
-                              color: Color(0xffc72c41),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(20)),
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text(
-                                  'Oops',
-                                  style: TextStyle(
-                                      fontSize: 18, color: Colors.white),
-                                ),
-                                Text(
-                                  "$_errorMessage",
-                                  style: const TextStyle(
-                                      fontSize: 12, color: Colors.white),
-                                  maxLines: 2,
-                                  overflow: TextOverflow.clip,
-                                ),
-                                Text(
-                                  "$_responseMessage",
-                                  style: const TextStyle(
-                                      fontSize: 12, color: Colors.white),
-                                  maxLines: 2,
-                                  overflow: TextOverflow.clip,
-                                )
-                              ],
-                            ),
-                          ),
-                          behavior: SnackBarBehavior.floating,
-                          backgroundColor: Colors.transparent,
-                          elevation: 0,
-                        ),
-                      );
+                      // LoginResponseModel? responseModel =
+                      //     await accountController.login(
+                      //         phoneController.text, passwordController.text);
+                      // if (responseModel != null) {
+                      //   if (responseModel.statusCode == 17) {
+                      //     _responseMessage =
+                      //         "Admin không thể đăng nhập trên mobile";
+                      //   } else if (responseModel.statusCode == 10) {
+                      //     _responseMessage = "Sai số điện thoại hoặc mật khẩu";
+                      //     print(_responseMessage);
+                      //   } else {
+                      //     CurrentUser currentUserModel =
+                      //         await accountController.getCurrentUser();
+                      //     if (currentUserModel != null) {
+                      //       baseController.saveStringtoSharedPreference(
+                      //           "CURRENT_USER_NAME", currentUserModel.name);
+                      //       baseController.saveStringtoSharedPreference(
+                      //           "CURRENT_USER_EMAIL", currentUserModel.email);
+                      //       baseController.saveStringtoSharedPreference(
+                      //           "CURRENT_USER_AVATAR", currentUserModel.avatar);
+                      //       baseController.saveStringtoSharedPreference(
+                      //           "CURRENT_USER_ID", currentUserModel.accountId);
+                      //     }
+                      Navigator.push(
+                          context,
+                          PageTransition(
+                              child: const BaseScreen(),
+                              type: PageTransitionType.fade));
+                      //   }
+                      // }
+                      // if (_errorMessage == null) {
+                      //   _errorMessage = "";
+                      // }
+                      // if (_responseMessage == null) {
+                      //   _responseMessage = "";
+                      // }
+                      // ScaffoldMessenger.of(context).showSnackBar(
+                      //   SnackBar(
+                      //     content: Container(
+                      //       padding: const EdgeInsets.all(16),
+                      //       height: 90,
+                      //       decoration: const BoxDecoration(
+                      //         color: Color(0xffc72c41),
+                      //         borderRadius:
+                      //             BorderRadius.all(Radius.circular(20)),
+                      //       ),
+                      //       child: Column(
+                      //         crossAxisAlignment: CrossAxisAlignment.start,
+                      //         children: [
+                      //           const Text(
+                      //             'Oops',
+                      //             style: TextStyle(
+                      //                 fontSize: 18, color: Colors.white),
+                      //           ),
+                      //           Text(
+                      //             "$_errorMessage",
+                      //             style: const TextStyle(
+                      //                 fontSize: 12, color: Colors.white),
+                      //             maxLines: 2,
+                      //             overflow: TextOverflow.clip,
+                      //           ),
+                      //           Text(
+                      //             "$_responseMessage",
+                      //             style: const TextStyle(
+                      //                 fontSize: 12, color: Colors.white),
+                      //             maxLines: 2,
+                      //             overflow: TextOverflow.clip,
+                      //           )
+                      //         ],
+                      //       ),
+                      //     ),
+                      //     behavior: SnackBarBehavior.floating,
+                      //     backgroundColor: Colors.transparent,
+                      //     elevation: 0,
+                      //   ),
+                      // );
                     },
                     style: ElevatedButton.styleFrom(
                         shape: RoundedRectangleBorder(

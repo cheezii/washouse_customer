@@ -138,6 +138,9 @@ class _CenterDetailScreenState extends State<CenterDetailScreen> {
                                   image: items[index].image,
                                   description: items[index].description,
                                   price: items[index].price,
+                                  press: () => Navigator.pushNamed(
+                                      context, '/serviceDetails',
+                                      arguments: items[index]),
                                 ),
                               ),
                             ),

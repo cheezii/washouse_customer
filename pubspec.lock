@@ -5,18 +5,18 @@ packages:
     dependency: transitive
     description:
       name: _fe_analyzer_shared
-      sha256: "98d1d33ed129b372846e862de23a0fc365745f4d7b5e786ce667fcbbb7ac5c07"
+      sha256: a36ec4843dc30ea6bf652bf25e3448db6c5e8bcf4aa55f063a5d1dad216d8214
       url: "https://pub.dev"
     source: hosted
-    version: "55.0.0"
+    version: "58.0.0"
   analyzer:
     dependency: transitive
     description:
       name: analyzer
-      sha256: "881348aed9b0b425882c97732629a6a31093c8ff20fc4b3b03fb9d3d50a3a126"
+      sha256: cc4242565347e98424ce9945c819c192ec0838cb9d1f6aa4a97cc96becbc5b27
       url: "https://pub.dev"
     source: hosted
-    version: "5.7.1"
+    version: "5.10.0"
   anim_search_bar:
     dependency: "direct main"
     description:
@@ -29,10 +29,10 @@ packages:
     dependency: "direct main"
     description:
       name: animated_bottom_navigation_bar
-      sha256: a26653d88e005f80469b6e4c1a68115f65b4d0d6bb948607feed6eb5d6cdb84d
+      sha256: "241307d13d3b1eeb2768017af906a0132e7a4569298d9e96a111faf154d6bf26"
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.0+1"
+    version: "1.2.0"
   archive:
     dependency: transitive
     description:
@@ -221,18 +221,18 @@ packages:
     dependency: transitive
     description:
       name: dart_style
-      sha256: "5be16bf1707658e4c03078d4a9b90208ded217fb02c163e207d334082412f2fb"
+      sha256: "6d691edde054969f0e0f26abb1b30834b5138b963793e56f69d3a9a4435e6352"
       url: "https://pub.dev"
     source: hosted
-    version: "2.2.5"
+    version: "2.3.0"
   dio:
     dependency: transitive
     description:
       name: dio
-      sha256: "3e5c4a94d112540d0c9a6b7f3969832e1604eb8cde0f88d0808382f9f632100b"
+      sha256: "0894a098594263fe1caaba3520e3016d8a855caeb010a882273189cca10f11e9"
       url: "https://pub.dev"
     source: hosted
-    version: "5.0.3"
+    version: "5.1.1"
   fake_async:
     dependency: transitive
     description:
@@ -359,26 +359,26 @@ packages:
     dependency: transitive
     description:
       name: flutter_osm_interface
-      sha256: "5e05bd08b16748fbc2a5d6ba859cf2f205dab1f40160080a17d7968ed14d43e6"
+      sha256: "68a4c0280413a0491b9ed7bc8f035ffa954579fc277d8daf4c12bbc395110fcc"
       url: "https://pub.dev"
     source: hosted
-    version: "0.3.4"
+    version: "0.3.5"
   flutter_osm_plugin:
     dependency: "direct main"
     description:
       name: flutter_osm_plugin
-      sha256: fc2a30e419827935da4fc565d4949c7a09723ca866de84339e9e4e7dd3823ed9
+      sha256: "66331e0ba72fa517d4630e0595f42adc42f0720ca994f8ff812c995ac4032cb2"
       url: "https://pub.dev"
     source: hosted
-    version: "0.53.1"
+    version: "0.53.2"
   flutter_osm_web:
     dependency: transitive
     description:
       name: flutter_osm_web
-      sha256: "11a6573a149047231514037a7b9d294a491ddc9d6f991da0cf66ee684e804d99"
+      sha256: "5453a90a2543662f4438ada91f3969a812b81f56861d7c37b70dceb651e02cf4"
       url: "https://pub.dev"
     source: hosted
-    version: "0.2.4"
+    version: "0.2.5"
   flutter_otp:
     dependency: "direct main"
     description:
@@ -545,10 +545,10 @@ packages:
     dependency: transitive
     description:
       name: google_identity_services_web
-      sha256: "5d9af2f1fa192f2629a266d038ee9307b0abe729a4f1b454dd21b414f5e7d381"
+      sha256: "7940fdc3b1035db4d65d387c1bdd6f9574deaa6777411569c05ecc25672efacd"
       url: "https://pub.dev"
     source: hosted
-    version: "0.2.0"
+    version: "0.2.1"
   google_maps_flutter:
     dependency: "direct main"
     description:
@@ -681,10 +681,10 @@ packages:
     dependency: transitive
     description:
       name: image_picker
-      sha256: "64b21d9f0e065f9ab0e4dde458076226c97382cc0c6949144cb874c62bf8e9f8"
+      sha256: cb25f04595a88450970dbe727243ba8cd21b6f7e0d7d1fc5b789fc6f52e95494
       url: "https://pub.dev"
     source: hosted
-    version: "0.8.7"
+    version: "0.8.7+1"
   image_picker_android:
     dependency: transitive
     description:
@@ -705,10 +705,10 @@ packages:
     dependency: transitive
     description:
       name: image_picker_ios
-      sha256: "50e882fe0a06bf0c8f7f5bce78d30975f279213293afc9471dc35f05617c50ff"
+      sha256: d4cb8ab04f770dab9d04c7959e5f6d22e8c5280343d425f9344f93832cf58445
       url: "https://pub.dev"
     source: hosted
-    version: "0.8.7+1"
+    version: "0.8.7+2"
   image_picker_platform_interface:
     dependency: transitive
     description:
@@ -869,6 +869,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.1"
+  percent_indicator:
+    dependency: "direct main"
+    description:
+      name: percent_indicator
+      sha256: c37099ad833a883c9d71782321cb65c3a848c21b6939b6185f0ff6640d05814c
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.2.3"
   permission_handler:
     dependency: transitive
     description:

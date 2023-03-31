@@ -7,6 +7,7 @@ import 'package:washouse_customer/screens/started/login.dart';
 
 import '../../components/constants/text_constants.dart';
 import '../../resource/controller/center_controller.dart';
+import '../../utils/price_util.dart';
 
 class Onboarding extends StatefulWidget {
   const Onboarding({super.key});
@@ -25,9 +26,6 @@ class _OnboardingState extends State<Onboarding> {
 
   @override
   void initState() {
-    //centerController.getCenterResponseModel('', '', '', '');
-    serviceController.getServiceListByCenterId(2);
-    //categoryController.getCategoriesList();
     super.initState();
   }
 

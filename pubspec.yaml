@@ -37,6 +37,8 @@ dependencies:
   skeleton_animation: ^0.1.4
   intl: ^0.17.0-nullsafety.2
   shared_preferences: 
+  percent_indicator: ^4.2.3
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter
