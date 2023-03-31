@@ -123,7 +123,8 @@ class _HomescreenState extends State<Homescreen> {
                     ),
                     GridView.builder(
                       shrinkWrap: true,
-                      itemCount: categoryList.length,
+                      itemCount:
+                          categoryList.length > 8 ? 8 : categoryList.length,
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 4,

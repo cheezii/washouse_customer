@@ -28,15 +28,28 @@ class CategoryCard extends StatelessWidget {
                   //color: Colors.white,
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: Image.asset(icon),
+                child: ClipOval(
+                  child: Image.network(icon, fit: BoxFit.cover),
+                ),
               ),
             ),
             const SizedBox(height: 5),
-            Text(
-              text,
-              textAlign: TextAlign.center,
-              style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
-            )
+            Expanded(
+              // wrap the Text widget in an Expanded widget
+              child: Text(
+                text,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 12,
+                ),
+              ),
+            ),
+            // Text(
+            //   text,
+            //   textAlign: TextAlign.center,
+            //   style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 12),
+            // )
           ],
         ),
       ),
