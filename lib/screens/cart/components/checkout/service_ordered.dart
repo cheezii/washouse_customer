@@ -31,19 +31,19 @@ class ServiceOrdered extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 10),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 26),
-          child: ListView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: demoCarts.length,
-            itemBuilder: (context, index) {
-              return CheckoutItemCard(
-                cart: demoCarts[index],
-              );
-            },
-          ),
-        ),
+        //   Container(
+        //     padding: const EdgeInsets.symmetric(horizontal: 26),
+        //     child: ListView.builder(
+        //       shrinkWrap: true,
+        //       physics: const NeverScrollableScrollPhysics(),
+        //       itemCount: demoCarts.length,
+        //       itemBuilder: (context, index) {
+        //         return CheckoutItemCard(
+        //           cart: demoCarts[index],
+        //         );
+        //       },
+        //     ),
+        //   ),
       ],
     );
   }

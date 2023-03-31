@@ -164,10 +164,9 @@ class OrderDetailScreen extends StatelessWidget {
                               Image.asset('assets/images/shipping/ship-di.png'),
                         ),
                         const SizedBox(width: 8),
-                        Text(
+                        const Text(
                           'Không sử dụng dịch vụ vận chuyển',
-                          style: TextStyle(
-                              fontSize: 16, color: Colors.grey.shade600),
+                          style: TextStyle(fontSize: 16),
                         ),
                       ],
                     ),
@@ -367,7 +366,7 @@ class OrderDetailScreen extends StatelessWidget {
                             ],
                           ),
                         )
-                      : Container(),
+                      : SizedBox(width: 0, height: 0),
                   isConfirm
                       ? SizedBox(
                           width: 190,
@@ -384,11 +383,11 @@ class OrderDetailScreen extends StatelessWidget {
                             ),
                           ),
                         )
-                      : Container(),
+                      : SizedBox(width: 0, height: 0),
                 ],
               ),
             )
-          : Container(),
+          : SizedBox(width: 0, height: 0),
     );
   }
 

@@ -25,9 +25,9 @@ class _CheckOutCardState extends State<CheckOutCard> {
     //   total += demoCarts[i].numOfItems * demoCarts[i].service.price;
     // }
     ValueNotifier<double> total = ValueNotifier<double>(0);
-    for (var item in demoCarts) {
-      total.value += item.numOfItems.value * item.service.price;
-    }
+    // for (var item in demoCarts) {
+    //   total.value += item.numOfItems.value * item.service.price;
+    // }
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
       height: 174,
@@ -103,28 +103,28 @@ class _CheckOutCardState extends State<CheckOutCard> {
                   );
                 }),
               ),
-              SizedBox(
-                width: 190,
-                height: 40,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0)),
-                      backgroundColor: kPrimaryColor),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      PageTransition(
-                          child: const FillAddressScreen(),
-                          type: PageTransitionType.rightToLeftWithFade),
-                    );
-                  },
-                  child: Text(
-                    'Thanh toán (${demoCarts.length})',
-                    style: const TextStyle(fontSize: 17),
-                  ),
-                ),
-              )
+              // SizedBox(
+              //   width: 190,
+              //   height: 40,
+              //   child: ElevatedButton(
+              //     style: ElevatedButton.styleFrom(
+              //         shape: RoundedRectangleBorder(
+              //             borderRadius: BorderRadius.circular(10.0)),
+              //         backgroundColor: kPrimaryColor),
+              //     onPressed: () {
+              //       Navigator.push(
+              //         context,
+              //         PageTransition(
+              //             child: const FillAddressScreen(),
+              //             type: PageTransitionType.rightToLeftWithFade),
+              //       );
+              //     },
+              //     child: Text(
+              //       'Thanh toán (${demoCarts.length})',
+              //       style: const TextStyle(fontSize: 17),
+              //     ),
+              //   ),
+              // )
             ],
           )
         ],

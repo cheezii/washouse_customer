@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 
 import '../../../components/constants/color_constants.dart';
 
-class ListCenter extends StatelessWidget {
+class CenterContainer extends StatelessWidget {
   final String? thumbnail;
   final String? name;
   final num? distance;
   final num? rating;
   final GestureTapCallback press;
   final bool hasRating;
-  const ListCenter({
+  const CenterContainer({
     Key? key,
     this.thumbnail,
     this.name,

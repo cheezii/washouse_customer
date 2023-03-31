@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:washouse_customer/screens/center/center_details_screen.dart';
 import 'package:washouse_customer/screens/started/onboarding.dart';
 
 void main() {
@@ -13,9 +14,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     HttpOverrides.global = MyHttpOverrides();
-    return const MaterialApp(
+    return MaterialApp(
       title: 'Washouse',
-      home: SafeArea(child: Onboarding()),
+      initialRoute: '/',
+      routes: {
+        '/centerDetails': (context) => const CenterDetailScreen(),
+      },
+      home: const SafeArea(child: Onboarding()),
       debugShowCheckedModeBanner: false,
     );
   }
