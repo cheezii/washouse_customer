@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:washouse_customer/components/constants/color_constants.dart';
 import 'package:washouse_customer/components/constants/size.dart';
+import 'package:washouse_customer/resource/models/request_models/filter_center_model.dart';
 import 'package:washouse_customer/screens/started/login.dart';
 
 import '../../components/constants/text_constants.dart';
@@ -20,7 +21,13 @@ class _OnboardingState extends State<Onboarding> {
 
   @override
   void initState() {
-    //centerController.getCenterResponseModel('', '', '', '');
+    FilterCenterRequest filterCenterRequest = FilterCenterRequest();
+    filterCenterRequest.page = 1;
+    filterCenterRequest.pageSize = 10;
+    filterCenterRequest.currentUserLatitude = 0;
+    filterCenterRequest.currentUserLatitude = 0;
+    filterCenterRequest.hasDelivery = true;
+    centerController.getCenterList(filterCenterRequest);
     super.initState();
   }
 

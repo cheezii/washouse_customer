@@ -5,8 +5,12 @@ import 'package:washouse_customer/resource/models/current_user.dart';
 import 'package:washouse_customer/resource/models/map_user.dart';
 import 'package:washouse_customer/resource/models/response_models/LoginResponseModel.dart';
 import 'package:washouse_customer/resource/models/token.dart';
+import 'package:washouse_customer/resource/controller/base_controller.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../components/constants/text_constants.dart';
+
+BaseController baseController = BaseController();
 
 class AccountController {
   Future register(String phone, pass, conpass) async {
@@ -45,17 +49,23 @@ class AccountController {
   }
 
   Future<CurrentUser> getCurrentUser() async {
-    Response response_currentUser =
-        await get(Uri.parse('$baseUrl/accounts/me'));
     CurrentUser currentUser = new CurrentUser();
     try {
-      if (response_currentUser.statusCode == 200) {
-        currentUser = jsonDecode(response_currentUser.body)['data'];
+      String url = '$baseUrl/accounts/me';
+      http.Response response =
+          await baseController.makeAuthenticatedRequest(url, {});
+      print(response.statusCode);
+      if (response.statusCode == 200) {
+        // Handle successful response
+        currentUser = CurrentUser?.fromJson(jsonDecode(response.body)["data"]);
+        print(currentUser.name);
+        // Do something with the user data...
       } else {
-        throw Exception("Lỗi khi load Json");
+        // Handle error response
+        throw Exception('Error fetching user data: ${response.statusCode}');
       }
     } catch (e) {
-      print('error: $e');
+      print('error: getCurrentUser-$e');
     }
     return currentUser;
   }
@@ -75,19 +85,12 @@ class AccountController {
           "access-control-allow-origin": "*",
         },
       );
-
+      print("a");
       var statusCode = jsonDecode(response.body)["statusCode"];
       var message = jsonDecode(response.body)["message"];
       if (statusCode == 10) {
         return new LoginResponseModel(
             statusCode: 10, message: message, data: null);
-      }
-      Token? token = jsonDecode(response.body)["data"] != null
-          ? Token?.fromJson(jsonDecode(response.body)["data"])
-          : null;
-      if (token != null) {
-        responseModel = new LoginResponseModel(
-            statusCode: statusCode, message: message, data: token);
       }
       if (statusCode == 17) {
         return new LoginResponseModel(
@@ -95,8 +98,22 @@ class AccountController {
             message: "Admin không thể đăng nhập vào mobile",
             data: null);
       }
-      if (statusCode == 0) {
-        final accessToken = token?.accessToken;
+
+      Token? token = jsonDecode(response.body)["data"] != null
+          ? Token?.fromJson(jsonDecode(response.body)["data"])
+          : null;
+      if (token != null) {
+        responseModel = new LoginResponseModel(
+            statusCode: statusCode, message: message, data: token);
+      }
+      if (statusCode == 0 && token != null) {
+        var accessToken = token.accessToken;
+        print(accessToken);
+        var refreshToken = token.refreshToken;
+        if (accessToken != null && refreshToken != null) {
+          await baseController.saveAccessToken(accessToken);
+          await baseController.saveRefreshToken(refreshToken);
+        }
       }
     } catch (e) {
       print('error: $e');

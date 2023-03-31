@@ -10,9 +10,12 @@ import 'package:washouse_customer/resource/controller/center_controller.dart';
 import 'package:washouse_customer/resource/controller/location_controller.dart';
 import 'package:washouse_customer/resource/controller/map_controller.dart';
 import 'package:washouse_customer/screens/home/components/nearby_center_home_skeleton.dart';
+import '../../resource/controller/category_controller.dart';
+import '../../resource/models/category.dart';
 import '../../resource/models/post.dart';
 import 'package:washouse_customer/resource/models/center.dart';
 import '../center/list_center_screen.dart';
+import 'components/category_card.dart';
 import 'components/home_header.dart';
 
 class Homescreen extends StatefulWidget {
@@ -24,8 +27,11 @@ class Homescreen extends StatefulWidget {
 
 class _HomescreenState extends State<Homescreen> {
   CenterController centerController = CenterController();
+  CategoryController categoryController = CategoryController();
   bool isLoading = true;
   bool isAcceptLocation = true;
+  bool isLoadingCate = true;
+  List<ServiceCategory> categoryList = [];
 
   Future<bool> _handleLocationPermission() async {
     bool serviceEnabled;
@@ -67,9 +73,19 @@ class _HomescreenState extends State<Homescreen> {
     }
   }
 
+  void getCategory() async {
+    categoryList = await categoryController.getCategoriesList();
+    if (categoryList.isNotEmpty) {
+      setState(() {
+        isLoadingCate = false;
+      });
+    }
+  }
+
   @override
   void initState() {
     getPermissionLocation();
+    getCategory();
     super.initState();
   }
 
@@ -105,24 +121,24 @@ class _HomescreenState extends State<Homescreen> {
                         )
                       ],
                     ),
-                    // GridView.builder(
-                    //   shrinkWrap: true,
-                    //   itemCount: 12,
-                    //   gridDelegate:
-                    //       const SliverGridDelegateWithFixedCrossAxisCount(
-                    //     crossAxisCount: 4,
-                    //     childAspectRatio: 0.8,
-                    //     crossAxisSpacing: 15,
-                    //     mainAxisSpacing: 15,
-                    //   ),
-                    //   itemBuilder: ((context, index) {
-                    //     return CategoryCard(
-                    //       icon: categoryList[index].thumbnail,
-                    //       text: categoryList[index].name,
-                    //       press: () {},
-                    //     );
-                    //   }),
-                    // ),
+                    GridView.builder(
+                      shrinkWrap: true,
+                      itemCount: categoryList.length,
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 4,
+                        childAspectRatio: 0.8,
+                        crossAxisSpacing: 15,
+                        mainAxisSpacing: 15,
+                      ),
+                      itemBuilder: ((context, index) {
+                        return CategoryCard(
+                          icon: categoryList[index].image!,
+                          text: categoryList[index].categoryName!,
+                          press: () {},
+                        );
+                      }),
+                    ),
                   ],
                 ),
               ),
