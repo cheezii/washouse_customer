@@ -11,7 +11,7 @@ class CategoryController {
     Response response = await get(Uri.parse('$baseUrl/service-categories'));
     try {
       if (response.statusCode == 200) {
-        var data = jsonDecode(response.body) as List;
+        var data = jsonDecode(response.body)["data"] as List;
         cateList = data.map((e) => ServiceCategory.fromJson(e)).toList();
       } else {
         throw Exception("Lỗi khi load Json");
