@@ -21,12 +21,11 @@ class SearchCenterScreen extends StatefulWidget {
 class _SearchCenterScreenState extends State<SearchCenterScreen> {
   CenterController centerController = CenterController();
   final TextEditingController _filter = TextEditingController();
-  String _searchText = '';
   List<LaundryCenter> centerList = [];
   List<LaundryCenter> suggetsList = [];
 
   void getListCenter() async {
-    centerList = await centerController.getCenterList('', '', '', '', '');
+    centerList = await centerController.getCenterNearby(); //cho nay sua lai
   }
 
   void getSuggest(String value) {

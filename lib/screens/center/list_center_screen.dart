@@ -14,6 +14,7 @@ import 'package:washouse_customer/screens/home/base_screen.dart';
 import '../../components/constants/color_constants.dart';
 import '../../resource/models/center.dart';
 import 'component/center_container.dart';
+import '../../resource/models/request_models/filter_center_model.dart';
 import 'search_center_screen.dart';
 import 'component/list_center_skeleton.dart';
 
@@ -42,6 +43,7 @@ class _ListCenterScreenState extends State<ListCenterScreen> {
   TextEditingController maxBudgetController = TextEditingController();
 
   Future<List<LaundryCenter>>? listAction;
+  FilterCenterRequest _filter = FilterCenterRequest();
 
   List<LaundryCenter> allCenter = [];
   List<LaundryCenter> suggesCenter = [];
@@ -64,6 +66,8 @@ class _ListCenterScreenState extends State<ListCenterScreen> {
   bool isAcceptLocation = false;
 
   int countCateChoosen = 0;
+  // late List<LaundryCenter> _centers;
+  // bool _isLoading = true;
 
   void getPermissionLocation() async {
     isAcceptLocation = await mapUserController.handleLocationPermission();
@@ -100,25 +104,54 @@ class _ListCenterScreenState extends State<ListCenterScreen> {
     super.dispose();
   }
 
+  // Future<void> _fetchLaundryCenters(FilterCenterRequest filter) async {
+  //   try {
+  //     final centers = await centerController.getCenterList(filter);
+  //     setState(() {
+  //       _centers = centers;
+  //     });
+  //   } catch (e) {
+  //     // Handle errors
+  //   } finally {
+  //     setState(() {
+  //       _isLoading = false;
+  //     });
+  //   }
+  // }
+
   @override
   void initState() {
     getCategory();
     getPermissionLocation();
     super.initState();
+
+    // // Fetch the laundry centers on screen load
+    // final filter = FilterCenterRequest(
+    //   page: 1,
+    //   pageSize: 1000,
+    //   sort: 'location',
+    // );
+    // _fetchLaundryCenters(filter);
   }
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     searchController.text = widget.pageName!;
-    if (widget.isNearby) {
-      listAction = centerController.getCenterNearby();
-    } else if (searchController.text.isNotEmpty) {
-      listAction =
-          centerController.getCenterList(searchController.text, '', '', '', '');
-    } else {
-      listAction = centerController.getCenterList('', '', '', '', '');
+    _filter.searchString = widget.pageName!;
+    if (widget.pageName! == "Tiệm giặt gần đây") {
+      _filter.searchString = null;
+      _filter.sort = "location";
     }
+    listAction = centerController.getCenterList(_filter);
+    // if (widget.isNearby) {
+    //   listAction = centerController.getCenterNearby();
+    // } else if (searchController.text.isNotEmpty) {
+    //   listAction =
+    //       centerController.getCenterList(1, 1000, null, null, null,searchController.text, '', '', '', '');
+    // } else {
+    //   listAction = centerController.getCenterList('', '', '', '', '');
+    // }
     //if (isAcceptLocation) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -552,13 +585,15 @@ class _ListCenterScreenState extends State<ListCenterScreen> {
                       String errorMsg = '';
                       int min = int.parse(minBudgetController.text);
                       int max = int.parse(maxBudgetController.text);
-                      print(min);
+                      _filter.budgetRange = "$min-$max";
+                      print(_filter.budgetRange);
                       if (min > max) {
                         errorMsg = 'Giá tối thiểu phải nhỏ hơn giá tối đa';
                       }
                       if (min < 0 || max < 0) {
                         errorMsg = 'Giá cả không thể bé hơn 0!';
                       }
+                      print(errorMsg);
                       if (errorMsg.isNotEmpty) {
                         AlertDialog(
                           title: const Text('Oops'),
@@ -664,7 +699,9 @@ class _ListCenterScreenState extends State<ListCenterScreen> {
                                   cateListChoose.add(cateList[index]);
                                   filterCate =
                                       'Loại dịch vụ (${cateListChoose.length})';
-                                  print(cateListChoose.length);
+                                  _filter.categoryServices = cateListChoose
+                                      .map((cate) => cate.id.toString())
+                                      .join(',');
                                 });
                                 this.setState(() {
                                   boxCateColor = selectedColor;
@@ -676,8 +713,14 @@ class _ListCenterScreenState extends State<ListCenterScreen> {
                                   this.setState(() {
                                     filterCate =
                                         'Loại dịch vụ (${cateListChoose.length})';
+                                    _filter.categoryServices = cateListChoose
+                                        .map((cate) => cate.id.toString())
+                                        .join(',');
+
+                                    print(_filter.categoryServices);
                                     if (cateListChoose.length == 0) {
                                       this.setState(() {
+                                        _filter.categoryServices = null;
                                         boxCateColor = Colors.white;
                                         filterCate = 'Loại dịch vụ';
                                       });
@@ -804,6 +847,7 @@ class _ListCenterScreenState extends State<ListCenterScreen> {
                         Navigator.pop(context);
                         setState(() {
                           sortedBy = value;
+                          _filter.sort = "location";
                         });
                         this.setState(() {
                           sortChoosen = value.toString();
@@ -821,6 +865,7 @@ class _ListCenterScreenState extends State<ListCenterScreen> {
                         Navigator.pop(context);
                         setState(() {
                           sortedBy = value;
+                          _filter.sort = "rating";
                         });
                         this.setState(() {
                           sortChoosen = value.toString();
@@ -837,6 +882,7 @@ class _ListCenterScreenState extends State<ListCenterScreen> {
                       onPressed: () {
                         setState(() {
                           sortedBy = null;
+                          _filter.sort = null;
                         });
                         this.setState(() {
                           sortChoosen = 'Sắp xếp theo';
