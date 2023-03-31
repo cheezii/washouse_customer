@@ -171,6 +171,14 @@ class _CenterDetailScreenState extends State<CenterDetailScreen> {
           _buildInfoColumn(),
         ],
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        backgroundColor: kPrimaryColor,
+        focusColor: sPrimaryColor,
+        hoverElevation: 50,
+        tooltip: 'Nhắn tin',
+        child: const Icon(Icons.chat_rounded),
+      ),
     );
   }
 
@@ -214,42 +222,10 @@ class _CenterDetailScreenState extends State<CenterDetailScreen> {
                     ? BoxInfo(
                         size: size,
                         icon: 'assets/images/shipping/ship-di.png',
-                        title: 'Dịch vụ vận chuyển',
-                        pressText: 'Xem thêm',
+                        title: 'Có hỗ trợ dịch vụ vận chuyển',
+                        pressText: '',
                         press: () {
-                          showModalBottomSheet(
-                              context: context,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20.0)),
-                              builder: ((context) {
-                                return Container(
-                                  height: 500,
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 10, horizontal: 10),
-                                  child: Column(
-                                    children: [
-                                      Row(
-                                        children: [
-                                          IconButton(
-                                              icon: const Icon(
-                                                  Icons.close_rounded),
-                                              onPressed: () {
-                                                Navigator.pop(context);
-                                              }),
-                                          const SizedBox(width: 70),
-                                          const Text(
-                                            'Dịch vụ vận chuyển',
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.w600),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              }));
+                          //showDeliveryModalBottomSheet();
                         },
                       )
                     : BoxInfo(
@@ -333,6 +309,40 @@ class _CenterDetailScreenState extends State<CenterDetailScreen> {
         ),
       ),
     );
+  }
+
+  Future<dynamic> showDeliveryModalBottomSheet() {
+    return showModalBottomSheet(
+        context: context,
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+        builder: ((context) {
+          return Container(
+            height: 500,
+            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    IconButton(
+                        icon: const Icon(Icons.close_rounded),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        }),
+                    const SizedBox(width: 70),
+                    const Text(
+                      'Dịch vụ vận chuyển',
+                      textAlign: TextAlign.center,
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+                    ),
+                  ],
+                ),
+                Divider(thickness: 1, color: Colors.grey.shade300),
+              ],
+            ),
+          );
+        }));
   }
 
   Widget _buildCircleMoreInfo() {

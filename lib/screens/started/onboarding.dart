@@ -20,6 +20,7 @@ class _OnboardingState extends State<Onboarding> {
   CenterController centerController = CenterController();
   ServiceController serviceController = ServiceController();
   CategoryController categoryController = CategoryController();
+  TimeOfDay timeNow = TimeOfDay.now();
   int currentIndex = 0;
 
   @override
