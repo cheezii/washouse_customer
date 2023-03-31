@@ -11,8 +11,8 @@ class Cart {
   });
 }
 
-List<Cart> demoCarts = [
-  Cart(service: demoServices[0], numOfItems: ValueNotifier<int>(1)),
-  Cart(service: demoServices[1], numOfItems: ValueNotifier<int>(3)),
-  Cart(service: demoServices[2], numOfItems: ValueNotifier<int>(2)),
-];
+// List<Cart> demoCarts = [
+//   Cart(service: demoServices[0], numOfItems: ValueNotifier<int>(1)),
+//   Cart(service: demoServices[1], numOfItems: ValueNotifier<int>(3)),
+//   Cart(service: demoServices[2], numOfItems: ValueNotifier<int>(2)),
+// ];

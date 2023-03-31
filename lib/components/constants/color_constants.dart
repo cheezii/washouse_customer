@@ -13,3 +13,4 @@ Color confirmingColor = Colors.yellow.shade300;
 Color processingColor = Colors.blue.shade400;
 Color shippingColor = Colors.orange.shade400;
 Color completeColor = Colors.green.shade400;
+const almostCloseColor = Color.fromARGB(255, 200, 172, 14);

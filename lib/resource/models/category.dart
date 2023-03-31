@@ -1,4 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:washouse_customer/resource/models/service.dart';
+
 class ServiceCategory {
   int? id;
   String? categoryName;
@@ -7,11 +9,11 @@ class ServiceCategory {
   String? image;
   bool? status;
   bool? homeFlag;
-  //List<Null>? services;
+  List<Service>? services;
   String? createdDate;
   String? createdBy;
-  Null? updatedDate;
-  Null? updatedBy;
+  String? updatedDate;
+  String? updatedBy;
 
   ServiceCategory(
       {this.id,
@@ -21,7 +23,7 @@ class ServiceCategory {
       this.image,
       this.status,
       this.homeFlag,
-      //this.services,
+      this.services,
       this.createdDate,
       this.createdBy,
       this.updatedDate,
@@ -35,6 +37,12 @@ class ServiceCategory {
     image = json['image'];
     status = json['status'];
     homeFlag = json['homeFlag'];
+    if (json['services'] != null) {
+      services = <Service>[];
+      json['services'].forEach((v) {
+        services!.add(new Service.fromJson(v));
+      });
+    }
     createdDate = json['createdDate'];
     createdBy = json['createdBy'];
     updatedDate = json['updatedDate'];

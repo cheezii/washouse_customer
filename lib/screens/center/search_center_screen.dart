@@ -9,7 +9,7 @@ import '../../components/constants/text_constants.dart';
 import '../../resource/controller/center_controller.dart';
 import '../../resource/models/center.dart';
 import 'component/list_center_skeleton.dart';
-import 'component/screen_list.dart';
+import 'component/center_container.dart';
 
 class SearchCenterScreen extends StatefulWidget {
   const SearchCenterScreen({super.key});

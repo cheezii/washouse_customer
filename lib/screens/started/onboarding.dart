@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:washouse_customer/components/constants/color_constants.dart';
 import 'package:washouse_customer/components/constants/size.dart';
-import 'package:washouse_customer/resource/models/request_models/filter_center_model.dart';
+import 'package:washouse_customer/resource/controller/category_controller.dart';
+import 'package:washouse_customer/resource/controller/service_controller.dart';
 import 'package:washouse_customer/screens/started/login.dart';
 
 import '../../components/constants/text_constants.dart';
@@ -17,17 +18,15 @@ class Onboarding extends StatefulWidget {
 class _OnboardingState extends State<Onboarding> {
   final PageController _pageController = PageController(initialPage: 0);
   CenterController centerController = CenterController();
+  ServiceController serviceController = ServiceController();
+  CategoryController categoryController = CategoryController();
   int currentIndex = 0;
 
   @override
   void initState() {
-    FilterCenterRequest filterCenterRequest = FilterCenterRequest();
-    filterCenterRequest.page = 1;
-    filterCenterRequest.pageSize = 10;
-    filterCenterRequest.currentUserLatitude = 0;
-    filterCenterRequest.currentUserLatitude = 0;
-    filterCenterRequest.hasDelivery = true;
-    centerController.getCenterList(filterCenterRequest);
+    //centerController.getCenterResponseModel('', '', '', '');
+    serviceController.getServiceListByCenterId(2);
+    //categoryController.getCategoriesList();
     super.initState();
   }
 

@@ -12,7 +12,6 @@ class CategoryController {
     try {
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body) as List;
-        //print(data);
         cateList = data.map((e) => ServiceCategory.fromJson(e)).toList();
       } else {
         throw Exception("Lỗi khi load Json");

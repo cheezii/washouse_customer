@@ -13,10 +13,10 @@ import 'package:washouse_customer/screens/home/base_screen.dart';
 
 import '../../components/constants/color_constants.dart';
 import '../../resource/models/center.dart';
+import 'component/center_container.dart';
 import '../../resource/models/request_models/filter_center_model.dart';
 import 'search_center_screen.dart';
 import 'component/list_center_skeleton.dart';
-import 'component/screen_list.dart';
 
 class ListCenterScreen extends StatefulWidget {
   final String? pageName;
@@ -403,14 +403,19 @@ class _ListCenterScreenState extends State<ListCenterScreen> {
                             centerList[index].rating != null ? true : false;
                         return Padding(
                           padding: const EdgeInsets.symmetric(vertical: 10),
-                          child: ListCenter(
-                              thumbnail: centerList[index].thumbnail!,
-                              name: centerList[index].title!,
-                              distance: centerList[index].distance!,
-                              rating:
-                                  hasRating ? centerList[index].rating! : null,
-                              hasRating: hasRating,
-                              press: () {}),
+                          child: CenterContainer(
+                            thumbnail: centerList[index].thumbnail!,
+                            name: centerList[index].title!,
+                            distance: centerList[index].distance!,
+                            rating:
+                                hasRating ? centerList[index].rating! : null,
+                            hasRating: hasRating,
+                            press: () => Navigator.pushNamed(
+                              context,
+                              '/centerDetails',
+                              arguments: centerList[index],
+                            ),
+                          ),
                         );
                       }),
                     );
@@ -641,10 +646,11 @@ class _ListCenterScreenState extends State<ListCenterScreen> {
       BuildContext context, Size size) {
     return showModalBottomSheet(
       context: context,
+      isScrollControlled: true,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
       builder: (context) => Container(
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-        height: 900,
+        height: 700,
         child: StatefulBuilder(
           builder: (context, setState) => Stack(children: [
             CustomScrollView(
@@ -817,7 +823,7 @@ class _ListCenterScreenState extends State<ListCenterScreen> {
                   Row(
                     children: [
                       IconButton(
-                          icon: Icon(Icons.close_rounded),
+                          icon: const Icon(Icons.close_rounded),
                           onPressed: () {
                             Navigator.pop(context);
                           }),
