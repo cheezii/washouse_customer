@@ -2,6 +2,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:washouse_customer/screens/cart/cart_screen.dart';
 import 'package:washouse_customer/screens/center/center_details_screen.dart';
 import 'package:washouse_customer/screens/started/onboarding.dart';
 
@@ -23,6 +24,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/centerDetails': (context) => const CenterDetailScreen(),
         '/serviceDetails': (context) => const ServiceDetailScreen(),
+        '/cart': (context) => const CartScreen(),
       },
       home: const SafeArea(child: Onboarding()),
       debugShowCheckedModeBanner: false,

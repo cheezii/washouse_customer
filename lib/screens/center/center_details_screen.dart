@@ -113,6 +113,11 @@ class _CenterDetailScreenState extends State<CenterDetailScreen> {
               //   ),
               //   pinned: true,
               // ),
+              SliverToBoxAdapter(
+                child: SizedBox(
+                  height: 15,
+                ),
+              ),
               SliverList(
                 delegate: SliverChildBuilderDelegate(
                   (context, categoryIndex) {

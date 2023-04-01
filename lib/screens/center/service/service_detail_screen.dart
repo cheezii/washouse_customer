@@ -185,7 +185,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                           ),
                         ],
                       ),
-                      Container(
+                      SizedBox(
                         width: 200.0,
                         height: 120,
                         child: ListView.builder(
@@ -199,9 +199,9 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                                   '${index + 1}',
                                   style: TextStyle(fontSize: 18.0),
                                 ),
-                                SizedBox(width: 4.0),
-                                Icon(Icons.star, color: kPrimaryColor),
-                                SizedBox(width: 8.0),
+                                const SizedBox(width: 4.0),
+                                const Icon(Icons.star, color: kPrimaryColor),
+                                const SizedBox(width: 8.0),
                                 LinearPercentIndicator(
                                   lineHeight: 6.0,
                                   // linearStrokeCap: LinearStrokeCap.roundAll,
@@ -222,111 +222,137 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                 ],
               ),
             ),
-          )
+          ),
         ],
       ),
-      bottomNavigationBar: Container(
-        padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
-        height: 70,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(30), topRight: Radius.circular(30)),
-          boxShadow: [
-            BoxShadow(
-              offset: const Offset(0, -15),
-              blurRadius: 20,
-              color: const Color(0xffdadada).withOpacity(0.15),
+      bottomNavigationBar: SingleChildScrollView(
+        reverse: true,
+        child: Column(children: [
+          Container(
+            padding: EdgeInsets.only(
+              left: 30,
+              right: 30,
             ),
-          ],
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            checkPriceType
-                ? Row(
-                    children: [
-                      Container(
-                        height: 50,
-                        width: size.width / 6,
-                        decoration: BoxDecoration(
-                          border: Border.all(width: 1),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: const TextField(
-                          textAlign: TextAlign.center,
-                          keyboardType: TextInputType.number,
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: 'Số ký',
-                            hintStyle: TextStyle(
-                              fontSize: 18,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+              boxShadow: [
+                BoxShadow(
+                  offset: const Offset(0, -15),
+                  blurRadius: 20,
+                  color: const Color(0xffdadada).withOpacity(0.15),
+                ),
+              ],
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                checkPriceType
+                    ? Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          SizedBox(
+                            height: 90,
+                            width: size.width / 6,
+                            child: const Align(
+                              alignment: Alignment.center,
+                              child: SizedBox(
+                                height: 50,
+                                child: TextField(
+                                  textAlign: TextAlign.center,
+                                  keyboardType: TextInputType.number,
+                                  decoration: InputDecoration(
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                          color: Colors.black, width: 1),
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(10)),
+                                    ),
+                                    contentPadding: EdgeInsets.all(0),
+                                    hintText: 'Số ký',
+                                    hintStyle: TextStyle(
+                                      fontSize: 18,
+                                      height: 1.4,
+                                    ),
+                                  ),
+                                  cursorHeight: 17,
+                                  style: TextStyle(
+                                    height: 1,
+                                    fontSize: 18,
+                                  ),
+                                ),
+                              ),
                             ),
                           ),
-                          cursorHeight: 17,
-                          style: TextStyle(
-                            height: 1,
-                            fontSize: 18,
+                          const SizedBox(width: 15),
+                          const Text(
+                            'kg',
+                            style: TextStyle(fontSize: 18),
                           ),
-                        ),
-                      ),
-                      const SizedBox(width: 5),
-                      const Text(
-                        'kg',
-                        style: TextStyle(fontSize: 18),
+                          const SizedBox(width: 15),
+                        ],
                       )
-                    ],
-                  )
-                : Row(
-                    children: [
-                      Container(
-                        width: 25,
-                        height: 25,
-                        decoration: BoxDecoration(
-                          color: Colors.grey.shade300,
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        child: const Icon(Icons.remove,
-                            color: Colors.white, size: 15),
+                    : Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Container(
+                            width: 25,
+                            height: 25,
+                            decoration: BoxDecoration(
+                              color: Colors.grey.shade300,
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            child: const Icon(Icons.remove,
+                                color: Colors.white, size: 15),
+                          ),
+                          Container(
+                            height: 90,
+                            padding: EdgeInsets.symmetric(horizontal: 15),
+                            child: Align(
+                              alignment: Alignment.center,
+                              child: Text(
+                                '1',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 18),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            width: 25,
+                            height: 25,
+                            decoration: BoxDecoration(
+                              color: kPrimaryColor,
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            child: const Icon(Icons.add,
+                                color: Colors.white, size: 15),
+                          ),
+                          const SizedBox(width: 15),
+                        ],
                       ),
-                      const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 10),
-                        child: Text(
-                          '1',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 18),
-                        ),
-                      ),
-                      Container(
-                        width: 25,
-                        height: 25,
-                        decoration: BoxDecoration(
-                          color: kPrimaryColor.withOpacity(.8),
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        child: const Icon(Icons.add,
-                            color: Colors.white, size: 15),
-                      ),
-                    ],
+                SizedBox(
+                  width: 230,
+                  height: 50,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0)),
+                        backgroundColor: kPrimaryColor),
+                    onPressed: () {},
+                    child: const Text(
+                      'Đặt dịch vụ',
+                      style: TextStyle(fontSize: 17),
+                    ),
                   ),
-            const Spacer(),
-            SizedBox(
-              width: 230,
-              height: 40,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0)),
-                    backgroundColor: kPrimaryColor),
-                onPressed: () {},
-                child: const Text(
-                  'Đặt dịch vụ',
-                  style: TextStyle(fontSize: 17),
                 ),
-              ),
+              ],
             ),
-          ],
-        ),
+          ),
+          Padding(
+              padding: EdgeInsets.only(
+                  bottom: MediaQuery.of(context).viewInsets.bottom))
+        ]),
       ),
     );
   }

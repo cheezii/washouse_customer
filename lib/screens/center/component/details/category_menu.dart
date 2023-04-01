@@ -6,6 +6,7 @@ import 'package:washouse_customer/resource/models/service.dart';
 
 class ServiceDemo {
   final String name;
+  final int id;
   final String image;
   final num price;
   final String description;
@@ -14,6 +15,7 @@ class ServiceDemo {
     required this.image,
     required this.price,
     required this.description,
+    required this.id,
   });
 }
 
@@ -31,6 +33,7 @@ List<CategoryMenu> demoCateList = [
     categoryName: 'Dịch vụ giặt ủi',
     item: [
       ServiceDemo(
+        id: 1,
         name: 'abcde',
         image: 'assets/images/placeholder.png',
         price: 12000,
@@ -38,6 +41,7 @@ List<CategoryMenu> demoCateList = [
             "A text button is a label child displayed on a (zero elevation) Material widget. The label's Text and Icon widgets are displayed in the style's ButtonStyle.",
       ),
       ServiceDemo(
+        id: 2,
         name: 'abcde',
         image: 'assets/images/placeholder.png',
         price: 12000,
@@ -50,6 +54,7 @@ List<CategoryMenu> demoCateList = [
     categoryName: 'Dịch vụ giặt sấy',
     item: [
       ServiceDemo(
+        id: 3,
         name: 'abcde',
         image: 'assets/images/placeholder.png',
         price: 12000,
@@ -57,6 +62,7 @@ List<CategoryMenu> demoCateList = [
             "A text button is a label child displayed on a (zero elevation) Material widget. The label's Text and Icon widgets are displayed in the style's ButtonStyle.",
       ),
       ServiceDemo(
+        id: 4,
         name: 'abcde',
         image: 'assets/images/placeholder.png',
         price: 12000,
@@ -69,6 +75,7 @@ List<CategoryMenu> demoCateList = [
     categoryName: 'Dịch vụ giặt áo',
     item: [
       ServiceDemo(
+        id: 5,
         name: 'abcde',
         image: 'assets/images/placeholder.png',
         price: 12000,
@@ -76,6 +83,7 @@ List<CategoryMenu> demoCateList = [
             "A text button is a label child displayed on a (zero elevation) Material widget. The label's Text and Icon widgets are displayed in the style's ButtonStyle.",
       ),
       ServiceDemo(
+        id: 6,
         name: 'abcde',
         image: 'assets/images/placeholder.png',
         price: 12000,

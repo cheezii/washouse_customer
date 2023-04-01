@@ -78,30 +78,30 @@ class OrderCard extends StatelessWidget {
                   ],
                 ),
               ),
-              // SizedBox(
-              //   width: 190,
-              //   height: 40,
-              //   child: ElevatedButton(
-              //     style: ElevatedButton.styleFrom(
-              //         shape: RoundedRectangleBorder(
-              //             borderRadius: BorderRadius.circular(10.0)),
-              //         backgroundColor: kPrimaryColor),
-              //     onPressed: () {
-              //       Navigator.push(
-              //         context,
-              //         PageTransition(
-              //             child: CheckoutScreen(
-              //               cart: demoCarts[0],
-              //             ),
-              //             type: PageTransitionType.leftToRightWithFade),
-              //       );
-              //     },
-              //     child: const Text(
-              //       'Đặt dịch vụ',
-              //       style: TextStyle(fontSize: 17),
-              //     ),
-              //   ),
-              // )
+              SizedBox(
+                width: 190,
+                height: 40,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0)),
+                      backgroundColor: kPrimaryColor),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      PageTransition(
+                          child: CheckoutScreen(
+                            cart: demoCarts[0],
+                          ),
+                          type: PageTransitionType.leftToRightWithFade),
+                    );
+                  },
+                  child: const Text(
+                    'Đặt dịch vụ',
+                    style: TextStyle(fontSize: 17),
+                  ),
+                ),
+              )
             ],
           )
         ],
