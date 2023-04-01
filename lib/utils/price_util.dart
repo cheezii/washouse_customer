@@ -15,8 +15,6 @@ class PriceUtils {
       '${priceString.substring(stringLength - stringLength, stringLength - 9)}.${priceString.substring(stringLength - 9, stringLength - 6)}.${priceString.substring(stringLength - 6, stringLength - 3)}.$lastThreeChars';
     }
 
-    print(priceConvert);
-
     return priceConvert;
   }
 }

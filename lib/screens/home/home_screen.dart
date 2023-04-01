@@ -205,7 +205,11 @@ class _HomescreenState extends State<Homescreen> {
                                           ? true
                                           : false;
                                   return GestureDetector(
-                                    onTap: () {},
+                                    onTap: () => Navigator.pushNamed(
+                                      context,
+                                      '/centerDetails',
+                                      arguments: centerList[index],
+                                    ),
                                     child: Container(
                                       width: 170,
                                       margin: const EdgeInsets.symmetric(

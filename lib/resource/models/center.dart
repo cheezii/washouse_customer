@@ -1,4 +1,6 @@
 //ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'service.dart';
+
 class LaundryCenter {
   int? id;
   String? thumbnail;
@@ -73,18 +75,23 @@ class LaundryCenter {
 class CenterServices {
   int? serviceCategoryID;
   String? serviceCategoryName;
-  //Null? services;
+  List<Service>? services;
 
   CenterServices({
     this.serviceCategoryID,
     this.serviceCategoryName,
-    //this.services,
+    this.services,
   });
 
   CenterServices.fromJson(Map<String, dynamic> json) {
     serviceCategoryID = json['serviceCategoryID'];
     serviceCategoryName = json['serviceCategoryName'];
-    //services = json['services'];
+    if (json['services'] != null) {
+      services = <Service>[];
+      json['services'].forEach((v) {
+        services!.add(new Service.fromJson(v));
+      });
+    }
   }
 }
 

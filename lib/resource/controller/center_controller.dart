@@ -8,6 +8,7 @@ import 'package:washouse_customer/resource/controller/base_controller.dart';
 import 'package:washouse_customer/resource/models/center.dart';
 import 'package:washouse_customer/resource/models/request_models/filter_center_model.dart';
 import 'package:washouse_customer/resource/models/response_models/center_response_model.dart';
+import 'package:washouse_customer/resource/models/service.dart';
 
 import '../../components/constants/text_constants.dart';
 
@@ -15,6 +16,7 @@ BaseController baseController = BaseController();
 
 class CenterController {
   List<LaundryCenter> centerList = [];
+  List<Service> serviceList = [];
   //     } else {
   //       throw Exception("Lỗi khi load Json");
   //     }
@@ -107,5 +109,22 @@ class CenterController {
       print('error: $e');
     }
     return centerList;
+  }
+
+  Future<LaundryCenter> getCenterById(int centerId) async {
+    Response response = await get(Uri.parse('$baseUrl/centers/$centerId'));
+    LaundryCenter center = LaundryCenter();
+
+    try {
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body)['data'];
+        center = LaundryCenter.fromJson(data);
+      } else {
+        throw Exception("Lỗi khi load Json");
+      }
+    } catch (e) {
+      print('get service error: $e');
+    }
+    return center;
   }
 }

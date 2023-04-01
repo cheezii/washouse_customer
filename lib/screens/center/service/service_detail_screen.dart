@@ -1,23 +1,36 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:percent_indicator/percent_indicator.dart';
+
 import 'package:washouse_customer/components/constants/color_constants.dart';
 import 'package:washouse_customer/screens/center/component/details/category_menu.dart';
-import 'package:percent_indicator/percent_indicator.dart';
 
 import '../../../utils/price_util.dart';
 
 class ServiceDetailScreen extends StatefulWidget {
-  const ServiceDetailScreen({super.key});
+  final serviceData;
+  const ServiceDetailScreen({
+    Key? key,
+    this.serviceData,
+  }) : super(key: key);
 
   @override
   State<ServiceDetailScreen> createState() => _ServiceDetailScreenState();
 }
 
 class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
+  ServiceDemo serviceArgs = ServiceDemo();
+
+  @override
+  void initState() {
+    super.initState();
+    serviceArgs = widget.serviceData;
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    final arguments = ModalRoute.of(context)!.settings.arguments as ServiceDemo;
     List<double> ratings = [0.1, 0.3, 0.5, 0.7, 0.9];
     bool checkPriceType = true;
 
@@ -32,7 +45,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
             backgroundColor: Colors.white,
             flexibleSpace: FlexibleSpaceBar(
               background: Image.asset(
-                arguments.image,
+                serviceArgs.image!,
                 fit: BoxFit.cover,
               ),
             ),
@@ -63,7 +76,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                   SizedBox(
                     width: size.width * 0.6,
                     child: Text(
-                      arguments.name,
+                      serviceArgs.name!,
                       style: const TextStyle(
                           fontWeight: FontWeight.w600, fontSize: 26),
                       maxLines: 2,
@@ -73,7 +86,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                   SizedBox(
                     width: size.width * 0.2,
                     child: Text(
-                      '${PriceUtils().convertFormatPrice(arguments.price)} đ',
+                      '${PriceUtils().convertFormatPrice(serviceArgs.price!)} đ',
                       style: const TextStyle(
                         color: kPrimaryColor,
                         fontSize: 20,
@@ -103,7 +116,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                   ),
                   const SizedBox(height: 10),
                   Text(
-                    arguments.description,
+                    serviceArgs.description!,
                     style: const TextStyle(fontSize: 17, color: textColor),
                     maxLines: 3,
                   ),
@@ -289,8 +302,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                           const Text(
                             'kg',
                             style: TextStyle(fontSize: 18),
-                          ),
-                          const SizedBox(width: 15),
+                          )
                         ],
                       )
                     : Row(

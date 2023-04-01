@@ -1,7 +1,9 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 
 import 'package:flutter/material.dart';
+import 'package:skeletons/skeletons.dart';
 import 'package:washouse_customer/components/constants/color_constants.dart';
+import 'package:washouse_customer/resource/controller/center_controller.dart';
 import 'package:washouse_customer/resource/controller/service_controller.dart';
 
 import 'package:washouse_customer/resource/models/center.dart';
@@ -15,7 +17,8 @@ import 'component/details/box_info.dart';
 import 'component/details/menu_item_card.dart';
 
 class CenterDetailScreen extends StatefulWidget {
-  const CenterDetailScreen({super.key});
+  final centerData;
+  const CenterDetailScreen({super.key, this.centerData});
 
   @override
   State<CenterDetailScreen> createState() => _CenterDetailScreenState();
@@ -24,13 +27,16 @@ class CenterDetailScreen extends StatefulWidget {
 class _CenterDetailScreenState extends State<CenterDetailScreen> {
   late ScrollController _scrollController;
   ServiceController serviceController = ServiceController();
+  CenterController centerController = CenterController();
 
   CategoryMenu? menu;
-  List<Service> serviceList = [];
+  LaundryCenter centerArgs = LaundryCenter();
+  LaundryCenter centerDetails = LaundryCenter();
+  CenterServices serviceOfCenter = CenterServices();
 
   DateTime now = DateTime.now();
 
-  void getServiceOfCenter() async {}
+  bool isLoadingDetail = true;
 
   @override
   void initState() {
@@ -38,16 +44,33 @@ class _CenterDetailScreenState extends State<CenterDetailScreen> {
     _scrollController.addListener(() {
       setState(() {});
     });
+
     super.initState();
+    centerArgs = widget.centerData;
+    Future.delayed(Duration(milliseconds: 1), () {
+      getCenterDetail();
+    });
+  }
+
+  void getCenterDetail() async {
+    LaundryCenter center = widget.centerData;
+    centerController.getCenterById(center.id!).then(
+      (result) {
+        setState(() {
+          centerDetails = result;
+          isLoadingDetail = false;
+        });
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    final arguments =
-        ModalRoute.of(context)!.settings.arguments as LaundryCenter;
 
-    serviceController.getServiceListByCenterId(arguments.id!);
+    print(centerDetails.title);
+
+    //centerDetails.centerServices![0].services![0].serviceName; mẫu lấy service của center
 
     return Scaffold(
       body: Stack(
@@ -63,7 +86,7 @@ class _CenterDetailScreenState extends State<CenterDetailScreen> {
                 backgroundColor: Colors.white,
                 flexibleSpace: FlexibleSpaceBar(
                   background: Image.network(
-                    arguments.thumbnail!,
+                    centerArgs.thumbnail!,
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -139,10 +162,10 @@ class _CenterDetailScreenState extends State<CenterDetailScreen> {
                               (index) => Padding(
                                 padding: const EdgeInsets.all(5),
                                 child: MenuItemCard(
-                                  title: items[index].name,
-                                  image: items[index].image,
-                                  description: items[index].description,
-                                  price: items[index].price,
+                                  title: items[index].name!,
+                                  image: items[index].image!,
+                                  description: items[index].description!,
+                                  price: items[index].price!,
                                   press: () => Navigator.pushNamed(
                                       context, '/serviceDetails',
                                       arguments: items[index]),
@@ -153,21 +176,6 @@ class _CenterDetailScreenState extends State<CenterDetailScreen> {
                         ],
                       ),
                     );
-                    // return Column(
-                    //   children: List.generate(
-                    //     items.length,
-                    //     (index) => Padding(
-                    //       padding: const EdgeInsets.symmetric(
-                    //           horizontal: 16, vertical: 5),
-                    //       child: MenuItemCard(
-                    //         title: items[index].name,
-                    //         image: items[index].image,
-                    //         description: items[index].description,
-                    //         price: items[index].price,
-                    //       ),
-                    //     ),
-                    //   ),
-                    // );
                   },
                   childCount: demoCateList.length,
                 ),
@@ -192,8 +200,6 @@ class _CenterDetailScreenState extends State<CenterDetailScreen> {
 
   Widget _buildInfoColumn() {
     Size size = MediaQuery.of(context).size;
-    final arguments =
-        ModalRoute.of(context)!.settings.arguments as LaundryCenter;
     double defaultMargin = 377;
     double defaultStart = 100;
     double defaultEnd = defaultStart / 2;
@@ -214,8 +220,8 @@ class _CenterDetailScreenState extends State<CenterDetailScreen> {
         scale = 0;
     }
 
-    bool isHasDelivery = CenterUtils().checkHasDelivery(arguments);
-    bool isHasRating = CenterUtils().checkHasRating(arguments);
+    bool isHasDelivery = CenterUtils().checkHasDelivery(centerArgs);
+    bool isHasRating = CenterUtils().checkHasRating(centerArgs);
 
     return Positioned(
       top: top,
@@ -274,7 +280,7 @@ class _CenterDetailScreenState extends State<CenterDetailScreen> {
                       isHasRating
                           ? Row(
                               children: [
-                                Text('${arguments.rating}',
+                                Text('${centerArgs.rating}',
                                     style: TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.w600,
@@ -283,7 +289,7 @@ class _CenterDetailScreenState extends State<CenterDetailScreen> {
                                 const Icon(Icons.circle_rounded, size: 3),
                                 const SizedBox(width: 5),
                                 Text(
-                                  '${arguments.numOfRating} lượt đánh giá',
+                                  '${centerArgs.numOfRating} lượt đánh giá',
                                   style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w600,
@@ -397,12 +403,10 @@ class _CenterDetailScreenState extends State<CenterDetailScreen> {
   }
 
   Future<dynamic> showInfoModalBottomSheet(BuildContext context) {
-    final arguments =
-        ModalRoute.of(context)!.settings.arguments as LaundryCenter;
     Size size = MediaQuery.of(context).size;
 
     var centerOperatingHoursList =
-        arguments.centerOperatingHours as List<CenterOperatingHours>;
+        centerArgs.centerOperatingHours as List<CenterOperatingHours>;
 
     Map<int, String> weekdayName = {
       1: "Thứ hai",
@@ -457,7 +461,7 @@ class _CenterDetailScreenState extends State<CenterDetailScreen> {
                       const SizedBox(height: 10),
                       Expanded(
                         child: Text(
-                          arguments.centerAddress!,
+                          centerArgs.centerAddress!,
                           maxLines: 2,
                           style: TextStyle(fontSize: 16),
                         ),
@@ -524,8 +528,6 @@ class _CenterDetailScreenState extends State<CenterDetailScreen> {
   }
 
   Widget _buildCardInfo() {
-    final arguments =
-        ModalRoute.of(context)!.settings.arguments as LaundryCenter;
     Size size = MediaQuery.of(context).size;
     double defaultMargin = 220;
     double defaultStart = 100;
@@ -558,9 +560,9 @@ class _CenterDetailScreenState extends State<CenterDetailScreen> {
     }
 
     CenterOperatingHours centerOperatingHours = CenterOperatingHours();
-    centerOperatingHours = arguments.centerOperatingHours![weekdayNow];
-    String? openTime = arguments.centerOperatingHours![weekdayNow].openTime;
-    String? closedTime = arguments.centerOperatingHours![weekdayNow].closeTime;
+    centerOperatingHours = centerArgs.centerOperatingHours![weekdayNow];
+    String? openTime = centerArgs.centerOperatingHours![weekdayNow].openTime;
+    String? closedTime = centerArgs.centerOperatingHours![weekdayNow].closeTime;
     bool isBreakDay =
         TimeUtils().checkBreakDay(openTime ?? "", closedTime ?? "");
 
@@ -597,7 +599,7 @@ class _CenterDetailScreenState extends State<CenterDetailScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Text(
-                    arguments.title!,
+                    centerArgs.title!,
                     style: const TextStyle(
                       fontSize: 24,
                       color: kPrimaryColor,
@@ -608,7 +610,7 @@ class _CenterDetailScreenState extends State<CenterDetailScreen> {
                   Row(
                     children: [
                       Text(
-                        '${arguments.distance!} km',
+                        '${centerArgs.distance!} km',
                         style: TextStyle(
                             fontWeight: FontWeight.w600,
                             color: Colors.grey.shade600),
@@ -618,7 +620,7 @@ class _CenterDetailScreenState extends State<CenterDetailScreen> {
                       const SizedBox(width: 5),
                       Expanded(
                         child: Text(
-                          arguments.centerAddress!,
+                          centerArgs.centerAddress!,
                           style: TextStyle(color: Colors.grey.shade600),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -688,7 +690,7 @@ class _CenterDetailScreenState extends State<CenterDetailScreen> {
                                         ),
                                         const SizedBox(width: 5),
                                         Text(
-                                          arguments.phone!,
+                                          centerArgs.phone!,
                                           style: TextStyle(
                                               color: Colors.grey.shade600,
                                               fontSize: 16),

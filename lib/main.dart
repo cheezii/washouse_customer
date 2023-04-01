@@ -2,6 +2,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:washouse_customer/components/route/route_generator.dart';
 import 'package:washouse_customer/screens/cart/cart_screen.dart';
 import 'package:washouse_customer/screens/center/center_details_screen.dart';
 import 'package:washouse_customer/screens/started/onboarding.dart';
@@ -18,15 +19,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     HttpOverrides.global = MyHttpOverrides();
-    return MaterialApp(
+    return const MaterialApp(
       title: 'Washouse',
       initialRoute: '/',
-      routes: {
-        '/centerDetails': (context) => const CenterDetailScreen(),
-        '/serviceDetails': (context) => const ServiceDetailScreen(),
-        '/cart': (context) => const CartScreen(),
-      },
-      home: const SafeArea(child: Onboarding()),
+      onGenerateRoute: RouteGenerator.generateRoute,
+      home: SafeArea(child: Onboarding()),
       debugShowCheckedModeBanner: false,
     );
   }
