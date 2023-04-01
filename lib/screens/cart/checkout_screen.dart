@@ -24,7 +24,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   Widget build(BuildContext context) {
     double total = 0.0;
     for (int i = 0; i < demoCarts.length; i++) {
-      total += demoCarts[i].numOfItems.value * demoCarts[i].service.price;
+      total += demoCarts[i].numOfItems.value * demoCarts[i].service.price!;
     }
     int paymentIndex = 0;
     return Scaffold(

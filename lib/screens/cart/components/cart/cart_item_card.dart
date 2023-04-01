@@ -29,7 +29,7 @@ class _CartItemCardState extends State<CartItemCard> {
                 color: const Color(0xfff5f6f9),
                 borderRadius: BorderRadius.circular(15),
               ),
-              child: Image.asset(widget.cart.service.image[0]),
+              child: Image.asset(widget.cart.service.image![0]),
             ),
           ),
         ),
@@ -41,7 +41,7 @@ class _CartItemCardState extends State<CartItemCard> {
               SizedBox(
                 width: 200,
                 child: Text(
-                  widget.cart.service.name,
+                  widget.cart.service.name!,
                   style: const TextStyle(
                       fontSize: 19,
                       color: Colors.black,

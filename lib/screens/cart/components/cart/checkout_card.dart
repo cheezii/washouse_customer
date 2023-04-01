@@ -26,7 +26,7 @@ class _CheckOutCardState extends State<CheckOutCard> {
     // }
     ValueNotifier<double> total = ValueNotifier<double>(0);
     for (var item in demoCarts) {
-      total.value += item.numOfItems.value * item.service.price;
+      total.value += item.numOfItems.value * item.service.price!;
     }
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),

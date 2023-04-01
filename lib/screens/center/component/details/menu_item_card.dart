@@ -28,48 +28,79 @@ class MenuItemCard extends StatelessWidget {
         height: 120,
         child: Row(
           children: [
-            Container(
-              height: 110,
-              width: 110,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                image: DecorationImage(
-                  fit: BoxFit.cover,
-                  image: AssetImage(image),
+            // Container(
+            //   height: 110,
+            //   width: 110,
+            //   decoration: BoxDecoration(
+            //     borderRadius: BorderRadius.circular(50),
+            //   ),
+            //   child: Image.network(image, fit: BoxFit.cover),
+            //   //),
+            // ),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(
+                  10), // set your desired border radius here
+              child: Image.network(
+                image, // replace with your own image URL
+                width: 110, // set your desired width here
+                height: 110, // set your desired height here
+                fit: BoxFit
+                    .cover, // set the image fit to cover the entire container
+                loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress == null) return child;
+                  return Center(
+                    child: CircularProgressIndicator(
+                        value: loadingProgress.expectedTotalBytes != null
+                            ? loadingProgress.cumulativeBytesLoaded.toDouble() /
+                                loadingProgress.expectedTotalBytes!.toDouble()
+                            : null),
+                  );
+                }, // replace with your own loading widget
+                // ignore: prefer_const_constructors
+                errorBuilder: (context, error, stackTrace) => SizedBox(
+                  width: 110,
+                  height: 110,
+                  // ignore: prefer_const_constructors
+                  child: Icon(Icons.error),
                 ),
               ),
             ),
             const SizedBox(width: 15),
             SizedBox(
-              height: 100,
-              width: 230,
+              height: 110,
+              width: 220,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    title,
-                    style: const TextStyle(
-                        fontSize: 22, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 5),
-                  Text(
-                    description,
-                    style: const TextStyle(
-                      fontSize: 15,
+                  Expanded(
+                    // wrap the Text widget in an Expanded widget
+                    child: Text(
+                      title,
+                      style: const TextStyle(
+                          fontSize: 18, fontWeight: FontWeight.bold),
                     ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 5),
+                  Expanded(
+                    child: Text(
+                      description,
+                      style: const TextStyle(
+                        fontSize: 15,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
                   const SizedBox(height: 5),
                   Text(
-                    '${PriceUtils().convertFormatPrice(price)} đ',
+                    '${PriceUtils().convertFormatPrice(price.toInt())} đ',
                     style: const TextStyle(
                       color: kPrimaryColor,
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
                     ),
-                  )
+                  ),
                 ],
               ),
             )

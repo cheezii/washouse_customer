@@ -67,10 +67,12 @@ class _CenterDetailScreenState extends State<CenterDetailScreen> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    int listLength = centerDetails.centerServices != null
+        ? centerDetails.centerServices!.length
+        : 0;
+    print(centerDetails.centerServices!.length);
 
-    print(centerDetails.title);
-
-    //centerDetails.centerServices![0].services![0].serviceName; mẫu lấy service của center
+    //centerDetails.centerServices![0].services![0].serviceName; //mẫu lấy service của center
 
     return Scaffold(
       body: Stack(
@@ -144,7 +146,9 @@ class _CenterDetailScreenState extends State<CenterDetailScreen> {
               SliverList(
                 delegate: SliverChildBuilderDelegate(
                   (context, categoryIndex) {
-                    List<ServiceDemo> items = demoCateList[categoryIndex].item;
+                    //List<ServiceDemo> items = demoCateList[categoryIndex].item;
+                    List<Service> items =
+                        centerDetails.centerServices![categoryIndex].services!;
                     return Padding(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 16, vertical: 10),
@@ -152,7 +156,8 @@ class _CenterDetailScreenState extends State<CenterDetailScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            demoCateList[categoryIndex].categoryName,
+                            centerDetails.centerServices![categoryIndex]
+                                .serviceCategoryName!,
                             style: const TextStyle(
                                 fontSize: 20, fontWeight: FontWeight.w500),
                           ),
@@ -162,10 +167,14 @@ class _CenterDetailScreenState extends State<CenterDetailScreen> {
                               (index) => Padding(
                                 padding: const EdgeInsets.all(5),
                                 child: MenuItemCard(
-                                  title: items[index].name!,
-                                  image: items[index].image!,
+                                  title: items[index].serviceName!,
+                                  image: items[index].image == null
+                                      ? "none"
+                                      : items[index].image!,
                                   description: items[index].description!,
-                                  price: items[index].price!,
+                                  price: items[index].price == null
+                                      ? 15
+                                      : items[index].price!,
                                   press: () => Navigator.pushNamed(
                                       context, '/serviceDetails',
                                       arguments: items[index]),
@@ -173,11 +182,31 @@ class _CenterDetailScreenState extends State<CenterDetailScreen> {
                               ),
                             ),
                           )
+                          // ListView(
+                          //   children: items
+                          //       .map((item) => Padding(
+                          //             padding: const EdgeInsets.all(5),
+                          //             child: MenuItemCard(
+                          //               title: item.serviceName!,
+                          //               image: item.image == null
+                          //                   ? "haha"
+                          //                   : item.image!,
+                          //               description: item.description!,
+                          //               price: item.price == null
+                          //                   ? 15
+                          //                   : item.price!,
+                          //               press: () => Navigator.pushNamed(
+                          //                   context, '/serviceDetails',
+                          //                   arguments: item),
+                          //             ),
+                          //           ))
+                          //       .toList(),
+                          // ),
                         ],
                       ),
                     );
                   },
-                  childCount: demoCateList.length,
+                  childCount: listLength,
                 ),
               ),
             ],
