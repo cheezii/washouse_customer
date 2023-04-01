@@ -9,7 +9,7 @@ class MenuItemCard extends StatelessWidget {
   final String title;
   final String description;
   final String image;
-  final num price;
+  final String price;
   final GestureTapCallback press;
   const MenuItemCard({
     Key? key,
@@ -22,6 +22,15 @@ class MenuItemCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    num minPrice = 0;
+    num maxPrice = 0;
+    bool multiplePrice = price.contains('-');
+    if (multiplePrice) {
+      List<String> priceArr = price.split('-');
+      minPrice = double.parse(priceArr.first);
+      maxPrice = double.parse(priceArr.last);
+    }
+
     return GestureDetector(
       onTap: press,
       child: SizedBox(
@@ -94,7 +103,9 @@ class MenuItemCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 5),
                   Text(
-                    '${PriceUtils().convertFormatPrice(price.toInt())} đ',
+                    multiplePrice
+                        ? '${PriceUtils().convertFormatPrice(minPrice.toInt())} đ - ${PriceUtils().convertFormatPrice(maxPrice.toInt())} đ'
+                        : '${PriceUtils().convertFormatPrice(double.parse(price).toInt())} đ',
                     style: const TextStyle(
                       color: kPrimaryColor,
                       fontSize: 18,

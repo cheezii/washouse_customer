@@ -4,8 +4,11 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
 import 'package:washouse_customer/components/constants/color_constants.dart';
+import 'package:washouse_customer/resource/models/service.dart';
 import 'package:washouse_customer/screens/center/component/details/category_menu.dart';
 
+import '../../../resource/controller/center_controller.dart';
+import '../../../resource/controller/service_controller.dart';
 import '../../../utils/price_util.dart';
 
 class ServiceDetailScreen extends StatefulWidget {
@@ -20,7 +23,15 @@ class ServiceDetailScreen extends StatefulWidget {
 }
 
 class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
-  ServiceDemo serviceArgs = ServiceDemo();
+  Service serviceArgs = Service();
+  ServiceController serviceController = ServiceController();
+  CenterController centerController = CenterController();
+
+  Service serviceDetails = Service();
+
+  DateTime now = DateTime.now();
+
+  bool isLoadingDetail = true;
 
   @override
   void initState() {
@@ -28,12 +39,27 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
     serviceArgs = widget.serviceData;
   }
 
+  void getServiceDetail() async {
+    Service service = widget.serviceData;
+    serviceController.getServiceById(service.serviceId!.toInt()).then(
+      (result) {
+        setState(() {
+          serviceDetails = result;
+          isLoadingDetail = false;
+        });
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    List<double> ratings = [0.1, 0.3, 0.5, 0.7, 0.9];
-    bool checkPriceType = true;
-
+    List<double> ratings = [0.5, 0.3, 0.5, 0.7, 0.9];
+    bool checkUnitType = true;
+    if (!serviceArgs.priceType!) {
+      checkUnitType = false;
+    }
+    print(serviceArgs.serviceName);
     return Scaffold(
       body: CustomScrollView(
         slivers: [
@@ -44,7 +70,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
             elevation: 0,
             backgroundColor: Colors.white,
             flexibleSpace: FlexibleSpaceBar(
-              background: Image.asset(
+              background: Image.network(
                 serviceArgs.image!,
                 fit: BoxFit.cover,
               ),
@@ -76,17 +102,17 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                   SizedBox(
                     width: size.width * 0.6,
                     child: Text(
-                      serviceArgs.name!,
+                      serviceArgs.serviceName!,
                       style: const TextStyle(
-                          fontWeight: FontWeight.w600, fontSize: 26),
+                          fontWeight: FontWeight.w600, fontSize: 24),
                       maxLines: 2,
                     ),
                   ),
                   const SizedBox(width: 10),
                   SizedBox(
-                    width: size.width * 0.2,
+                    width: size.width * 0.25,
                     child: Text(
-                      '${PriceUtils().convertFormatPrice(serviceArgs.price!)} đ',
+                      '${PriceUtils().convertFormatPrice(serviceArgs.price!.toInt())} đ',
                       style: const TextStyle(
                         color: kPrimaryColor,
                         fontSize: 20,
@@ -121,7 +147,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                     maxLines: 3,
                   ),
                   const SizedBox(height: 15),
-                  const Text.rich(
+                  Text.rich(
                     TextSpan(
                       children: [
                         TextSpan(
@@ -130,7 +156,9 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                               fontWeight: FontWeight.w600, fontSize: 18),
                         ),
                         TextSpan(
-                            text: '150 phút', style: TextStyle(fontSize: 17)),
+                            text:
+                                serviceArgs.timeEstimate!.toString() + " phút",
+                            style: TextStyle(fontSize: 17)),
                       ],
                     ),
                   ),
@@ -157,11 +185,11 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                     children: [
                       Column(
                         children: [
-                          const Text.rich(
+                          Text.rich(
                             TextSpan(
                               children: [
                                 TextSpan(
-                                  text: "4.6",
+                                  text: serviceArgs.rating.toString(),
                                   style: TextStyle(
                                     fontSize: 42,
                                     fontWeight: FontWeight.w700,
@@ -179,7 +207,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                           ),
                           const SizedBox(height: 5),
                           RatingBarIndicator(
-                            rating: 4.6,
+                            rating: serviceArgs.rating!.toDouble(),
                             itemBuilder: (context, index) => const Icon(
                               Icons.star,
                               color: kPrimaryColor,
@@ -189,8 +217,8 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                             direction: Axis.horizontal,
                           ),
                           const SizedBox(height: 10.0),
-                          const Text(
-                            "13 đánh giá",
+                          Text(
+                            '${serviceArgs.numOfRating} đánh giá',
                             style: TextStyle(
                               fontSize: 18,
                               color: textColor,
@@ -261,7 +289,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                checkPriceType
+                checkUnitType
                     ? Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [

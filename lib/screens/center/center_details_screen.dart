@@ -172,9 +172,9 @@ class _CenterDetailScreenState extends State<CenterDetailScreen> {
                                       ? "none"
                                       : items[index].image!,
                                   description: items[index].description!,
-                                  price: items[index].price == null
-                                      ? 15
-                                      : items[index].price!,
+                                  price: items[index].priceType!
+                                      ? '${items[index].prices!.last.price}-${items[index].prices!.first.price}'
+                                      : items[index].price!.toString(),
                                   press: () => Navigator.pushNamed(
                                       context, '/serviceDetails',
                                       arguments: items[index]),

@@ -112,6 +112,33 @@ class CenterController {
   }
 
   Future<LaundryCenter> getCenterById(int centerId) async {
+    // Position position = await Geolocator.getCurrentPosition();
+    // final queryParameters = {
+    //   "currentUserLatitude": position.latitude,
+    //   "currentUserLongitude": position.longitude
+    // };
+    // LaundryCenter center = LaundryCenter();
+
+    // try {
+    //   final url = "$baseUrl/centers/$centerId";
+
+    //   print(queryParameters);
+    //   Response response =
+    //       await baseController.makeAuthenticatedRequest(url, queryParameters);
+    //   print(response.statusCode);
+    //   if (response.statusCode == 200) {
+    //     var data = jsonDecode(response.body)['data'];
+    //     // Handle successful response
+    //     center = LaundryCenter.fromJson(data);
+    //     // Do something with the user data...
+    //   } else {
+    //     // Handle error response
+    //     throw Exception('Error fetching user data: ${response.statusCode}');
+    //   }
+    // } catch (e) {
+    //   print('error: getCenterDetail: $e');
+    // }
+    // return center;
     Response response = await get(Uri.parse('$baseUrl/centers/$centerId'));
     LaundryCenter center = LaundryCenter();
 

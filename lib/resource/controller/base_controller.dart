@@ -51,6 +51,7 @@ class BaseController {
         'Authorization': 'Bearer $accessToken',
       },
     );
+    print(url + queryParams.keys.first);
     if (response.statusCode == 401) {
       // If the access token is expired, use the refresh token to get a new one
       String refreshToken = await getRefreshToken();
