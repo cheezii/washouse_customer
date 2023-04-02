@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../components/constants/color_constants.dart';
-import '../../../../resource/models/cart.dart';
+import '../../../../resource/models/cart_item.dart';
 import 'checkout_item_card.dart';
 
 class ServiceOrdered extends StatelessWidget {
