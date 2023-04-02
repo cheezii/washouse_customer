@@ -1,5 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:provider/provider.dart';
@@ -77,11 +78,25 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
     List<double> ratings = [0.5, 0.3, 0.5, 0.7, 0.9];
     CartItem cartItem;
     double? productPrice;
-    bool checkUnitType;
+    bool checkUnitType = false;
+    bool checkRatingNull = false;
+    bool checkPriceType = false;
+    int PriceMin = 0;
+    int PriceMax = 0;
+    double? _selectedValue;
 
-    if (!serviceArgs.priceType!) {
-      checkUnitType = false;
-    } else {
+    List<double> _values = [];
+
+    if (serviceArgs.rating == null) {
+      checkRatingNull = true;
+    }
+    if (serviceArgs.priceType!) {
+      checkPriceType = true;
+      for (var i = 1; i < (serviceArgs.prices!.last.maxValue! * 10 + 1); i++) {
+        _values.add(i / 10);
+      }
+    }
+    if (serviceArgs.unit != null && serviceArgs.unit == "Kg") {
       checkUnitType = true;
     }
 
@@ -134,19 +149,19 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                     ),
                   ),
                   const SizedBox(width: 10),
-                  !checkUnitType
-                      ? SizedBox(
-                          width: size.width * 0.25,
-                          child: Text(
-                            '${PriceUtils().convertFormatPrice(serviceArgs.price!.toInt())} đ',
-                            style: const TextStyle(
-                              color: kPrimaryColor,
-                              fontSize: 20,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        )
-                      : SizedBox(width: 0, height: 0),
+                  SizedBox(
+                    width: size.width * 0.25,
+                    child: Text(
+                      checkPriceType
+                          ? '${PriceUtils().convertFormatPrice(serviceArgs.prices!.last.price!.toInt())} đ - ${PriceUtils().convertFormatPrice(serviceArgs.prices!.first.price!.toInt())} đ'
+                          : '${PriceUtils().convertFormatPrice(serviceArgs.price!.toInt())} đ',
+                      style: const TextStyle(
+                        color: kPrimaryColor,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -207,86 +222,96 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                     style: TextStyle(fontWeight: FontWeight.w600, fontSize: 22),
                   ),
                   const SizedBox(height: 15),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        children: [
-                          Text.rich(
-                            TextSpan(
+                  !checkRatingNull
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
                               children: [
-                                TextSpan(
-                                  text: serviceArgs.rating.toString(),
-                                  style: TextStyle(
-                                    fontSize: 42,
-                                    fontWeight: FontWeight.w700,
+                                Text.rich(
+                                  TextSpan(
+                                    children: [
+                                      TextSpan(
+                                        text: serviceArgs.rating!.toString(),
+                                        style: TextStyle(
+                                          fontSize: 42,
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                      ),
+                                      TextSpan(
+                                        text: " / 5",
+                                        style: TextStyle(
+                                          fontSize: 24.0,
+                                          color: textColor,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                                TextSpan(
-                                  text: " / 5",
+                                const SizedBox(height: 5),
+                                RatingBarIndicator(
+                                  rating: serviceArgs.rating!.toDouble(),
+                                  itemBuilder: (context, index) => const Icon(
+                                    Icons.star,
+                                    color: kPrimaryColor,
+                                  ),
+                                  itemCount: 5,
+                                  itemSize: 30,
+                                  direction: Axis.horizontal,
+                                ),
+                                const SizedBox(height: 10.0),
+                                Text(
+                                  '${serviceArgs.numOfRating} đánh giá',
                                   style: TextStyle(
-                                    fontSize: 24.0,
+                                    fontSize: 18,
                                     color: textColor,
                                   ),
                                 ),
                               ],
                             ),
-                          ),
-                          const SizedBox(height: 5),
-                          RatingBarIndicator(
-                            rating: serviceArgs.rating!.toDouble(),
-                            itemBuilder: (context, index) => const Icon(
-                              Icons.star,
-                              color: kPrimaryColor,
+                            SizedBox(
+                              width: 200.0,
+                              height: 120,
+                              child: ListView.builder(
+                                shrinkWrap: true,
+                                reverse: true,
+                                itemCount: 5,
+                                itemBuilder: (context, index) {
+                                  return Row(
+                                    children: [
+                                      Text(
+                                        '${index + 1}',
+                                        style: TextStyle(fontSize: 18.0),
+                                      ),
+                                      const SizedBox(width: 4.0),
+                                      const Icon(Icons.star,
+                                          color: kPrimaryColor),
+                                      const SizedBox(width: 8.0),
+                                      LinearPercentIndicator(
+                                        lineHeight: 6.0,
+                                        // linearStrokeCap: LinearStrokeCap.roundAll,
+                                        width:
+                                            MediaQuery.of(context).size.width /
+                                                2.8,
+                                        animation: true,
+                                        animationDuration: 2500,
+                                        percent: ratings[index],
+                                        progressColor: kPrimaryColor,
+                                      ),
+                                    ],
+                                  );
+                                },
+                              ),
                             ),
-                            itemCount: 5,
-                            itemSize: 30,
-                            direction: Axis.horizontal,
+                          ],
+                        )
+                      : const Text(
+                          'Chưa có đánh giá',
+                          style: TextStyle(
+                            fontSize: 35,
+                            fontWeight: FontWeight.w700,
                           ),
-                          const SizedBox(height: 10.0),
-                          Text(
-                            '${serviceArgs.numOfRating} đánh giá',
-                            style: TextStyle(
-                              fontSize: 18,
-                              color: textColor,
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        width: 200.0,
-                        height: 120,
-                        child: ListView.builder(
-                          shrinkWrap: true,
-                          reverse: true,
-                          itemCount: 5,
-                          itemBuilder: (context, index) {
-                            return Row(
-                              children: [
-                                Text(
-                                  '${index + 1}',
-                                  style: TextStyle(fontSize: 18.0),
-                                ),
-                                const SizedBox(width: 4.0),
-                                const Icon(Icons.star, color: kPrimaryColor),
-                                const SizedBox(width: 8.0),
-                                LinearPercentIndicator(
-                                  lineHeight: 6.0,
-                                  // linearStrokeCap: LinearStrokeCap.roundAll,
-                                  width:
-                                      MediaQuery.of(context).size.width / 2.8,
-                                  animation: true,
-                                  animationDuration: 2500,
-                                  percent: ratings[index],
-                                  progressColor: kPrimaryColor,
-                                ),
-                              ],
-                            );
-                          },
                         ),
-                      ),
-                    ],
-                  ),
                 ],
               ),
             ),
@@ -327,11 +352,48 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                               alignment: Alignment.center,
                               child: SizedBox(
                                 height: 50,
-                                child: TextField(
-                                  controller: kilogramController,
-                                  textAlign: TextAlign.center,
-                                  keyboardType: TextInputType.number,
-                                  decoration: const InputDecoration(
+
+//                                 child: TextField(
+//                                   controller: kilogramController,
+//                                   textAlign: TextAlign.center,
+//                                   keyboardType: TextInputType.number,
+//                                   decoration: const InputDecoration(
+// =======
+                                // child: TextField(
+                                //   textAlign: TextAlign.center,
+                                //   keyboardType: TextInputType.numberWithOptions(
+                                //       decimal: true),
+                                //   decoration: InputDecoration(
+                                //     enabledBorder: OutlineInputBorder(
+                                //       borderSide: BorderSide(
+                                //           color: Colors.black, width: 1),
+                                //       borderRadius:
+                                //           BorderRadius.all(Radius.circular(10)),
+                                //     ),
+                                //     contentPadding: EdgeInsets.all(0),
+                                //     hintText: 'Số ký',
+                                //     hintStyle: TextStyle(
+                                //       fontSize: 18,
+                                //       height: 1.4,
+                                //     ),
+                                //   ),
+                                //   cursorHeight: 17,
+                                //   inputFormatters: [
+                                //     FilteringTextInputFormatter.allow(
+                                //         RegExp(r'^\d+\.?\d{0,3}')),
+                                //   ],
+                                //   style: TextStyle(
+                                //     height: 1,
+                                //     fontSize: 18,
+                                //   ),
+                                // ),
+                                child: DropdownButtonFormField<double>(
+                                  value: _selectedValue,
+                                  // decoration: InputDecoration(
+                                  //   labelText: 'Select',
+                                  //   border: OutlineInputBorder(),
+                                  // ),
+                                  decoration: InputDecoration(
                                     enabledBorder: OutlineInputBorder(
                                       borderSide: BorderSide(
                                           color: Colors.black, width: 1),
@@ -345,11 +407,24 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                                       height: 1.4,
                                     ),
                                   ),
-                                  cursorHeight: 17,
-                                  style: const TextStyle(
-                                    height: 1,
-                                    fontSize: 18,
-                                  ),
+// <<<<<<< HEAD
+//                                   cursorHeight: 17,
+//                                   style: const TextStyle(
+//                                     height: 1,
+//                                     fontSize: 18,
+//                                   ),
+// =======
+                                  items: _values.map((value) {
+                                    return DropdownMenuItem(
+                                      value: value,
+                                      child: Text(value.toString()),
+                                    );
+                                  }).toList(),
+                                  onChanged: (value) {
+                                    setState(() {
+                                      _selectedValue = value;
+                                    });
+                                  },
                                 ),
                               ),
                             ),
@@ -434,7 +509,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                         ],
                       ),
                 SizedBox(
-                  width: 230,
+                  width: 200,
                   height: 50,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(

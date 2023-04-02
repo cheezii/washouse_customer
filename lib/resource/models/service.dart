@@ -7,6 +7,8 @@ class Service {
   bool? priceType;
   num? price;
   num? minPrice;
+  String? unit;
+  num? rate;
   List<Prices>? prices;
   num? timeEstimate;
   num? rating;
@@ -21,6 +23,8 @@ class Service {
       this.priceType,
       this.price,
       this.minPrice,
+      this.unit,
+      this.rate,
       this.prices,
       this.timeEstimate,
       this.rating,
@@ -35,6 +39,8 @@ class Service {
     priceType = json['priceType'];
     price = json['price'];
     minPrice = json['minPrice'];
+    unit = json['unit'];
+    rate = json['rate'];
     if (json['prices'] != null) {
       prices = <Prices>[];
       json['prices'].forEach((v) {
