@@ -22,6 +22,7 @@ class MenuItemCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     num minPrice = 0;
     num maxPrice = 0;
     bool multiplePrice = price.contains('-');
@@ -47,8 +48,7 @@ class MenuItemCard extends StatelessWidget {
             //   //),
             // ),
             ClipRRect(
-              borderRadius: BorderRadius.circular(
-                  10), // set your desired border radius here
+              borderRadius: BorderRadius.circular(10),
               child: Image.network(
                 image, // replace with your own image URL
                 width: 110, // set your desired width here
@@ -76,8 +76,8 @@ class MenuItemCard extends StatelessWidget {
             ),
             const SizedBox(width: 15),
             SizedBox(
-              height: 110,
-              width: 220,
+              height: 100,
+              width: size.width * 0.58,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -90,7 +90,6 @@ class MenuItemCard extends StatelessWidget {
                           fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                   ),
-                  const SizedBox(height: 5),
                   Expanded(
                     child: Text(
                       description,
@@ -101,7 +100,7 @@ class MenuItemCard extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                  const SizedBox(height: 5),
+                  const SizedBox(height: 10),
                   Text(
                     multiplePrice
                         ? '${PriceUtils().convertFormatPrice(minPrice.toInt())} đ - ${PriceUtils().convertFormatPrice(maxPrice.toInt())} đ'

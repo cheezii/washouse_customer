@@ -31,6 +31,7 @@ class ServiceDetailScreen extends StatefulWidget {
 }
 
 class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
+  late List<Prices> priceList;
   Service serviceArgs = Service();
   ServiceController serviceController = ServiceController();
   CenterController centerController = CenterController();
@@ -49,6 +50,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
 
   @override
   void initState() {
+    getServiceDetail();
     quantity = 1;
     quantityController.text = quantity.toString();
     kilogram = 0;
@@ -56,6 +58,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
     super.initState();
     //centerArgs = widget.centerData;
     serviceArgs = widget.serviceData;
+    priceList = serviceArgs.prices!;
   }
 
   void getServiceDetail() async {
@@ -75,7 +78,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
     var provider = Provider.of<CartProvidder>(context);
     var cart = provider.cart;
     Size size = MediaQuery.of(context).size;
-    List<double> ratings = [0.5, 0.3, 0.5, 0.7, 0.9];
+    List<double> ratings = [];
     CartItem cartItem;
     double? productPrice;
     bool checkUnitType = false;
@@ -90,14 +93,25 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
     if (serviceArgs.rating == null) {
       checkRatingNull = true;
     }
+
     if (serviceArgs.priceType!) {
       checkPriceType = true;
-      for (var i = 1; i < (serviceArgs.prices!.last.maxValue! * 10 + 1); i++) {
+      for (var i = 1; i <= (serviceArgs.prices!.last.maxValue! * 10); i++) {
         _values.add(i / 10);
       }
     }
+
     if (serviceArgs.unit != null && serviceArgs.unit == "Kg") {
       checkUnitType = true;
+    }
+
+    if (serviceArgs.ratings != null && serviceArgs.numOfRating != 0) {
+      double star1 = serviceArgs.ratings![0] / serviceArgs.numOfRating!;
+      double star2 = serviceArgs.ratings![1] / serviceArgs.numOfRating!;
+      double star3 = serviceArgs.ratings![2] / serviceArgs.numOfRating!;
+      double star4 = serviceArgs.ratings![3] / serviceArgs.numOfRating!;
+      double star5 = serviceArgs.ratings![4] / serviceArgs.numOfRating!;
+      ratings.addAll([star1, star2, star3, star4, star5]);
     }
 
     return Scaffold(
@@ -177,7 +191,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                     'Thông tin dịch vụ',
                     style: TextStyle(fontWeight: FontWeight.w600, fontSize: 22),
                   ),
-                  const SizedBox(height: 15),
+                  const SizedBox(height: 20),
                   const Text(
                     'Mô tả',
                     style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
@@ -188,7 +202,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                     style: const TextStyle(fontSize: 17, color: textColor),
                     maxLines: 3,
                   ),
-                  const SizedBox(height: 15),
+                  const SizedBox(height: 20),
                   Text.rich(
                     TextSpan(
                       children: [
@@ -204,6 +218,50 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                       ],
                     ),
                   ),
+                  checkUnitType
+                      ? SingleChildScrollView(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(height: 20),
+                              const Text(
+                                'Bảng giá',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w600, fontSize: 18),
+                              ),
+                              SizedBox(
+                                width: size.width,
+                                child: DataTable(
+                                  columns: const <DataColumn>[
+                                    DataColumn(
+                                      label: Text(
+                                        'Số ký',
+                                        style: TextStyle(
+                                            fontStyle: FontStyle.italic),
+                                      ),
+                                    ),
+                                    DataColumn(
+                                      label: Text(
+                                        'Giá thành',
+                                        style: TextStyle(
+                                            fontStyle: FontStyle.italic),
+                                      ),
+                                    ),
+                                  ],
+                                  rows: priceList
+                                      .map<DataRow>((e) => DataRow(cells: [
+                                            DataCell(
+                                                Text(e.maxValue.toString())),
+                                            DataCell(Text(
+                                                '${PriceUtils().convertFormatPrice(e.price?.round() as num)} đ')),
+                                          ]))
+                                      .toList(),
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      : const SizedBox(height: 0, width: 0),
                 ],
               ),
             ),
@@ -233,12 +291,12 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                                     children: [
                                       TextSpan(
                                         text: serviceArgs.rating!.toString(),
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                           fontSize: 42,
                                           fontWeight: FontWeight.w700,
                                         ),
                                       ),
-                                      TextSpan(
+                                      const TextSpan(
                                         text: " / 5",
                                         style: TextStyle(
                                           fontSize: 24.0,
@@ -262,7 +320,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                                 const SizedBox(height: 10.0),
                                 Text(
                                   '${serviceArgs.numOfRating} đánh giá',
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontSize: 18,
                                     color: textColor,
                                   ),
@@ -305,11 +363,19 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                             ),
                           ],
                         )
-                      : const Text(
-                          'Chưa có đánh giá',
-                          style: TextStyle(
-                            fontSize: 35,
-                            fontWeight: FontWeight.w700,
+                      : Align(
+                          alignment: Alignment.center,
+                          child: Column(
+                            children: const [
+                              Icon(Icons.star_rounded,
+                                  color: kPrimaryColor, size: 60),
+                              SizedBox(height: 10),
+                              Text(
+                                'Chưa có đánh giá nào',
+                                style: TextStyle(
+                                    fontSize: 22, fontWeight: FontWeight.w500),
+                              )
+                            ],
                           ),
                         ),
                 ],
@@ -347,7 +413,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                         children: [
                           SizedBox(
                             height: 90,
-                            width: size.width / 6,
+                            width: size.width / 5,
                             child: Align(
                               alignment: Alignment.center,
                               child: SizedBox(
@@ -393,14 +459,20 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                                   //   labelText: 'Select',
                                   //   border: OutlineInputBorder(),
                                   // ),
-                                  decoration: InputDecoration(
+                                  decoration: const InputDecoration(
                                     enabledBorder: OutlineInputBorder(
                                       borderSide: BorderSide(
                                           color: Colors.black, width: 1),
                                       borderRadius:
                                           BorderRadius.all(Radius.circular(10)),
                                     ),
-                                    contentPadding: EdgeInsets.all(0),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                          color: Colors.black, width: 1),
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(10)),
+                                    ),
+                                    contentPadding: EdgeInsets.only(left: 10),
                                     hintText: 'Số ký',
                                     hintStyle: TextStyle(
                                       fontSize: 18,
