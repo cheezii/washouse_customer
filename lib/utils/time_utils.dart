@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class TimeUtils {
   TimeOfDay timeNow = TimeOfDay.now();
@@ -69,7 +70,26 @@ class TimeUtils {
     return false;
   }
 
-  String getDisplayName(String time) {
-    return time.substring(0, 5);
+  bool checkOver24Hours(String createDateTime) {
+    String formattedDate = changeDateFormat(createDateTime);
+    DateTime datetime = DateTime.parse(formattedDate);
+    int milliseconds = datetime.millisecondsSinceEpoch;
+    if (dateNow.millisecondsSinceEpoch - milliseconds < 24 * 60 * 60 * 1000) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  String changeDateFormat(String dateChange) {
+    var time = dateChange.split(' ')[1] as String;
+    var day = dateChange.split(' ')[0] as String;
+    DateTime date = DateFormat('dd/MM/yyyy').parse(day);
+    String formattedDate = DateFormat('yyyy-MM-dd').format(date);
+    return formattedDate + ' ' + time;
+  }
+
+  String getDisplayName(String dateTime) {
+    return dateTime.substring(0, 5);
   }
 }

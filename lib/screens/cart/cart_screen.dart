@@ -9,7 +9,6 @@ class CartScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: kBackgroundColor,
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         elevation: 0,
