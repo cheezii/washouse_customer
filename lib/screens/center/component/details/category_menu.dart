@@ -8,16 +8,14 @@ class ServiceDemo {
   final String? name;
   final int? id;
   final String? image;
-  final double? price;
+  final num? price;
   final String? description;
-  final String? unit;
   ServiceDemo({
     this.name,
     this.image,
     this.price,
     this.description,
     this.id,
-    this.unit,
   });
 }
 
@@ -36,7 +34,6 @@ List<CategoryMenu> demoCateList = [
     item: [
       ServiceDemo(
         id: 1,
-        unit: "Kg",
         name: 'abcde',
         image: 'assets/images/placeholder.png',
         price: 12000,
@@ -45,7 +42,6 @@ List<CategoryMenu> demoCateList = [
       ),
       ServiceDemo(
         id: 2,
-        unit: 'Cái',
         name: 'abcde',
         image: 'assets/images/placeholder.png',
         price: 12000,
@@ -59,7 +55,6 @@ List<CategoryMenu> demoCateList = [
     item: [
       ServiceDemo(
         id: 3,
-        unit: "Kg",
         name: 'abcde',
         image: 'assets/images/placeholder.png',
         price: 12000,
@@ -68,7 +63,6 @@ List<CategoryMenu> demoCateList = [
       ),
       ServiceDemo(
         id: 4,
-        unit: 'Cái',
         name: 'abcde',
         image: 'assets/images/placeholder.png',
         price: 12000,
@@ -82,7 +76,6 @@ List<CategoryMenu> demoCateList = [
     item: [
       ServiceDemo(
         id: 5,
-        unit: 'Đôi',
         name: 'abcde',
         image: 'assets/images/placeholder.png',
         price: 12000,
@@ -91,7 +84,6 @@ List<CategoryMenu> demoCateList = [
       ),
       ServiceDemo(
         id: 6,
-        unit: "Kg",
         name: 'abcde',
         image: 'assets/images/placeholder.png',
         price: 12000,

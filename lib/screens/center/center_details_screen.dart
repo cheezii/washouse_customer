@@ -13,7 +13,6 @@ import 'package:washouse_customer/screens/center/component/details/center_catego
 import 'package:washouse_customer/utils/center_utils.dart';
 import 'package:washouse_customer/utils/time_utils.dart';
 
-import '../../components/route/route_generator.dart';
 import 'component/details/box_info.dart';
 import 'component/details/menu_item_card.dart';
 
@@ -178,8 +177,7 @@ class _CenterDetailScreenState extends State<CenterDetailScreen> {
                                       : items[index].price!.toString(),
                                   press: () => Navigator.pushNamed(
                                       context, '/serviceDetails',
-                                      arguments: ScreenArguments(
-                                          centerArgs, items[index])),
+                                      arguments: items[index]),
                                 ),
                               ),
                             ),

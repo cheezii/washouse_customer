@@ -1,18 +1,15 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:washouse_customer/utils/price_util.dart';
 
 import '../../components/constants/color_constants.dart';
-import '../../resource/controller/cart_provider.dart';
-import '../../resource/models/cart_item.dart';
+import '../../resource/models/cart.dart';
 import 'components/checkout/order_card.dart';
 import 'components/checkout/service_ordered.dart';
 import 'information/shipping/shipping_address.dart';
 import 'information/shipping/shipping_method.dart';
 
 class CheckoutScreen extends StatefulWidget {
-  final CartItem cart;
+  final Cart cart;
   const CheckoutScreen({
     Key? key,
     required this.cart,
@@ -25,13 +22,10 @@ class CheckoutScreen extends StatefulWidget {
 class _CheckoutScreenState extends State<CheckoutScreen> {
   @override
   Widget build(BuildContext context) {
-<<<<<<< Updated upstream
     double total = 0.0;
     for (int i = 0; i < demoCarts.length; i++) {
       total += demoCarts[i].numOfItems.value * demoCarts[i].service.price!;
     }
-=======
->>>>>>> Stashed changes
     int paymentIndex = 0;
     return Scaffold(
       backgroundColor: kBackgroundColor,
@@ -180,110 +174,100 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             separateLine(),
             const ShippingMethod(),
             separateLine(),
-            Consumer<CartProvidder>(
-              builder: (context, value, child) {
-                {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Chi tiết thanh toán',
+                    style: TextStyle(
+                        color: textColor,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w700),
+                  ),
+                  const SizedBox(height: 10),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
-                          'Chi tiết thanh toán',
-                          style: TextStyle(
-                              color: textColor,
-                              fontSize: 18,
-                              fontWeight: FontWeight.w700),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                              'Tạm tính:',
+                              style: TextStyle(fontSize: 16),
+                            ),
+                            Text(
+                              '$total đ',
+                              style: const TextStyle(
+                                  fontSize: 16,
+                                  color: textColor,
+                                  fontWeight: FontWeight.bold),
+                            )
+                          ],
                         ),
-                        const SizedBox(height: 10),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8),
-                          child: Column(
-                            children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  const Text(
-                                    'Tạm tính:',
-                                    style: TextStyle(fontSize: 16),
-                                  ),
-                                  Text(
-                                    '${PriceUtils().convertFormatPrice(value.getTotalPrice().round())} đ',
-                                    style: const TextStyle(
-                                        fontSize: 16,
-                                        color: textColor,
-                                        fontWeight: FontWeight.bold),
-                                  )
-                                ],
-                              ),
-                              const SizedBox(height: 15),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: const [
-                                  Text(
-                                    'Mã giảm giá:',
-                                    style: TextStyle(fontSize: 16),
-                                  ),
-                                  Text(
-                                    '0 đ',
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        color: textColor,
-                                        fontWeight: FontWeight.bold),
-                                  )
-                                ],
-                              ),
-                              const SizedBox(height: 15),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: const [
-                                  Text(
-                                    'Phí ship:',
-                                    style: TextStyle(fontSize: 16),
-                                  ),
-                                  Text(
-                                    '0 đ',
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        color: textColor,
-                                        fontWeight: FontWeight.bold),
-                                  )
-                                ],
-                              ),
-                              Divider(
-                                height: 40,
-                                color: Colors.grey.shade300,
-                                thickness: 2,
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  const Text(
-                                    'Tổng cộng:',
-                                    style: TextStyle(fontSize: 17),
-                                  ),
-                                  Text(
-                                    '${PriceUtils().convertFormatPrice(value.getTotalPrice().round())} đ',
-                                    style: const TextStyle(
-                                        fontSize: 17,
-                                        color: kPrimaryColor,
-                                        fontWeight: FontWeight.bold),
-                                  )
-                                ],
-                              ),
-                            ],
-                          ),
+                        const SizedBox(height: 15),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: const [
+                            Text(
+                              'Mã giảm giá:',
+                              style: TextStyle(fontSize: 16),
+                            ),
+                            Text(
+                              '0 đ',
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  color: textColor,
+                                  fontWeight: FontWeight.bold),
+                            )
+                          ],
                         ),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 15),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: const [
+                            Text(
+                              'Phí ship:',
+                              style: TextStyle(fontSize: 16),
+                            ),
+                            Text(
+                              '0 đ',
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  color: textColor,
+                                  fontWeight: FontWeight.bold),
+                            )
+                          ],
+                        ),
+                        Divider(
+                          height: 40,
+                          color: Colors.grey.shade300,
+                          thickness: 2,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                              'Tổng cộng:',
+                              style: TextStyle(fontSize: 17),
+                            ),
+                            Text(
+                              '$total đ',
+                              style: const TextStyle(
+                                  fontSize: 17,
+                                  color: kPrimaryColor,
+                                  fontWeight: FontWeight.bold),
+                            )
+                          ],
+                        ),
                       ],
                     ),
-                  );
-                }
-              },
+                  ),
+                  const SizedBox(height: 20),
+                ],
+              ),
             )
           ],
         ),

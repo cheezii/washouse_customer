@@ -2,9 +2,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:washouse_customer/components/route/route_generator.dart';
-import 'package:washouse_customer/resource/controller/cart_provider.dart';
 import 'package:washouse_customer/screens/cart/cart_screen.dart';
 import 'package:washouse_customer/screens/center/center_details_screen.dart';
 import 'package:washouse_customer/screens/started/onboarding.dart';
@@ -12,12 +10,7 @@ import 'package:washouse_customer/screens/started/onboarding.dart';
 import 'screens/center/service/service_detail_screen.dart';
 
 void main() {
-  runApp(
-    ChangeNotifierProvider(
-      create: (context) => CartProvidder(),
-      child: const MyApp(),
-    ),
-  );
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
