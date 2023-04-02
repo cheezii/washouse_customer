@@ -6,6 +6,7 @@ import 'package:washouse_customer/screens/started/login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
 import '../../resource/controller/base_controller.dart';
+import '../notification/list_notification_screen.dart';
 import 'components/profile_widget.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -58,8 +59,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 padding: const EdgeInsets.only(top: 18, left: 16, right: 16),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: const [
-                    Text(
+                  children: [
+                    const Text(
                       'Tài khoản',
                       style: TextStyle(
                         color: textColor,
@@ -67,10 +68,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         fontSize: 30,
                       ),
                     ),
-                    Icon(
-                      Icons.notifications,
-                      color: textColor,
-                      size: 30.0,
+                    IconButton(
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            PageTransition(
+                                child: const ListNotificationScreen(),
+                                type: PageTransitionType.rightToLeftWithFade));
+                      },
+                      icon: const Icon(
+                        Icons.notifications,
+                        color: textColor,
+                        size: 30.0,
+                      ),
                     ),
                   ],
                 ),
