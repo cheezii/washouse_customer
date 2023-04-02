@@ -14,10 +14,11 @@ class RouteGenerator {
       case '/serviceDetails':
         return MaterialPageRoute(
           builder: (context) {
-            final arrguments = settings.arguments as ScreenArguments;
-            return ServiceDetailScreen(
-                centerData: arrguments.screen1,
-                serviceData: arrguments.screen2);
+            //final arrguments = settings.arguments as ScreenArguments;
+            // return ServiceDetailScreen(
+            //     centerData: arrguments.screen1,
+            //     serviceData: arrguments.screen2);
+            return ServiceDetailScreen(serviceData: args);
           },
         );
       case '/cart':
@@ -44,9 +45,9 @@ class RouteGenerator {
   }
 }
 
-class ScreenArguments {
-  final screen1;
-  final screen2;
+// class ScreenArguments {
+//   final screen1;
+//   final screen2;
 
-  ScreenArguments(this.screen1, this.screen2);
-}
+//   ScreenArguments(this.screen1, this.screen2);
+// }

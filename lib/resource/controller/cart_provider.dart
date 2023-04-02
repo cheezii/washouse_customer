@@ -73,13 +73,13 @@ class CartProvidder extends ChangeNotifier {
     }
   }
 
-  void addTotalPrice(num productPrice) {
+  void addTotalPrice(double productPrice) {
     _totalPrice = _totalPrice + productPrice;
     _setPrefItems();
     notifyListeners();
   }
 
-  void removeTotalPrice(num productPrice) {
+  void removeTotalPrice(double productPrice) {
     _totalPrice = _totalPrice - productPrice;
     _setPrefItems();
     notifyListeners();

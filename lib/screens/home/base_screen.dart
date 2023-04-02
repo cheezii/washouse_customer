@@ -55,8 +55,14 @@ class _BaseScreenState extends State<BaseScreen> {
         floatingActionButton: badges.Badge(
           badgeContent: Consumer<CartProvidder>(
             builder: (context, value, child) {
+              bool checkItem;
+              if (value.getCounter() > 0) {
+                checkItem = true;
+              } else {
+                checkItem = false;
+              }
               return Text(
-                value.getCounter().toString(),
+                checkItem ? value.getCounter().toString() : '0',
                 style: TextStyle(color: Colors.white),
               );
             },
@@ -79,6 +85,7 @@ class _BaseScreenState extends State<BaseScreen> {
                 '/cart',
                 arguments: _centerName,
               );
+              provider.removerCounter();
             },
             backgroundColor: kPrimaryColor,
             child: const Icon(Icons.shopping_bag),

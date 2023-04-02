@@ -103,13 +103,9 @@ class MenuItemCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 5),
                   Text(
-<<<<<<< Updated upstream
                     multiplePrice
                         ? '${PriceUtils().convertFormatPrice(minPrice.toInt())} đ - ${PriceUtils().convertFormatPrice(maxPrice.toInt())} đ'
                         : '${PriceUtils().convertFormatPrice(double.parse(price).toInt())} đ',
-=======
-                    '${PriceUtils().convertFormatPrice(price.round())} đ',
->>>>>>> Stashed changes
                     style: const TextStyle(
                       color: kPrimaryColor,
                       fontSize: 18,

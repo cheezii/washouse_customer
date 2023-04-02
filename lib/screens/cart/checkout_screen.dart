@@ -25,13 +25,6 @@ class CheckoutScreen extends StatefulWidget {
 class _CheckoutScreenState extends State<CheckoutScreen> {
   @override
   Widget build(BuildContext context) {
-<<<<<<< Updated upstream
-    double total = 0.0;
-    for (int i = 0; i < demoCarts.length; i++) {
-      total += demoCarts[i].numOfItems.value * demoCarts[i].service.price!;
-    }
-=======
->>>>>>> Stashed changes
     int paymentIndex = 0;
     return Scaffold(
       backgroundColor: kBackgroundColor,
@@ -67,7 +60,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           children: [
             const ShippingAddress(),
             separateLine(),
-            const ServiceOrdered(),
+            const ServiceOrdered(), //map data của cart vào cái này
             separateLine(),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 16),

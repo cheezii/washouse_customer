@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../../../components/constants/color_constants.dart';
-import '../../../../resource/models/cart_item.dart';
-import '../../../../utils/price_util.dart';
+import '../../../../../components/constants/color_constants.dart';
+import '../../../../../resource/models/cart_item.dart';
+import '../../../../../utils/price_util.dart';
 
 class CheckoutItemCard extends StatelessWidget {
   final CartItem cart;
@@ -54,11 +54,7 @@ class CheckoutItemCard extends StatelessWidget {
                   ),
                   const Spacer(),
                   Text(
-<<<<<<< Updated upstream
-                    '${cart.service.price! * cart.numOfItems.value} đ',
-=======
                     '${PriceUtils().convertFormatPrice(cart.service.price!.round() * cart.measurement)} đ',
->>>>>>> Stashed changes
                     style: const TextStyle(
                       color: kPrimaryColor,
                       fontWeight: FontWeight.bold,
