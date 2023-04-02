@@ -146,7 +146,6 @@ class _CenterDetailScreenState extends State<CenterDetailScreen> {
               SliverList(
                 delegate: SliverChildBuilderDelegate(
                   (context, categoryIndex) {
-                    //List<ServiceDemo> items = demoCateList[categoryIndex].item;
                     List<Service> items =
                         centerDetails.centerServices![categoryIndex].services!;
                     return Padding(
