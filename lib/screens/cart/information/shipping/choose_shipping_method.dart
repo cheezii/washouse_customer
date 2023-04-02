@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:washouse_customer/resource/models/cart.dart';
+import 'package:washouse_customer/resource/models/cart_item.dart';
 
 import '../../../../components/constants/color_constants.dart';
 import '../../cart_screen.dart';

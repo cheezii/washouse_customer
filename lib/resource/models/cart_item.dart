@@ -3,24 +3,35 @@ import 'package:flutter/material.dart';
 import 'package:washouse_customer/resource/models/service.dart';
 import 'package:washouse_customer/screens/center/component/details/category_menu.dart';
 
-class Cart {
+class CartItem {
   ServiceDemo service;
-  ValueNotifier<int> numOfItems;
-  Cart({
+  num measurement;
+
+  CartItem({
     required this.service,
-    required this.numOfItems,
+    required this.measurement,
   });
+
+  Map<String, dynamic> toJson() => {
+        'service': service,
+        'measurement': measurement,
+      };
+
+  CartItem.fromJson(Map<String, dynamic> json)
+      : service = json['service'],
+        measurement = json['measurement'];
 }
 
-List<Cart> demoCarts = [
-  Cart(service: demoServices[0], numOfItems: ValueNotifier<int>(1)),
-  Cart(service: demoServices[1], numOfItems: ValueNotifier<int>(3)),
-  Cart(service: demoServices[2], numOfItems: ValueNotifier<int>(2)),
+List<CartItem> demoCarts = [
+  CartItem(service: demoServices[0], measurement: 1),
+  CartItem(service: demoServices[1], measurement: 3),
+  CartItem(service: demoServices[2], measurement: 2),
 ];
 
 List<ServiceDemo> demoServices = [
   ServiceDemo(
     id: 1,
+    unit: 'Kg',
     description: '1',
     name: 'Giặt sấy rèm cửa',
     image: 'assets/images/category/curtains_outlined.png',
@@ -28,6 +39,7 @@ List<ServiceDemo> demoServices = [
   ),
   ServiceDemo(
     id: 2,
+    unit: 'Cái',
     description: '2',
     name: 'Giặt hấp caravat',
     image: 'assets/images/category/tie.png',
@@ -35,8 +47,9 @@ List<ServiceDemo> demoServices = [
   ),
   ServiceDemo(
     id: 3,
+    unit: 'Đôi',
     description: '3',
-    name: 'Giặt hấp gối cổ',
+    name: 'Giặt giày',
     image: 'assets/images/category/neck-pillow.png',
     price: 60000,
   ),

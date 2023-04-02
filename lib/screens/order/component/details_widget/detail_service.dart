@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../components/constants/color_constants.dart';
-import '../../../../resource/models/cart.dart';
+import '../../../../resource/models/cart_item.dart';
 import 'detail_item_card.dart';
 
 class DetailService extends StatelessWidget {
@@ -30,19 +30,19 @@ class DetailService extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 6),
-          // Container(
-          //   padding: const EdgeInsets.symmetric(horizontal: 10),
-          //   child: ListView.builder(
-          //     shrinkWrap: true,
-          //     physics: const NeverScrollableScrollPhysics(),
-          //     itemCount: demoCarts.length,
-          //     itemBuilder: (context, index) {
-          //       return DetailItemCard(
-          //         cart: demoCarts[index],
-          //       );
-          //     },
-          //   ),
-          // ),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: demoCarts.length,
+              itemBuilder: (context, index) {
+                return DetailItemCard(
+                  cart: demoCarts[index],
+                );
+              },
+            ),
+          ),
         ],
       ),
     );
