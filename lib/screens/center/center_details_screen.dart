@@ -70,7 +70,7 @@ class _CenterDetailScreenState extends State<CenterDetailScreen> {
     int listLength = centerDetails.centerServices != null
         ? centerDetails.centerServices!.length
         : 0;
-    print(centerDetails.centerServices!.length);
+    //print(centerDetails.centerServices!.length);
 
     //centerDetails.centerServices![0].services![0].serviceName; //mẫu lấy service của center
 
