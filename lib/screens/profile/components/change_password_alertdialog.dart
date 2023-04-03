@@ -37,6 +37,7 @@ class _ChangePassWordAlertDialogState extends State<ChangePassWordAlertDialog> {
                 if (value!.isEmpty) {
                   return 'Mật khẩu không được để trống';
                 }
+                return null;
               },
               obscureText: true,
               style: const TextStyle(

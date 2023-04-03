@@ -27,8 +27,10 @@ AccountController accountController = AccountController();
 BaseController baseController = BaseController();
 
 class _LoginState extends State<Login> {
+  final _formPhoneNumberKey = GlobalKey<FormState>();
+  final _formPwdKey = GlobalKey<FormState>();
   bool _isHidden = true;
-  String? _errorMessage;
+  String _errorMessage = '';
   String? _responseMessage;
 
   @override
@@ -55,43 +57,67 @@ class _LoginState extends State<Login> {
                   style: TextStyle(fontSize: 40.0, fontWeight: FontWeight.w700),
                 ),
                 const SizedBox(height: 16),
-                TextFormField(
-                  obscureText: false,
-                  style: const TextStyle(
-                    color: textColor,
-                  ),
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    prefixIcon: Icon(
-                      Icons.phone_android_rounded,
-                      color: textColor.withOpacity(.5),
+                Form(
+                  key: _formPhoneNumberKey,
+                  child: TextFormField(
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Số điện thoại không được để trống';
+                      }
+                      return null;
+                    },
+                    onSaved: (newValue) {
+                      phoneController.text = newValue!;
+                    },
+                    obscureText: false,
+                    style: const TextStyle(
+                      color: textColor,
                     ),
-                    labelText: 'Số điện thoại',
-                  ),
-                  keyboardType: TextInputType.number,
-                  cursorColor: textColor.withOpacity(.8),
-                  controller: phoneController,
-                ),
-                TextFormField(
-                  obscureText: _isHidden,
-                  style: const TextStyle(
-                    color: textColor,
-                  ),
-                  decoration: InputDecoration(
+                    decoration: InputDecoration(
                       border: InputBorder.none,
                       prefixIcon: Icon(
-                        Icons.password_rounded,
+                        Icons.phone_android_rounded,
                         color: textColor.withOpacity(.5),
                       ),
-                      labelText: 'Mật khẩu',
-                      suffix: InkWell(
-                        onTap: _togglePasswordView,
-                        child: Icon(
-                          _isHidden ? Icons.visibility : Icons.visibility_off,
+                      labelText: 'Số điện thoại',
+                    ),
+                    keyboardType: TextInputType.number,
+                    cursorColor: textColor.withOpacity(.8),
+                    controller: phoneController,
+                  ),
+                ),
+                Form(
+                  key: _formPwdKey,
+                  child: TextFormField(
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Mật khẩu không được để trống';
+                      }
+                      return null;
+                    },
+                    onSaved: (newValue) {
+                      passwordController.text = newValue!;
+                    },
+                    obscureText: _isHidden,
+                    style: const TextStyle(
+                      color: textColor,
+                    ),
+                    decoration: InputDecoration(
+                        border: InputBorder.none,
+                        prefixIcon: Icon(
+                          Icons.password_rounded,
+                          color: textColor.withOpacity(.5),
                         ),
-                      )),
-                  cursorColor: textColor.withOpacity(.8),
-                  controller: passwordController,
+                        labelText: 'Mật khẩu',
+                        suffix: InkWell(
+                          onTap: _togglePasswordView,
+                          child: Icon(
+                            _isHidden ? Icons.visibility : Icons.visibility_off,
+                          ),
+                        )),
+                    cursorColor: textColor.withOpacity(.8),
+                    controller: passwordController,
+                  ),
                 ),
                 const SizedBox(height: 16),
                 SizedBox(
@@ -99,8 +125,8 @@ class _LoginState extends State<Login> {
                   height: 45,
                   child: ElevatedButton(
                     onPressed: () async {
-                      // _errorMessage = null;
-                      // _responseMessage = null;
+                      //_errorMessage = null;
+                      _responseMessage = '';
                       // if (phoneController.text.isEmpty &&
                       //     passwordController.text.isEmpty) {
                       //   _errorMessage =
@@ -113,39 +139,85 @@ class _LoginState extends State<Login> {
                       //     passwordController.text.isEmpty) {
                       //   _errorMessage = "Mật khẩu không được để trống";
                       // }
-                      // print(phoneController.text);
-                      // print(passwordController.text);
+                      if (_formPhoneNumberKey.currentState!.validate() &&
+                          _formPwdKey.currentState!.validate()) {
+                        _formPwdKey.currentState!.save();
+                        _formPhoneNumberKey.currentState!.save();
+                        //call api change pwd
 
-                      // LoginResponseModel? responseModel =
-                      //     await accountController.login(
-                      //         phoneController.text, passwordController.text);
-                      // if (responseModel != null) {
-                      //   if (responseModel.statusCode == 17) {
-                      //     _responseMessage =
-                      //         "Admin không thể đăng nhập trên mobile";
-                      //   } else if (responseModel.statusCode == 10) {
-                      //     _responseMessage = "Sai số điện thoại hoặc mật khẩu";
-                      //     print(_responseMessage);
-                      //   } else {
-                      //     CurrentUser currentUserModel =
-                      //         await accountController.getCurrentUser();
-                      //     if (currentUserModel != null) {
-                      //       baseController.saveStringtoSharedPreference(
-                      //           "CURRENT_USER_NAME", currentUserModel.name);
-                      //       baseController.saveStringtoSharedPreference(
-                      //           "CURRENT_USER_EMAIL", currentUserModel.email);
-                      //       baseController.saveStringtoSharedPreference(
-                      //           "CURRENT_USER_AVATAR", currentUserModel.avatar);
-                      //       baseController.saveStringtoSharedPreference(
-                      //           "CURRENT_USER_ID", currentUserModel.accountId);
-                      //     }
-                      Navigator.push(
-                          context,
-                          PageTransition(
-                              child: const BaseScreen(),
-                              type: PageTransitionType.fade));
-                      //  }
-                      //}
+                        LoginResponseModel? responseModel =
+                            await accountController.login(
+                                phoneController.text, passwordController.text);
+                        if (responseModel != null) {
+                          if (responseModel.statusCode == 17) {
+                            _responseMessage =
+                                "Admin không thể đăng nhập trên mobile";
+                          } else if (responseModel.statusCode == 10) {
+                            _responseMessage =
+                                "Sai số điện thoại hoặc mật khẩu";
+                          } else {
+                            CurrentUser currentUserModel =
+                                await accountController.getCurrentUser();
+                            if (currentUserModel != null) {
+                              baseController.saveStringtoSharedPreference(
+                                  "CURRENT_USER_NAME", currentUserModel.name);
+                              baseController.saveStringtoSharedPreference(
+                                  "CURRENT_USER_EMAIL", currentUserModel.email);
+                              baseController.saveStringtoSharedPreference(
+                                  "CURRENT_USER_AVATAR",
+                                  currentUserModel.avatar);
+                              baseController.saveStringtoSharedPreference(
+                                  "CURRENT_USER_ID",
+                                  currentUserModel.accountId);
+                            }
+                            Navigator.push(
+                                context,
+                                PageTransition(
+                                    child: const BaseScreen(),
+                                    type: PageTransitionType.fade));
+                          }
+                        }
+                      }
+                      // if (_responseMessage == null) {
+                      //   _responseMessage = "";
+                      // }
+                      if (_responseMessage != null) {
+                        // ignore: use_build_context_synchronously
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              title: Align(
+                                  alignment: Alignment.center,
+                                  child: Text('Lỗi!!')),
+                              content: Text('$_responseMessage'),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              actions: <Widget>[
+                                ElevatedButton(
+                                  child: Text(
+                                    'Đã hiểu',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w700,
+                                        color: kPrimaryColor),
+                                  ),
+                                  style: ElevatedButton.styleFrom(
+                                      elevation: 0,
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(30)),
+                                      backgroundColor: kBackgroundColor),
+                                  onPressed: () {
+                                    // Perform some action
+                                    Navigator.of(context).pop();
+                                  },
+                                )
+                              ],
+                            );
+                          },
+                        );
+                      }
                       // if (_errorMessage == null) {
                       //   _errorMessage = "";
                       // }
@@ -170,13 +242,13 @@ class _LoginState extends State<Login> {
                       //             style: TextStyle(
                       //                 fontSize: 18, color: Colors.white),
                       //           ),
-                      //           Text(
-                      //             "$_errorMessage",
-                      //             style: const TextStyle(
-                      //                 fontSize: 12, color: Colors.white),
-                      //             maxLines: 2,
-                      //             overflow: TextOverflow.clip,
-                      //           ),
+                      //           // Text(
+                      //           //   "$_errorMessage",
+                      //           //   style: const TextStyle(
+                      //           //       fontSize: 12, color: Colors.white),
+                      //           //   maxLines: 2,
+                      //           //   overflow: TextOverflow.clip,
+                      //           // ),
                       //           Text(
                       //             "$_responseMessage",
                       //             style: const TextStyle(
