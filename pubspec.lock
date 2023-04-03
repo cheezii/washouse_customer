@@ -278,6 +278,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.0"
+  flutter_cupertino_localizations:
+    dependency: "direct main"
+    description:
+      name: flutter_cupertino_localizations
+      sha256: a4276b91cc3e75738e2e3b1168331bfa68cc87de2eacce637c50f441f9075f3b
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.1"
+  flutter_datetime_picker:
+    dependency: "direct main"
+    description:
+      name: flutter_datetime_picker
+      sha256: "8e695c63c769350e541951227c2775190ec73ceda774a315b1dc9a99d5facfe5"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.5.1"
   flutter_google_places:
     dependency: "direct main"
     description:
@@ -678,7 +694,7 @@ packages:
     source: hosted
     version: "4.0.15"
   image_picker:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: image_picker
       sha256: cb25f04595a88450970dbe727243ba8cd21b6f7e0d7d1fc5b789fc6f52e95494

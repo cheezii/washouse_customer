@@ -25,6 +25,10 @@ class MyApp extends StatelessWidget {
       onGenerateRoute: RouteGenerator.generateRoute,
       home: SafeArea(child: Onboarding()),
       debugShowCheckedModeBanner: false,
+      supportedLocales: [
+        //Locale('en', 'US'),
+        Locale('vi', 'VN'),
+      ],
     );
   }
 }

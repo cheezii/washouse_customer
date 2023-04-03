@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:washouse_customer/components/constants/color_constants.dart';
 import 'package:washouse_customer/components/constants/size.dart';
+import 'package:washouse_customer/screens/profile/information_screen.dart';
 import 'package:washouse_customer/screens/profile/manage_account_screen.dart';
 import 'dart:async';
 import '../../resource/controller/base_controller.dart';
@@ -93,20 +94,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Container(
-                      width: 150,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          color: kPrimaryColor.withOpacity(.5),
-                          width: 5.0,
-                        ),
+                    width: 150,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: kPrimaryColor.withOpacity(.5),
+                        width: 5.0,
                       ),
-                      child: CircleAvatar(
-                        radius: 60,
-                        backgroundColor: Colors.grey,
-                        backgroundImage:
-                            NetworkImage(_currentUserAvartar ?? ""),
-                      )),
+                    ),
+                    child: CircleAvatar(
+                      radius: 60,
+                      backgroundColor: Colors.grey,
+                      backgroundImage: NetworkImage(_currentUserAvartar ?? ""),
+                    ),
+                  ),
                   const SizedBox(height: 10),
                   Text(
                     '$_currentUserName',
@@ -135,7 +136,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           title: 'Hồ sơ',
                           txtColor: textColor,
                           iconColor: textColor,
-                          press: () {},
+                          press: () {
+                            Navigator.push(
+                                context,
+                                PageTransition(
+                                    child: const InfomationScreen(),
+                                    type: PageTransitionType
+                                        .leftToRightWithFade));
+                          },
                         ),
                         const SizedBox(height: 10),
                         ProfileWidget(

@@ -139,85 +139,87 @@ class _LoginState extends State<Login> {
                       //     passwordController.text.isEmpty) {
                       //   _errorMessage = "Mật khẩu không được để trống";
                       // }
-                      if (_formPhoneNumberKey.currentState!.validate() &&
-                          _formPwdKey.currentState!.validate()) {
-                        _formPwdKey.currentState!.save();
-                        _formPhoneNumberKey.currentState!.save();
-                        //call api change pwd
 
-                        LoginResponseModel? responseModel =
-                            await accountController.login(
-                                phoneController.text, passwordController.text);
-                        if (responseModel != null) {
-                          if (responseModel.statusCode == 17) {
-                            _responseMessage =
-                                "Admin không thể đăng nhập trên mobile";
-                          } else if (responseModel.statusCode == 10) {
-                            _responseMessage =
-                                "Sai số điện thoại hoặc mật khẩu";
-                          } else {
-                            CurrentUser currentUserModel =
-                                await accountController.getCurrentUser();
-                            if (currentUserModel != null) {
-                              baseController.saveStringtoSharedPreference(
-                                  "CURRENT_USER_NAME", currentUserModel.name);
-                              baseController.saveStringtoSharedPreference(
-                                  "CURRENT_USER_EMAIL", currentUserModel.email);
-                              baseController.saveStringtoSharedPreference(
-                                  "CURRENT_USER_AVATAR",
-                                  currentUserModel.avatar);
-                              baseController.saveStringtoSharedPreference(
-                                  "CURRENT_USER_ID",
-                                  currentUserModel.accountId);
-                            }
-                            Navigator.push(
-                                context,
-                                PageTransition(
-                                    child: const BaseScreen(),
-                                    type: PageTransitionType.fade));
-                          }
-                        }
-                      }
+                      // if (_formPhoneNumberKey.currentState!.validate() &&
+                      //     _formPwdKey.currentState!.validate()) {
+                      //   _formPwdKey.currentState!.save();
+                      //   _formPhoneNumberKey.currentState!.save();
+                      //   //call api change pwd
+
+                      //   LoginResponseModel? responseModel =
+                      //       await accountController.login(
+                      //           phoneController.text, passwordController.text);
+                      //   if (responseModel != null) {
+                      //     if (responseModel.statusCode == 17) {
+                      //       _responseMessage =
+                      //           "Admin không thể đăng nhập trên mobile";
+                      //     } else if (responseModel.statusCode == 10) {
+                      //       _responseMessage =
+                      //           "Sai số điện thoại hoặc mật khẩu";
+                      //     } else {
+                      //       CurrentUser currentUserModel =
+                      //           await accountController.getCurrentUser();
+                      //       if (currentUserModel != null) {
+                      //         baseController.saveStringtoSharedPreference(
+                      //             "CURRENT_USER_NAME", currentUserModel.name);
+                      //         baseController.saveStringtoSharedPreference(
+                      //             "CURRENT_USER_EMAIL", currentUserModel.email);
+                      //         baseController.saveStringtoSharedPreference(
+                      //             "CURRENT_USER_AVATAR",
+                      //             currentUserModel.avatar);
+                      //         baseController.saveStringtoSharedPreference(
+                      //             "CURRENT_USER_ID",
+                      //             currentUserModel.accountId);
+                      //       }
+                      Navigator.push(
+                          context,
+                          PageTransition(
+                              child: const BaseScreen(),
+                              type: PageTransitionType.fade));
+                      //    }
+                      //  }
+                      //}
                       // if (_responseMessage == null) {
                       //   _responseMessage = "";
                       // }
-                      if (_responseMessage != null) {
-                        // ignore: use_build_context_synchronously
-                        showDialog(
-                          context: context,
-                          builder: (context) {
-                            return AlertDialog(
-                              title: Align(
-                                  alignment: Alignment.center,
-                                  child: Text('Lỗi!!')),
-                              content: Text('$_responseMessage'),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15),
-                              ),
-                              actions: <Widget>[
-                                ElevatedButton(
-                                  child: Text(
-                                    'Đã hiểu',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w700,
-                                        color: kPrimaryColor),
-                                  ),
-                                  style: ElevatedButton.styleFrom(
-                                      elevation: 0,
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(30)),
-                                      backgroundColor: kBackgroundColor),
-                                  onPressed: () {
-                                    // Perform some action
-                                    Navigator.of(context).pop();
-                                  },
-                                )
-                              ],
-                            );
-                          },
-                        );
-                      }
+                      // if (_responseMessage != null) {
+                      //   // ignore: use_build_context_synchronously
+                      //   showDialog(
+                      //     context: context,
+                      //     builder: (context) {
+                      //       return AlertDialog(
+                      //         title: Align(
+                      //             alignment: Alignment.center,
+                      //             child: Text('Lỗi!!')),
+                      //         content: Text('$_responseMessage'),
+                      //         shape: RoundedRectangleBorder(
+                      //           borderRadius: BorderRadius.circular(15),
+                      //         ),
+                      //         actions: <Widget>[
+                      //           ElevatedButton(
+                      //             child: Text(
+                      //               'Đã hiểu',
+                      //               style: TextStyle(
+                      //                   fontWeight: FontWeight.w700,
+                      //                   color: kPrimaryColor),
+                      //             ),
+                      //             style: ElevatedButton.styleFrom(
+                      //                 elevation: 0,
+                      //                 shape: RoundedRectangleBorder(
+                      //                     borderRadius:
+                      //                         BorderRadius.circular(30)),
+                      //                 backgroundColor: kBackgroundColor),
+                      //             onPressed: () {
+                      //               // Perform some action
+                      //               Navigator.of(context).pop();
+                      //             },
+                      //           )
+                      //         ],
+                      //       );
+                      //     },
+                      //   );
+                      // }
+
                       // if (_errorMessage == null) {
                       //   _errorMessage = "";
                       // }

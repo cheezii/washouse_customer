@@ -15,7 +15,7 @@ import '../../resource/controller/category_controller.dart';
 import '../../resource/models/category.dart';
 import '../../resource/models/post.dart';
 import 'package:washouse_customer/resource/models/center.dart';
-import '../center/list_center_screen.dart';
+import '../center/list_center.dart';
 import 'components/category_card.dart';
 import 'components/home_header.dart';
 import 'components/title_with_more_button.dart';

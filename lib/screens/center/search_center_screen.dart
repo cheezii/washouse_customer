@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
-import 'package:washouse_customer/screens/center/list_center_screen.dart';
+import 'package:washouse_customer/screens/center/list_center.dart';
 
 import '../../components/constants/color_constants.dart';
 import '../../components/constants/text_constants.dart';
