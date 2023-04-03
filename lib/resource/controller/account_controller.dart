@@ -54,6 +54,7 @@ class AccountController {
       String url = '$baseUrl/accounts/me';
       http.Response response =
           await baseController.makeAuthenticatedRequest(url, {});
+
       print(response.statusCode);
       if (response.statusCode == 200) {
         // Handle successful response
@@ -85,9 +86,10 @@ class AccountController {
           "access-control-allow-origin": "*",
         },
       );
-      print("a");
+      print('step 1: $body');
       var statusCode = jsonDecode(response.body)["statusCode"];
       var message = jsonDecode(response.body)["message"];
+      print('step 2: $statusCode + $message');
       if (statusCode == 10) {
         return new LoginResponseModel(
             statusCode: 10, message: message, data: null);
@@ -102,13 +104,14 @@ class AccountController {
       Token? token = jsonDecode(response.body)["data"] != null
           ? Token?.fromJson(jsonDecode(response.body)["data"])
           : null;
+      print('step 3: $token');
       if (token != null) {
         responseModel = new LoginResponseModel(
             statusCode: statusCode, message: message, data: token);
       }
       if (statusCode == 0 && token != null) {
         var accessToken = token.accessToken;
-        print(accessToken);
+        print('step 4: $accessToken');
         var refreshToken = token.refreshToken;
         if (accessToken != null && refreshToken != null) {
           await baseController.saveAccessToken(accessToken);
@@ -118,6 +121,7 @@ class AccountController {
     } catch (e) {
       print('error: $e');
     }
+    print('step 5: ${responseModel?.message}');
     return responseModel;
   }
 }

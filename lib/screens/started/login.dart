@@ -113,6 +113,8 @@ class _LoginState extends State<Login> {
                       //     passwordController.text.isEmpty) {
                       //   _errorMessage = "Mật khẩu không được để trống";
                       // }
+                      // print(phoneController.text);
+                      // print(passwordController.text);
 
                       // LoginResponseModel? responseModel =
                       //     await accountController.login(
@@ -142,8 +144,8 @@ class _LoginState extends State<Login> {
                           PageTransition(
                               child: const BaseScreen(),
                               type: PageTransitionType.fade));
-                      //   }
-                      // }
+                      //  }
+                      //}
                       // if (_errorMessage == null) {
                       //   _errorMessage = "";
                       // }
