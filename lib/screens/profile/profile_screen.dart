@@ -4,6 +4,7 @@ import 'package:washouse_customer/components/constants/color_constants.dart';
 import 'package:washouse_customer/components/constants/size.dart';
 import 'package:washouse_customer/screens/profile/information_screen.dart';
 import 'package:washouse_customer/screens/profile/manage_account_screen.dart';
+import 'package:washouse_customer/screens/profile/my_feed_back_screen.dart';
 import 'package:washouse_customer/screens/profile/payment_screen.dart';
 import 'dart:async';
 import '../../resource/controller/base_controller.dart';
@@ -167,7 +168,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           title: 'Đánh giá',
                           txtColor: textColor,
                           iconColor: textColor,
-                          press: () {},
+                          press: () {
+                            Navigator.push(
+                                context,
+                                PageTransition(
+                                    child: MyFeedbackScreen(),
+                                    type: PageTransitionType
+                                        .rightToLeftWithFade));
+                          },
                         ),
                         const SizedBox(height: 10),
                         ProfileWidget(

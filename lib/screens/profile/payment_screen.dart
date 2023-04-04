@@ -109,7 +109,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                       'assets/images/transaction/wallet.png'),
                                 ),
                                 const SizedBox(width: 10),
-                                Text(
+                                const Text(
                                   'Nạp tiền vào ví',
                                   style: TextStyle(
                                       color: Colors.white,

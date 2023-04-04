@@ -172,43 +172,6 @@ class _FillAddressScreenState extends State<FillAddressScreen> {
           ),
         ),
       ),
-      // bottomNavigationBar: Container(
-      //   padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
-      //   height: 70,
-      //   decoration: BoxDecoration(
-      //     color: Colors.white,
-      //     borderRadius: const BorderRadius.only(
-      //         topLeft: Radius.circular(30), topRight: Radius.circular(30)),
-      //     boxShadow: [
-      //       BoxShadow(
-      //         offset: const Offset(0, -15),
-      //         blurRadius: 20,
-      //         color: const Color(0xffdadada).withOpacity(0.15),
-      //       ),
-      //     ],
-      //   ),
-      //   child: SizedBox(
-      //     width: 190,
-      //     height: 40,
-      //     child: ElevatedButton(
-      //       style: ElevatedButton.styleFrom(
-      //           shape: RoundedRectangleBorder(
-      //               borderRadius: BorderRadius.circular(10.0)),
-      //           backgroundColor: kPrimaryColor),
-      //       onPressed: () {
-      //         Navigator.push(
-      //             context,
-      //             MaterialPageRoute(
-      //                 builder: (context) =>
-      //                     CheckoutScreen(cart: demoCarts[0])));
-      //       },
-      //       child: const Text(
-      //         'Xác nhận',
-      //         style: TextStyle(fontSize: 17),
-      //       ),
-      //     ),
-      //   ),
-      // ),
     );
   }
 }

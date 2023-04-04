@@ -13,7 +13,7 @@ class OrderProcessingScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     int counter = 0;
     List<Order> processingList = [];
-    for (var item in orderList) {
+    for (var item in processingList) {
       if (item.status == 2) {
         counter++;
         processingList.add(item);
