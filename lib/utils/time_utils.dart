@@ -92,4 +92,9 @@ class TimeUtils {
   String getDisplayName(String dateTime) {
     return dateTime.substring(0, 5);
   }
+
+  String getDisplayTime(String dateTime) {
+    List<String> subString = dateTime.split(' ');
+    return '${subString[0].substring(0, 5)} ${subString[1].substring(0, 5)}';
+  }
 }
