@@ -6,7 +6,7 @@ import 'package:washouse_customer/components/route/route_generator.dart';
 import 'package:washouse_customer/screens/cart/cart_screen.dart';
 import 'package:washouse_customer/screens/center/center_details_screen.dart';
 import 'package:washouse_customer/screens/started/onboarding.dart';
-
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'screens/center/service/service_detail_screen.dart';
 
 void main() {
@@ -25,6 +25,11 @@ class MyApp extends StatelessWidget {
       onGenerateRoute: RouteGenerator.generateRoute,
       home: SafeArea(child: Onboarding()),
       debugShowCheckedModeBanner: false,
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
       supportedLocales: [
         //Locale('en', 'US'),
         Locale('vi', 'VN'),

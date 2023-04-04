@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:washouse_customer/screens/profile/components/change_name_alertdialog.dart';
 import 'package:washouse_customer/screens/profile/components/information_widget.dart';
-import 'package:flutter_cupertino_localizations/flutter_cupertino_localizations.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 import '../../components/constants/color_constants.dart';
 
