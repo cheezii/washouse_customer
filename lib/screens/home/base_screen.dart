@@ -44,7 +44,7 @@ class _BaseScreenState extends State<BaseScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var provider = Provider.of<CartProvidder>(context);
+    var provider = Provider.of<CartProvider>(context);
     return badges.Badge(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
@@ -53,16 +53,18 @@ class _BaseScreenState extends State<BaseScreen> {
           children: pages,
         ),
         floatingActionButton: badges.Badge(
-          badgeContent: Consumer<CartProvidder>(
+          badgeContent: Consumer<CartProvider>(
             builder: (context, value, child) {
               bool checkItem;
-              if (value.getCounter() > 0) {
+              //if (value.getCounter() > 0) {
+              if (value.cartItems.isNotEmpty) {
                 checkItem = true;
               } else {
                 checkItem = false;
               }
               return Text(
-                checkItem ? value.getCounter().toString() : '0',
+                //checkItem ? value.getCounter().toString() : '0',
+                checkItem ? value.cartItems.length.toString() : '0',
                 style: TextStyle(color: Colors.white),
               );
             },
@@ -85,7 +87,8 @@ class _BaseScreenState extends State<BaseScreen> {
                 '/cart',
                 arguments: _centerName,
               );
-              provider.removerCounter();
+              //provider.removerCounter();
+              //provider.removerCounter();
             },
             backgroundColor: kPrimaryColor,
             child: const Icon(Icons.shopping_bag),

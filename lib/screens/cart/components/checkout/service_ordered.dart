@@ -14,7 +14,8 @@ class ServiceOrdered extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<CartProvidder>(
+    List<CartItem> cartItems = Provider.of<CartProvider>(context).cartItems;
+    return Consumer<CartProvider>(
       builder: (context, value, child) {
         {
           return Column(
@@ -43,10 +44,12 @@ class ServiceOrdered extends StatelessWidget {
                 child: ListView.builder(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
-                  itemCount: demoCarts.length,
+                  //itemCount: demoCarts.length,
+                  itemCount: cartItems.length,
                   itemBuilder: (context, index) {
                     bool checkUnitType;
-                    if (demoCarts[index].service.unit?.compareTo('Kg') == 0) {
+                    //if (demoCarts[index].service.unit?.compareTo('Kg') == 0) {
+                    if (cartItems[index].unit?.compareTo('Kg') == 0) {
                       checkUnitType = true;
                     } else {
                       checkUnitType = false;
@@ -64,7 +67,8 @@ class ServiceOrdered extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(15),
                               ),
                               child:
-                                  Image.asset(demoCarts[index].service.image!),
+                                  //Image.asset(demoCarts[index].service.image!),
+                                  Image.network(cartItems[index].thumbnail!),
                             ),
                           ),
                         ),
@@ -76,7 +80,8 @@ class ServiceOrdered extends StatelessWidget {
                               SizedBox(
                                 width: 200,
                                 child: Text(
-                                  demoCarts[index].service.name!,
+                                  //demoCarts[index].service.name!,
+                                  cartItems[index].name,
                                   style: const TextStyle(
                                       fontSize: 17,
                                       color: Colors.black,
@@ -89,18 +94,21 @@ class ServiceOrdered extends StatelessWidget {
                                 children: [
                                   checkUnitType
                                       ? Text(
-                                          'KL: x${demoCarts[index].measurement} kg',
+                                          //'KL: x${demoCarts[index].measurement} kg',
+                                          'KL: x${cartItems[index].measurement} kg',
                                           style: const TextStyle(
                                               color: textColor, fontSize: 16),
                                         )
                                       : Text(
-                                          'SL: x${demoCarts[index].measurement}',
+                                          //'SL: x${demoCarts[index].measurement}',
+                                          'SL: x${cartItems[index].measurement}',
                                           style: const TextStyle(
                                               color: textColor, fontSize: 16),
                                         ),
                                   const Spacer(),
                                   Text(
-                                    '${PriceUtils().convertFormatPrice(demoCarts[index].service.price!.round() * demoCarts[index].measurement)} đ',
+                                    //'${PriceUtils().convertFormatPrice(demoCarts[index].service.price!.round() * demoCarts[index].measurement)} đ',
+                                    '${PriceUtils().convertFormatPrice(cartItems[index].price!.round() * cartItems[index].measurement)} đ',
                                     style: const TextStyle(
                                       color: kPrimaryColor,
                                       fontWeight: FontWeight.bold,

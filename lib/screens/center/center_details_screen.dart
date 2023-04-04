@@ -167,21 +167,21 @@ class _CenterDetailScreenState extends State<CenterDetailScreen> {
                               (index) => Padding(
                                 padding: const EdgeInsets.all(5),
                                 child: MenuItemCard(
-                                    title: items[index].serviceName!,
-                                    image: items[index].image == null
-                                        ? "none"
-                                        : items[index].image!,
-                                    description: items[index].description!,
-                                    price: items[index].priceType!
-                                        ? '${items[index].prices!.last.price}-${items[index].prices!.first.price}'
-                                        : items[index].price!.toString(),
-                                    press: () => Navigator.pushNamed(
-                                          context,
-                                          '/serviceDetails',
-                                          arguments: items[index],
-                                        )
-                                    //ScreenArguments(centerArgs, items[index])),
-                                    ),
+                                  title: items[index].serviceName!,
+                                  image: items[index].image == null
+                                      ? "none"
+                                      : items[index].image!,
+                                  description: items[index].description!,
+                                  price: items[index].priceType!
+                                      ? '${items[index].prices!.last.price}-${items[index].prices!.first.price}'
+                                      : items[index].price!.toString(),
+                                  press: () => Navigator.pushNamed(
+                                      context, '/serviceDetails',
+                                      //   arguments: items[index],
+                                      // )
+                                      arguments: ScreenArguments(
+                                          centerArgs, items[index])),
+                                ),
                               ),
                             ),
                           )

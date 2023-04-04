@@ -76,7 +76,7 @@ class _CheckOutCardState extends State<CheckOutCard> {
             ),
           ),
           const SizedBox(height: 20),
-          Consumer<CartProvidder>(
+          Consumer<CartProvider>(
             builder: (context, value, child) {
               bool checkPrice;
               if (value.getTotalPrice() > 0) {
@@ -85,6 +85,7 @@ class _CheckOutCardState extends State<CheckOutCard> {
                 checkPrice = false;
               }
               bool checkItem;
+              //if (value.getCounter() > 0) {
               if (value.getCounter() > 0) {
                 checkItem = true;
               } else {

@@ -173,7 +173,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             separateLine(),
             const ShippingMethod(),
             separateLine(),
-            Consumer<CartProvidder>(
+            Consumer<CartProvider>(
               builder: (context, value, child) {
                 {
                   return Padding(

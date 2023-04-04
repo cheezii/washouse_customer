@@ -12,22 +12,26 @@ import '../../../../utils/price_util.dart';
 import 'temp_delete/cart_item_card.dart';
 
 class CartBodyScreen extends StatefulWidget {
-  final String centerName;
-  const CartBodyScreen({super.key, required this.centerName});
+  const CartBodyScreen({super.key});
 
   @override
   State<CartBodyScreen> createState() => _CartBodyScreenState();
 }
 
 class _CartBodyScreenState extends State<CartBodyScreen> {
-  TextEditingController kilogramController = TextEditingController();
+  //TextEditingController kilogramController = TextEditingController();
+  @override
+  void initState() {
+    super.initState();
+    context.read<CartProvider>().loadCartItemsFromPrefs();
+  }
+
   @override
   Widget build(BuildContext context) {
-    var provider = Provider.of<CartProvidder>(context);
-    var cart = provider.cart;
+    var provider = Provider.of<CartProvider>(context);
     return Padding(
       padding: const EdgeInsets.only(top: 16, right: 16, left: 16),
-      child: Consumer<CartProvidder>(builder: (context, value, child) {
+      child: Consumer<CartProvider>(builder: (context, value, child) {
         //var cart = value.getCart(); //lấy cart để hiện thị ở đây
         return Column(
           children: [
@@ -49,18 +53,24 @@ class _CartBodyScreenState extends State<CartBodyScreen> {
             const SizedBox(height: 16),
             ListView.builder(
                 shrinkWrap: true,
-                itemCount: cart.length,
+                itemCount: value.cartItems.length,
                 itemBuilder: (context, index) {
-                  int? id = cart[index]!.service.id;
-                  num? measurement = cart[index]?.measurement ?? 0;
-                  ServiceDemo? service = cart[index]?.service;
-                  String? unit = service?.unit ?? '';
-                  String image = service?.image ?? '';
-                  double? price = service?.price! ?? 0;
+                  int? id = value.cartItems[index].serviceId;
+                  num? measurement = value.cartItems[index]?.measurement ?? 0;
+                  //ServiceDemo? service = cart[index]?.service;
+                  String? unit = value.cartItems[index].unit ?? '';
+                  String image = value.cartItems[index].thumbnail ?? '';
+                  double? price = value.cartItems[index].price! ?? 0;
                   double? productPrice = price * measurement;
 
                   bool checkUnit;
-
+                  TextEditingController kilogramController =
+                      TextEditingController(
+                          text: value.cartItems[index].measurement.toString());
+                  //kilogramController = TextEditingController(
+                  //    text: value.cartItems[index].measurement.toString());
+                  // kilogramController.selection = TextSelection.fromPosition(
+                  //    TextPosition(offset: kilogramController.text.length));
                   if ('Kg'.compareTo(unit) == 0) {
                     checkUnit = true;
                   } else {
@@ -89,10 +99,12 @@ class _CartBodyScreenState extends State<CartBodyScreen> {
                         ),
                       ),
                       onDismissed: (direction) {
-                        provider.clear(id!);
-                        setState(() {
-                          demoCarts.removeAt(index);
-                        });
+                        //provider.clear(id!);
+                        value.removeItemFromCart(value.cartItems[index]);
+                        value.removerCounter();
+                        // setState(() {
+
+                        // });
                       },
                       child: Row(
                         children: [
@@ -118,7 +130,7 @@ class _CartBodyScreenState extends State<CartBodyScreen> {
                                 SizedBox(
                                   width: 200,
                                   child: Text(
-                                    service?.name as String,
+                                    value.cartItems[index].name as String,
                                     style: const TextStyle(
                                         fontSize: 19,
                                         color: Colors.black,
@@ -143,6 +155,11 @@ class _CartBodyScreenState extends State<CartBodyScreen> {
                                                           kilogramController,
                                                       keyboardType:
                                                           TextInputType.number,
+                                                      onChanged: (value) {
+                                                        // Do something with the new value, for example, print it to the console
+                                                        print(
+                                                            'New value: $value');
+                                                      },
                                                       decoration:
                                                           const InputDecoration(
                                                         enabledBorder:
@@ -201,10 +218,11 @@ class _CartBodyScreenState extends State<CartBodyScreen> {
                                                   if (measurement > 0) {
                                                     provider
                                                         .removeFromCartWithQuantity(
-                                                            cart[index]!);
+                                                            value.cartItems[
+                                                                index]!);
                                                   } else {
-                                                    provider.clear(
-                                                        service?.id as int);
+                                                    // provider.clear(
+                                                    //     service?.id as int);
                                                   }
                                                   provider.removeTotalPrice(
                                                       productPrice);
@@ -239,7 +257,8 @@ class _CartBodyScreenState extends State<CartBodyScreen> {
                                                 onTap: () {
                                                   provider
                                                       .addToCartWithQuantity(
-                                                          cart[index]!);
+                                                          value.cartItems[
+                                                              index]!);
                                                   provider.removeTotalPrice(
                                                       productPrice);
                                                 },

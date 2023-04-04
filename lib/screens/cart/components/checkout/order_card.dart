@@ -16,6 +16,7 @@ class OrderCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    List<CartItem> cartItems = Provider.of<CartProvider>(context).cartItems;
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
       height: 174,
@@ -60,7 +61,7 @@ class OrderCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 20),
-          Consumer<CartProvidder>(
+          Consumer<CartProvider>(
             builder: (context, value, child) {
               {
                 return Row(
@@ -94,7 +95,8 @@ class OrderCard extends StatelessWidget {
                             context,
                             PageTransition(
                                 child: CheckoutScreen(
-                                  cart: demoCarts[0],
+                                  //cart: demoCarts[0],
+                                  cart: cartItems[0],
                                 ),
                                 type: PageTransitionType.leftToRightWithFade),
                           );

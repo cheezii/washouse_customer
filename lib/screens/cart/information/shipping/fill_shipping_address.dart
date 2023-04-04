@@ -3,11 +3,13 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
+import 'package:provider/provider.dart';
 import 'package:washouse_customer/resource/models/cart_item.dart';
 import 'package:washouse_customer/screens/cart/checkout_screen.dart';
 
 import '../../../../components/constants/color_constants.dart';
 import '../../../../components/constants/text_constants.dart';
+import '../../../../resource/controller/cart_provider.dart';
 
 class FillAddressScreen extends StatefulWidget {
   const FillAddressScreen({super.key});
@@ -59,6 +61,7 @@ class _FillAddressScreenState extends State<FillAddressScreen> {
 
   @override
   Widget build(BuildContext context) {
+    List<CartItem> cartItems = Provider.of<CartProvider>(context).cartItems;
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -200,7 +203,8 @@ class _FillAddressScreenState extends State<FillAddressScreen> {
                   context,
                   MaterialPageRoute(
                       builder: (context) =>
-                          CheckoutScreen(cart: demoCarts[0])));
+                          //CheckoutScreen(cart: demoCarts[0])));
+                          CheckoutScreen(cart: cartItems[0])));
             },
             child: const Text(
               'Xác nhận',

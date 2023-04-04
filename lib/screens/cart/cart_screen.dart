@@ -12,21 +12,19 @@ import 'components/cart/checkout_card.dart';
 import 'information/shipping/fill_shipping_address.dart';
 
 class CartScreen extends StatefulWidget {
-  final centerName;
-  const CartScreen({super.key, this.centerName});
+  //final centerName;
+  //const CartScreen({super.key, this.centerName});
+  const CartScreen({super.key});
 
   @override
   State<CartScreen> createState() => _CartScreenState();
 }
 
 class _CartScreenState extends State<CartScreen> {
-  late String _centerName;
-
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _centerName = widget.centerName;
   }
 
   @override
@@ -63,7 +61,10 @@ class _CartScreenState extends State<CartScreen> {
           ),
         ],
       ),
-      body: CartBodyScreen(centerName: _centerName),
+      //Giỏ hàng trống thì không hiện bên dưới set lại body và bottomNavigationBar nếu giỏ hàng trống
+
+      //body: CartBodyScreen(centerName: _centerName),
+      body: const CartBodyScreen(),
       bottomNavigationBar: const CheckOutCard(),
     );
   }

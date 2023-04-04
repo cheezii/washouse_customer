@@ -141,17 +141,34 @@ class CenterController {
     // return center;
     Response response = await get(Uri.parse('$baseUrl/centers/$centerId'));
     LaundryCenter center = LaundryCenter();
-
+    print(response.statusCode);
     try {
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body)['data'];
         center = LaundryCenter.fromJson(data);
+      } else {
+        throw Exception('Error fetching user data: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('get service error: $e');
+    }
+    return center;
+  }
+
+  Future<String?> getCenterNameById(int centerId) async {
+    Response response = await get(Uri.parse('$baseUrl/centers/$centerId'));
+    String? centerName;
+
+    try {
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body)['data']['title'];
+        //centerName = data.toString();
       } else {
         throw Exception("Lỗi khi load Json");
       }
     } catch (e) {
       print('get service error: $e');
     }
-    return center;
+    return centerName;
   }
 }

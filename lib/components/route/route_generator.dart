@@ -14,16 +14,17 @@ class RouteGenerator {
       case '/serviceDetails':
         return MaterialPageRoute(
           builder: (context) {
-            //final arrguments = settings.arguments as ScreenArguments;
-            // return ServiceDetailScreen(
-            //     centerData: arrguments.screen1,
-            //     serviceData: arrguments.screen2);
-            return ServiceDetailScreen(serviceData: args);
+            final arrguments = settings.arguments as ScreenArguments;
+            return ServiceDetailScreen(
+                centerData: arrguments.screen1,
+                serviceData: arrguments.screen2);
+            // return ServiceDetailScreen(serviceData: args);
           },
         );
       case '/cart':
         return MaterialPageRoute(
-          builder: (context) => CartScreen(centerName: args),
+          //builder: (context) => CartScreen(centerName: args),
+          builder: (context) => CartScreen(),
         );
       default:
         return _errorRoute();
@@ -34,10 +35,10 @@ class RouteGenerator {
     return MaterialPageRoute(builder: (context) {
       return Scaffold(
         appBar: AppBar(
-          title: Text('ERROR'),
+          title: const Text('ERROR'),
           centerTitle: true,
         ),
-        body: Center(
+        body: const Center(
           child: Text('Không tìm thấy trang!'),
         ),
       );
@@ -45,9 +46,9 @@ class RouteGenerator {
   }
 }
 
-// class ScreenArguments {
-//   final screen1;
-//   final screen2;
+class ScreenArguments {
+  final screen1;
+  final screen2;
 
-//   ScreenArguments(this.screen1, this.screen2);
-// }
+  ScreenArguments(this.screen1, this.screen2);
+}

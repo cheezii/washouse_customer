@@ -14,7 +14,7 @@ import 'screens/center/service/service_detail_screen.dart';
 void main() {
   runApp(
     ChangeNotifierProvider(
-      create: (context) => CartProvidder(),
+      create: (context) => CartProvider(),
       child: const MyApp(),
     ),
   );

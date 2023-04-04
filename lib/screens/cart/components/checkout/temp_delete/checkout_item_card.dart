@@ -25,7 +25,8 @@ class CheckoutItemCard extends StatelessWidget {
                 color: const Color(0xfff5f6f9),
                 borderRadius: BorderRadius.circular(15),
               ),
-              child: Image.asset(cart.service.image![0]),
+              //child: Image.asset(cart.service.image![0]),
+              child: Image.asset(cart.thumbnail![0]),
             ),
           ),
         ),
@@ -37,7 +38,8 @@ class CheckoutItemCard extends StatelessWidget {
               SizedBox(
                 width: 200,
                 child: Text(
-                  cart.service.name!,
+                  //cart.service.name!,
+                  cart.name,
                   style: const TextStyle(
                       fontSize: 17,
                       color: Colors.black,
@@ -54,7 +56,8 @@ class CheckoutItemCard extends StatelessWidget {
                   ),
                   const Spacer(),
                   Text(
-                    '${PriceUtils().convertFormatPrice(cart.service.price!.round() * cart.measurement)} đ',
+                    //'${PriceUtils().convertFormatPrice(cart.service.price!.round() * cart.measurement)} đ',
+                    '${PriceUtils().convertFormatPrice(cart.price!.round() * cart.measurement)} đ',
                     style: const TextStyle(
                       color: kPrimaryColor,
                       fontWeight: FontWeight.bold,

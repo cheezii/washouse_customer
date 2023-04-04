@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:washouse_customer/utils/price_util.dart';
 
 import '../../../../components/constants/color_constants.dart';
+import '../../../../resource/controller/cart_provider.dart';
 import '../../../../resource/models/cart_item.dart';
 
 class DetailItemCard extends StatelessWidget {
@@ -13,6 +15,7 @@ class DetailItemCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    //List<CartItem> cartItems = Provider.of<CartProvider>(context).cartItems;
     return Row(
       children: [
         SizedBox(
@@ -25,7 +28,8 @@ class DetailItemCard extends StatelessWidget {
                 color: const Color(0xfff5f6f9),
                 borderRadius: BorderRadius.circular(15),
               ),
-              child: Image.asset(cart.service.image!),
+              //child: Image.asset(cart.service.image!),
+              child: Image.network(cart.thumbnail!),
             ),
           ),
         ),
@@ -37,7 +41,8 @@ class DetailItemCard extends StatelessWidget {
               SizedBox(
                 width: 200,
                 child: Text(
-                  cart.service.name!,
+                  //cart.service.name!,
+                  cart.name,
                   style: const TextStyle(
                       fontSize: 17,
                       color: Colors.black,
@@ -54,7 +59,8 @@ class DetailItemCard extends StatelessWidget {
                   ),
                   const Spacer(),
                   Text(
-                    '${PriceUtils().convertFormatPrice(cart.service.price!.round() * cart.measurement)} đ',
+                    //'${PriceUtils().convertFormatPrice(cart.service.price!.round() * cart.measurement)} đ',
+                    '${PriceUtils().convertFormatPrice(cart.price!.round() * cart.measurement)} đ',
                     style: const TextStyle(
                       color: kPrimaryColor,
                       fontWeight: FontWeight.bold,
