@@ -8,13 +8,13 @@ import '../models/cart_item.dart';
 
 class CartProvider extends ChangeNotifier {
   List<CartItem> _cartItems = [];
-  late int _counter;
+  //late int _counter;
   late String _centerName;
   late double _totalPrice;
 
   List<CartItem> get cartItems => _cartItems;
 
-  int get counter => _counter;
+  //int get counter => _counter;
   String get centerName => _centerName;
   double get totalPrice => _totalPrice;
 
@@ -37,7 +37,11 @@ class CartProvider extends ChangeNotifier {
     int existingItemIndex =
         _cartItems.indexWhere((item) => item.serviceId == newItem.serviceId);
     if (existingItemIndex == -1) {
+      newItem.price = CartUtils.getTotalPriceOfCartItem(newItem);
+      print('newItem.price:${newItem.price}');
+      addTotalPrice(newItem.price!);
       _cartItems.add(newItem);
+      print('_totalPrice:${_totalPrice}');
     } else {
       CartItem existingItem = _cartItems[existingItemIndex];
       if (newItem.priceType) {
@@ -57,7 +61,9 @@ class CartProvider extends ChangeNotifier {
         newItem.measurement = newItem.measurement + existingItem.measurement;
         newItem.price = CartUtils.getTotalPriceOfCartItem(newItem);
       }
+      removeTotalPrice(existingItem.price!);
       _cartItems.removeAt(existingItemIndex);
+      addTotalPrice(newItem.price!);
       _cartItems.add(newItem);
     }
     notifyListeners();
@@ -65,7 +71,10 @@ class CartProvider extends ChangeNotifier {
   }
 
   void removeItemFromCart(CartItem itemToRemove) {
-    _cartItems.removeWhere((item) => item.serviceId == itemToRemove.serviceId);
+    int existingItemIndex = _cartItems
+        .indexWhere((item) => item.serviceId == itemToRemove.serviceId);
+    removeTotalPrice(_cartItems[existingItemIndex].price!);
+    _cartItems.remove(_cartItems[existingItemIndex]);
     notifyListeners();
     saveCartItemsToPrefs();
   }
@@ -80,14 +89,14 @@ class CartProvider extends ChangeNotifier {
 
   void _setPrefItems() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setInt('cart_item', _counter);
+    //prefs.setInt('cart_item', _counter);
     prefs.setDouble('total_price', _totalPrice);
     notifyListeners();
   }
 
   void _getPrefItems() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    _counter = prefs.getInt('cart_item') ?? 0;
+    //_counter = prefs.getInt('cart_item') ?? 0;
     _totalPrice = prefs.getDouble('total_price') ?? 0;
     notifyListeners();
   }
@@ -98,13 +107,22 @@ class CartProvider extends ChangeNotifier {
   // }
 
   void addTotalPrice(double productPrice) {
-    _totalPrice = _totalPrice + productPrice;
+    print('productPrice-${productPrice}'); //35
+    print('_totalPrice-${_totalPrice}'); //0
+    _totalPrice += productPrice;
+    //(_totalPrice + productPrice) > 0 ? (_totalPrice + productPrice) : 0;
+    print('_totalPriceAfter-${_totalPrice}');
     _setPrefItems();
     notifyListeners();
   }
 
   void removeTotalPrice(double productPrice) {
-    _totalPrice = _totalPrice - productPrice;
+    print('productPriceRemove-${productPrice}');
+    print('_totalPriceRemove-${_totalPrice}'); //0
+    print('_Remove-${(_totalPrice - productPrice)}'); //0
+    _totalPrice =
+        (_totalPrice - productPrice) > 0 ? _totalPrice - productPrice : 0;
+    print('_totalPriceAfterRemove-${_totalPrice}');
     _setPrefItems();
     notifyListeners();
   }
@@ -115,21 +133,21 @@ class CartProvider extends ChangeNotifier {
   }
 
   void addCounter() {
-    _counter++;
+    //_counter++;
     _setPrefItems();
     notifyListeners();
   }
 
   void removerCounter() {
-    _counter--;
+    //_counter--;
     _setPrefItems();
     notifyListeners();
   }
 
-  int getCounter() {
-    _getPrefItems();
-    return _counter;
-  }
+  // int getCounter() {
+  //   _getPrefItems();
+  //   return _counter;
+  // }
 
   //Map<int, CartItem> _cart = {};
 
@@ -173,28 +191,71 @@ class CartProvider extends ChangeNotifier {
 
   //kiểm tra đã có trong cart thì tăng 1, k thì thêm vào cart
   void addToCartWithQuantity(CartItem cart_item) {
+    // int existingItemIndex =
+    //     _cartItems.indexWhere((item) => item.serviceId == cart_item.serviceId);
+    // if (existingItemIndex >= 0) {
+    //   // _cartItems[existingItemIndex].measurement =
+    //   //     _cartItems[existingItemIndex].measurement + 1;
+    //   //print(_cartItems[existingItemIndex].measurement);
+    //   _cartItems[existingItemIndex].price =
+    //       CartUtils.getTotalPriceOfCartItem(cart_item);
+    // } else {
+    //   addTotalPrice(cart_item.price!);
+    //   _cartItems.add(cart_item);
+    // }
     int existingItemIndex =
         _cartItems.indexWhere((item) => item.serviceId == cart_item.serviceId);
-    if (existingItemIndex >= 0) {
-      _cartItems[existingItemIndex].measurement =
-          _cartItems[existingItemIndex].measurement + 1;
+    CartItem existingItem = _cartItems[existingItemIndex];
+    if (cart_item.priceType) {
+      double totalMeasurement = existingItem.measurement + 1;
+      double maxCapacity = cart_item.prices!.last.maxValue!.toDouble();
+      if (totalMeasurement <= maxCapacity) {
+        cart_item.measurement = totalMeasurement;
+        cart_item.price = CartUtils.getTotalPriceOfCartItem(cart_item);
+      } else {
+        cart_item.measurement = maxCapacity;
+        cart_item.price = CartUtils.getTotalPriceOfCartItem(cart_item);
+        print(
+            "Measurement capacity exceeded for item with serviceId ${existingItem.serviceId}");
+      }
     } else {
-      _cartItems.add(cart_item);
+      cart_item.measurement = 1 + existingItem.measurement;
+      cart_item.price = CartUtils.getTotalPriceOfCartItem(cart_item);
     }
+    removeTotalPrice(existingItem.price!);
+    _cartItems.removeAt(existingItemIndex);
+    addTotalPrice(cart_item.price!);
+    _cartItems.add(cart_item);
     notifyListeners();
     saveCartItemsToPrefs();
   }
 
   //có thì trừ không thì xóa
   void removeFromCartWithQuantity(CartItem cart_item) {
+    // int existingItemIndex =
+    //     _cartItems.indexWhere((item) => item.serviceId == cart_item.serviceId);
+    // if (existingItemIndex >= 0) {
+    //   _cartItems[existingItemIndex].measurement =
+    //       _cartItems[existingItemIndex].measurement - 1;
+
+    //   _cartItems[existingItemIndex].price =
+    //       CartUtils.getTotalPriceOfCartItem(cart_item);
+    // } else {
+    //   removeTotalPrice(_cartItems[existingItemIndex].price!);
+    //   _cartItems.remove(_cartItems[existingItemIndex]);
+    // }
+    // saveCartItemsToPrefs();
+    // notifyListeners();
     int existingItemIndex =
         _cartItems.indexWhere((item) => item.serviceId == cart_item.serviceId);
-    if (existingItemIndex >= 0) {
-      _cartItems[existingItemIndex].measurement =
-          _cartItems[existingItemIndex].measurement - 1;
-    } else {
-      _cartItems.remove(_cartItems[existingItemIndex]);
-    }
+    CartItem existingItem = _cartItems[existingItemIndex];
+    removeTotalPrice(existingItem.price!);
+    cart_item.measurement = existingItem.measurement - 1;
+    cart_item.price = CartUtils.getTotalPriceOfCartItem(cart_item);
+    _cartItems.removeAt(existingItemIndex);
+
+    addTotalPrice(cart_item.price!);
+    _cartItems.add(cart_item);
     notifyListeners();
     saveCartItemsToPrefs();
   }
