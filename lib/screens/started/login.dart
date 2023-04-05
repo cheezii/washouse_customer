@@ -65,6 +65,9 @@ class _LoginState extends State<Login> {
                       if (value!.isEmpty) {
                         return 'Số điện thoại không được để trống';
                       }
+                      if (!typePhoneNum.hasMatch(value)) {
+                        return 'Số điện thoại phải có mười số';
+                      }
                       return null;
                     },
                     onSaved: (newValue) {
@@ -93,9 +96,6 @@ class _LoginState extends State<Login> {
                     validator: (value) {
                       if (value!.isEmpty) {
                         return 'Mật khẩu không được để trống';
-                      }
-                      if (!typePhoneNum.hasMatch(value)) {
-                        return 'Số điện thoại phải có mười số';
                       }
                       return null;
                     },
