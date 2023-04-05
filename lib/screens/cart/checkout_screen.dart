@@ -202,7 +202,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                     style: TextStyle(fontSize: 16),
                                   ),
                                   Text(
-                                    '${PriceUtils().convertFormatPrice(value.getTotalPrice().round())} đ',
+                                    //'${PriceUtils().convertFormatPrice(value.getTotalPrice().round())} đ',
+                                    '${PriceUtils().convertFormatPrice(value.cartItems.fold(0.0, (sum, item) => sum + item.price!).round())} đ',
                                     style: const TextStyle(
                                         fontSize: 16,
                                         color: textColor,
@@ -260,7 +261,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                     style: TextStyle(fontSize: 17),
                                   ),
                                   Text(
-                                    '${PriceUtils().convertFormatPrice(value.getTotalPrice().round())} đ',
+                                    //'${PriceUtils().convertFormatPrice(value.getTotalPrice().round())} đ',
+                                    '${PriceUtils().convertFormatPrice(value.cartItems.fold(0.0, (sum, item) => sum + item.price!).round())} đ',
                                     style: const TextStyle(
                                         fontSize: 17,
                                         color: kPrimaryColor,

@@ -86,7 +86,7 @@ class _CheckOutCardState extends State<CheckOutCard> {
               }
               bool checkItem;
               //if (value.getCounter() > 0) {
-              if (value.getCounter() > 0) {
+              if (value.cartItems.length > 0) {
                 checkItem = true;
               } else {
                 checkItem = false;
@@ -100,7 +100,8 @@ class _CheckOutCardState extends State<CheckOutCard> {
                       children: [
                         TextSpan(
                           text: checkPrice
-                              ? '${PriceUtils().convertFormatPrice(value.getTotalPrice().round())} đ'
+                              //? '${PriceUtils().convertFormatPrice(value.getTotalPrice().round())} đ'
+                              ? '${PriceUtils().convertFormatPrice(value.cartItems.fold(0.0, (sum, item) => sum + item.price!).round())} đ'
                               : '0 đ',
                           style: const TextStyle(
                               fontSize: 20,
@@ -127,7 +128,8 @@ class _CheckOutCardState extends State<CheckOutCard> {
                         );
                       },
                       child: Text(
-                        'Thanh toán (${checkItem ? value.getCounter() : 0})',
+                        //'Thanh toán (${checkItem ? value.getCounter() : 0})',
+                        'Thanh toán (${value.cartItems.length})',
                         style: const TextStyle(fontSize: 17),
                       ),
                     ),

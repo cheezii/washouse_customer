@@ -70,16 +70,21 @@ class CartUtils {
           check = true;
         }
       }
+      print('currentPrice-${currentPrice}');
+      print('item.minPrice-${item.minPrice}');
       if (item.minPrice != null &&
           currentPrice * item.measurement < item.minPrice!) {
         totalCurrentPrice = item.minPrice!.toDouble();
       } else {
         totalCurrentPrice = currentPrice * item.measurement;
       }
+      print('totalCurrentPrice-${totalCurrentPrice}');
     } else {
       totalCurrentPrice = item.unitPrice! * item.measurement.toDouble();
       currentPrice = item.price!.toDouble();
     }
+
+    print(totalCurrentPrice);
     return totalCurrentPrice;
   }
 }

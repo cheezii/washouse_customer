@@ -8,7 +8,9 @@ import 'package:washouse_customer/resource/models/cart_item.dart';
 import 'package:washouse_customer/screens/center/component/details/category_menu.dart';
 
 import '../../../../resource/controller/cart_provider.dart';
+import '../../../../utils/formatter_util.dart';
 import '../../../../utils/price_util.dart';
+import '../../../../utils/shared_preferences_util.dart';
 import 'temp_delete/cart_item_card.dart';
 
 class CartBodyScreen extends StatefulWidget {
@@ -47,7 +49,14 @@ class _CartBodyScreenState extends State<CartBodyScreen> {
                   'The Clean House', //lấy name của center, mà chưa nghĩ ra :)
                   //widget.centerName,
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
-                )
+                ),
+                ElevatedButton(
+                  onPressed: () async {
+                    await SharedPreferencesUtil.clearSharedPreferences();
+                    // Do something else after clearing SharedPreferences
+                  },
+                  child: Text('Clear cart'),
+                ),
               ],
             ),
             const SizedBox(height: 16),
@@ -56,12 +65,19 @@ class _CartBodyScreenState extends State<CartBodyScreen> {
                 itemCount: value.cartItems.length,
                 itemBuilder: (context, index) {
                   int? id = value.cartItems[index].serviceId;
-                  num? measurement = value.cartItems[index]?.measurement ?? 0;
+                  num measurement = value.cartItems[index]?.measurement ?? 0;
                   //ServiceDemo? service = cart[index]?.service;
                   String? unit = value.cartItems[index].unit ?? '';
                   String image = value.cartItems[index].thumbnail ?? '';
                   double? price = value.cartItems[index].price! ?? 0;
                   double? productPrice = price * measurement;
+                  bool checkPriceType = false;
+                  double _maxMeasurementValue = value.cartItems[index].priceType
+                      ? value.cartItems[index].prices!.last.maxValue!.toDouble()
+                      : 0;
+                  if (value.cartItems[index].priceType!) {
+                    checkPriceType = true;
+                  }
 
                   bool checkUnit;
                   TextEditingController kilogramController =
@@ -118,7 +134,7 @@ class _CartBodyScreenState extends State<CartBodyScreen> {
                                   color: const Color(0xfff5f6f9),
                                   borderRadius: BorderRadius.circular(15),
                                 ),
-                                child: Image.asset(image),
+                                child: Image.network(image, fit: BoxFit.cover),
                               ),
                             ),
                           ),
@@ -146,60 +162,157 @@ class _CartBodyScreenState extends State<CartBodyScreen> {
                                             width: 100,
                                             child: Row(
                                               children: [
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    setState(() {
+                                                      if (measurement > 1) {
+                                                        provider
+                                                            .removeFromCartWithQuantity(
+                                                                value.cartItems[
+                                                                    index]!);
+                                                      } else {
+                                                        provider
+                                                            .removeItemFromCart(
+                                                                value.cartItems[
+                                                                    index]);
+                                                        // provider
+                                                        //     .removerCounter();
+                                                      }
+                                                      // provider.removeTotalPrice(
+                                                      //     productPrice);
+                                                    });
+                                                  },
+                                                  child: Container(
+                                                    width: 25,
+                                                    height: 25,
+                                                    decoration: BoxDecoration(
+                                                      color:
+                                                          Colors.grey.shade300,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              4),
+                                                    ),
+                                                    child: const Icon(
+                                                        Icons.remove,
+                                                        color: Colors.white,
+                                                        size: 15),
+                                                  ),
+                                                ),
                                                 Flexible(
                                                   child: SizedBox(
                                                     height: 40,
                                                     width: 60,
                                                     child: TextField(
+                                                      readOnly: false,
                                                       controller:
                                                           kilogramController,
+                                                      textAlign:
+                                                          TextAlign.center,
                                                       keyboardType:
                                                           TextInputType.number,
+                                                      inputFormatters: [
+                                                        MaxValueFormatter(
+                                                            _maxMeasurementValue)
+                                                      ],
                                                       onChanged: (value) {
-                                                        // Do something with the new value, for example, print it to the console
-                                                        print(
-                                                            'New value: $value');
+                                                        setState(() {
+                                                          measurement =
+                                                              double.parse(value
+                                                                  .toString());
+                                                          //kilogramController.text = value.toString();
+                                                        });
                                                       },
                                                       decoration:
                                                           const InputDecoration(
                                                         enabledBorder:
-                                                            OutlineInputBorder(
-                                                          borderSide:
-                                                              BorderSide(
-                                                                  color: Colors
-                                                                      .black,
-                                                                  width: 1),
-                                                          borderRadius:
-                                                              BorderRadius.all(
-                                                                  Radius
-                                                                      .circular(
-                                                                          10)),
-                                                        ),
-                                                        focusedBorder:
-                                                            OutlineInputBorder(
-                                                          borderSide: BorderSide(
-                                                              color:
-                                                                  kPrimaryColor,
-                                                              width: 1),
-                                                          borderRadius:
-                                                              BorderRadius.all(
-                                                                  Radius
-                                                                      .circular(
-                                                                          10)),
-                                                        ),
+                                                            InputBorder.none,
                                                         contentPadding:
-                                                            EdgeInsets.all(10),
-                                                        hintText: 'Số ký',
-                                                        hintStyle: TextStyle(
-                                                          fontSize: 17,
-                                                          height: 1.4,
-                                                        ),
+                                                            EdgeInsets.all(0),
                                                       ),
                                                       style: const TextStyle(
                                                         height: 1.4,
-                                                        fontSize: 17,
+                                                        fontSize: 18,
+                                                        fontWeight:
+                                                            FontWeight.w500,
                                                       ),
                                                     ),
+                                                  ),
+                                                ),
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    setState(() {
+                                                      if (measurement <=
+                                                              (_maxMeasurementValue -
+                                                                  1) &&
+                                                          checkPriceType) {
+                                                        // value.cartItems[index]
+                                                        //     .measurement++;
+                                                        provider
+                                                            .addToCartWithQuantity(
+                                                                value.cartItems[
+                                                                    index]);
+                                                        // provider
+                                                        //     .removeTotalPrice(
+                                                        //         productPrice);
+                                                        kilogramController
+                                                                .text =
+                                                            measurement
+                                                                .toString();
+                                                      } else if (measurement <=
+                                                              (_maxMeasurementValue) &&
+                                                          checkPriceType) {
+                                                        value.cartItems[index]
+                                                                .measurement =
+                                                            _maxMeasurementValue;
+                                                        provider
+                                                            .addToCartWithQuantity(
+                                                                value.cartItems[
+                                                                    index]);
+                                                        // provider
+                                                        //     .removeTotalPrice(
+                                                        //         productPrice);
+                                                        kilogramController
+                                                                .text =
+                                                            measurement
+                                                                .toString();
+                                                      } else {
+                                                        // value.cartItems[index]
+                                                        //     .measurement++;
+                                                        provider
+                                                            .addToCartWithQuantity(
+                                                                value.cartItems[
+                                                                    index]);
+                                                        // provider
+                                                        //     .removeTotalPrice(
+                                                        //         productPrice);
+                                                        kilogramController
+                                                                .text =
+                                                            measurement
+                                                                .toString();
+                                                      }
+                                                    });
+                                                    // provider
+                                                    //     .addToCartWithQuantity(
+                                                    //         value.cartItems[
+                                                    //             index]!);
+                                                    // print(provider
+                                                    //     .cartItems[index].price);
+                                                    // provider.removeTotalPrice(
+                                                    //     productPrice);
+                                                  },
+                                                  child: Container(
+                                                    width: 20,
+                                                    height: 20,
+                                                    decoration: BoxDecoration(
+                                                      color: kPrimaryColor
+                                                          .withOpacity(.8),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              4),
+                                                    ),
+                                                    child: const Icon(Icons.add,
+                                                        color: Colors.white,
+                                                        size: 15),
                                                   ),
                                                 ),
                                                 const SizedBox(width: 5),
@@ -215,17 +328,20 @@ class _CartBodyScreenState extends State<CartBodyScreen> {
                                             children: [
                                               GestureDetector(
                                                 onTap: () {
-                                                  if (measurement > 0) {
+                                                  print(
+                                                      'MESUREMENT-${measurement}');
+                                                  if (measurement > 1) {
                                                     provider
                                                         .removeFromCartWithQuantity(
                                                             value.cartItems[
                                                                 index]!);
                                                   } else {
-                                                    // provider.clear(
-                                                    //     service?.id as int);
+                                                    provider.removeItemFromCart(
+                                                        value.cartItems[index]);
+                                                    //provider.removerCounter();
                                                   }
-                                                  provider.removeTotalPrice(
-                                                      productPrice);
+                                                  // provider.removeTotalPrice(
+                                                  //     productPrice);
                                                 },
                                                 child: Container(
                                                   width: 20,
@@ -255,12 +371,54 @@ class _CartBodyScreenState extends State<CartBodyScreen> {
                                               ),
                                               GestureDetector(
                                                 onTap: () {
-                                                  provider
-                                                      .addToCartWithQuantity(
-                                                          value.cartItems[
-                                                              index]!);
-                                                  provider.removeTotalPrice(
-                                                      productPrice);
+                                                  if (measurement <=
+                                                          (_maxMeasurementValue -
+                                                              1) &&
+                                                      checkPriceType) {
+                                                    // value.cartItems[index]
+                                                    //     .measurement++;
+                                                    provider
+                                                        .addToCartWithQuantity(
+                                                            value.cartItems[
+                                                                index]);
+                                                    // provider.removeTotalPrice(
+                                                    //     productPrice);
+                                                    // kilogramController.text =
+                                                    //     measurement.toString();
+                                                  } else if (measurement <=
+                                                          (_maxMeasurementValue) &&
+                                                      checkPriceType) {
+                                                    value.cartItems[index]
+                                                            .measurement =
+                                                        _maxMeasurementValue;
+                                                    provider
+                                                        .addToCartWithQuantity(
+                                                            value.cartItems[
+                                                                index]);
+                                                    // provider.removeTotalPrice(
+                                                    //     productPrice);
+                                                    // kilogramController.text =
+                                                    //     measurement.toString();
+                                                  } else {
+                                                    // value.cartItems[index]
+                                                    //     .measurement++;
+                                                    provider
+                                                        .addToCartWithQuantity(
+                                                            value.cartItems[
+                                                                index]);
+                                                    // provider.removeTotalPrice(
+                                                    //     productPrice);
+                                                    // kilogramController.text =
+                                                    //     measurement.toString();
+                                                  }
+                                                  // provider
+                                                  //     .addToCartWithQuantity(
+                                                  //         value.cartItems[
+                                                  //             index]!);
+                                                  // print(provider
+                                                  //     .cartItems[index].price);
+                                                  // provider.removeTotalPrice(
+                                                  //     productPrice);
                                                 },
                                                 child: Container(
                                                   width: 20,
@@ -282,6 +440,7 @@ class _CartBodyScreenState extends State<CartBodyScreen> {
                                     const Spacer(),
                                     Text(
                                       '${PriceUtils().convertFormatPrice(price.round())} đ',
+                                      //'${value.cartItems[index].price} đ',
                                       style: const TextStyle(
                                           fontWeight: FontWeight.bold,
                                           color: kPrimaryColor,

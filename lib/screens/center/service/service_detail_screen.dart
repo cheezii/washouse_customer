@@ -11,6 +11,7 @@ import 'package:washouse_customer/screens/center/component/details/category_menu
 
 import '../../../resource/controller/center_controller.dart';
 import '../../../resource/controller/service_controller.dart';
+import '../../../utils/formatter_util.dart';
 import '../../../utils/price_util.dart';
 
 import 'package:washouse_customer/resource/controller/cart_provider.dart';
@@ -48,14 +49,14 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
   late int quantity;
   late num kilogram;
 
-  double? selectedDropdownValue;
+  //double? selectedDropdownValue;
 
   @override
   void initState() {
     getServiceDetail();
     quantity = 1;
     quantityController.text = quantity.toString();
-    kilogram = 0;
+    kilogram = 1.0;
     kilogramController.text = kilogram.toString();
     super.initState();
     centerArgs = widget.centerData;
@@ -90,10 +91,10 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
     bool checkPriceType = false;
     int PriceMin = 0;
     int PriceMax = 0;
-    double? _selectedValue = serviceArgs.priceType!
-        ? serviceArgs.prices!.first.maxValue!.toDouble()
+    double _maxMeasurementValue = serviceArgs.priceType!
+        ? serviceArgs.prices!.last.maxValue!.toDouble()
         : 0;
-    List<double> _values = [];
+    //List<double> _values = [];
 
     if (serviceArgs.rating == null) {
       checkRatingNull = true;
@@ -101,9 +102,9 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
 
     if (serviceArgs.priceType!) {
       checkPriceType = true;
-      for (var i = 1; i <= (serviceArgs.prices!.last.maxValue! * 10); i++) {
-        _values.add(i / 10);
-      }
+      // for (var i = 1; i <= (serviceArgs.prices!.last.maxValue! * 10); i++) {
+      //   _values.add(i / 10);
+      // }
     }
 
     if (serviceArgs.priceType != null && serviceArgs.priceType == true) {
@@ -122,7 +123,6 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
       double star5 = serviceArgs.ratings![4] / serviceArgs.numOfRating!;
       ratings.addAll([star1, star2, star3, star4, star5]);
     }
-
     return Scaffold(
       body: CustomScrollView(
         slivers: [
@@ -418,61 +418,151 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 checkUnitType
+                    // ? Row(
+                    //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    //     children: [
+                    //       SizedBox(
+                    //         height: 90,
+                    //         width: size.width / 5,
+                    //         child: Align(
+                    //           alignment: Alignment.center,
+                    //           child: SizedBox(
+                    //             height: 50,
+                    //             child: DropdownButtonFormField<double>(
+                    //               value: _selectedValue,
+                    //               //value: 3,
+                    //               decoration: const InputDecoration(
+                    //                 enabledBorder: OutlineInputBorder(
+                    //                   borderSide: BorderSide(
+                    //                       color: Colors.black, width: 1),
+                    //                   borderRadius:
+                    //                       BorderRadius.all(Radius.circular(10)),
+                    //                 ),
+                    //                 focusedBorder: OutlineInputBorder(
+                    //                   borderSide: BorderSide(
+                    //                       color: Colors.black, width: 1),
+                    //                   borderRadius:
+                    //                       BorderRadius.all(Radius.circular(10)),
+                    //                 ),
+                    //                 contentPadding: EdgeInsets.only(left: 10),
+                    //                 hintText: 'Số ký',
+                    //                 hintStyle: TextStyle(
+                    //                   fontSize: 18,
+                    //                   height: 1.4,
+                    //                 ),
+                    //               ),
+                    //               items: _values.map((value) {
+                    //                 return DropdownMenuItem(
+                    //                   value: value,
+                    //                   child: Text(value.toString()),
+                    //                 );
+                    //               }).toList(),
+                    //               onChanged: (value) {
+                    //                 setState(() {
+                    //                   _selectedValue = value;
+                    //                   selectedDropdownValue = value;
+                    //                   //print(_selectedValue);
+                    //                 });
+                    //               },
+                    //             ),
+                    //           ),
+                    //         ),
+                    //       ),
+                    //       const SizedBox(width: 15),
+                    //       const Text(
+                    //         'kg',
+                    //         style: TextStyle(fontSize: 18),
+                    //       )
+                    //     ],
+                    //   )
                     ? Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          SizedBox(
+                          GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                if (kilogram > 1) {
+                                  kilogram--;
+                                  kilogramController.text = kilogram.toString();
+                                } else {
+                                  kilogram = 1;
+                                }
+                              });
+                            },
+                            child: Container(
+                              width: 25,
+                              height: 25,
+                              decoration: BoxDecoration(
+                                color: Colors.grey.shade300,
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                              child: const Icon(Icons.remove,
+                                  color: Colors.white, size: 15),
+                            ),
+                          ),
+                          Container(
                             height: 90,
-                            width: size.width / 5,
+                            width: size.width / 6,
+                            padding: EdgeInsets.symmetric(horizontal: 15),
                             child: Align(
                               alignment: Alignment.center,
                               child: SizedBox(
                                 height: 50,
-                                child: DropdownButtonFormField<double>(
-                                  value: _selectedValue,
-                                  //value: 3,
-                                  decoration: const InputDecoration(
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: Colors.black, width: 1),
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(10)),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: Colors.black, width: 1),
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(10)),
-                                    ),
-                                    contentPadding: EdgeInsets.only(left: 10),
-                                    hintText: 'Số ký',
-                                    hintStyle: TextStyle(
-                                      fontSize: 18,
-                                      height: 1.4,
-                                    ),
-                                  ),
-                                  items: _values.map((value) {
-                                    return DropdownMenuItem(
-                                      value: value,
-                                      child: Text(value.toString()),
-                                    );
-                                  }).toList(),
+                                child: TextField(
+                                  readOnly: false,
+                                  controller: kilogramController,
+                                  textAlign: TextAlign.center,
+                                  keyboardType: TextInputType.number,
+                                  inputFormatters: [
+                                    MaxValueFormatter(_maxMeasurementValue)
+                                  ],
                                   onChanged: (value) {
                                     setState(() {
-                                      _selectedValue = value;
-                                      selectedDropdownValue = value;
-                                      //print(_selectedValue);
+                                      kilogram = double.parse(value.toString());
                                     });
                                   },
+                                  decoration: const InputDecoration(
+                                    enabledBorder: InputBorder.none,
+                                    contentPadding: EdgeInsets.all(0),
+                                  ),
+                                  style: const TextStyle(
+                                    height: 1.4,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w500,
+                                  ),
                                 ),
                               ),
                             ),
                           ),
+                          GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                if (kilogram <= (_maxMeasurementValue - 1) &&
+                                    checkPriceType) {
+                                  kilogram++;
+                                  kilogramController.text = kilogram.toString();
+                                } else if (kilogram <= (_maxMeasurementValue) &&
+                                    checkPriceType) {
+                                  kilogram = _maxMeasurementValue;
+                                  kilogramController.text = kilogram.toString();
+                                } else {
+                                  kilogram++;
+                                  kilogramController.text = kilogram.toString();
+                                }
+                              });
+                            },
+                            child: Container(
+                              width: 25,
+                              height: 25,
+                              decoration: BoxDecoration(
+                                color: kPrimaryColor,
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                              child: const Icon(Icons.add,
+                                  color: Colors.white, size: 15),
+                            ),
+                          ),
                           const SizedBox(width: 15),
-                          const Text(
-                            'kg',
-                            style: TextStyle(fontSize: 18),
-                          )
                         ],
                       )
                     : Row(
@@ -502,7 +592,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                           ),
                           Container(
                             height: 90,
-                            width: size.width / 8,
+                            width: size.width / 6,
                             padding: EdgeInsets.symmetric(horizontal: 15),
                             child: Align(
                               alignment: Alignment.center,
@@ -529,8 +619,18 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                           GestureDetector(
                             onTap: () {
                               setState(() {
-                                quantity++;
-                                quantityController.text = quantity.toString();
+                                if (quantity <= (_maxMeasurementValue - 1) &&
+                                    checkPriceType) {
+                                  quantity++;
+                                  quantityController.text = quantity.toString();
+                                } else if (quantity <= (_maxMeasurementValue) &&
+                                    checkPriceType) {
+                                  quantity = _maxMeasurementValue.toInt();
+                                  quantityController.text = quantity.toString();
+                                } else {
+                                  quantity++;
+                                  quantityController.text = quantity.toString();
+                                }
                               });
                             },
                             child: Container(
@@ -560,11 +660,14 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                       //     ? int.parse(kilogramController.text)
                       //     : quantity;
                       double measurementInput;
-                      debugPrint('Selected value: $selectedDropdownValue');
+                      //debugPrint('Selected value: $selectedDropdownValue');
+                      // checkUnitType
+                      //     ? measurementInput = (selectedDropdownValue == null
+                      //         ? serviceArgs.prices!.first.maxValue!.toDouble()
+                      //         : selectedDropdownValue!)
+                      //     : measurementInput = quantity.toDouble();
                       checkUnitType
-                          ? measurementInput = (selectedDropdownValue == null
-                              ? serviceArgs.prices!.first.maxValue!.toDouble()
-                              : selectedDropdownValue!)
+                          ? measurementInput = kilogram.toDouble()
                           : measurementInput = quantity.toDouble();
 
                       debugPrint('Selected: $measurementInput');
@@ -610,12 +713,13 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                           weight:
                               serviceArgs.rate! * measurementInput.toDouble(),
                           unit: serviceArgs.unit,
-                          minPrice: currentPrice,
+                          minPrice: serviceArgs.minPrice == null
+                              ? null
+                              : serviceArgs.minPrice!.toDouble(),
                           prices: serviceArgs.prices);
                       provider.addItemToCart(cartItem); //add to cart
                       //print(cart.length);
-                      provider
-                          .addCounter(); //để hiện thị số lượng trong giỏ hàng
+                      //provider.addCounter(); //để hiện thị số lượng trong giỏ hàng
                       // productPrice =
                       //     (serviceArgs.price! * measurement) as double?;
                       // provider.addTotalPrice(productPrice!); //add được rồi
