@@ -27,6 +27,7 @@ AccountController accountController = AccountController();
 BaseController baseController = BaseController();
 
 class _LoginState extends State<Login> {
+  final typePhoneNum = RegExp(r'(((\+|)84)|0)(3|5|7|8|9)+([0-9]{8})\b');
   final _formPhoneNumberKey = GlobalKey<FormState>();
   final _formPwdKey = GlobalKey<FormState>();
   bool _isHidden = true;
@@ -92,6 +93,9 @@ class _LoginState extends State<Login> {
                     validator: (value) {
                       if (value!.isEmpty) {
                         return 'Mật khẩu không được để trống';
+                      }
+                      if (!typePhoneNum.hasMatch(value)) {
+                        return 'Số điện thoại phải có mười số';
                       }
                       return null;
                     },

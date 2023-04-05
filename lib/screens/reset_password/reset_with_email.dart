@@ -8,9 +8,19 @@ import '../started/login.dart';
 import '../widgets/custom_textfield.dart';
 import 'reset_with_phone.dart';
 
-class ResetWithEmail extends StatelessWidget {
+class ResetWithEmail extends StatefulWidget {
   const ResetWithEmail({super.key});
 
+  @override
+  State<ResetWithEmail> createState() => _ResetWithEmailState();
+}
+
+TextEditingController emailController = TextEditingController();
+
+class _ResetWithEmailState extends State<ResetWithEmail> {
+  final _formEmailKey = GlobalKey<FormState>();
+  final typeEmail = RegExp(
+      r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -43,11 +53,37 @@ class ResetWithEmail extends StatelessWidget {
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: kDefaultPadding),
-                  const CustomTextfield(
-                    icon: Icons.alternate_email,
-                    obsecureText: false,
-                    hintText: 'Email',
-                    inputType: TextInputType.text,
+                  Form(
+                    key: _formEmailKey,
+                    child: TextFormField(
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'Email không được để trống';
+                        }
+                        if (!typeEmail.hasMatch(value)) {
+                          return 'Sai kiểu email';
+                        }
+                        return null;
+                      },
+                      onSaved: (newValue) {
+                        emailController.text = newValue!;
+                      },
+                      obscureText: false,
+                      style: const TextStyle(
+                        color: textColor,
+                      ),
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        prefixIcon: Icon(
+                          Icons.alternate_email_rounded,
+                          color: textColor.withOpacity(.5),
+                        ),
+                        labelText: 'Email',
+                      ),
+                      keyboardType: TextInputType.number,
+                      cursorColor: textColor.withOpacity(.8),
+                      controller: emailController,
+                    ),
                   ),
                   const SizedBox(height: kDefaultPadding),
                   SizedBox(
@@ -55,18 +91,21 @@ class ResetWithEmail extends StatelessWidget {
                     height: 45,
                     child: ElevatedButton(
                       onPressed: () {
-                        Navigator.push(
-                            context,
-                            PageTransition(
-                                child: const OTPScreen(),
-                                type: PageTransitionType.fade));
+                        if (_formEmailKey.currentState!.validate()) {
+                          _formEmailKey.currentState!.save();
+                          Navigator.push(
+                              context,
+                              PageTransition(
+                                  child: const ResetWithPhone(),
+                                  type: PageTransitionType.fade));
+                        }
                       },
                       style: ElevatedButton.styleFrom(
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10.0)),
                           backgroundColor: kPrimaryColor),
                       child: const Text(
-                        'TIẾP TỤC',
+                        'Tiếp tục',
                         style: TextStyle(fontSize: 18.0),
                       ),
                     ),

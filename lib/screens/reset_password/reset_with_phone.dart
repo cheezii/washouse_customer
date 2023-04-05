@@ -8,8 +8,18 @@ import '../widgets/custom_textfield.dart';
 import 'reset_with_email.dart';
 import 'send_otp.dart';
 
-class ResetWithPhone extends StatelessWidget {
+class ResetWithPhone extends StatefulWidget {
   const ResetWithPhone({super.key});
+
+  @override
+  State<ResetWithPhone> createState() => _ResetWithPhoneState();
+}
+
+TextEditingController passwordController = TextEditingController();
+
+class _ResetWithPhoneState extends State<ResetWithPhone> {
+  final _formPhoneNumKey = GlobalKey<FormState>();
+  final typePhoneNum = RegExp(r'(((\+|)84)|0)(3|5|7|8|9)+([0-9]{8})\b');
 
   @override
   Widget build(BuildContext context) {
@@ -43,11 +53,37 @@ class ResetWithPhone extends StatelessWidget {
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: kDefaultPadding),
-                  const CustomTextfield(
-                    icon: Icons.mobile_friendly_rounded,
-                    obsecureText: false,
-                    hintText: 'Số điện thoại',
-                    inputType: TextInputType.number,
+                  Form(
+                    key: _formPhoneNumKey,
+                    child: TextFormField(
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'Số điện thoại không được để trống';
+                        }
+                        if (!typePhoneNum.hasMatch(value)) {
+                          return 'Số điện thoại phải có mười số';
+                        }
+                        return null;
+                      },
+                      onSaved: (newValue) {
+                        phoneController.text = newValue!;
+                      },
+                      obscureText: false,
+                      style: const TextStyle(
+                        color: textColor,
+                      ),
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        prefixIcon: Icon(
+                          Icons.phone_android_rounded,
+                          color: textColor.withOpacity(.5),
+                        ),
+                        labelText: 'Số điện thoại',
+                      ),
+                      keyboardType: TextInputType.number,
+                      cursorColor: textColor.withOpacity(.8),
+                      controller: phoneController,
+                    ),
                   ),
                   const SizedBox(height: kDefaultPadding),
                   Container(
@@ -57,18 +93,21 @@ class ResetWithPhone extends StatelessWidget {
                     height: 45,
                     child: ElevatedButton(
                       onPressed: () {
-                        Navigator.push(
-                            context,
-                            PageTransition(
-                                child: const OTPScreen(),
-                                type: PageTransitionType.fade));
+                        if (_formPhoneNumKey.currentState!.validate()) {
+                          _formPhoneNumKey.currentState!.save();
+                          Navigator.push(
+                              context,
+                              PageTransition(
+                                  child: const OTPScreen(),
+                                  type: PageTransitionType.fade));
+                        }
                       },
                       style: ElevatedButton.styleFrom(
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10.0)),
                           backgroundColor: kPrimaryColor),
                       child: const Text(
-                        'TIẾP TỤC',
+                        'Tiếp tục',
                         style: TextStyle(fontSize: 18.0),
                       ),
                     ),

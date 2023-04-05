@@ -146,7 +146,7 @@ class _ChangePwdScreenState extends State<ChangePwdScreen> {
                               borderRadius: BorderRadius.circular(10.0)),
                           backgroundColor: kPrimaryColor),
                       child: const Text(
-                        'TẠO MẬT KHẨU',
+                        'Tạo mật khẩu',
                         style: TextStyle(fontSize: 18.0),
                       ),
                     ),
