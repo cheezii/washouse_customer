@@ -96,6 +96,9 @@ class _ChangePwdScreenState extends State<ChangePwdScreen> {
                         if (value!.isEmpty) {
                           return 'Xác nhận mật khẩu không được để trống';
                         }
+                        if (value.compareTo(passwordController.text) != 0) {
+                          return 'Xác nhận mật khẩu không khớp!';
+                        }
                         return null;
                       },
                       onSaved: (newValue) {
