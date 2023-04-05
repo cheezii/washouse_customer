@@ -1,7 +1,9 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:percent_indicator/percent_indicator.dart';
+import 'package:provider/provider.dart';
 
 import 'package:washouse_customer/components/constants/color_constants.dart';
 import 'package:washouse_customer/resource/models/service.dart';
@@ -9,13 +11,20 @@ import 'package:washouse_customer/screens/center/component/details/category_menu
 
 import '../../../resource/controller/center_controller.dart';
 import '../../../resource/controller/service_controller.dart';
+import '../../../utils/formatter_util.dart';
 import '../../../utils/price_util.dart';
 
+import 'package:washouse_customer/resource/controller/cart_provider.dart';
+import 'package:washouse_customer/resource/models/cart_item.dart';
+import 'package:washouse_customer/resource/models/center.dart';
+
 class ServiceDetailScreen extends StatefulWidget {
+  final centerData;
   final serviceData;
   const ServiceDetailScreen({
     Key? key,
     this.serviceData,
+    this.centerData,
   }) : super(key: key);
 
   @override
@@ -23,6 +32,7 @@ class ServiceDetailScreen extends StatefulWidget {
 }
 
 class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
+  late List<Prices> priceList;
   Service serviceArgs = Service();
   ServiceController serviceController = ServiceController();
   CenterController centerController = CenterController();
@@ -33,10 +43,25 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
 
   bool isLoadingDetail = true;
 
+  TextEditingController quantityController = TextEditingController();
+  TextEditingController kilogramController = TextEditingController();
+  LaundryCenter centerArgs = LaundryCenter();
+  late int quantity;
+  late num kilogram;
+
+  //double? selectedDropdownValue;
+
   @override
   void initState() {
+    getServiceDetail();
+    quantity = 1;
+    quantityController.text = quantity.toString();
+    kilogram = 1.0;
+    kilogramController.text = kilogram.toString();
     super.initState();
+    centerArgs = widget.centerData;
     serviceArgs = widget.serviceData;
+    priceList = serviceArgs.prices!;
   }
 
   void getServiceDetail() async {
@@ -53,13 +78,51 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    //print(centerArgs.id);
+    var provider = Provider.of<CartProvider>(context);
+    var cart = provider.cartItems;
     Size size = MediaQuery.of(context).size;
-    List<double> ratings = [0.5, 0.3, 0.5, 0.7, 0.9];
-    bool checkUnitType = true;
-    if (!serviceArgs.priceType!) {
-      checkUnitType = false;
+    List<double> ratings = [];
+    CartItem cartItem;
+    double? productPrice;
+    bool checkUnitType = false;
+    bool checkPriceChart = false;
+    bool checkRatingNull = false;
+    bool checkPriceType = false;
+    int PriceMin = 0;
+    int PriceMax = 0;
+    double _maxMeasurementValue = serviceArgs.priceType!
+        ? serviceArgs.prices!.last.maxValue!.toDouble()
+        : 0;
+    //List<double> _values = [];
+
+    if (serviceArgs.rating == null) {
+      checkRatingNull = true;
     }
-    print(serviceArgs.serviceName);
+
+    if (serviceArgs.priceType!) {
+      checkPriceType = true;
+      // for (var i = 1; i <= (serviceArgs.prices!.last.maxValue! * 10); i++) {
+      //   _values.add(i / 10);
+      // }
+    }
+
+    if (serviceArgs.priceType != null && serviceArgs.priceType == true) {
+      checkPriceChart = true;
+    }
+
+    if (serviceArgs.unit != null && serviceArgs.unit == "Kg") {
+      checkUnitType = true;
+    }
+
+    if (serviceArgs.ratings != null && serviceArgs.numOfRating != 0) {
+      double star1 = serviceArgs.ratings![0] / serviceArgs.numOfRating!;
+      double star2 = serviceArgs.ratings![1] / serviceArgs.numOfRating!;
+      double star3 = serviceArgs.ratings![2] / serviceArgs.numOfRating!;
+      double star4 = serviceArgs.ratings![3] / serviceArgs.numOfRating!;
+      double star5 = serviceArgs.ratings![4] / serviceArgs.numOfRating!;
+      ratings.addAll([star1, star2, star3, star4, star5]);
+    }
     return Scaffold(
       body: CustomScrollView(
         slivers: [
@@ -112,7 +175,9 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                   SizedBox(
                     width: size.width * 0.25,
                     child: Text(
-                      '${PriceUtils().convertFormatPrice(serviceArgs.price!.toInt())} đ',
+                      checkPriceType
+                          ? '${PriceUtils().convertFormatPrice(serviceArgs.prices!.last.price!.toInt())} đ - ${PriceUtils().convertFormatPrice(serviceArgs.prices!.first.price!.toInt())} đ'
+                          : '${PriceUtils().convertFormatPrice(serviceArgs.price!.toInt())} đ',
                       style: const TextStyle(
                         color: kPrimaryColor,
                         fontSize: 20,
@@ -135,7 +200,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                     'Thông tin dịch vụ',
                     style: TextStyle(fontWeight: FontWeight.w600, fontSize: 22),
                   ),
-                  const SizedBox(height: 15),
+                  const SizedBox(height: 20),
                   const Text(
                     'Mô tả',
                     style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
@@ -146,11 +211,11 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                     style: const TextStyle(fontSize: 17, color: textColor),
                     maxLines: 3,
                   ),
-                  const SizedBox(height: 15),
+                  const SizedBox(height: 20),
                   Text.rich(
                     TextSpan(
                       children: [
-                        TextSpan(
+                        const TextSpan(
                           text: 'Thời gian dự tính:   ',
                           style: TextStyle(
                               fontWeight: FontWeight.w600, fontSize: 18),
@@ -162,6 +227,51 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                       ],
                     ),
                   ),
+                  checkPriceChart
+                      ? SingleChildScrollView(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(height: 20),
+                              const Text(
+                                'Bảng giá',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w600, fontSize: 18),
+                              ),
+                              SizedBox(
+                                width: size.width,
+                                child: DataTable(
+                                  columns: const <DataColumn>[
+                                    DataColumn(
+                                      label: Text(
+                                        'Tối đa',
+                                        style: TextStyle(
+                                            fontStyle: FontStyle.italic),
+                                      ),
+                                    ),
+                                    DataColumn(
+                                      label: Text(
+                                        'Giá thành',
+                                        style: TextStyle(
+                                            fontStyle: FontStyle.italic),
+                                      ),
+                                    ),
+                                  ],
+                                  rows: priceList
+                                      .map<DataRow>((e) => DataRow(cells: [
+                                            DataCell(Text(
+                                                e.maxValue.toString() +
+                                                    ' ${serviceArgs.unit}')),
+                                            DataCell(Text(
+                                                '${PriceUtils().convertFormatPrice(e.price?.round() as num)} đ/${serviceArgs.unit}')),
+                                          ]))
+                                      .toList(),
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      : const SizedBox(height: 0, width: 0),
                 ],
               ),
             ),
@@ -180,86 +290,104 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                     style: TextStyle(fontWeight: FontWeight.w600, fontSize: 22),
                   ),
                   const SizedBox(height: 15),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        children: [
-                          Text.rich(
-                            TextSpan(
+                  !checkRatingNull
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
                               children: [
-                                TextSpan(
-                                  text: serviceArgs.rating.toString(),
-                                  style: TextStyle(
-                                    fontSize: 42,
-                                    fontWeight: FontWeight.w700,
+                                Text.rich(
+                                  TextSpan(
+                                    children: [
+                                      TextSpan(
+                                        text: serviceArgs.rating!.toString(),
+                                        style: const TextStyle(
+                                          fontSize: 42,
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                      ),
+                                      const TextSpan(
+                                        text: " / 5",
+                                        style: TextStyle(
+                                          fontSize: 24.0,
+                                          color: textColor,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                                TextSpan(
-                                  text: " / 5",
-                                  style: TextStyle(
-                                    fontSize: 24.0,
+                                const SizedBox(height: 5),
+                                RatingBarIndicator(
+                                  rating: serviceArgs.rating!.toDouble(),
+                                  itemBuilder: (context, index) => const Icon(
+                                    Icons.star,
+                                    color: kPrimaryColor,
+                                  ),
+                                  itemCount: 5,
+                                  itemSize: 30,
+                                  direction: Axis.horizontal,
+                                ),
+                                const SizedBox(height: 10.0),
+                                Text(
+                                  '${serviceArgs.numOfRating} đánh giá',
+                                  style: const TextStyle(
+                                    fontSize: 18,
                                     color: textColor,
                                   ),
                                 ),
                               ],
                             ),
-                          ),
-                          const SizedBox(height: 5),
-                          RatingBarIndicator(
-                            rating: serviceArgs.rating!.toDouble(),
-                            itemBuilder: (context, index) => const Icon(
-                              Icons.star,
-                              color: kPrimaryColor,
+                            SizedBox(
+                              width: 200.0,
+                              height: 120,
+                              child: ListView.builder(
+                                shrinkWrap: true,
+                                reverse: true,
+                                itemCount: 5,
+                                itemBuilder: (context, index) {
+                                  return Row(
+                                    children: [
+                                      Text(
+                                        '${index + 1}',
+                                        style: TextStyle(fontSize: 18.0),
+                                      ),
+                                      const SizedBox(width: 4.0),
+                                      const Icon(Icons.star,
+                                          color: kPrimaryColor),
+                                      const SizedBox(width: 8.0),
+                                      LinearPercentIndicator(
+                                        lineHeight: 6.0,
+                                        // linearStrokeCap: LinearStrokeCap.roundAll,
+                                        width:
+                                            MediaQuery.of(context).size.width /
+                                                2.8,
+                                        animation: true,
+                                        animationDuration: 2500,
+                                        percent: ratings[index],
+                                        progressColor: kPrimaryColor,
+                                      ),
+                                    ],
+                                  );
+                                },
+                              ),
                             ),
-                            itemCount: 5,
-                            itemSize: 30,
-                            direction: Axis.horizontal,
+                          ],
+                        )
+                      : Align(
+                          alignment: Alignment.center,
+                          child: Column(
+                            children: const [
+                              Icon(Icons.star_rounded,
+                                  color: kPrimaryColor, size: 60),
+                              SizedBox(height: 10),
+                              Text(
+                                'Chưa có đánh giá nào',
+                                style: TextStyle(
+                                    fontSize: 22, fontWeight: FontWeight.w500),
+                              )
+                            ],
                           ),
-                          const SizedBox(height: 10.0),
-                          Text(
-                            '${serviceArgs.numOfRating} đánh giá',
-                            style: TextStyle(
-                              fontSize: 18,
-                              color: textColor,
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        width: 200.0,
-                        height: 120,
-                        child: ListView.builder(
-                          shrinkWrap: true,
-                          reverse: true,
-                          itemCount: 5,
-                          itemBuilder: (context, index) {
-                            return Row(
-                              children: [
-                                Text(
-                                  '${index + 1}',
-                                  style: TextStyle(fontSize: 18.0),
-                                ),
-                                const SizedBox(width: 4.0),
-                                const Icon(Icons.star, color: kPrimaryColor),
-                                const SizedBox(width: 8.0),
-                                LinearPercentIndicator(
-                                  lineHeight: 6.0,
-                                  // linearStrokeCap: LinearStrokeCap.roundAll,
-                                  width:
-                                      MediaQuery.of(context).size.width / 2.8,
-                                  animation: true,
-                                  animationDuration: 2500,
-                                  percent: ratings[index],
-                                  progressColor: kPrimaryColor,
-                                ),
-                              ],
-                            );
-                          },
                         ),
-                      ),
-                    ],
-                  ),
                 ],
               ),
             ),
@@ -290,96 +418,313 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 checkUnitType
+                    // ? Row(
+                    //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    //     children: [
+                    //       SizedBox(
+                    //         height: 90,
+                    //         width: size.width / 5,
+                    //         child: Align(
+                    //           alignment: Alignment.center,
+                    //           child: SizedBox(
+                    //             height: 50,
+                    //             child: DropdownButtonFormField<double>(
+                    //               value: _selectedValue,
+                    //               //value: 3,
+                    //               decoration: const InputDecoration(
+                    //                 enabledBorder: OutlineInputBorder(
+                    //                   borderSide: BorderSide(
+                    //                       color: Colors.black, width: 1),
+                    //                   borderRadius:
+                    //                       BorderRadius.all(Radius.circular(10)),
+                    //                 ),
+                    //                 focusedBorder: OutlineInputBorder(
+                    //                   borderSide: BorderSide(
+                    //                       color: Colors.black, width: 1),
+                    //                   borderRadius:
+                    //                       BorderRadius.all(Radius.circular(10)),
+                    //                 ),
+                    //                 contentPadding: EdgeInsets.only(left: 10),
+                    //                 hintText: 'Số ký',
+                    //                 hintStyle: TextStyle(
+                    //                   fontSize: 18,
+                    //                   height: 1.4,
+                    //                 ),
+                    //               ),
+                    //               items: _values.map((value) {
+                    //                 return DropdownMenuItem(
+                    //                   value: value,
+                    //                   child: Text(value.toString()),
+                    //                 );
+                    //               }).toList(),
+                    //               onChanged: (value) {
+                    //                 setState(() {
+                    //                   _selectedValue = value;
+                    //                   selectedDropdownValue = value;
+                    //                   //print(_selectedValue);
+                    //                 });
+                    //               },
+                    //             ),
+                    //           ),
+                    //         ),
+                    //       ),
+                    //       const SizedBox(width: 15),
+                    //       const Text(
+                    //         'kg',
+                    //         style: TextStyle(fontSize: 18),
+                    //       )
+                    //     ],
+                    //   )
                     ? Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          SizedBox(
+                          GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                if (kilogram > 1) {
+                                  kilogram--;
+                                  kilogramController.text = kilogram.toString();
+                                } else {
+                                  kilogram = 1;
+                                }
+                              });
+                            },
+                            child: Container(
+                              width: 25,
+                              height: 25,
+                              decoration: BoxDecoration(
+                                color: Colors.grey.shade300,
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                              child: const Icon(Icons.remove,
+                                  color: Colors.white, size: 15),
+                            ),
+                          ),
+                          Container(
                             height: 90,
                             width: size.width / 6,
-                            child: const Align(
+                            padding: EdgeInsets.symmetric(horizontal: 15),
+                            child: Align(
                               alignment: Alignment.center,
                               child: SizedBox(
                                 height: 50,
                                 child: TextField(
+                                  readOnly: false,
+                                  controller: kilogramController,
                                   textAlign: TextAlign.center,
                                   keyboardType: TextInputType.number,
-                                  decoration: InputDecoration(
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: Colors.black, width: 1),
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(10)),
-                                    ),
+                                  inputFormatters: [
+                                    MaxValueFormatter(_maxMeasurementValue)
+                                  ],
+                                  onChanged: (value) {
+                                    setState(() {
+                                      kilogram = double.parse(value.toString());
+                                    });
+                                  },
+                                  decoration: const InputDecoration(
+                                    enabledBorder: InputBorder.none,
                                     contentPadding: EdgeInsets.all(0),
-                                    hintText: 'Số ký',
-                                    hintStyle: TextStyle(
-                                      fontSize: 18,
-                                      height: 1.4,
-                                    ),
                                   ),
-                                  cursorHeight: 17,
-                                  style: TextStyle(
-                                    height: 1,
+                                  style: const TextStyle(
+                                    height: 1.4,
                                     fontSize: 18,
+                                    fontWeight: FontWeight.w500,
                                   ),
                                 ),
                               ),
                             ),
                           ),
+                          GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                if (kilogram <= (_maxMeasurementValue - 1) &&
+                                    checkPriceType) {
+                                  kilogram++;
+                                  kilogramController.text = kilogram.toString();
+                                } else if (kilogram <= (_maxMeasurementValue) &&
+                                    checkPriceType) {
+                                  kilogram = _maxMeasurementValue;
+                                  kilogramController.text = kilogram.toString();
+                                } else {
+                                  kilogram++;
+                                  kilogramController.text = kilogram.toString();
+                                }
+                              });
+                            },
+                            child: Container(
+                              width: 25,
+                              height: 25,
+                              decoration: BoxDecoration(
+                                color: kPrimaryColor,
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                              child: const Icon(Icons.add,
+                                  color: Colors.white, size: 15),
+                            ),
+                          ),
                           const SizedBox(width: 15),
-                          const Text(
-                            'kg',
-                            style: TextStyle(fontSize: 18),
-                          )
                         ],
                       )
                     : Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Container(
-                            width: 25,
-                            height: 25,
-                            decoration: BoxDecoration(
-                              color: Colors.grey.shade300,
-                              borderRadius: BorderRadius.circular(4),
+                          GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                if (quantity > 1) {
+                                  quantity--;
+                                  quantityController.text = quantity.toString();
+                                } else {
+                                  quantity = 1;
+                                }
+                              });
+                            },
+                            child: Container(
+                              width: 25,
+                              height: 25,
+                              decoration: BoxDecoration(
+                                color: Colors.grey.shade300,
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                              child: const Icon(Icons.remove,
+                                  color: Colors.white, size: 15),
                             ),
-                            child: const Icon(Icons.remove,
-                                color: Colors.white, size: 15),
                           ),
                           Container(
                             height: 90,
+                            width: size.width / 6,
                             padding: EdgeInsets.symmetric(horizontal: 15),
                             child: Align(
                               alignment: Alignment.center,
-                              child: Text(
-                                '1',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 18),
+                              child: SizedBox(
+                                height: 50,
+                                child: TextField(
+                                  readOnly: true,
+                                  controller: quantityController,
+                                  textAlign: TextAlign.center,
+                                  keyboardType: TextInputType.number,
+                                  decoration: const InputDecoration(
+                                    enabledBorder: InputBorder.none,
+                                    contentPadding: EdgeInsets.all(0),
+                                  ),
+                                  style: const TextStyle(
+                                    height: 1.4,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
                               ),
                             ),
                           ),
-                          Container(
-                            width: 25,
-                            height: 25,
-                            decoration: BoxDecoration(
-                              color: kPrimaryColor,
-                              borderRadius: BorderRadius.circular(4),
+                          GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                if (quantity <= (_maxMeasurementValue - 1) &&
+                                    checkPriceType) {
+                                  quantity++;
+                                  quantityController.text = quantity.toString();
+                                } else if (quantity <= (_maxMeasurementValue) &&
+                                    checkPriceType) {
+                                  quantity = _maxMeasurementValue.toInt();
+                                  quantityController.text = quantity.toString();
+                                } else {
+                                  quantity++;
+                                  quantityController.text = quantity.toString();
+                                }
+                              });
+                            },
+                            child: Container(
+                              width: 25,
+                              height: 25,
+                              decoration: BoxDecoration(
+                                color: kPrimaryColor,
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                              child: const Icon(Icons.add,
+                                  color: Colors.white, size: 15),
                             ),
-                            child: const Icon(Icons.add,
-                                color: Colors.white, size: 15),
                           ),
                           const SizedBox(width: 15),
                         ],
                       ),
                 SizedBox(
-                  width: 230,
+                  width: 200,
                   height: 50,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10.0)),
                         backgroundColor: kPrimaryColor),
-                    onPressed: () {},
+                    onPressed: () {
+                      // double measurementInput = checkUnitType
+                      //     ? int.parse(kilogramController.text)
+                      //     : quantity;
+                      double measurementInput;
+                      //debugPrint('Selected value: $selectedDropdownValue');
+                      // checkUnitType
+                      //     ? measurementInput = (selectedDropdownValue == null
+                      //         ? serviceArgs.prices!.first.maxValue!.toDouble()
+                      //         : selectedDropdownValue!)
+                      //     : measurementInput = quantity.toDouble();
+                      checkUnitType
+                          ? measurementInput = kilogram.toDouble()
+                          : measurementInput = quantity.toDouble();
+
+                      debugPrint('Selected: $measurementInput');
+                      //Kiểm tra unit Price nằm trong khoảng nào
+                      double currentPrice = 0;
+                      double totalCurrentPrice = 0;
+                      if (serviceArgs.priceType!) {
+                        bool check = false;
+                        for (var itemPrice in serviceArgs.prices!) {
+                          if (measurementInput <= itemPrice.maxValue! &&
+                              !check) {
+                            currentPrice = itemPrice.price!.toDouble();
+                          }
+                          if (currentPrice > 0) {
+                            check = true;
+                          }
+                        }
+                        if (serviceArgs.minPrice != null &&
+                            currentPrice * measurementInput <
+                                serviceArgs.minPrice!) {
+                          totalCurrentPrice = serviceArgs.minPrice!.toDouble();
+                        } else {
+                          totalCurrentPrice = currentPrice * measurementInput;
+                        }
+                      } else {
+                        totalCurrentPrice =
+                            serviceArgs.price! * measurementInput.toDouble();
+                        currentPrice = serviceArgs.price!.toDouble();
+                      }
+                      print(totalCurrentPrice);
+                      //cartItem = CartItem(service: serviceArgs, measurement: 1);
+                      //provider.addToCartWithQuantity(cartItem); //add to cart
+                      cartItem = CartItem(
+                          serviceId: serviceArgs.serviceId!.toInt(),
+                          centerId: centerArgs.id!.toInt(),
+                          name: serviceArgs.serviceName!,
+                          priceType: serviceArgs.priceType!,
+                          measurement: measurementInput,
+                          thumbnail: serviceArgs.image,
+                          price: totalCurrentPrice,
+                          unitPrice: currentPrice,
+                          customerNote: null,
+                          weight:
+                              serviceArgs.rate! * measurementInput.toDouble(),
+                          unit: serviceArgs.unit,
+                          minPrice: serviceArgs.minPrice == null
+                              ? null
+                              : serviceArgs.minPrice!.toDouble(),
+                          prices: serviceArgs.prices);
+                      provider.addItemToCart(cartItem); //add to cart
+                      //print(cart.length);
+                      //provider.addCounter(); //để hiện thị số lượng trong giỏ hàng
+                      // productPrice =
+                      //     (serviceArgs.price! * measurement) as double?;
+                      // provider.addTotalPrice(productPrice!); //add được rồi
+                      //_setNameCenter;
+                    },
                     child: const Text(
                       'Đặt dịch vụ',
                       style: TextStyle(fontSize: 17),
@@ -397,3 +742,691 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
     );
   }
 }
+
+
+
+// // ignore_for_file: public_member_api_docs, sort_constructors_first
+// import 'dart:developer';
+
+// import 'package:flutter/material.dart';
+// import 'package:flutter/services.dart';
+// import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+// import 'package:percent_indicator/percent_indicator.dart';
+// import 'package:provider/provider.dart';
+// import 'package:shared_preferences/shared_preferences.dart';
+
+// import 'package:washouse_customer/components/constants/color_constants.dart';
+// import 'package:washouse_customer/resource/models/service.dart';
+// import 'package:washouse_customer/screens/center/component/details/category_menu.dart';
+
+// import '../../../resource/controller/center_controller.dart';
+// import '../../../resource/controller/service_controller.dart';
+// import '../../../utils/cart_util.dart';
+// import '../../../utils/price_util.dart';
+
+// import 'package:washouse_customer/resource/controller/cart_provider.dart';
+// import 'package:washouse_customer/resource/models/cart_item.dart';
+// import 'package:washouse_customer/resource/models/center.dart';
+
+// class ServiceDetailScreen extends StatefulWidget {
+//   final centerData;
+//   final serviceData;
+//   const ServiceDetailScreen({
+//     Key? key,
+//     this.serviceData,
+//     this.centerData,
+//   }) : super(key: key);
+
+//   @override
+//   State<ServiceDetailScreen> createState() => _ServiceDetailScreenState();
+// }
+
+// class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
+//   late List<Prices> priceList;
+//   Service serviceArgs = Service();
+//   ServiceController serviceController = ServiceController();
+//   CenterController centerController = CenterController();
+
+//   Service serviceDetails = Service();
+
+//   DateTime now = DateTime.now();
+
+//   bool isLoadingDetail = true;
+
+//   TextEditingController quantityController = TextEditingController();
+//   TextEditingController kilogramController = TextEditingController();
+//   LaundryCenter centerArgs = LaundryCenter();
+//   late int quantity;
+//   late num kilogram;
+//   List<CartItem> _cart = [];
+//   String? mycart;
+
+//   Future<void> _loadCart() async {
+//     final cart = await CartUtils.loadCart();
+//     setState(() {
+//       _cart = cart;
+//     });
+//   }
+
+//   Future<void> _addItem(CartItem item) async {
+//     await CartUtils.addItem(item);
+//     _loadCart();
+//   }
+
+//   @override
+//   void initState() {
+//     getServiceDetail();
+//     quantity = 1;
+//     quantityController.text = quantity.toString();
+//     kilogram = 0;
+//     kilogramController.text = kilogram.toString();
+//     super.initState();
+//     centerArgs = widget.centerData;
+//     serviceArgs = widget.serviceData;
+//     priceList = serviceArgs.prices!;
+//     _loadCart();
+//     someFunction();
+//   }
+
+//   void getServiceDetail() async {
+//     Service service = widget.serviceData;
+//     serviceController.getServiceById(service.serviceId!.toInt()).then(
+//       (result) {
+//         setState(() {
+//           serviceDetails = result;
+//           isLoadingDetail = false;
+//         });
+//       },
+//     );
+//   }
+
+//   void someFunction() async {
+//     SharedPreferences prefs = await SharedPreferences.getInstance();
+//     mycart = await prefs.getString('cart_items');
+//     // do something with myInt, myString, and myBool
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     var provider = Provider.of<CartProvidder>(context);
+//     var cart = provider.cart;
+//     Size size = MediaQuery.of(context).size;
+//     List<double> ratings = [];
+//     CartItem cartItem;
+//     double? productPrice;
+//     bool checkUnitType = false;
+//     bool checkRatingNull = false;
+//     bool checkPriceType = false;
+//     int PriceMin = 0;
+//     int PriceMax = 0;
+//     double? _selectedValue;
+
+//     List<double> _values = [];
+
+//     if (serviceArgs.rating == null) {
+//       checkRatingNull = true;
+//     }
+
+//     if (serviceArgs.priceType!) {
+//       checkPriceType = true;
+//       for (var i = 1; i <= (serviceArgs.prices!.last.maxValue! * 10); i++) {
+//         _values.add(i / 10);
+//       }
+//     }
+
+//     if (serviceArgs.unit != null && serviceArgs.unit == "Kg") {
+//       checkUnitType = true;
+//     }
+
+//     if (serviceArgs.ratings != null && serviceArgs.numOfRating != 0) {
+//       double star1 = serviceArgs.ratings![0] / serviceArgs.numOfRating!;
+//       double star2 = serviceArgs.ratings![1] / serviceArgs.numOfRating!;
+//       double star3 = serviceArgs.ratings![2] / serviceArgs.numOfRating!;
+//       double star4 = serviceArgs.ratings![3] / serviceArgs.numOfRating!;
+//       double star5 = serviceArgs.ratings![4] / serviceArgs.numOfRating!;
+//       ratings.addAll([star1, star2, star3, star4, star5]);
+//     }
+
+//     return Scaffold(
+//       body: CustomScrollView(
+//         slivers: [
+//           SliverAppBar(
+//             pinned: true,
+//             expandedHeight: 250,
+//             stretch: true,
+//             elevation: 0,
+//             backgroundColor: Colors.white,
+//             flexibleSpace: FlexibleSpaceBar(
+//               background: Image.network(
+//                 serviceArgs.image!,
+//                 fit: BoxFit.cover,
+//               ),
+//             ),
+//             leading: GestureDetector(
+//               onTap: () => Navigator.pop(context),
+//               child: const Padding(
+//                 padding: EdgeInsets.only(left: 16),
+//                 child: CircleAvatar(
+//                   backgroundColor: Colors.white,
+//                   child: Icon(Icons.arrow_back_ios_new_rounded,
+//                       color: Colors.black),
+//                 ),
+//               ),
+//             ),
+//           ),
+//           SliverToBoxAdapter(
+//             child: Container(
+//               height: 80,
+//               decoration: BoxDecoration(
+//                 border: Border(
+//                   bottom: BorderSide(width: 1.0, color: Colors.grey.shade300),
+//                 ),
+//               ),
+//               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+//               child: Row(
+//                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                 children: [
+//                   SizedBox(
+//                     width: size.width * 0.6,
+//                     child: Text(
+//                       serviceArgs.serviceName!,
+//                       style: const TextStyle(
+//                           fontWeight: FontWeight.w600, fontSize: 24),
+//                       maxLines: 2,
+//                     ),
+//                   ),
+//                   const SizedBox(width: 10),
+//                   SizedBox(
+//                     width: size.width * 0.25,
+//                     child: Text(
+//                       checkPriceType
+//                           ? '${PriceUtils().convertFormatPrice(serviceArgs.prices!.last.price!.toInt())} đ - ${PriceUtils().convertFormatPrice(serviceArgs.prices!.first.price!.toInt())} đ'
+//                           : '${PriceUtils().convertFormatPrice(serviceArgs.price!.toInt())} đ',
+//                       style: const TextStyle(
+//                         color: kPrimaryColor,
+//                         fontSize: 20,
+//                         fontWeight: FontWeight.w600,
+//                       ),
+//                     ),
+//                   ),
+//                 ],
+//               ),
+//             ),
+//           ),
+//           SliverToBoxAdapter(
+//             child: Padding(
+//               //height: 200,
+//               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+//               child: Column(
+//                 crossAxisAlignment: CrossAxisAlignment.start,
+//                 children: [
+//                   const Text(
+//                     'Thông tin dịch vụ',
+//                     style: TextStyle(fontWeight: FontWeight.w600, fontSize: 22),
+//                   ),
+//                   const SizedBox(height: 20),
+//                   const Text(
+//                     'Mô tả',
+//                     style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
+//                   ),
+//                   const SizedBox(height: 10),
+//                   Text(
+//                     serviceArgs.description!,
+//                     style: const TextStyle(fontSize: 17, color: textColor),
+//                     maxLines: 3,
+//                   ),
+//                   const SizedBox(height: 20),
+//                   Text.rich(
+//                     TextSpan(
+//                       children: [
+//                         const TextSpan(
+//                           text: 'Thời gian dự tính:   ',
+//                           style: TextStyle(
+//                               fontWeight: FontWeight.w600, fontSize: 18),
+//                         ),
+//                         TextSpan(
+//                             text:
+//                                 serviceArgs.timeEstimate!.toString() + " phút",
+//                             style: TextStyle(fontSize: 17)),
+//                       ],
+//                     ),
+//                   ),
+//                   checkUnitType
+//                       ? SingleChildScrollView(
+//                           child: Column(
+//                             crossAxisAlignment: CrossAxisAlignment.start,
+//                             children: [
+//                               const SizedBox(height: 20),
+//                               const Text(
+//                                 'Bảng giá',
+//                                 style: TextStyle(
+//                                     fontWeight: FontWeight.w600, fontSize: 18),
+//                               ),
+//                               SizedBox(
+//                                 width: size.width,
+//                                 child: DataTable(
+//                                   columns: const <DataColumn>[
+//                                     DataColumn(
+//                                       label: Text(
+//                                         'Số ký',
+//                                         style: TextStyle(
+//                                             fontStyle: FontStyle.italic),
+//                                       ),
+//                                     ),
+//                                     DataColumn(
+//                                       label: Text(
+//                                         'Giá thành',
+//                                         style: TextStyle(
+//                                             fontStyle: FontStyle.italic),
+//                                       ),
+//                                     ),
+//                                   ],
+//                                   rows: priceList
+//                                       .map<DataRow>((e) => DataRow(cells: [
+//                                             DataCell(
+//                                                 Text(e.maxValue.toString())),
+//                                             DataCell(Text(
+//                                                 '${PriceUtils().convertFormatPrice(e.price?.round() as num)} đ')),
+//                                           ]))
+//                                       .toList(),
+//                                 ),
+//                               ),
+//                             ],
+//                           ),
+//                         )
+//                       : const SizedBox(height: 0, width: 0),
+//                 ],
+//               ),
+//             ),
+//           ),
+//           SliverToBoxAdapter(
+//             child: Divider(thickness: 1.0, color: Colors.grey.shade300),
+//           ),
+//           SliverToBoxAdapter(
+//             child: Padding(
+//               padding: const EdgeInsets.symmetric(horizontal: 16),
+//               child: Column(
+//                 crossAxisAlignment: CrossAxisAlignment.start,
+//                 children: [
+//                   const Text(
+//                     'Đánh giá',
+//                     style: TextStyle(fontWeight: FontWeight.w600, fontSize: 22),
+//                   ),
+//                   const SizedBox(height: 15),
+//                   !checkRatingNull
+//                       ? Row(
+//                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                           children: [
+//                             Column(
+//                               children: [
+//                                 Text.rich(
+//                                   TextSpan(
+//                                     children: [
+//                                       TextSpan(
+//                                         text: serviceArgs.rating!.toString(),
+//                                         style: const TextStyle(
+//                                           fontSize: 42,
+//                                           fontWeight: FontWeight.w700,
+//                                         ),
+//                                       ),
+//                                       const TextSpan(
+//                                         text: " / 5",
+//                                         style: TextStyle(
+//                                           fontSize: 24.0,
+//                                           color: textColor,
+//                                         ),
+//                                       ),
+//                                     ],
+//                                   ),
+//                                 ),
+//                                 const SizedBox(height: 5),
+//                                 RatingBarIndicator(
+//                                   rating: serviceArgs.rating!.toDouble(),
+//                                   itemBuilder: (context, index) => const Icon(
+//                                     Icons.star,
+//                                     color: kPrimaryColor,
+//                                   ),
+//                                   itemCount: 5,
+//                                   itemSize: 30,
+//                                   direction: Axis.horizontal,
+//                                 ),
+//                                 const SizedBox(height: 10.0),
+//                                 Text(
+//                                   '${serviceArgs.numOfRating} đánh giá',
+//                                   style: const TextStyle(
+//                                     fontSize: 18,
+//                                     color: textColor,
+//                                   ),
+//                                 ),
+//                               ],
+//                             ),
+//                             SizedBox(
+//                               width: 200.0,
+//                               height: 120,
+//                               child: ListView.builder(
+//                                 shrinkWrap: true,
+//                                 reverse: true,
+//                                 itemCount: 5,
+//                                 itemBuilder: (context, index) {
+//                                   return Row(
+//                                     children: [
+//                                       Text(
+//                                         '${index + 1}',
+//                                         style: TextStyle(fontSize: 18.0),
+//                                       ),
+//                                       const SizedBox(width: 4.0),
+//                                       const Icon(Icons.star,
+//                                           color: kPrimaryColor),
+//                                       const SizedBox(width: 8.0),
+//                                       LinearPercentIndicator(
+//                                         lineHeight: 6.0,
+//                                         // linearStrokeCap: LinearStrokeCap.roundAll,
+//                                         width:
+//                                             MediaQuery.of(context).size.width /
+//                                                 2.8,
+//                                         animation: true,
+//                                         animationDuration: 2500,
+//                                         percent: ratings[index],
+//                                         progressColor: kPrimaryColor,
+//                                       ),
+//                                     ],
+//                                   );
+//                                 },
+//                               ),
+//                             ),
+//                           ],
+//                         )
+//                       : Align(
+//                           alignment: Alignment.center,
+//                           child: Column(
+//                             children: const [
+//                               Icon(Icons.star_rounded,
+//                                   color: kPrimaryColor, size: 60),
+//                               SizedBox(height: 10),
+//                               Text(
+//                                 'Chưa có đánh giá nào',
+//                                 style: TextStyle(
+//                                     fontSize: 22, fontWeight: FontWeight.w500),
+//                               )
+//                             ],
+//                           ),
+//                         ),
+//                 ],
+//               ),
+//             ),
+//           ),
+//         ],
+//       ),
+//       bottomNavigationBar: SingleChildScrollView(
+//         reverse: true,
+//         child: Column(children: [
+//           Container(
+//             padding: EdgeInsets.only(
+//               left: 30,
+//               right: 30,
+//             ),
+//             decoration: BoxDecoration(
+//               color: Colors.white,
+//               borderRadius: const BorderRadius.only(
+//                   topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+//               boxShadow: [
+//                 BoxShadow(
+//                   offset: const Offset(0, -15),
+//                   blurRadius: 20,
+//                   color: const Color(0xffdadada).withOpacity(0.15),
+//                 ),
+//               ],
+//             ),
+//             child: Row(
+//               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//               children: [
+//                 checkUnitType
+//                     ? Row(
+//                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//                         children: [
+//                           SizedBox(
+//                             height: 90,
+//                             width: size.width / 5,
+//                             child: Align(
+//                               alignment: Alignment.center,
+//                               child: SizedBox(
+//                                 height: 50,
+
+// //                                 child: TextField(
+// //                                   controller: kilogramController,
+// //                                   textAlign: TextAlign.center,
+// //                                   keyboardType: TextInputType.number,
+// //                                   decoration: const InputDecoration(
+// // =======
+//                                 // child: TextField(
+//                                 //   textAlign: TextAlign.center,
+//                                 //   keyboardType: TextInputType.numberWithOptions(
+//                                 //       decimal: true),
+//                                 //   decoration: InputDecoration(
+//                                 //     enabledBorder: OutlineInputBorder(
+//                                 //       borderSide: BorderSide(
+//                                 //           color: Colors.black, width: 1),
+//                                 //       borderRadius:
+//                                 //           BorderRadius.all(Radius.circular(10)),
+//                                 //     ),
+//                                 //     contentPadding: EdgeInsets.all(0),
+//                                 //     hintText: 'Số ký',
+//                                 //     hintStyle: TextStyle(
+//                                 //       fontSize: 18,
+//                                 //       height: 1.4,
+//                                 //     ),
+//                                 //   ),
+//                                 //   cursorHeight: 17,
+//                                 //   inputFormatters: [
+//                                 //     FilteringTextInputFormatter.allow(
+//                                 //         RegExp(r'^\d+\.?\d{0,3}')),
+//                                 //   ],
+//                                 //   style: TextStyle(
+//                                 //     height: 1,
+//                                 //     fontSize: 18,
+//                                 //   ),
+//                                 // ),
+//                                 child: DropdownButtonFormField<double>(
+//                                   value: _selectedValue,
+//                                   // decoration: InputDecoration(
+//                                   //   labelText: 'Select',
+//                                   //   border: OutlineInputBorder(),
+//                                   // ),
+//                                   decoration: const InputDecoration(
+//                                     enabledBorder: OutlineInputBorder(
+//                                       borderSide: BorderSide(
+//                                           color: Colors.black, width: 1),
+//                                       borderRadius:
+//                                           BorderRadius.all(Radius.circular(10)),
+//                                     ),
+//                                     focusedBorder: OutlineInputBorder(
+//                                       borderSide: BorderSide(
+//                                           color: Colors.black, width: 1),
+//                                       borderRadius:
+//                                           BorderRadius.all(Radius.circular(10)),
+//                                     ),
+//                                     contentPadding: EdgeInsets.only(left: 10),
+//                                     hintText: 'Số ký',
+//                                     hintStyle: TextStyle(
+//                                       fontSize: 18,
+//                                       height: 1.4,
+//                                     ),
+//                                   ),
+// // <<<<<<< HEAD
+// //                                   cursorHeight: 17,
+// //                                   style: const TextStyle(
+// //                                     height: 1,
+// //                                     fontSize: 18,
+// //                                   ),
+// // =======
+//                                   items: _values.map((value) {
+//                                     return DropdownMenuItem(
+//                                       value: value,
+//                                       child: Text(value.toString()),
+//                                     );
+//                                   }).toList(),
+//                                   onChanged: (value) {
+//                                     setState(() {
+//                                       _selectedValue = value;
+//                                     });
+//                                   },
+//                                 ),
+//                               ),
+//                             ),
+//                           ),
+//                           const SizedBox(width: 15),
+//                           const Text(
+//                             'kg',
+//                             style: TextStyle(fontSize: 18),
+//                           )
+//                         ],
+//                       )
+//                     : Row(
+//                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//                         children: [
+//                           GestureDetector(
+//                             onTap: () {
+//                               setState(() {
+//                                 if (quantity > 1) {
+//                                   quantity--;
+//                                   quantityController.text = quantity.toString();
+//                                 } else {
+//                                   quantity = 1;
+//                                 }
+//                               });
+//                             },
+//                             child: Container(
+//                               width: 25,
+//                               height: 25,
+//                               decoration: BoxDecoration(
+//                                 color: Colors.grey.shade300,
+//                                 borderRadius: BorderRadius.circular(4),
+//                               ),
+//                               child: const Icon(Icons.remove,
+//                                   color: Colors.white, size: 15),
+//                             ),
+//                           ),
+//                           Container(
+//                             height: 90,
+//                             width: size.width / 8,
+//                             padding: EdgeInsets.symmetric(horizontal: 15),
+//                             child: Align(
+//                               alignment: Alignment.center,
+//                               child: SizedBox(
+//                                 height: 50,
+//                                 child: TextField(
+//                                   readOnly: true,
+//                                   controller: quantityController,
+//                                   textAlign: TextAlign.center,
+//                                   keyboardType: TextInputType.number,
+//                                   decoration: const InputDecoration(
+//                                     enabledBorder: InputBorder.none,
+//                                     contentPadding: EdgeInsets.all(0),
+//                                   ),
+//                                   style: const TextStyle(
+//                                     height: 1.4,
+//                                     fontSize: 18,
+//                                     fontWeight: FontWeight.w500,
+//                                   ),
+//                                 ),
+//                               ),
+//                             ),
+//                           ),
+//                           GestureDetector(
+//                             onTap: () {
+//                               setState(() {
+//                                 quantity++;
+//                                 quantityController.text = quantity.toString();
+//                               });
+//                             },
+//                             child: Container(
+//                               width: 25,
+//                               height: 25,
+//                               decoration: BoxDecoration(
+//                                 color: kPrimaryColor,
+//                                 borderRadius: BorderRadius.circular(4),
+//                               ),
+//                               child: const Icon(Icons.add,
+//                                   color: Colors.white, size: 15),
+//                             ),
+//                           ),
+//                           const SizedBox(width: 15),
+//                         ],
+//                       ),
+//                 SizedBox(
+//                   width: 200,
+//                   height: 50,
+//                   child: ElevatedButton(
+//                     style: ElevatedButton.styleFrom(
+//                         shape: RoundedRectangleBorder(
+//                             borderRadius: BorderRadius.circular(10.0)),
+//                         backgroundColor: kPrimaryColor),
+//                     onPressed: () {
+//                       int _measurement = checkUnitType
+//                           ? int.parse(kilogramController.text)
+//                           : quantity;
+//                       //Kiểm tra unit Price nằm trong khoảng nào
+//                       double currentPrice = 0;
+//                       double totalCurrentPrice = 0;
+//                       if (serviceArgs.priceType!) {
+//                         bool check = false;
+//                         for (var itemPrice in serviceArgs.prices!) {
+//                           if (_measurement <= itemPrice.maxValue! && !check) {
+//                             currentPrice = itemPrice.price!.toDouble();
+//                           }
+//                           if (currentPrice > 0) {
+//                             check = true;
+//                           }
+//                         }
+//                         if (currentPrice * _measurement <
+//                             serviceArgs.minPrice!) {
+//                           totalCurrentPrice = serviceArgs.minPrice!.toDouble();
+//                         } else {
+//                           totalCurrentPrice = currentPrice * _measurement;
+//                         }
+//                       } else {
+//                         totalCurrentPrice =
+//                             serviceArgs.price! * _measurement.toDouble();
+//                         currentPrice = serviceArgs.price!.toDouble();
+//                       }
+//                       //cartItem = CartItem(service: serviceArgs, measurement: 1);
+//                       //provider.addToCartWithQuantity(cartItem); //chưa add được
+//                       cartItem = CartItem(
+//                           serviceId: serviceArgs.serviceId!.toInt(),
+//                           centerId: centerArgs.id,
+//                           name: serviceArgs.serviceName,
+//                           thumbnail: serviceArgs.image,
+//                           price: totalCurrentPrice,
+//                           priceType: serviceArgs.priceType,
+//                           unit: serviceArgs.unit,
+//                           measurement: _measurement.toDouble(),
+//                           customerNote: null,
+//                           weight: serviceArgs.rate! * _measurement.toDouble(),
+//                           minPrice: currentPrice,
+//                           prices: serviceArgs.prices);
+//                       //print(cartItem.price);
+//                       _addItem(cartItem);
+//                       provider
+//                           .addCounter(); //để hiện thị số lượng trong giỏ hàng
+//                       // productPrice =
+//                       //     (serviceArgs.price! * measurement) as double?;
+//                       // provider.addTotalPrice(productPrice!); //add được rồi
+//                       //_setNameCenter;
+//                     },
+//                     child: const Text(
+//                       'Đặt dịch vụ',
+//                       style: TextStyle(fontSize: 17),
+//                     ),
+//                   ),
+//                 ),
+//               ],
+//             ),
+//           ),
+//           Padding(
+//               padding: EdgeInsets.only(
+//                   bottom: MediaQuery.of(context).viewInsets.bottom))
+//         ]),
+//       ),
+//     );
+//   }
+// }

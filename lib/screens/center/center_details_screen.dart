@@ -13,6 +13,7 @@ import 'package:washouse_customer/screens/center/component/details/center_catego
 import 'package:washouse_customer/utils/center_utils.dart';
 import 'package:washouse_customer/utils/time_utils.dart';
 
+import '../../components/route/route_generator.dart';
 import 'component/details/box_info.dart';
 import 'component/details/menu_item_card.dart';
 
@@ -70,7 +71,7 @@ class _CenterDetailScreenState extends State<CenterDetailScreen> {
     int listLength = centerDetails.centerServices != null
         ? centerDetails.centerServices!.length
         : 0;
-    print(centerDetails.centerServices!.length);
+    //print(centerDetails.centerServices!.length);
 
     //centerDetails.centerServices![0].services![0].serviceName; //mẫu lấy service của center
 
@@ -146,7 +147,6 @@ class _CenterDetailScreenState extends State<CenterDetailScreen> {
               SliverList(
                 delegate: SliverChildBuilderDelegate(
                   (context, categoryIndex) {
-                    //List<ServiceDemo> items = demoCateList[categoryIndex].item;
                     List<Service> items =
                         centerDetails.centerServices![categoryIndex].services!;
                     return Padding(
@@ -177,7 +177,10 @@ class _CenterDetailScreenState extends State<CenterDetailScreen> {
                                       : items[index].price!.toString(),
                                   press: () => Navigator.pushNamed(
                                       context, '/serviceDetails',
-                                      arguments: items[index]),
+                                      //   arguments: items[index],
+                                      // )
+                                      arguments: ScreenArguments(
+                                          centerArgs, items[index])),
                                 ),
                               ),
                             ),

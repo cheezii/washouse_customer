@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../../../components/constants/color_constants.dart';
-import '../../../../resource/models/cart.dart';
+import '../../../../resource/controller/cart_provider.dart';
+import '../../../../resource/models/cart_item.dart';
 import 'detail_item_card.dart';
 
 class DetailService extends StatelessWidget {
@@ -11,6 +13,7 @@ class DetailService extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    List<CartItem> cartItems = Provider.of<CartProvider>(context).cartItems;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
@@ -30,19 +33,21 @@ class DetailService extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 6),
-          // Container(
-          //   padding: const EdgeInsets.symmetric(horizontal: 10),
-          //   child: ListView.builder(
-          //     shrinkWrap: true,
-          //     physics: const NeverScrollableScrollPhysics(),
-          //     itemCount: demoCarts.length,
-          //     itemBuilder: (context, index) {
-          //       return DetailItemCard(
-          //         cart: demoCarts[index],
-          //       );
-          //     },
-          //   ),
-          // ),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              //itemCount: demoCarts.length,
+              itemCount: cartItems.length,
+              itemBuilder: (context, index) {
+                return DetailItemCard(
+                  //cart: demoCarts[index],
+                  cart: cartItems[index],
+                );
+              },
+            ),
+          ),
         ],
       ),
     );

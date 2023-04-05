@@ -42,6 +42,8 @@ dependencies:
   image_picker: ^0.8.7+1
   flutter_datetime_picker: ^1.5.1
   flutter_cupertino_localizations: ^1.0.1
+  provider: ^6.0.5
+  badges: ^3.0.3
   
 dev_dependencies:
   flutter_test:
