@@ -1,18 +1,22 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 
 import 'package:flutter/material.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:skeletons/skeletons.dart';
 import 'package:washouse_customer/components/constants/color_constants.dart';
 import 'package:washouse_customer/resource/controller/center_controller.dart';
 import 'package:washouse_customer/resource/controller/service_controller.dart';
 
 import 'package:washouse_customer/resource/models/center.dart';
+import 'package:washouse_customer/resource/models/promotion.dart';
 import 'package:washouse_customer/resource/models/service.dart';
 import 'package:washouse_customer/screens/center/component/details/category_menu.dart';
 import 'package:washouse_customer/screens/center/component/details/center_categories.dart';
+import 'package:washouse_customer/screens/center/component/promotion/promotion_widget.dart';
 import 'package:washouse_customer/utils/center_utils.dart';
 import 'package:washouse_customer/utils/time_utils.dart';
 
+import '../../components/route/route_generator.dart';
 import 'component/details/box_info.dart';
 import 'component/details/menu_item_card.dart';
 
@@ -176,7 +180,10 @@ class _CenterDetailScreenState extends State<CenterDetailScreen> {
                                       : items[index].price!.toString(),
                                   press: () => Navigator.pushNamed(
                                       context, '/serviceDetails',
-                                      arguments: items[index]),
+                                      //   arguments: items[index],
+                                      // )
+                                      arguments: ScreenArguments(
+                                          centerArgs, items[index])),
                                 ),
                               ),
                             ),
@@ -250,6 +257,7 @@ class _CenterDetailScreenState extends State<CenterDetailScreen> {
 
     bool isHasDelivery = CenterUtils().checkHasDelivery(centerArgs);
     bool isHasRating = CenterUtils().checkHasRating(centerArgs);
+    bool isHavePromotion = true;
 
     return Positioned(
       top: top,
@@ -282,7 +290,83 @@ class _CenterDetailScreenState extends State<CenterDetailScreen> {
                   icon: 'assets/images/service/coupon.png',
                   title: 'Thông tin khuyến mãi',
                   pressText: 'Xem thêm',
-                  press: () {},
+                  press: () {
+                    showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: true,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20.0)),
+                        builder: (context) => SizedBox(
+                              height: 500,
+                              child: Column(
+                                children: [
+                                  Row(
+                                    children: [
+                                      IconButton(
+                                          icon: const Icon(Icons.close_rounded),
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          }),
+                                      const SizedBox(width: 90),
+                                      const Text(
+                                        'Mã giảm giá',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.w600),
+                                      ),
+                                    ],
+                                  ),
+                                  Divider(
+                                      thickness: 1,
+                                      color: Colors.grey.shade300),
+                                  const SizedBox(height: 10),
+                                  isHavePromotion
+                                      ? Expanded(
+                                          child: ListView.builder(
+                                            itemBuilder: ((context, index) {
+                                              return Padding(
+                                                padding:
+                                                    const EdgeInsets.all(10),
+                                                child: PromotionWidget(
+                                                    description:
+                                                        demoPromotionList[index]
+                                                            .description,
+                                                    expiredDate:
+                                                        demoPromotionList[index]
+                                                            .expiredDate,
+                                                    code:
+                                                        demoPromotionList[index]
+                                                            .code),
+                                              );
+                                            }),
+                                            itemCount: demoPromotionList.length,
+                                          ),
+                                        )
+                                      : Column(
+                                          children: [
+                                            Container(
+                                              padding: const EdgeInsets.only(
+                                                  top: 50),
+                                              height: 150,
+                                              width: 150,
+                                              child: Image.asset(
+                                                  'assets/images/service/coupon.png'),
+                                            ),
+                                            const SizedBox(height: 20),
+                                            Text(
+                                              'Không có mã giảm giá nào',
+                                              style: TextStyle(
+                                                  fontSize: 18,
+                                                  color: Colors.grey.shade500,
+                                                  fontWeight: FontWeight.w400),
+                                            )
+                                          ],
+                                        )
+                                ],
+                              ),
+                            ));
+                  },
                 ),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 25),

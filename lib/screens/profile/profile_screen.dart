@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:washouse_customer/components/constants/color_constants.dart';
 import 'package:washouse_customer/components/constants/size.dart';
-import 'package:washouse_customer/screens/started/login.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:washouse_customer/screens/profile/information_screen.dart';
+import 'package:washouse_customer/screens/profile/manage_account_screen.dart';
+import 'package:washouse_customer/screens/profile/my_feed_back_screen.dart';
+import 'package:washouse_customer/screens/profile/payment_screen.dart';
 import 'dart:async';
 import '../../resource/controller/base_controller.dart';
+import '../notification/list_notification_screen.dart';
 import 'components/profile_widget.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -18,8 +21,8 @@ class ProfileScreen extends StatefulWidget {
 BaseController baseController = BaseController();
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  late String _currentUserName;
-  late String _currentUserEmail;
+  String _currentUserName = '';
+  String _currentUserEmail = '';
   String? _currentUserAvartar;
 
   @override
@@ -55,11 +58,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
           children: [
             SafeArea(
               child: Padding(
-                padding: const EdgeInsets.only(top: 18, left: 16, right: 16),
+                padding: const EdgeInsets.only(top: 6, left: 16, right: 16),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: const [
-                    Text(
+                  children: [
+                    const Text(
                       'Tài khoản',
                       style: TextStyle(
                         color: textColor,
@@ -67,70 +70,50 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         fontSize: 30,
                       ),
                     ),
-                    Icon(
-                      Icons.notifications,
-                      color: textColor,
-                      size: 30.0,
+                    IconButton(
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            PageTransition(
+                                child: const ListNotificationScreen(),
+                                type: PageTransitionType.rightToLeftWithFade));
+                      },
+                      icon: const Icon(
+                        Icons.notifications,
+                        color: textColor,
+                        size: 30.0,
+                      ),
                     ),
                   ],
                 ),
               ),
             ),
             Container(
-              padding: const EdgeInsets.all(kDefaultPadding),
-              height: size.height,
+              padding: const EdgeInsets.only(left: 16, right: 16, top: 10),
+              height: size.height * .79,
               width: size.width,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Container(
-                      width: 150,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          color: kPrimaryColor.withOpacity(.5),
-                          width: 5.0,
-                        ),
+                    width: 150,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: kPrimaryColor.withOpacity(.5),
+                        width: 5.0,
                       ),
-                      // child: CircleAvatar(
-                      //   radius: 60,
-                      //   backgroundColor: Colors.grey,
-                      //   //backgroundImage: ExactAssetImage('assets/images/profile/anonymous.jpg'),
-                      //   backgroundImage: NetworkImage(_currentUserAvartar),
-                      // ),
-                      //   child: FutureBuilder<ImageProvider<Object>>(
-                      //     future: _loadImage(),
-                      //     builder: (BuildContext context,
-                      //         AsyncSnapshot<ImageProvider<Object>> snapshot) {
-                      //       if (snapshot.connectionState == ConnectionState.done &&
-                      //           snapshot.hasData) {
-                      //         return CircleAvatar(
-                      //           radius: 60,
-                      //           backgroundColor: Colors.grey,
-                      //           backgroundImage: snapshot.data,
-                      //         );
-                      //       } else {
-                      //         return CircleAvatar(
-                      //           radius: 60,
-                      //           backgroundColor: Colors.grey,
-                      //           backgroundImage: ExactAssetImage(
-                      //               'assets/images/profile/anonymous.jpg'),
-                      //         );
-                      //       }
-                      //     },
-                      //   ),
-                      // ),
-                      child: CircleAvatar(
-                        radius: 60,
-                        backgroundColor: Colors.grey,
-                        //backgroundImage: ExactAssetImage('assets/images/profile/anonymous.jpg'),
-                        backgroundImage:
-                            NetworkImage(_currentUserAvartar ?? ""),
-                      )),
+                    ),
+                    child: CircleAvatar(
+                      radius: 60,
+                      backgroundColor: Colors.grey,
+                      backgroundImage: NetworkImage(_currentUserAvartar ?? ""),
+                    ),
+                  ),
                   const SizedBox(height: 10),
                   Text(
                     '$_currentUserName',
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: textColor,
                       fontSize: 22,
                       fontWeight: FontWeight.w400,
@@ -143,27 +126,58 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       fontSize: 18,
                     ),
                   ),
-                  const SizedBox(height: 30),
+                  const SizedBox(height: 20),
                   SizedBox(
-                    height: size.height * .7,
+                    height: size.height * .525,
                     width: size.width,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         ProfileWidget(
                           icon: Icons.person,
-                          title: 'Hồ sơ của tôi',
+                          title: 'Hồ sơ',
                           txtColor: textColor,
                           iconColor: textColor,
-                          press: () {},
+                          press: () {
+                            Navigator.push(
+                                context,
+                                PageTransition(
+                                    child: const InfomationScreen(),
+                                    type: PageTransitionType
+                                        .leftToRightWithFade));
+                          },
                         ),
+                        const SizedBox(height: 10),
+                        ProfileWidget(
+                          icon: Icons.wallet_rounded,
+                          title: 'Ví của tôi',
+                          txtColor: textColor,
+                          iconColor: textColor,
+                          press: () {
+                            Navigator.push(
+                                context,
+                                PageTransition(
+                                    child: PaymentScreen(),
+                                    type: PageTransitionType
+                                        .rightToLeftWithFade));
+                          },
+                        ),
+                        const SizedBox(height: 10),
                         ProfileWidget(
                           icon: Icons.feedback_rounded,
                           title: 'Đánh giá',
                           txtColor: textColor,
                           iconColor: textColor,
-                          press: () {},
+                          press: () {
+                            Navigator.push(
+                                context,
+                                PageTransition(
+                                    child: MyFeedbackScreen(),
+                                    type: PageTransitionType
+                                        .rightToLeftWithFade));
+                          },
                         ),
+                        const SizedBox(height: 10),
                         ProfileWidget(
                           icon: Icons.help_rounded,
                           title: 'Trung tâm hỗ trợ',
@@ -171,6 +185,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           iconColor: textColor,
                           press: () {},
                         ),
+                        const SizedBox(height: 10),
                         ProfileWidget(
                           icon: Icons.info_outline_rounded,
                           title: 'Về chúng tôi',
@@ -178,17 +193,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           iconColor: textColor,
                           press: () {},
                         ),
+                        const SizedBox(height: 10),
                         ProfileWidget(
-                          icon: Icons.logout_rounded,
-                          title: 'Đăng xuất',
-                          txtColor: Colors.red,
-                          iconColor: Colors.red,
+                          icon: Icons.settings_rounded,
+                          title: 'Quản lý tài khoản',
+                          txtColor: textColor,
+                          iconColor: textColor,
                           press: () {
                             Navigator.push(
-                                context,
-                                PageTransition(
-                                    child: const Login(),
-                                    type: PageTransitionType.fade));
+                              context,
+                              PageTransition(
+                                  child: ManageAccountScreen(),
+                                  type: PageTransitionType.rightToLeftWithFade),
+                            );
                           },
                         ),
                       ],

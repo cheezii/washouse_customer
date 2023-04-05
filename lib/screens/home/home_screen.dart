@@ -9,14 +9,16 @@ import 'package:washouse_customer/components/constants/color_constants.dart';
 import 'package:washouse_customer/resource/controller/center_controller.dart';
 import 'package:washouse_customer/resource/controller/location_controller.dart';
 import 'package:washouse_customer/resource/controller/map_controller.dart';
+import 'package:washouse_customer/screens/cateogry/category_list_screen.dart';
 import 'package:washouse_customer/screens/home/components/nearby_center_home_skeleton.dart';
 import '../../resource/controller/category_controller.dart';
 import '../../resource/models/category.dart';
 import '../../resource/models/post.dart';
 import 'package:washouse_customer/resource/models/center.dart';
-import '../center/list_center_screen.dart';
+import '../center/list_center.dart';
 import 'components/category_card.dart';
 import 'components/home_header.dart';
+import 'components/title_with_more_button.dart';
 
 class Homescreen extends StatefulWidget {
   const Homescreen({super.key});
@@ -104,40 +106,55 @@ class _HomescreenState extends State<Homescreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Column(
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          'Các loại dịch vụ',
-                          style: TextStyle(
-                              fontSize: 22, fontWeight: FontWeight.w700),
-                        ),
-                        IconButton(
-                          onPressed: () {},
-                          icon: const Icon(
-                            Icons.arrow_forward_ios_rounded,
-                            size: 20,
-                          ),
-                        )
-                      ],
-                    ),
-                    GridView.builder(
-                      shrinkWrap: true,
-                      itemCount:
-                          categoryList.length > 8 ? 8 : categoryList.length,
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 4,
-                        childAspectRatio: 0.8,
-                        crossAxisSpacing: 15,
-                        mainAxisSpacing: 15,
-                      ),
-                      itemBuilder: ((context, index) {
-                        return CategoryCard(
-                          icon: categoryList[index].image!,
-                          text: categoryList[index].categoryName!,
-                          press: () {},
-                        );
+                    TitleWithMoreBtn(
+                        title: 'Các loại dịch vụ',
+                        press: () {
+                          Navigator.push(
+                              context,
+                              PageTransition(
+                                  child: const ListCategoryScreen(),
+                                  type:
+                                      PageTransitionType.rightToLeftWithFade));
+                        }),
+                    FutureBuilder(
+                      future: categoryController.getCategoriesList(),
+                      builder: ((context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        } else if (snapshot.hasData) {
+                          categoryList = snapshot.data!;
+                          return GridView.builder(
+                            shrinkWrap: true,
+                            itemCount: categoryList.length > 8
+                                ? 8
+                                : categoryList.length,
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 4,
+                              childAspectRatio: 0.8,
+                              crossAxisSpacing: 15,
+                              mainAxisSpacing: 15,
+                            ),
+                            itemBuilder: ((context, index) {
+                              return CategoryCard(
+                                icon: categoryList[index].image!,
+                                text: categoryList[index].categoryName!,
+                                press: () {},
+                              );
+                            }),
+                          );
+                        } else if (snapshot.hasError) {
+                          return Column(
+                            children: [
+                              Text('Oops'),
+                              Text('Có lỗi xảy ra rồi!'),
+                            ],
+                          );
+                        }
+                        return Container();
                       }),
                     ),
                   ],
@@ -149,33 +166,19 @@ class _HomescreenState extends State<Homescreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Column(
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          'Tiệm giặt gần đây',
-                          style: TextStyle(
-                              fontSize: 22, fontWeight: FontWeight.w700),
-                        ),
-                        IconButton(
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                PageTransition(
-                                    child: const ListCenterScreen(
-                                      pageName: 'Tiệm giặt gần đây',
-                                      isNearby: true,
-                                      isSearch: false,
-                                    ),
-                                    type: PageTransitionType
-                                        .rightToLeftWithFade));
-                          },
-                          icon: const Icon(
-                            Icons.arrow_forward_ios_rounded,
-                            size: 20,
-                          ),
-                        ),
-                      ],
+                    TitleWithMoreBtn(
+                      title: 'Tiệm giặt gần đây',
+                      press: () {
+                        Navigator.push(
+                            context,
+                            PageTransition(
+                                child: const ListCenterScreen(
+                                  pageName: 'Tiệm giặt gần đây',
+                                  isNearby: true,
+                                  isSearch: false,
+                                ),
+                                type: PageTransitionType.rightToLeftWithFade));
+                      },
                     ),
                     Skeleton(
                       isLoading: isLoading,
@@ -300,23 +303,7 @@ class _HomescreenState extends State<Homescreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Column(
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          'Blog tiệm giặt',
-                          style: TextStyle(
-                              fontSize: 22, fontWeight: FontWeight.w700),
-                        ),
-                        IconButton(
-                          onPressed: () {},
-                          icon: const Icon(
-                            Icons.arrow_forward_ios_rounded,
-                            size: 20,
-                          ),
-                        ),
-                      ],
-                    ),
+                    TitleWithMoreBtn(title: 'Blog tiệm giặt', press: () {}),
                   ],
                 ),
               ),

@@ -1,4 +1,5 @@
 //ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'center_delivery_price.dart';
 import 'service.dart';
 
 class LaundryCenter {
@@ -17,6 +18,7 @@ class LaundryCenter {
   num? maxPrice;
   bool? monthOff;
   bool? hasDelivery;
+  List<CenterDeliveryPrice>? centerDeliveryPrices;
   CenterLocation? centerLocation;
   List<CenterOperatingHours>? centerOperatingHours;
 
@@ -36,6 +38,7 @@ class LaundryCenter {
       this.maxPrice,
       this.monthOff,
       this.hasDelivery,
+      this.centerDeliveryPrices,
       this.centerLocation,
       this.centerOperatingHours});
 
@@ -60,6 +63,12 @@ class LaundryCenter {
     maxPrice = json['maxPrice'];
     monthOff = json['monthOff'];
     hasDelivery = json['hasDelivery'];
+    if (json['centerDeliveryPrices'] != null) {
+      centerDeliveryPrices = <CenterDeliveryPrice>[];
+      json['centerDeliveryPrices'].forEach((v) {
+        centerDeliveryPrices?.add(new CenterDeliveryPrice.fromJson(v));
+      });
+    }
     centerLocation = json['centerLocation'] != null
         ? new CenterLocation.fromJson(json['centerLocation'])
         : null;

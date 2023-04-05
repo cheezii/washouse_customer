@@ -11,7 +11,8 @@ import 'package:washouse_customer/resource/models/center.dart';
 import '../../../components/constants/color_constants.dart';
 import '../../../resource/controller/map_controller.dart';
 import '../../center/component/list_center_skeleton.dart';
-import '../../center/list_center_screen.dart';
+import '../../center/list_center.dart';
+import '../../notification/list_notification_screen.dart';
 import '../current_location_screen.dart';
 import '../../center/search_center_screen.dart';
 
@@ -151,11 +152,20 @@ class _HomeHeaderState extends State<HomeHeader> {
                   ),
                 ],
               ),
-              const Icon(
-                Icons.notifications,
-                color: textColor,
-                size: 30.0,
-              ),
+              IconButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      PageTransition(
+                          child: const ListNotificationScreen(),
+                          type: PageTransitionType.rightToLeftWithFade));
+                },
+                icon: const Icon(
+                  Icons.notifications,
+                  color: textColor,
+                  size: 30.0,
+                ),
+              )
             ],
           ),
           const SizedBox(height: 8),

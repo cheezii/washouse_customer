@@ -20,22 +20,27 @@ class SignUp extends StatefulWidget {
   State<SignUp> createState() => _SignUpState();
 }
 
+TextEditingController emailController = TextEditingController();
+TextEditingController phoneController = TextEditingController();
+TextEditingController passwordController = TextEditingController();
+TextEditingController conpasswordController = TextEditingController();
+
 class _SignUpState extends State<SignUp> {
+  GlobalKey<FormState> _formPwdKey = GlobalKey<FormState>();
+  GlobalKey<FormState> _formConPwdKey = GlobalKey<FormState>();
+  GlobalKey<FormState> _formPhoneNumKey = GlobalKey<FormState>();
+  final typePhoneNum = RegExp(r'(((\+|)84)|0)(3|5|7|8|9)+([0-9]{8})\b');
   String? _errorMessage;
   bool _isPassHidden = true;
-  bool _isConHidden = true;
+  bool _isConPassHidden = true;
   AccountController accountController = AccountController();
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController phoneController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
-  final TextEditingController conpasswordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return SafeArea(
       child: Scaffold(
-        //resizeToAvoidBottomInset: false,
+        resizeToAvoidBottomInset: true,
         backgroundColor: kBackgroundColor,
         body: Center(
           child: Padding(
@@ -46,7 +51,6 @@ class _SignUpState extends State<SignUp> {
             child: SingleChildScrollView(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Image.asset('assets/images/started/phone-security.png'),
                   const SizedBox(height: kDefaultPadding),
@@ -56,87 +60,110 @@ class _SignUpState extends State<SignUp> {
                         TextStyle(fontSize: 40.0, fontWeight: FontWeight.w700),
                   ),
                   const SizedBox(height: kDefaultPadding),
-                  // TextFormField(
-                  //   obscureText: false,
-                  //   style: const TextStyle(
-                  //     color: textColor,
-                  //   ),
-                  //   decoration: InputDecoration(
-                  //     border: InputBorder.none,
-                  //     prefixIcon: Icon(
-                  //       //Icons.account_circle_outlined,
-                  //       Icons.alternate_email_rounded,
-                  //       color: textColor.withOpacity(.5),
-                  //     ),
-                  //     labelText: 'Email',
-                  //   ),
-                  //   cursorColor: textColor.withOpacity(.8),
-                  //   controller: emailController,
-                  // ),
-                  TextFormField(
-                    obscureText: false,
-                    style: const TextStyle(
-                      color: textColor,
-                    ),
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      prefixIcon: Icon(
-                        Icons.phone_android_rounded,
-                        color: textColor.withOpacity(.5),
+                  Form(
+                    key: _formPhoneNumKey,
+                    child: TextFormField(
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'Số điện thoại không được để trống';
+                        }
+                        if (!typePhoneNum.hasMatch(value)) {
+                          return 'Số điện thoại phải có mười số';
+                        }
+                        return null;
+                      },
+                      onSaved: (newValue) {
+                        phoneController.text = newValue!;
+                      },
+                      obscureText: false,
+                      style: const TextStyle(
+                        color: textColor,
                       ),
-                      labelText: 'Số điện thoại',
-                    ),
-                    keyboardType: TextInputType.number,
-                    cursorColor: textColor.withOpacity(.8),
-                    controller: phoneController,
-                  ),
-                  TextFormField(
-                    obscureText: _isPassHidden,
-                    style: const TextStyle(
-                      color: textColor,
-                    ),
-                    decoration: InputDecoration(
+                      decoration: InputDecoration(
                         border: InputBorder.none,
                         prefixIcon: Icon(
-                          Icons.password_rounded,
+                          Icons.phone_android_rounded,
                           color: textColor.withOpacity(.5),
                         ),
-                        labelText: 'Mật khẩu',
-                        suffix: InkWell(
-                          onTap: _togglePasswordView,
-                          child: Icon(
-                            _isPassHidden
-                                ? Icons.visibility
-                                : Icons.visibility_off,
-                          ),
-                        )),
-                    cursorColor: textColor.withOpacity(.8),
-                    keyboardType: TextInputType.text,
-                    controller: passwordController,
-                  ),
-                  TextFormField(
-                    obscureText: _isConHidden,
-                    style: const TextStyle(
-                      color: textColor,
+                        labelText: 'Số điện thoại',
+                      ),
+                      keyboardType: TextInputType.number,
+                      cursorColor: textColor.withOpacity(.8),
+                      controller: phoneController,
                     ),
-                    decoration: InputDecoration(
-                        border: InputBorder.none,
-                        prefixIcon: Icon(
-                          Icons.password_rounded,
-                          color: textColor.withOpacity(.5),
-                        ),
-                        labelText: 'Xác nhận mật khẩu',
-                        suffix: InkWell(
-                          onTap: _togglePasswordView,
-                          child: Icon(
-                            _isConHidden
-                                ? Icons.visibility
-                                : Icons.visibility_off,
+                  ),
+                  Form(
+                    key: _formPwdKey,
+                    child: TextFormField(
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'Mật khẩu không được để trống';
+                        }
+                        return null;
+                      },
+                      onSaved: (newValue) {
+                        passwordController.text = newValue!;
+                      },
+                      obscureText: _isPassHidden,
+                      style: const TextStyle(
+                        color: textColor,
+                      ),
+                      decoration: InputDecoration(
+                          border: InputBorder.none,
+                          prefixIcon: Icon(
+                            Icons.password_rounded,
+                            color: textColor.withOpacity(.5),
                           ),
-                        )),
-                    cursorColor: textColor.withOpacity(.8),
-                    keyboardType: TextInputType.text,
-                    controller: conpasswordController,
+                          labelText: 'Mật khẩu',
+                          suffix: InkWell(
+                            onTap: _togglePasswordView,
+                            child: Icon(
+                              _isPassHidden
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                            ),
+                          )),
+                      cursorColor: textColor.withOpacity(.8),
+                      controller: passwordController,
+                    ),
+                  ),
+                  Form(
+                    key: _formConPwdKey,
+                    child: TextFormField(
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'Xác nhận mật khẩu không được để trống';
+                        }
+                        if (value.compareTo(passwordController.text) != 0) {
+                          return 'Xác nhận mật khẩu không khớp!';
+                        }
+                        return null;
+                      },
+                      onSaved: (newValue) {
+                        conpasswordController.text = newValue!;
+                      },
+                      obscureText: _isConPassHidden,
+                      style: const TextStyle(
+                        color: textColor,
+                      ),
+                      decoration: InputDecoration(
+                          border: InputBorder.none,
+                          prefixIcon: Icon(
+                            Icons.password_rounded,
+                            color: textColor.withOpacity(.5),
+                          ),
+                          labelText: 'Xác nhận mật khẩu',
+                          suffix: InkWell(
+                            onTap: _toggleConPasswordView,
+                            child: Icon(
+                              _isConPassHidden
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                            ),
+                          )),
+                      cursorColor: textColor.withOpacity(.8),
+                      controller: conpasswordController,
+                    ),
                   ),
                   const SizedBox(height: 10),
                   SizedBox(
@@ -144,63 +171,25 @@ class _SignUpState extends State<SignUp> {
                     height: 45,
                     child: ElevatedButton(
                       onPressed: () {
-                        if (phoneController.text.isEmpty) {
-                          _errorMessage = "Số điện thoại không được để trống!";
-                        }
-                        if (passwordController.text.isEmpty) {
-                          _errorMessage = "Mật khẩu không được  để trống!";
-                        }
-                        if (conpasswordController.text
-                                .compareTo(passwordController.text) !=
-                            0) {
-                          _errorMessage = "Xác nhận mật khẩu không khớp!";
-                        }
+                        if (_formPhoneNumKey.currentState!.validate() &&
+                            _formPwdKey.currentState!.validate() &&
+                            _formConPwdKey.currentState!.validate()) {
+                          _formPhoneNumKey.currentState!.save();
+                          _formPwdKey.currentState!.save();
+                          _formConPwdKey.currentState!.save();
 
-                        accountController.register(
-                            //emailController.text,
-                            phoneController.text,
-                            passwordController.text,
-                            conpasswordController.text);
-                        if (_errorMessage?.compareTo("success") == 0) {
-                          Navigator.push(
-                              context,
-                              PageTransition(
-                                  child: const Login(),
-                                  type: PageTransitionType.fade));
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Container(
-                                padding: const EdgeInsets.all(16),
-                                height: 90,
-                                decoration: const BoxDecoration(
-                                  color: Color(0xffc72c41),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(20)),
-                                ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const Text(
-                                      'Oops',
-                                      style: TextStyle(
-                                          fontSize: 18, color: Colors.white),
-                                    ),
-                                    Text(
-                                      "$_errorMessage",
-                                      style: const TextStyle(
-                                          fontSize: 12, color: Colors.white),
-                                      maxLines: 2,
-                                      overflow: TextOverflow.clip,
-                                    )
-                                  ],
-                                ),
-                              ),
-                              behavior: SnackBarBehavior.floating,
-                              backgroundColor: Colors.transparent,
-                              elevation: 0,
-                            ),
-                          );
+                          accountController.register(
+                              //emailController.text,
+                              phoneController.text,
+                              passwordController.text,
+                              conpasswordController.text);
+                          if (_errorMessage?.compareTo("success") == 0) {
+                            Navigator.push(
+                                context,
+                                PageTransition(
+                                    child: const Login(),
+                                    type: PageTransitionType.fade));
+                          }
                         }
                       },
                       style: ElevatedButton.styleFrom(
@@ -365,7 +354,12 @@ class _SignUpState extends State<SignUp> {
   void _togglePasswordView() {
     setState(() {
       _isPassHidden = !_isPassHidden;
-      _isConHidden = !_isConHidden;
+    });
+  }
+
+  void _toggleConPasswordView() {
+    setState(() {
+      _isConPassHidden = !_isConPassHidden;
     });
   }
 }

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:washouse_customer/components/constants/color_constants.dart';
 import 'package:washouse_customer/resource/models/chat_user.dart';
 import 'package:washouse_customer/screens/chat/components/chat.dart';
+
+import '../notification/list_notification_screen.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key});
@@ -43,8 +46,8 @@ class _ChatScreenState extends State<ChatScreen> {
                 padding: const EdgeInsets.only(top: 18, left: 16, right: 16),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: const [
-                    Text(
+                  children: [
+                    const Text(
                       'Tin nhắn',
                       style: TextStyle(
                         color: textColor,
@@ -52,10 +55,19 @@ class _ChatScreenState extends State<ChatScreen> {
                         fontSize: 30,
                       ),
                     ),
-                    Icon(
-                      Icons.notifications,
-                      color: textColor,
-                      size: 30.0,
+                    IconButton(
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            PageTransition(
+                                child: const ListNotificationScreen(),
+                                type: PageTransitionType.rightToLeftWithFade));
+                      },
+                      icon: const Icon(
+                        Icons.notifications,
+                        color: textColor,
+                        size: 30.0,
+                      ),
                     ),
                   ],
                 ),

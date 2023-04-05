@@ -13,6 +13,7 @@ class Service {
   num? timeEstimate;
   num? rating;
   num? numOfRating;
+  List<int>? ratings;
 
   Service(
       {this.serviceId,
@@ -28,7 +29,8 @@ class Service {
       this.prices,
       this.timeEstimate,
       this.rating,
-      this.numOfRating});
+      this.numOfRating,
+      this.ratings});
 
   Service.fromJson(Map<String, dynamic> json) {
     serviceId = json['serviceId'];
@@ -50,6 +52,7 @@ class Service {
     timeEstimate = json['timeEstimate'];
     rating = json['rating'];
     numOfRating = json['numOfRating'];
+    ratings = json['ratings'].cast<int>();
   }
 }
 
