@@ -10,91 +10,96 @@ class PromotionWidget extends StatelessWidget {
   final String description;
   final String expiredDate;
   final String code;
+  final GestureTapCallback press;
   const PromotionWidget({
     Key? key,
     required this.description,
     required this.expiredDate,
     required this.code,
+    required this.press,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return Container(
-      width: size.width,
-      height: 70,
-      decoration: ShapeDecoration(
-        color: Colors.white,
-        shape: _PromotionShapeBorder(width: 1, radius: 20),
-        shadows: [
-          BoxShadow(
-            color: Colors.grey.shade400,
-            blurRadius: 5,
-            spreadRadius: 2,
-            offset: Offset(0, 7),
-          )
-        ],
-      ),
-      child: Row(
-        children: [
-          Container(
-            height: 75,
-            width: 20,
-            decoration: const BoxDecoration(
-              color: kPrimaryColor,
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(18),
-                bottomLeft: Radius.circular(18),
+    return GestureDetector(
+      onTap: press,
+      child: Container(
+        width: size.width,
+        height: 70,
+        decoration: ShapeDecoration(
+          color: Colors.white,
+          shape: _PromotionShapeBorder(width: 1, radius: 20),
+          shadows: [
+            BoxShadow(
+              color: Colors.grey.shade400,
+              blurRadius: 5,
+              spreadRadius: 2,
+              offset: Offset(0, 7),
+            )
+          ],
+        ),
+        child: Row(
+          children: [
+            Container(
+              height: 75,
+              width: 20,
+              decoration: const BoxDecoration(
+                color: kPrimaryColor,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(18),
+                  bottomLeft: Radius.circular(18),
+                ),
               ),
             ),
-          ),
-          const SizedBox(width: 10),
-          SizedBox(
-            width: size.width / 1.79,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Text(
-                  description,
-                  style: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    color: textColor,
+            const SizedBox(width: 10),
+            SizedBox(
+              width: size.width / 1.79,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Text(
+                    description,
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: textColor,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                Text(
-                  expiredDate,
-                  style: TextStyle(
-                    color: Colors.grey.shade500,
-                    fontSize: 14,
-                  ),
-                )
-              ],
+                  Text(
+                    expiredDate,
+                    style: TextStyle(
+                      color: Colors.grey.shade500,
+                      fontSize: 14,
+                    ),
+                  )
+                ],
+              ),
             ),
-          ),
-          Container(
-            padding: const EdgeInsets.only(top: 12),
-            child: DottedLine(
-              direction: Axis.vertical,
-              dashColor: Colors.grey.shade400,
-              lineThickness: 1,
-              lineLength: 50,
-              dashLength: 7,
+            Container(
+              padding: const EdgeInsets.only(top: 12),
+              child: DottedLine(
+                direction: Axis.vertical,
+                dashColor: Colors.grey.shade400,
+                lineThickness: 1,
+                lineLength: 50,
+                dashLength: 7,
+              ),
             ),
-          ),
-          const SizedBox(width: 20),
-          SizedBox(
-            width: size.width * 0.24,
-            child: Text(
-              code,
-              style: TextStyle(
-                  color: Colors.grey.shade600, fontWeight: FontWeight.w600),
-            ),
-          )
-        ],
+            const SizedBox(width: 20),
+            SizedBox(
+              width: size.width * 0.24,
+              child: Text(
+                code,
+                style: TextStyle(
+                    color: Colors.grey.shade600, fontWeight: FontWeight.w600),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

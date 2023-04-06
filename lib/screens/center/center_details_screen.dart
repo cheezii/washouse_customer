@@ -329,15 +329,16 @@ class _CenterDetailScreenState extends State<CenterDetailScreen> {
                                                 padding:
                                                     const EdgeInsets.all(10),
                                                 child: PromotionWidget(
-                                                    description:
-                                                        demoPromotionList[index]
-                                                            .description,
-                                                    expiredDate:
-                                                        demoPromotionList[index]
-                                                            .expiredDate,
-                                                    code:
-                                                        demoPromotionList[index]
-                                                            .code),
+                                                  description:
+                                                      demoPromotionList[index]
+                                                          .description,
+                                                  expiredDate:
+                                                      demoPromotionList[index]
+                                                          .expiredDate,
+                                                  code: demoPromotionList[index]
+                                                      .code,
+                                                  press: () {},
+                                                ),
                                               );
                                             }),
                                             itemCount: demoPromotionList.length,

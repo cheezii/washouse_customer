@@ -101,14 +101,13 @@ class ServiceOrdered extends StatelessWidget {
                                         )
                                       : Text(
                                           //'SL: x${demoCarts[index].measurement}',
-                                          'SL: x${cartItems[index].measurement}',
+                                          'SL: x${cartItems[index].measurement.round()}',
                                           style: const TextStyle(
                                               color: textColor, fontSize: 16),
                                         ),
                                   const Spacer(),
                                   Text(
-                                    //'${PriceUtils().convertFormatPrice(demoCarts[index].service.price!.round() * demoCarts[index].measurement)} đ',
-                                    '${PriceUtils().convertFormatPrice(cartItems[index].price!.round() * cartItems[index].measurement)} đ',
+                                    '${PriceUtils().convertFormatPrice((cartItems[index].price!.round() * cartItems[index].measurement).toInt())} đ',
                                     style: const TextStyle(
                                       color: kPrimaryColor,
                                       fontWeight: FontWeight.bold,

@@ -25,7 +25,7 @@ class _CheckOutCardState extends State<CheckOutCard> {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
-      height: 174,
+      height: 150,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: const BorderRadius.only(
