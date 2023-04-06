@@ -131,145 +131,148 @@ class _LoginState extends State<Login> {
                     onPressed: () async {
                       //_errorMessage = null;
                       _responseMessage = '';
-                      // if (phoneController.text.isEmpty &&
-                      //     passwordController.text.isEmpty) {
-                      //   _errorMessage =
-                      //       "Số điện thoại và mật khẩu không được để trống";
-                      // } else if (phoneController.text.isEmpty &&
-                      //     !passwordController.text.isEmpty) {
-                      //   _errorMessage = "Số điện thoại không được để trống";
-                      // }
-                      // if (!phoneController.text.isEmpty &&
-                      //     passwordController.text.isEmpty) {
-                      //   _errorMessage = "Mật khẩu không được để trống";
-                      // }
+                      if (phoneController.text.isEmpty &&
+                          passwordController.text.isEmpty) {
+                        _errorMessage =
+                            "Số điện thoại và mật khẩu không được để trống";
+                      } else if (phoneController.text.isEmpty &&
+                          !passwordController.text.isEmpty) {
+                        _errorMessage = "Số điện thoại không được để trống";
+                      }
+                      if (!phoneController.text.isEmpty &&
+                          passwordController.text.isEmpty) {
+                        _errorMessage = "Mật khẩu không được để trống";
+                      }
 
-                      // if (_formPhoneNumberKey.currentState!.validate() &&
-                      //     _formPwdKey.currentState!.validate()) {
-                      //   _formPwdKey.currentState!.save();
-                      //   _formPhoneNumberKey.currentState!.save();
-                      //   //call api change pwd
+                      if (_formPhoneNumberKey.currentState!.validate() &&
+                          _formPwdKey.currentState!.validate()) {
+                        _formPwdKey.currentState!.save();
+                        _formPhoneNumberKey.currentState!.save();
+                        //call api change pwd
 
-                      //   LoginResponseModel? responseModel =
-                      //       await accountController.login(
-                      //           phoneController.text, passwordController.text);
-                      //   if (responseModel != null) {
-                      //     if (responseModel.statusCode == 17) {
-                      //       _responseMessage =
-                      //           "Admin không thể đăng nhập trên mobile";
-                      //     } else if (responseModel.statusCode == 10) {
-                      //       _responseMessage =
-                      //           "Sai số điện thoại hoặc mật khẩu";
-                      //     } else {
-                      //       CurrentUser currentUserModel =
-                      //           await accountController.getCurrentUser();
-                      //       if (currentUserModel != null) {
-                      //         baseController.saveStringtoSharedPreference(
-                      //             "CURRENT_USER_NAME", currentUserModel.name);
-                      //         baseController.saveStringtoSharedPreference(
-                      //             "CURRENT_USER_EMAIL", currentUserModel.email);
-                      //         baseController.saveStringtoSharedPreference(
-                      //             "CURRENT_USER_AVATAR",
-                      //             currentUserModel.avatar);
-                      //         baseController.saveStringtoSharedPreference(
-                      //             "CURRENT_USER_ID",
-                      //             currentUserModel.accountId);
-                      //       }
-                      Navigator.push(
-                          context,
-                          PageTransition(
-                              child: const BaseScreen(),
-                              type: PageTransitionType.fade));
-                      //    }
-                      //  }
-                      //}
-                      // if (_responseMessage == null) {
-                      //   _responseMessage = "";
-                      // }
-                      // if (_responseMessage != null) {
-                      //   // ignore: use_build_context_synchronously
-                      //   showDialog(
-                      //     context: context,
-                      //     builder: (context) {
-                      //       return AlertDialog(
-                      //         title: Align(
-                      //             alignment: Alignment.center,
-                      //             child: Text('Lỗi!!')),
-                      //         content: Text('$_responseMessage'),
-                      //         shape: RoundedRectangleBorder(
-                      //           borderRadius: BorderRadius.circular(15),
-                      //         ),
-                      //         actions: <Widget>[
-                      //           ElevatedButton(
-                      //             child: Text(
-                      //               'Đã hiểu',
-                      //               style: TextStyle(
-                      //                   fontWeight: FontWeight.w700,
-                      //                   color: kPrimaryColor),
-                      //             ),
-                      //             style: ElevatedButton.styleFrom(
-                      //                 elevation: 0,
-                      //                 shape: RoundedRectangleBorder(
-                      //                     borderRadius:
-                      //                         BorderRadius.circular(30)),
-                      //                 backgroundColor: kBackgroundColor),
-                      //             onPressed: () {
-                      //               // Perform some action
-                      //               Navigator.of(context).pop();
-                      //             },
-                      //           )
-                      //         ],
-                      //       );
-                      //     },
-                      //   );
-                      // }
+                        LoginResponseModel? responseModel =
+                            await accountController.login(
+                                phoneController.text, passwordController.text);
+                        if (responseModel != null) {
+                          if (responseModel.statusCode == 17) {
+                            _responseMessage =
+                                "Admin không thể đăng nhập trên mobile";
+                          } else if (responseModel.statusCode == 10) {
+                            _responseMessage =
+                                "Sai số điện thoại hoặc mật khẩu";
+                          } else {
+                            CurrentUser currentUserModel =
+                                await accountController.getCurrentUser();
+                            if (currentUserModel != null) {
+                              baseController.saveStringtoSharedPreference(
+                                  "CURRENT_USER_NAME", currentUserModel.name);
+                              baseController.saveStringtoSharedPreference(
+                                  "CURRENT_USER_EMAIL", currentUserModel.email);
+                              baseController.saveStringtoSharedPreference(
+                                  "CURRENT_USER_AVATAR",
+                                  currentUserModel.avatar);
+                              baseController.saveInttoSharedPreference(
+                                  "CURRENT_USER_ID",
+                                  currentUserModel.accountId);
+                              baseController.saveStringtoSharedPreference(
+                                  "CURRENT_USER_PASSWORD",
+                                  passwordController.text);
+                            }
+                            Navigator.push(
+                                context,
+                                PageTransition(
+                                    child: const BaseScreen(),
+                                    type: PageTransitionType.fade));
+                          }
+                        }
+                      }
+                      if (_responseMessage == null) {
+                        _responseMessage = "";
+                      }
+                      if (_responseMessage != null) {
+                        // ignore: use_build_context_synchronously
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              title: Align(
+                                  alignment: Alignment.center,
+                                  child: Text('Lỗi!!')),
+                              content: Text('$_responseMessage'),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              actions: <Widget>[
+                                ElevatedButton(
+                                  child: Text(
+                                    'Đã hiểu',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w700,
+                                        color: kPrimaryColor),
+                                  ),
+                                  style: ElevatedButton.styleFrom(
+                                      elevation: 0,
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(30)),
+                                      backgroundColor: kBackgroundColor),
+                                  onPressed: () {
+                                    // Perform some action
+                                    Navigator.of(context).pop();
+                                  },
+                                )
+                              ],
+                            );
+                          },
+                        );
+                      }
 
-                      // if (_errorMessage == null) {
-                      //   _errorMessage = "";
-                      // }
-                      // if (_responseMessage == null) {
-                      //   _responseMessage = "";
-                      // }
-                      // ScaffoldMessenger.of(context).showSnackBar(
-                      //   SnackBar(
-                      //     content: Container(
-                      //       padding: const EdgeInsets.all(16),
-                      //       height: 90,
-                      //       decoration: const BoxDecoration(
-                      //         color: Color(0xffc72c41),
-                      //         borderRadius:
-                      //             BorderRadius.all(Radius.circular(20)),
-                      //       ),
-                      //       child: Column(
-                      //         crossAxisAlignment: CrossAxisAlignment.start,
-                      //         children: [
-                      //           const Text(
-                      //             'Oops',
-                      //             style: TextStyle(
-                      //                 fontSize: 18, color: Colors.white),
-                      //           ),
-                      //           // Text(
-                      //           //   "$_errorMessage",
-                      //           //   style: const TextStyle(
-                      //           //       fontSize: 12, color: Colors.white),
-                      //           //   maxLines: 2,
-                      //           //   overflow: TextOverflow.clip,
-                      //           // ),
-                      //           Text(
-                      //             "$_responseMessage",
-                      //             style: const TextStyle(
-                      //                 fontSize: 12, color: Colors.white),
-                      //             maxLines: 2,
-                      //             overflow: TextOverflow.clip,
-                      //           )
-                      //         ],
-                      //       ),
-                      //     ),
-                      //     behavior: SnackBarBehavior.floating,
-                      //     backgroundColor: Colors.transparent,
-                      //     elevation: 0,
-                      //   ),
-                      // );
+                      if (_errorMessage == null) {
+                        _errorMessage = "";
+                      }
+                      if (_responseMessage == null) {
+                        _responseMessage = "";
+                      }
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Container(
+                            padding: const EdgeInsets.all(16),
+                            height: 90,
+                            decoration: const BoxDecoration(
+                              color: Color(0xffc72c41),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(20)),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'Oops',
+                                  style: TextStyle(
+                                      fontSize: 18, color: Colors.white),
+                                ),
+                                // Text(
+                                //   "$_errorMessage",
+                                //   style: const TextStyle(
+                                //       fontSize: 12, color: Colors.white),
+                                //   maxLines: 2,
+                                //   overflow: TextOverflow.clip,
+                                // ),
+                                Text(
+                                  "$_responseMessage",
+                                  style: const TextStyle(
+                                      fontSize: 12, color: Colors.white),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.clip,
+                                )
+                              ],
+                            ),
+                          ),
+                          behavior: SnackBarBehavior.floating,
+                          backgroundColor: Colors.transparent,
+                          elevation: 0,
+                        ),
+                      );
                     },
                     style: ElevatedButton.styleFrom(
                         shape: RoundedRectangleBorder(

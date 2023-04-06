@@ -1,10 +1,16 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:washouse_customer/resource/controller/account_controller.dart';
+import 'package:washouse_customer/resource/models/customer.dart';
 import 'package:washouse_customer/screens/profile/components/change_name_alertdialog.dart';
 import 'package:washouse_customer/screens/profile/components/information_widget.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import '../../components/constants/color_constants.dart';
+import '../../resource/controller/base_controller.dart';
 
 class InfomationScreen extends StatefulWidget {
   const InfomationScreen({super.key});
@@ -13,13 +19,27 @@ class InfomationScreen extends StatefulWidget {
   State<InfomationScreen> createState() => _InfomationScreenState();
 }
 
+BaseController baseController = BaseController();
+AccountController accountController = AccountController();
+
 class _InfomationScreenState extends State<InfomationScreen> {
   TextEditingController dateController = TextEditingController();
-  DateTime date = DateTime.now();
+  DateTime date = DateTime.now().subtract(const Duration(days: 18 * 365 + 4));
   String? gender;
   String genderDisplay = '- Chọn -';
   String? birthday;
-  String birthdayDisplay = 'dd/MM/yyyy';
+  String birthdayDisplay = '- Chọn -';
+  File? _imageFile;
+
+  Future<void> _pickImage(ImageSource source) async {
+    final pickedFile = await ImagePicker().pickImage(source: source);
+
+    if (pickedFile != null) {
+      setState(() {
+        _imageFile = File(pickedFile.path);
+      });
+    }
+  }
 
   @override
   void dispose() {
@@ -27,10 +47,64 @@ class _InfomationScreenState extends State<InfomationScreen> {
     super.dispose();
   }
 
+  String _currentUserName = '';
+  String _currentUserEmail = '';
+  String _currentUserAvartar = '';
+  int _currentUserId = 0;
+  Customer? _currentCustomer;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadData();
+  }
+
+  Future<void> _loadData() async {
+    final name =
+        await baseController.getStringtoSharedPreference("CURRENT_USER_NAME");
+    final email =
+        await baseController.getStringtoSharedPreference("CURRENT_USER_EMAIL");
+    final avatar =
+        await baseController.getStringtoSharedPreference("CURRENT_USER_AVATAR");
+    final userId =
+        await baseController.getInttoSharedPreference("CURRENT_USER_ID");
+    final currentCustomer =
+        await accountController.getCustomerInfomation(userId);
+    setState(() {
+      _currentUserName = name != "" ? name : "Undentified Name";
+      _currentUserEmail = email != "" ? email : "Undentified Email";
+      _currentUserAvartar = avatar != ""
+          ? avatar
+          : "https://storage.googleapis.com/washousebucket/anonymous-20230330210147.jpg?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Credential=washouse-sa%40washouse-381309.iam.gserviceaccount.com%2F20230330%2Fauto%2Fstorage%2Fgoog4_request&X-Goog-Date=20230330T210148Z&X-Goog-Expires=1800&X-Goog-SignedHeaders=host&X-Goog-Signature=7c813f26489c9ba06cdfff27db9faa2ca4d7c046766aeb3874fdf86ec7c91ae904951f7b2617b6e78598d46f8b91d842d2f4c2a10696539bcf09c839d51d9565831f6c503b3e37f899ab8920f69c3aaa30e0ff2d9c598d1a4c523c1e8038520a32fe49a92c4448c49e602b77312444fe3505afa30da1c4bfbdf0f7a5ab9f2783005c1f3624b3417e17c0067f65f4c02fd03bbe9a0eed8390b56aa2b78a34ca88b52bbce7e1d364dc24e6650a68954e36439102f19a3b332fcb1562260d5223db1e09748eee5d7e6b0cba62dc7cfda9e1e00690f334b9e4b85c710ed77dee42759b48f98df0f05e1adf686351f6232a7d157c9f988248af0c69ec64af0cdbe247";
+      _currentUserId = userId != 0 ? userId : 0;
+      _currentCustomer = currentCustomer != null ? currentCustomer : null;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     dateController.text = '${date.day}/${date.month}/${date.year}';
+    if (_currentCustomer != null && _currentCustomer!.gender != null) {
+      switch (_currentCustomer!.gender!) {
+        case 0:
+          genderDisplay = "Nam";
+          break;
+        case 1:
+          genderDisplay = "Nữ";
+          break;
+        case 2:
+          genderDisplay = "Khác";
+          break;
+        default:
+          genderDisplay = '- Chọn -';
+      }
+    }
+    if (_currentCustomer != null &&
+        _currentCustomer!.dob != null &&
+        _currentCustomer!.dob!.isNotEmpty) {
+      birthday = _currentCustomer!.dob!;
+    }
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -56,13 +130,20 @@ class _InfomationScreenState extends State<InfomationScreen> {
             children: [
               Column(
                 children: [
-                  const CircleAvatar(
+                  CircleAvatar(
                     radius: 40,
                     backgroundColor: Colors.grey,
-                    backgroundImage: AssetImage('assets/images/profile/4.jpg'),
+                    //backgroundImage: AssetImage('assets/images/profile/4.jpg'),
+                    backgroundImage: NetworkImage(_currentUserAvartar),
                   ),
                   TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        _pickImage(ImageSource.gallery);
+                        //baseController.UploadImage(_imageFile);
+                        //save avatar Preference
+                        //accountController.  ///api/customers/profilepic
+                        //
+                      },
                       child: const Text('Đổi ảnh đại diện',
                           style: TextStyle(fontSize: 17))),
                 ],
@@ -71,7 +152,7 @@ class _InfomationScreenState extends State<InfomationScreen> {
                 children: [
                   InformationWidget(
                       title: 'Họ và tên',
-                      subTitle: 'Tên khách hàng',
+                      subTitle: _currentUserName,
                       canChange: true,
                       press: () {
                         showDialog(
@@ -81,12 +162,15 @@ class _InfomationScreenState extends State<InfomationScreen> {
                       }),
                   InformationWidget(
                       title: 'Số điện thoại',
-                      subTitle: '0328104356',
+                      subTitle: (_currentCustomer != null &&
+                              _currentCustomer!.phone != null)
+                          ? _currentCustomer!.phone!
+                          : '- Chọn -',
                       canChange: false,
                       press: () {}),
                   InformationWidget(
                       title: 'Email',
-                      subTitle: 'tester01@gmail.com',
+                      subTitle: _currentUserEmail,
                       canChange: false,
                       press: () {}),
                   InformationWidget(
@@ -130,22 +214,6 @@ class _InfomationScreenState extends State<InfomationScreen> {
                                               color: Colors.grey.shade300),
                                           const SizedBox(height: 10),
                                           ListTile(
-                                            title: const Text('Nữ'),
-                                            trailing: Radio<String>(
-                                              value: 'Nữ',
-                                              groupValue: gender,
-                                              onChanged: (value) {
-                                                setState(() {
-                                                  gender = value;
-                                                });
-                                                this.setState(() {
-                                                  genderDisplay =
-                                                      value.toString();
-                                                });
-                                              },
-                                            ),
-                                          ),
-                                          ListTile(
                                             title: const Text('Nam'),
                                             trailing: Radio<String>(
                                               value: 'Nam',
@@ -155,6 +223,22 @@ class _InfomationScreenState extends State<InfomationScreen> {
                                                   gender = value;
                                                   genderDisplay =
                                                       value.toString();
+                                                });
+                                                this.setState(() {
+                                                  genderDisplay =
+                                                      value.toString();
+                                                });
+                                              },
+                                            ),
+                                          ),
+                                          ListTile(
+                                            title: const Text('Nữ'),
+                                            trailing: Radio<String>(
+                                              value: 'Nữ',
+                                              groupValue: gender,
+                                              onChanged: (value) {
+                                                setState(() {
+                                                  gender = value;
                                                 });
                                                 this.setState(() {
                                                   genderDisplay =
@@ -261,7 +345,20 @@ class _InfomationScreenState extends State<InfomationScreen> {
                                             color: textColor,
                                             fontWeight: FontWeight.w500),
                                       ),
-                                      const SizedBox(height: 50),
+                                      const SizedBox(height: 2),
+                                      const TextField(
+                                        readOnly: true,
+                                        decoration: InputDecoration(
+                                          hintText:
+                                              '*Lưu ý: Bạn phải trên 18 tuổi để sử dụng dịch vụ',
+                                          hintStyle: TextStyle(
+                                            fontSize: 12,
+                                            color: Colors.red,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(height: 20),
                                       SizedBox(
                                         height: 250,
                                         child: CupertinoDatePicker(

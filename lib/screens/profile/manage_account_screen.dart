@@ -111,6 +111,11 @@ class _ManageAccountScreenState extends State<ManageAccountScreen> {
                               onPressed: () {
                                 // Perform some action
                                 Navigator.of(context).pop();
+                                Navigator.push(
+                                    context,
+                                    PageTransition(
+                                        child: const Login(),
+                                        type: PageTransitionType.fade));
                               },
                             ),
                           ],

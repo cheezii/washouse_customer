@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:washouse_customer/resource/models/current_user.dart';
+import 'package:washouse_customer/resource/models/customer.dart';
 import 'package:washouse_customer/resource/models/map_user.dart';
 import 'package:washouse_customer/resource/models/response_models/LoginResponseModel.dart';
 import 'package:washouse_customer/resource/models/token.dart';
@@ -52,14 +53,14 @@ class AccountController {
     CurrentUser currentUser = new CurrentUser();
     try {
       String url = '$baseUrl/accounts/me';
-      http.Response response =
+      Response response =
           await baseController.makeAuthenticatedRequest(url, {});
 
       print(response.statusCode);
       if (response.statusCode == 200) {
         // Handle successful response
         currentUser = CurrentUser?.fromJson(jsonDecode(response.body)["data"]);
-        print(currentUser.name);
+        //print(currentUser.name);
         // Do something with the user data...
       } else {
         // Handle error response
@@ -123,5 +124,49 @@ class AccountController {
     }
     print('step 5: ${responseModel?.message}');
     return responseModel;
+  }
+
+  Future<Customer?> getCustomerInfomation(int accountId) async {
+    Customer? currentCustomer = Customer();
+    try {
+      String url = '$baseUrl/customers/account/$accountId';
+      Response response =
+          await baseController.makeAuthenticatedRequest(url, {});
+      if (response.statusCode == 200) {
+        // Handle successful response
+        currentCustomer = jsonDecode(response.body)["data"] != null
+            ? Customer?.fromJson(jsonDecode(response.body)["data"])
+            : null;
+        //Map<String, dynamic> accountDetails = json.decode(response.body);
+        return currentCustomer;
+        //print(currentUser.name);
+        // Do something with the user data...
+      } else {
+        // Handle error response
+        throw Exception('Error fetching user data: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('error: getCustomerInfomationByAccountId-$e');
+      throw e;
+    }
+  }
+
+  Future<String> changePassword(String oldPassword, String newPassword) async {
+    int userId =
+        await baseController.getInttoSharedPreference("CURRENT_USER_ID");
+    String url = '$baseUrl/accounts/$userId/change-password';
+    Map<String, dynamic> queryParams = {};
+    Map<String, dynamic> requestBody = {
+      'oldPass': oldPassword,
+      'newPass': newPassword
+    };
+    http.Response response = await baseController.makeAuthenticatedPutRequest(
+        url, queryParams, requestBody);
+    if (response.statusCode == 200) {
+      return "change password success";
+    } else {
+      // Handle error changing password
+      throw Exception('Error changing password: ${response.statusCode}');
+    }
   }
 }

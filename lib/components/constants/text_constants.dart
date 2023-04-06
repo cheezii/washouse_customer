@@ -13,6 +13,6 @@ const String shipping = 'Chờ giao';
 const String complete = 'Hoàn thành';
 
 //Api constant
-const String baseUrl = 'https://washouse.azurewebsites.net/api';
+const String baseUrl = 'https://washouse-api.azurewebsites.net/api';
 //const String baseUrl = 'https://localhost:44360/api';
 const String apiKey = 'AIzaSyDkPbok7azcZ9mht1nD-RjJy1wJOkhlo7M';

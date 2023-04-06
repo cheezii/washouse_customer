@@ -10,6 +10,11 @@ class BaseController {
     return prefs.getString(key);
   }
 
+  Future<int> getInttoSharedPreference(String key) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getInt(key);
+  }
+
 // Define a function to save a string to shared preferences
   Future<void> saveStringtoSharedPreference(
       String saveName, dynamic? saveString) async {
@@ -17,10 +22,16 @@ class BaseController {
     await prefs.setString(saveName, saveString);
   }
 
+  Future<void> saveInttoSharedPreference(String saveName, int? saveInt) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setInt(saveName, saveInt);
+  }
+
   // Define a function to get the access token from shared preferences
   Future<String> getAccessToken() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getString('access_token');
+    String accessToken = prefs.getString('access_token');
+    return accessToken;
   }
 
 // Define a function to save the access token to shared preferences
@@ -51,7 +62,6 @@ class BaseController {
         'Authorization': 'Bearer $accessToken',
       },
     );
-    print(url + queryParams.keys.first);
     if (response.statusCode == 401) {
       // If the access token is expired, use the refresh token to get a new one
       String refreshToken = await getRefreshToken();
@@ -71,6 +81,89 @@ class BaseController {
         await saveRefreshToken(newRefreshToken);
         // Make the original request again with the new access token
         return makeAuthenticatedRequest(url, {});
+      } else {
+        // Handle error getting new tokens
+        throw Exception('Error refreshing tokens: ${tokenResponse.statusCode}');
+      }
+    } else {
+      // Return the original response
+      return response;
+    }
+  }
+
+  Future<http.Response> makeAuthenticatedPutRequest(
+      String url, Map<String, dynamic> queryParams, dynamic requestBody) async {
+    String accessToken = await getAccessToken();
+    final uri = Uri.parse(url).replace(queryParameters: queryParams);
+    http.Response response = await http.put(
+      uri,
+      headers: {
+        'Authorization': 'Bearer $accessToken',
+        'Content-Type': 'application/json',
+      },
+      body: json.encode(requestBody),
+    );
+    if (response.statusCode == 401) {
+      // If the access token is expired, use the refresh token to get a new one
+      String refreshToken = await getRefreshToken();
+      http.Response tokenResponse = await http.post(
+        Uri.parse('$baseUrl/accounts/token'),
+        body: {
+          'accessToken': accessToken,
+          'refreshToken': refreshToken,
+        },
+      );
+      if (tokenResponse.statusCode == 200) {
+        // Save the new access and refresh tokens
+        Map<String, dynamic> tokenJson = json.decode(tokenResponse.body);
+        String newAccessToken = tokenJson['access_token'];
+        String newRefreshToken = tokenJson['refresh_token'];
+        await saveAccessToken(newAccessToken);
+        await saveRefreshToken(newRefreshToken);
+        // Make the original request again with the new access token
+        return makeAuthenticatedPutRequest(url, queryParams, requestBody);
+      } else {
+        // Handle error getting new tokens
+        throw Exception('Error refreshing tokens: ${tokenResponse.statusCode}');
+      }
+    } else {
+      // Return the original response
+      return response;
+    }
+  }
+
+  Future<http.Response> makeAuthenticatedPostRequest(
+      String url, Map<String, dynamic> queryParams, dynamic requestBody) async {
+    String accessToken = await getAccessToken();
+    final uri = Uri.parse(url).replace(queryParameters: queryParams);
+
+    http.Response response = await http.post(
+      uri,
+      headers: {
+        'Authorization': 'Bearer $accessToken',
+        'Content-Type': 'application/json',
+      },
+      body: json.encode(requestBody),
+    );
+    if (response.statusCode == 401) {
+      // If the access token is expired, use the refresh token to get a new one
+      String refreshToken = await getRefreshToken();
+      http.Response tokenResponse = await http.post(
+        Uri.parse('$baseUrl/accounts/token'),
+        body: {
+          'accessToken': accessToken,
+          'refreshToken': refreshToken,
+        },
+      );
+      if (tokenResponse.statusCode == 200) {
+        // Save the new access and refresh tokens
+        Map<String, dynamic> tokenJson = json.decode(tokenResponse.body);
+        String newAccessToken = tokenJson['access_token'];
+        String newRefreshToken = tokenJson['refresh_token'];
+        await saveAccessToken(newAccessToken);
+        await saveRefreshToken(newRefreshToken);
+        // Make the original request again with the new access token
+        return makeAuthenticatedPostRequest(url, queryParams, requestBody);
       } else {
         // Handle error getting new tokens
         throw Exception('Error refreshing tokens: ${tokenResponse.statusCode}');
