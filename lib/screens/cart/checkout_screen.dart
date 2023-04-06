@@ -23,9 +23,9 @@ class CheckoutScreen extends StatefulWidget {
 }
 
 class _CheckoutScreenState extends State<CheckoutScreen> {
+  int? payment;
   @override
   Widget build(BuildContext context) {
-    int paymentIndex = 0;
     return Scaffold(
       backgroundColor: kBackgroundColor,
       resizeToAvoidBottomInset: false,
@@ -58,8 +58,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const ShippingAddress(),
-            separateLine(),
+            // const ShippingAddress(),
+            // separateLine(),
+            const SizedBox(height: 16),
             const ServiceOrdered(), //map data của cart vào cái này
             separateLine(),
             Container(
@@ -110,10 +111,12 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                         ),
                         Radio(
                           activeColor: kPrimaryColor,
-                          value: 1,
-                          groupValue: paymentIndex,
-                          onChanged: (Object? newVal) {
-                            paymentIndex = setPayment(paymentIndex, newVal);
+                          value: 0,
+                          groupValue: payment,
+                          onChanged: (newVal) {
+                            setState(() {
+                              payment = newVal;
+                            });
                           },
                         ),
                       ],
@@ -140,30 +143,24 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                             SizedBox(
                               width: 35,
                               child: Image.asset(
-                                  'assets/images/shipping/logo-momo-png-1.png'),
+                                  'assets/images/shipping/vnpay-icon.png'),
                             ),
                             const SizedBox(width: 8),
                             const Text(
-                              'Thanh toán bằng Momo',
+                              'Thanh toán bằng VNPay',
                               style: TextStyle(fontSize: 16),
                             ),
                           ],
                         ),
                         Radio(
-                          value: 2,
-                          groupValue: paymentIndex,
-                          onChanged: (Object? newVal) {
-                            paymentIndex = setPayment(paymentIndex, newVal);
+                          value: 1,
+                          groupValue: payment,
+                          onChanged: (newVal) {
+                            setState(() {
+                              payment = newVal;
+                            });
                           },
                         ),
-                        // Container(
-                        //   width: 15,
-                        //   height: 15,
-                        //   decoration: ShapeDecoration(
-                        //       shape: CircleBorder(
-                        //           side:
-                        //               BorderSide(color: Colors.grey.shade400))),
-                        // )
                       ],
                     ),
                   ),
@@ -299,12 +296,5 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         const SizedBox(height: 15),
       ],
     );
-  }
-
-  int setPayment(int paymentIndex, Object? newVal) {
-    setState(() {
-      paymentIndex = int.parse(newVal.toString());
-    });
-    return paymentIndex;
   }
 }

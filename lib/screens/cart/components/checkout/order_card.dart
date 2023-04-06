@@ -8,6 +8,7 @@ import '../../../../components/constants/color_constants.dart';
 import '../../../../resource/controller/cart_provider.dart';
 import '../../../../resource/models/cart_item.dart';
 import '../../checkout_screen.dart';
+import '../cart/add_voucher.dart';
 
 class OrderCard extends StatelessWidget {
   const OrderCard({
@@ -34,36 +35,51 @@ class OrderCard extends StatelessWidget {
       ),
       child: Column(
         children: [
-          Row(
-            children: [
-              Container(
-                height: 40,
-                width: 40,
-                decoration: BoxDecoration(
-                  color: const Color(0xfff5f6f9),
-                  borderRadius: BorderRadius.circular(10),
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                  context,
+                  PageTransition(
+                      child: const AddVoucherScreen(),
+                      type: PageTransitionType.rightToLeftWithFade));
+            },
+            child: Row(
+              children: [
+                Container(
+                  height: 40,
+                  width: 40,
+                  decoration: BoxDecoration(
+                    color: const Color(0xfff5f6f9),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(5),
+                    child: SvgPicture.asset('assets/icons/coupon.svg'),
+                  ),
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.all(5),
-                  child: SvgPicture.asset('assets/icons/coupon.svg'),
+                const SizedBox(width: 10),
+                const Text('Mã khuyến mãi'),
+                const Spacer(),
+                const Text(
+                  'Nhập hoặc chọn mã',
+                  style: TextStyle(color: textNoteColor),
                 ),
-              ),
-              const SizedBox(width: 10),
-              const Text('Mã khuyến mãi'),
-              const Spacer(),
-              const Text(
-                'Nhập hoặc chọn mã',
-                style: TextStyle(color: textNoteColor),
-              ),
-              const SizedBox(width: 10),
-              const Icon(Icons.arrow_forward_ios,
-                  size: 12, color: textNoteColor),
-            ],
+                const SizedBox(width: 10),
+                const Icon(Icons.arrow_forward_ios,
+                    size: 12, color: textNoteColor),
+              ],
+            ),
           ),
           const SizedBox(height: 20),
           Consumer<CartProvider>(
             builder: (context, value, child) {
               {
+                bool checkPrice;
+                if (value.getTotalPrice() > 0) {
+                  checkPrice = true;
+                } else {
+                  checkPrice = false;
+                }
                 return Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -72,8 +88,10 @@ class OrderCard extends StatelessWidget {
                         text: 'Tổng cộng:\n',
                         children: [
                           TextSpan(
-                            text:
-                                '${PriceUtils().convertFormatPrice(value.getTotalPrice().round())} đ',
+                            text: checkPrice
+                                //? '${PriceUtils().convertFormatPrice(value.getTotalPrice().round())} đ'
+                                ? '${PriceUtils().convertFormatPrice(value.cartItems.fold(0.0, (sum, item) => sum + item.price!).round())} đ'
+                                : '0 đ',
                             style: const TextStyle(
                                 fontSize: 20,
                                 color: kPrimaryColor,

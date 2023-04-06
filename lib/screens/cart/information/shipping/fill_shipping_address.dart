@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:provider/provider.dart';
+
 import 'package:washouse_customer/resource/models/cart_item.dart';
 import 'package:washouse_customer/screens/cart/checkout_screen.dart';
 
@@ -19,6 +20,13 @@ class FillAddressScreen extends StatefulWidget {
 }
 
 class _FillAddressScreenState extends State<FillAddressScreen> {
+  TextEditingController nameController = TextEditingController();
+  TextEditingController phoneController = TextEditingController();
+  TextEditingController adressController = TextEditingController();
+  GlobalKey<FormState> _formNameKey = GlobalKey<FormState>();
+  GlobalKey<FormState> _formPhoneNumberKey = GlobalKey<FormState>();
+  GlobalKey<FormState> _formAddressKey = GlobalKey<FormState>();
+  final typePhoneNum = RegExp(r'(((\+|)84)|0)(3|5|7|8|9)+([0-9]{8})\b');
   List districtList = [];
   List wardList = [];
 
@@ -63,6 +71,7 @@ class _FillAddressScreenState extends State<FillAddressScreen> {
   Widget build(BuildContext context) {
     List<CartItem> cartItems = Provider.of<CartProvider>(context).cartItems;
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         elevation: 0,
         backgroundColor:
@@ -79,7 +88,7 @@ class _FillAddressScreenState extends State<FillAddressScreen> {
         ),
         title: const Align(
           alignment: Alignment.center,
-          child: Text('Thông tin giao hàng',
+          child: Text('Thông tin khách hàng',
               style: TextStyle(color: Colors.white, fontSize: 24)),
         ),
         actions: const [
@@ -98,23 +107,92 @@ class _FillAddressScreenState extends State<FillAddressScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const FillingShippingInfo(
-                lableText: 'Tên người nhận',
-                hintText: 'Nhập họ và tên người nhận',
+              Form(
+                key: _formNameKey,
+                child: FillingShippingInfo(
+                  lableText: 'Họ và tên',
+                  hintText: 'Nhập họ và tên của bạn',
+                  controller: nameController,
+                ),
               ),
               const SizedBox(height: 20),
-              const FillingShippingInfo(
-                lableText: 'Số điện thoại',
-                hintText: 'Nhập số điện thoại người nhận hàng',
+              Form(
+                key: _formPhoneNumberKey,
+                child: TextFormField(
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Không được để trống trường này';
+                    }
+                    if (!typePhoneNum.hasMatch(value)) {
+                      return 'Số điện thoại phải có mười số';
+                    }
+                  },
+                  onSaved: (newValue) {
+                    phoneController.text = newValue!;
+                  },
+                  decoration: const InputDecoration(
+                    labelText: 'Số điện thoại',
+                    labelStyle: TextStyle(
+                      color: Colors.black,
+                      fontSize: 18,
+                    ),
+                    hintText: 'Nhập số điện thoại của bạn',
+                    hintStyle: TextStyle(
+                      color: textNoteColor,
+                    ),
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
+                  ),
+                  keyboardType: TextInputType.number,
+                  controller: phoneController,
+                  style: const TextStyle(
+                    color: textColor,
+                    fontSize: 16,
+                  ),
+                ),
               ),
               const SizedBox(height: 20),
-              const FillingShippingInfo(
-                lableText: 'Địa chỉ nhận hàng',
-                hintText: 'Nhập số nhà, tên đường...',
+              Form(
+                key: _formAddressKey,
+                child: FillingShippingInfo(
+                  lableText: 'Địa chỉ cá nhân',
+                  hintText: 'Nhập số nhà, tên đường...',
+                  controller: adressController,
+                ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 25),
               const Text(
-                'Quận/huyện',
+                'Tỉnh / thành phố',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 14,
+                ),
+              ),
+              const SizedBox(height: 5),
+              DropdownButton(
+                isDense: true,
+                isExpanded: true,
+                items: <String>[
+                  'Thành phố Hồ Chí Minh',
+                  'Chọn tỉnh / thành phố'
+                ].map((String item) {
+                  return DropdownMenuItem<String>(
+                    value: item,
+                    child: Text(item),
+                  );
+                }).toList(),
+                underline: Container(
+                  height: 1,
+                  color: Colors.grey.shade500,
+                ),
+                icon: const Icon(Icons.keyboard_arrow_down_rounded),
+                iconSize: 30,
+                hint: const Text('Thành phố Hồ Chí Minh'),
+                style: const TextStyle(color: textColor),
+                onChanged: null,
+              ),
+              const SizedBox(height: 25),
+              const Text(
+                'Quận / huyện',
                 style: TextStyle(
                   color: Colors.black,
                   fontSize: 14,
@@ -130,6 +208,10 @@ class _FillAddressScreenState extends State<FillAddressScreen> {
                     child: Text(item['districtName']),
                   );
                 }).toList(),
+                underline: Container(
+                  height: 1,
+                  color: Colors.grey.shade500,
+                ),
                 icon: const Icon(Icons.keyboard_arrow_down_rounded),
                 iconSize: 30,
                 value: myDistrict,
@@ -140,12 +222,15 @@ class _FillAddressScreenState extends State<FillAddressScreen> {
                     myDistrict = newValue!;
                     getWardsList();
                     isSelectedDistrict = true;
+                    if (myWard!.isNotEmpty) {
+                      myWard = '';
+                    }
                   });
                 },
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 25),
               const Text(
-                'Phường/xã',
+                'Phường / xã',
                 style: TextStyle(
                   color: Colors.black,
                   fontSize: 14,
@@ -160,6 +245,10 @@ class _FillAddressScreenState extends State<FillAddressScreen> {
                     child: Text(item['wardName']),
                   );
                 }).toList(),
+                underline: Container(
+                  height: 1,
+                  color: Colors.grey.shade500,
+                ),
                 icon: const Icon(Icons.keyboard_arrow_down_rounded),
                 iconSize: 30,
                 value: myWard,
@@ -199,12 +288,18 @@ class _FillAddressScreenState extends State<FillAddressScreen> {
                     borderRadius: BorderRadius.circular(10.0)),
                 backgroundColor: kPrimaryColor),
             onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          //CheckoutScreen(cart: demoCarts[0])));
-                          CheckoutScreen(cart: cartItems[0])));
+              if (_formNameKey.currentState!.validate() &&
+                  _formPhoneNumberKey.currentState!.validate() &&
+                  _formAddressKey.currentState!.validate()) {
+                _formNameKey.currentState!.save();
+                _formPhoneNumberKey.currentState!.save();
+                _formAddressKey.currentState!.save();
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            CheckoutScreen(cart: cartItems[0])));
+              }
             },
             child: const Text(
               'Xác nhận',
@@ -220,15 +315,25 @@ class _FillAddressScreenState extends State<FillAddressScreen> {
 class FillingShippingInfo extends StatelessWidget {
   final String lableText;
   final String hintText;
+  final TextEditingController controller;
   const FillingShippingInfo({
     Key? key,
     required this.lableText,
     required this.hintText,
+    required this.controller,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      validator: (value) {
+        if (value!.isEmpty) {
+          return 'Không được để trống trường này';
+        }
+      },
+      onSaved: (newValue) {
+        controller.text = newValue!;
+      },
       decoration: InputDecoration(
         labelText: lableText,
         labelStyle: const TextStyle(
@@ -240,6 +345,11 @@ class FillingShippingInfo extends StatelessWidget {
           color: textNoteColor,
         ),
         floatingLabelBehavior: FloatingLabelBehavior.always,
+      ),
+      controller: controller,
+      style: const TextStyle(
+        color: textColor,
+        fontSize: 16,
       ),
     );
   }
