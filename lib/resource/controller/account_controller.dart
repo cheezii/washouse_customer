@@ -169,4 +169,21 @@ class AccountController {
       throw Exception('Error changing password: ${response.statusCode}');
     }
   }
+
+  Future<String> changeProfilePicture(
+      String SavedFileName, int accountId) async {
+    String url = '$baseUrl/accounts/$accountId/profile-picture';
+    Map<String, dynamic> queryParams = {'SavedFileName': SavedFileName};
+    Map<String, dynamic> requestBody = {};
+    print(SavedFileName);
+    print(accountId);
+    http.Response response = await baseController.makeAuthenticatedPutRequest(
+        url, queryParams, requestBody);
+    if (response.statusCode == 200) {
+      return "update profile picture success";
+    } else {
+      // Handle error changing password
+      throw Exception('Error changing password: ${response.statusCode}');
+    }
+  }
 }

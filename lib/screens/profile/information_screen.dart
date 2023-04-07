@@ -137,12 +137,133 @@ class _InfomationScreenState extends State<InfomationScreen> {
                     backgroundImage: NetworkImage(_currentUserAvartar),
                   ),
                   TextButton(
-                      onPressed: () {
-                        _pickImage(ImageSource.gallery);
-                        //baseController.UploadImage(_imageFile);
-                        //save avatar Preference
-                        //accountController.  ///api/customers/profilepic
-                        //
+                      onPressed: () async {
+                        await _pickImage(ImageSource.gallery);
+
+                        //   Map<String, String> responseMap =
+                        //       await baseController.uploadImage(_imageFile!);
+
+                        //   //accountController.  ///api/customers/profilepic
+                        //   String messageChangeProfilePicture =
+                        //       await accountController.changeProfilePicture(
+                        //           responseMap['SavedFileName']!,
+                        //           _currentUserId);
+                        //   if (messageChangeProfilePicture.compareTo(
+                        //           "update profile picture success") ==
+                        //       0) {
+                        //     //save avatar Preference
+                        //     await baseController.saveStringtoSharedPreference(
+                        //         "CURRENT_USER_AVATAR",
+                        //         responseMap['signedUrl']);
+                        print('_imageFile - $_imageFile');
+                        if (_imageFile != null) {
+                          // ignore: use_build_context_synchronously
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: const Text('Ảnh bạn đã chọn'),
+                                content: Image.file(
+                                  _imageFile!,
+                                  height: 200.0,
+                                  width: 200.0,
+                                  fit: BoxFit.cover,
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: const Text('Hủy bỏ'),
+                                  ),
+                                  TextButton(
+                                    onPressed: () async {
+                                      Map<String, String> responseMap =
+                                          await baseController
+                                              .upload(_imageFile!);
+                                      String messageChangeProfilePicture =
+                                          await accountController
+                                              .changeProfilePicture(
+                                                  responseMap['savedFileName']!,
+                                                  _currentUserId);
+                                      if (messageChangeProfilePicture.compareTo(
+                                              "update profile picture success") ==
+                                          0) {
+                                        //save avatar Preference
+                                        await baseController
+                                            .saveStringtoSharedPreference(
+                                                "CURRENT_USER_AVATAR",
+                                                responseMap['signedUrl']);
+                                        Navigator.of(context).pop();
+                                        showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                              title: const Text('Thông báo'),
+                                              content: const Text(
+                                                  'Bạn đã đổi ảnh đại diện thành công!'),
+                                              actions: [
+                                                TextButton(
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                  child: Text('OK'),
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        );
+                                      } else {
+                                        // ignore: use_build_context_synchronously
+                                        showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                              title: const Text('Thông báo'),
+                                              content: const Text(
+                                                  'Có lỗi trong quá trình xử lý!'),
+                                              actions: [
+                                                TextButton(
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                  child: Text('OK'),
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        );
+                                      }
+                                    },
+                                    child: const Text('Chấp nhận'),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        } else {
+                          // ignore: use_build_context_synchronously
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: const Text('Thông báo'),
+                                content:
+                                    const Text('Có lỗi trong quá trình xử lý!'),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: Text('OK'),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        }
+
+                        //}
                       },
                       child: const Text('Đổi ảnh đại diện',
                           style: TextStyle(fontSize: 17))),

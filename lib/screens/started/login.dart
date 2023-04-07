@@ -6,6 +6,7 @@ import 'package:washouse_customer/components/constants/color_constants.dart';
 import 'package:washouse_customer/components/constants/size.dart';
 import 'package:washouse_customer/resource/controller/account_controller.dart';
 import 'package:washouse_customer/resource/models/current_user.dart';
+import 'package:washouse_customer/resource/models/customer.dart';
 import 'package:washouse_customer/resource/models/response_models/LoginResponseModel.dart';
 import 'package:washouse_customer/resource/models/token.dart';
 import 'package:washouse_customer/screens/home/base_screen.dart';
@@ -173,23 +174,35 @@ class _LoginState extends State<Login> {
                                   currentUserModel.avatar);
                               baseController.saveInttoSharedPreference(
                                   "CURRENT_USER_ID",
-                                  currentUserModel.accountId);
+                                  currentUserModel.accountId!);
                               baseController.saveStringtoSharedPreference(
                                   "CURRENT_USER_PASSWORD",
                                   passwordController.text);
                             }
+                            Customer? currentCustomer =
+                                await accountController.getCustomerInfomation(
+                                    currentUserModel.accountId!);
+                            if (currentCustomer != null) {
+                              baseController.saveInttoSharedPreference(
+                                  "CURRENT_CUSTOMER_ID",
+                                  currentUserModel.accountId!);
+                            }
+                            Navigator.of(context).pop();
+                            // ignore: use_build_context_synchronously
                             Navigator.push(
                                 context,
                                 PageTransition(
                                     child: const BaseScreen(),
                                     type: PageTransitionType.fade));
+
+                            print(_responseMessage);
                           }
                         }
                       }
                       if (_responseMessage == null) {
                         _responseMessage = "";
                       }
-                      if (_responseMessage != null) {
+                      if (_responseMessage != null && _responseMessage != "") {
                         // ignore: use_build_context_synchronously
                         showDialog(
                           context: context,
@@ -233,46 +246,46 @@ class _LoginState extends State<Login> {
                       if (_responseMessage == null) {
                         _responseMessage = "";
                       }
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Container(
-                            padding: const EdgeInsets.all(16),
-                            height: 90,
-                            decoration: const BoxDecoration(
-                              color: Color(0xffc72c41),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(20)),
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text(
-                                  'Oops',
-                                  style: TextStyle(
-                                      fontSize: 18, color: Colors.white),
-                                ),
-                                // Text(
-                                //   "$_errorMessage",
-                                //   style: const TextStyle(
-                                //       fontSize: 12, color: Colors.white),
-                                //   maxLines: 2,
-                                //   overflow: TextOverflow.clip,
-                                // ),
-                                Text(
-                                  "$_responseMessage",
-                                  style: const TextStyle(
-                                      fontSize: 12, color: Colors.white),
-                                  maxLines: 2,
-                                  overflow: TextOverflow.clip,
-                                )
-                              ],
-                            ),
-                          ),
-                          behavior: SnackBarBehavior.floating,
-                          backgroundColor: Colors.transparent,
-                          elevation: 0,
-                        ),
-                      );
+                      // ScaffoldMessenger.of(context).showSnackBar(
+                      //   SnackBar(
+                      //     content: Container(
+                      //       padding: const EdgeInsets.all(16),
+                      //       height: 90,
+                      //       decoration: const BoxDecoration(
+                      //         color: Color(0xffc72c41),
+                      //         borderRadius:
+                      //             BorderRadius.all(Radius.circular(20)),
+                      //       ),
+                      //       child: Column(
+                      //         crossAxisAlignment: CrossAxisAlignment.start,
+                      //         children: [
+                      //           const Text(
+                      //             'Oops',
+                      //             style: TextStyle(
+                      //                 fontSize: 18, color: Colors.white),
+                      //           ),
+                      //           // Text(
+                      //           //   "$_errorMessage",
+                      //           //   style: const TextStyle(
+                      //           //       fontSize: 12, color: Colors.white),
+                      //           //   maxLines: 2,
+                      //           //   overflow: TextOverflow.clip,
+                      //           // ),
+                      //           Text(
+                      //             "$_responseMessage",
+                      //             style: const TextStyle(
+                      //                 fontSize: 12, color: Colors.white),
+                      //             maxLines: 2,
+                      //             overflow: TextOverflow.clip,
+                      //           )
+                      //         ],
+                      //       ),
+                      //     ),
+                      //     behavior: SnackBarBehavior.floating,
+                      //     backgroundColor: Colors.transparent,
+                      //     elevation: 0,
+                      //   ),
+                      // );
                     },
                     style: ElevatedButton.styleFrom(
                         shape: RoundedRectangleBorder(
