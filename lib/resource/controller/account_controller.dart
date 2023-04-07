@@ -8,6 +8,7 @@ import 'package:washouse_customer/resource/models/response_models/LoginResponseM
 import 'package:washouse_customer/resource/models/token.dart';
 import 'package:washouse_customer/resource/controller/base_controller.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:washouse_customer/resource/models/wallet.dart';
 
 import '../../components/constants/text_constants.dart';
 
@@ -87,10 +88,10 @@ class AccountController {
           "access-control-allow-origin": "*",
         },
       );
-      print('step 1: $body');
+      //print('step 1: $body');
       var statusCode = jsonDecode(response.body)["statusCode"];
       var message = jsonDecode(response.body)["message"];
-      print('step 2: $statusCode + $message');
+      //print('step 2: $statusCode + $message');
       if (statusCode == 10) {
         return new LoginResponseModel(
             statusCode: 10, message: message, data: null);
@@ -105,14 +106,14 @@ class AccountController {
       Token? token = jsonDecode(response.body)["data"] != null
           ? Token?.fromJson(jsonDecode(response.body)["data"])
           : null;
-      print('step 3: $token');
+      //print('step 3: $token');
       if (token != null) {
         responseModel = new LoginResponseModel(
             statusCode: statusCode, message: message, data: token);
       }
       if (statusCode == 0 && token != null) {
         var accessToken = token.accessToken;
-        print('step 4: $accessToken');
+        // print('step 4: $accessToken');
         var refreshToken = token.refreshToken;
         if (accessToken != null && refreshToken != null) {
           await baseController.saveAccessToken(accessToken);
@@ -122,7 +123,7 @@ class AccountController {
     } catch (e) {
       print('error: $e');
     }
-    print('step 5: ${responseModel?.message}');
+    //print('step 5: ${responseModel?.message}');
     return responseModel;
   }
 
@@ -184,6 +185,31 @@ class AccountController {
     } else {
       // Handle error changing password
       throw Exception('Error changing password: ${response.statusCode}');
+    }
+  }
+
+  Future<Wallet?> getMyWallet() async {
+    Wallet? wallet = Wallet();
+    try {
+      String url = '$baseUrl/accounts/my-wallet';
+      Response response =
+          await baseController.makeAuthenticatedRequest(url, {});
+      if (response.statusCode == 200) {
+        // Handle successful response
+        wallet = jsonDecode(response.body)["data"] != null
+            ? Wallet?.fromJson(jsonDecode(response.body)["data"])
+            : null;
+        //Map<String, dynamic> accountDetails = json.decode(response.body);
+        return wallet;
+        //print(currentUser.name);
+        // Do something with the user data...
+      } else {
+        // Handle error response
+        throw Exception('Error fetching wallet data: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('error: getMyWallet-$e');
+      throw e;
     }
   }
 }
