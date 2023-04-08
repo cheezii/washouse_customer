@@ -5,6 +5,7 @@ import 'package:page_transition/page_transition.dart';
 import 'package:skeletons/skeletons.dart';
 import 'package:washouse_customer/components/constants/color_constants.dart';
 import 'package:washouse_customer/resource/controller/center_controller.dart';
+import 'package:washouse_customer/resource/controller/promotion_controller.dart';
 import 'package:washouse_customer/resource/controller/service_controller.dart';
 
 import 'package:washouse_customer/resource/models/center.dart';
@@ -32,11 +33,13 @@ class _CenterDetailScreenState extends State<CenterDetailScreen> {
   late ScrollController _scrollController;
   ServiceController serviceController = ServiceController();
   CenterController centerController = CenterController();
+  PromotionController promotionController = PromotionController();
 
   CategoryMenu? menu;
   LaundryCenter centerArgs = LaundryCenter();
   LaundryCenter centerDetails = LaundryCenter();
   CenterServices serviceOfCenter = CenterServices();
+  List<PromotionModel> displayPromotionList = [];
 
   DateTime now = DateTime.now();
 
@@ -53,6 +56,7 @@ class _CenterDetailScreenState extends State<CenterDetailScreen> {
     centerArgs = widget.centerData;
     Future.delayed(Duration(milliseconds: 1), () {
       getCenterDetail();
+      promotionList();
     });
   }
 
@@ -66,6 +70,20 @@ class _CenterDetailScreenState extends State<CenterDetailScreen> {
         });
       },
     );
+  }
+
+  void promotionList() async {
+    LaundryCenter center = widget.centerData;
+    int centerId = center.id!;
+
+    var promotions =
+        await promotionController.getPromotionListOfCenter(centerId);
+    print(promotions);
+    if (promotions.isNotEmpty) {
+      setState(() {
+        displayPromotionList = promotions;
+      });
+    }
   }
 
   @override
@@ -330,18 +348,22 @@ class _CenterDetailScreenState extends State<CenterDetailScreen> {
                                                     const EdgeInsets.all(10),
                                                 child: PromotionWidget(
                                                   description:
-                                                      demoPromotionList[index]
-                                                          .description,
+                                                      displayPromotionList[
+                                                              index]
+                                                          .description!,
                                                   expiredDate:
-                                                      demoPromotionList[index]
-                                                          .expiredDate,
-                                                  code: demoPromotionList[index]
+                                                      displayPromotionList[
+                                                              index]
+                                                          .expireDate,
+                                                  code: displayPromotionList[
+                                                          index]
                                                       .code,
                                                   press: () {},
                                                 ),
                                               );
                                             }),
-                                            itemCount: demoPromotionList.length,
+                                            itemCount:
+                                                displayPromotionList.length,
                                           ),
                                         )
                                       : Column(

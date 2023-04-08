@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:washouse_customer/resource/controller/promotion_controller.dart';
 
 import '../../../../components/constants/color_constants.dart';
 import '../../../../resource/models/promotion.dart';
@@ -12,15 +14,33 @@ class AddVoucherScreen extends StatefulWidget {
 }
 
 class _AddVoucherScreenState extends State<AddVoucherScreen> {
-  List<PromotionModel> displayList = demoPromotionList;
-
+  List<PromotionModel> displayList = [];
+  PromotionController promotionController = PromotionController();
   void getSuggest(String value) {
     setState(() {
-      displayList = demoPromotionList
+      displayList = displayList
           .where((element) =>
               element.code.toLowerCase().contains(value.toLowerCase()))
           .toList();
     });
+  }
+
+  @override
+  void initState() {
+    promotionList();
+    super.initState();
+  }
+
+  void promotionList() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    int centerId = prefs.getInt('centerId');
+    var promotions =
+        await promotionController.getPromotionListOfCenter(centerId);
+    if (promotions.isNotEmpty) {
+      setState(() {
+        displayList = promotions;
+      });
+    }
   }
 
   @override
@@ -82,8 +102,8 @@ class _AddVoucherScreenState extends State<AddVoucherScreen> {
                 return Padding(
                   padding: const EdgeInsets.all(10),
                   child: PromotionWidget(
-                    description: displayList[index].description,
-                    expiredDate: displayList[index].expiredDate,
+                    description: displayList[index].description!,
+                    expiredDate: displayList[index].expireDate,
                     code: displayList[index].code,
                     press: () {},
                   ),
