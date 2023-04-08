@@ -11,6 +11,7 @@ import 'package:washouse_customer/screens/started/login.dart';
 import '../../components/constants/text_constants.dart';
 import '../../resource/controller/account_controller.dart';
 import '../../resource/controller/google_controller.dart';
+import '../reset_password/send_otp.dart';
 import '../widgets/custom_textfield.dart';
 
 class SignUp extends StatefulWidget {
@@ -187,7 +188,9 @@ class _SignUpState extends State<SignUp> {
                             Navigator.push(
                                 context,
                                 PageTransition(
-                                    child: const Login(),
+                                    child: const OTPScreen(
+                                      isSignUp: true,
+                                    ),
                                     type: PageTransitionType.fade));
                           }
                         }

@@ -98,7 +98,7 @@ class _ResetWithPhoneState extends State<ResetWithPhone> {
                           Navigator.push(
                               context,
                               PageTransition(
-                                  child: const OTPScreen(),
+                                  child: const OTPScreen(isSignUp: false),
                                   type: PageTransitionType.fade));
                         }
                       },
