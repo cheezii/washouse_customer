@@ -77,7 +77,8 @@ class MenuItemCard extends StatelessWidget {
             const SizedBox(width: 15),
             SizedBox(
               height: 100,
-              width: size.width * 0.58,
+              //width: size.width * 0.58,
+              width: 220,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.start,

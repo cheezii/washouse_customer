@@ -34,3 +34,18 @@ class TransactionHistory {
     return data;
   }
 }
+
+List<TransactionHistory> listTransaction = [
+  TransactionHistory(
+      paymentId: 1,
+      status: 'success',
+      plusOrMinus: 'plus',
+      amount: 35000,
+      timeStamp: '20/02/2023 20:20:20'),
+  TransactionHistory(
+      paymentId: 1,
+      status: 'success',
+      plusOrMinus: 'minus',
+      amount: 35000,
+      timeStamp: '20/02/2023 20:20:20'),
+];

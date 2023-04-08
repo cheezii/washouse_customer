@@ -125,24 +125,24 @@ class _CenterDetailScreenState extends State<CenterDetailScreen> {
                     ),
                   ),
                 ),
-                actions: const [
-                  CircleAvatar(
-                      backgroundColor: Colors.white,
-                      child: Icon(
-                        Icons.ios_share,
-                        color: Colors.black,
-                      )),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16),
-                    child: CircleAvatar(
-                      backgroundColor: Colors.white,
-                      child: Icon(
-                        Icons.search_rounded,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ),
-                ],
+                // actions: const [
+                //   CircleAvatar(
+                //       backgroundColor: Colors.white,
+                //       child: Icon(
+                //         Icons.ios_share,
+                //         color: Colors.black,
+                //       )),
+                //   Padding(
+                //     padding: EdgeInsets.symmetric(horizontal: 16),
+                //     child: CircleAvatar(
+                //       backgroundColor: Colors.white,
+                //       child: Icon(
+                //         Icons.search_rounded,
+                //         color: Colors.black,
+                //       ),
+                //     ),
+                //   ),
+                // ],
               ),
               const SliverToBoxAdapter(
                 child: SizedBox(height: 235),

@@ -30,22 +30,25 @@ class OrderDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     String status = '';
     Color statusColor = Colors.white;
-    if (orderList[0].status == 0) {
-      statusColor = cancelColor;
-      status = 'Đã hủy';
-    } else if (orderList[0].status == 1) {
-      statusColor = confirmingColor;
-      status = 'Chờ xác nhận';
-    } else if (orderList[0].status == 2) {
-      statusColor = processingColor;
-      status = 'Chờ xử lý';
-    } else if (orderList[0].status == 3) {
-      statusColor = shippingColor;
-      status = 'Chờ giao';
-    } else if (orderList[0].status == 4) {
-      statusColor = completeColor;
-      status = 'Hoàn thành';
-    }
+    // if (orderList[0].status.compareTo('Đã hủy') == 0) {
+    //   statusColor = cancelColor;
+    //   status = 'Đã hủy';
+    // } else if (orderList[0].status.compareTo('Xác nhận') == 0) {
+    //   statusColor = confirmedColor;
+    //   status = 'Xác nhận';
+    // } else if (orderList[0].status.compareTo('Xử lý') == 0) {
+    //   statusColor = processingColor;
+    //   status = 'Xử lý';
+    // } else if (orderList[0].status.compareTo('Đang chờ') == 0) {
+    //   statusColor = pendingdColor;
+    //   status = 'Đang chờ';
+    // } else if (orderList[0].status.compareTo('Sẵn sàng') == 0) {
+    //   statusColor = readyColor;
+    //   status = 'Sẵn sàng';
+    // } else if (orderList[0].status.compareTo('Hoàn tất') == 0) {
+    //   statusColor = completeColor;
+    //   status = 'Hoàn tất';
+    // }
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -98,7 +101,7 @@ class OrderDetailScreen extends StatelessWidget {
                         style: const TextStyle(
                             fontWeight: FontWeight.w600, fontSize: 20),
                       ),
-                      DetailHeading(statusColor: statusColor, status: status)
+                      //DetailHeading(statusColor: statusColor, status: status)
                     ],
                   ),
                   const SizedBox(height: 6),
@@ -307,7 +310,7 @@ class OrderDetailScreen extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: isProccessing || isShipping
+      bottomNavigationBar: isConfirm
           ? Container(
               padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
               height: 70,
@@ -324,70 +327,57 @@ class OrderDetailScreen extends StatelessWidget {
                   ),
                 ],
               ),
-              child: Row(
-                children: [
-                  isComplete
-                      ? Expanded(
-                          child: Row(
-                            children: [
-                              SizedBox(
-                                width: 150,
-                                height: 55,
-                                child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(10.0)),
-                                      backgroundColor: kPrimaryColor),
-                                  onPressed: () {},
-                                  child: const Text(
-                                    'Đặt lại dịch vụ',
-                                    style: TextStyle(fontSize: 17),
-                                  ),
-                                ),
-                              ),
-                              const Spacer(),
-                              SizedBox(
-                                width: 150,
-                                height: 55,
-                                child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(10.0)),
-                                      backgroundColor: kPrimaryColor),
-                                  onPressed: () {},
-                                  child: const Text(
-                                    'Trả hàng',
-                                    style: TextStyle(fontSize: 17),
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
-                        )
-                      : SizedBox(width: 0, height: 0),
-                  isConfirm
-                      ? SizedBox(
-                          width: 190,
-                          height: 40,
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10.0)),
-                                backgroundColor: cancelColor),
-                            onPressed: () {},
-                            child: const Text(
-                              'Hủy dịch vụ',
-                              style: TextStyle(fontSize: 17),
-                            ),
-                          ),
-                        )
-                      : SizedBox(width: 0, height: 0),
-                ],
+              child: SizedBox(
+                width: 190,
+                height: 40,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0)),
+                      backgroundColor: cancelColor),
+                  onPressed: () {},
+                  child: const Text(
+                    'Hủy dịch vụ',
+                    style: TextStyle(fontSize: 17),
+                  ),
+                ),
               ),
             )
-          : SizedBox(width: 0, height: 0),
+          : isShipping
+              ? Container(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+                  height: 70,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(30),
+                        topRight: Radius.circular(30)),
+                    boxShadow: [
+                      BoxShadow(
+                        offset: const Offset(0, -15),
+                        blurRadius: 20,
+                        color: const Color(0xffdadada).withOpacity(0.15),
+                      ),
+                    ],
+                  ),
+                  child: SizedBox(
+                    width: 190,
+                    height: 40,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0)),
+                          backgroundColor: kPrimaryColor),
+                      onPressed: () {},
+                      child: const Text(
+                        'Thanh toán',
+                        style: TextStyle(fontSize: 17),
+                      ),
+                    ),
+                  ),
+                )
+              : SizedBox(width: 0, height: 0),
     );
   }
 

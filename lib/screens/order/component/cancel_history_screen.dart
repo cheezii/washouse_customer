@@ -14,7 +14,7 @@ class OrderCancelScreen extends StatelessWidget {
     int counter = 0;
     List<Order> cancelList = [];
     for (var item in orderList) {
-      if (item.status == 0) {
+      if (item.status.compareTo('Đã hủy') == 0) {
         counter++;
         cancelList.add(item);
       }
@@ -32,10 +32,10 @@ class OrderCancelScreen extends StatelessWidget {
             itemBuilder: ((context, index) {
               return OrderedCard(
                 statusColor: cancelColor,
-                statusString: cancel,
-                status: 0,
+                statusString: canceled,
+                status: 'Đã hủy',
                 isComplete: false,
-                isConfirm: false,
+                isPending: false,
                 isCancel: true,
                 isProcessing: false,
                 isShipping: false,

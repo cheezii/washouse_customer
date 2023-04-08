@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:washouse_customer/components/constants/color_constants.dart';
 import 'package:washouse_customer/components/constants/text_constants.dart';
-import 'package:washouse_customer/screens/order/component/confirming_screen.dart';
+import 'package:washouse_customer/screens/order/component/confirmed_screen.dart';
 
+import 'component/pending_screen.dart';
 import 'component/processing_screen.dart';
-import 'component/shipping_screen.dart';
+import 'component/ready_screen.dart';
 import 'order_history_screen.dart';
 import 'search_order_screen.dart';
 
@@ -16,7 +17,7 @@ class OrderScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return DefaultTabController(
       initialIndex: 0,
-      length: 3,
+      length: 4,
       child: Scaffold(
           appBar: AppBar(
             elevation: 0,
@@ -63,16 +64,18 @@ class OrderScreen extends StatelessWidget {
               unselectedLabelColor: textColor,
               labelColor: textColor,
               tabs: [
-                Tab(text: confirming),
+                Tab(text: pending),
+                Tab(text: confirmed),
                 Tab(text: processing),
-                Tab(text: shipping),
+                Tab(text: ready),
               ],
             ),
           ),
           body: const TabBarView(children: [
-            OrderConfirmingScreen(),
+            OrderPedingScreen(),
+            OrderConfirmedScreen(),
             OrderProcessingScreen(),
-            OrderShippingScreen(),
+            OrderReadyScreen(),
           ])),
     );
   }

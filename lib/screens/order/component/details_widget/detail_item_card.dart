@@ -54,13 +54,15 @@ class DetailItemCard extends StatelessWidget {
               Row(
                 children: [
                   Text(
-                    'SL: x${cart.measurement}',
+                    cart.unit!.compareTo('Kg') == 0
+                        ? 'KL: x${cart.measurement}'
+                        : 'SL: x${cart.measurement.toInt()}',
                     style: const TextStyle(color: textColor, fontSize: 16),
                   ),
                   const Spacer(),
                   Text(
                     //'${PriceUtils().convertFormatPrice(cart.service.price!.round() * cart.measurement)} đ',
-                    '${PriceUtils().convertFormatPrice(cart.price!.round() * cart.measurement)} đ',
+                    '${PriceUtils().convertFormatPrice(cart.price!.round())} đ',
                     style: const TextStyle(
                       color: kPrimaryColor,
                       fontWeight: FontWeight.bold,

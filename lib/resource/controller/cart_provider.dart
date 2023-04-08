@@ -282,6 +282,52 @@ class CartProvider extends ChangeNotifier {
     saveCartItemsToPrefs();
   }
 
+  void addToCartWithKilogram(CartItem cart_item) {
+    int existingItemIndex =
+        _cartItems.indexWhere((item) => item.serviceId == cart_item.serviceId);
+    CartItem existingItem = _cartItems[existingItemIndex];
+    if (cart_item.priceType) {
+      double totalMeasurement =
+          double.parse((existingItem.measurement + 0.1).toStringAsFixed(1));
+      double maxCapacity = cart_item.prices!.last.maxValue!.toDouble();
+      if (totalMeasurement <= maxCapacity) {
+        cart_item.measurement = totalMeasurement;
+        cart_item.price = CartUtils.getTotalPriceOfCartItem(cart_item);
+      } else {
+        cart_item.measurement = maxCapacity;
+        cart_item.price = CartUtils.getTotalPriceOfCartItem(cart_item);
+        print(
+            "Measurement capacity exceeded for item with serviceId ${existingItem.serviceId}");
+      }
+    } else {
+      cart_item.measurement =
+          double.parse((0.1 + existingItem.measurement).toStringAsFixed(1));
+      cart_item.price = CartUtils.getTotalPriceOfCartItem(cart_item);
+    }
+    removeTotalPrice(existingItem.price!);
+    _cartItems.removeAt(existingItemIndex);
+    addTotalPrice(cart_item.price!);
+    _cartItems.add(cart_item);
+    notifyListeners();
+    saveCartItemsToPrefs();
+  }
+
+  void removeFromCartWithKilogram(CartItem cart_item) {
+    int existingItemIndex =
+        _cartItems.indexWhere((item) => item.serviceId == cart_item.serviceId);
+    CartItem existingItem = _cartItems[existingItemIndex];
+    removeTotalPrice(existingItem.price!);
+    cart_item.measurement =
+        double.parse((existingItem.measurement - 0.1).toStringAsFixed(1));
+    cart_item.price = CartUtils.getTotalPriceOfCartItem(cart_item);
+    _cartItems.removeAt(existingItemIndex);
+
+    addTotalPrice(cart_item.price!);
+    _cartItems.add(cart_item);
+    notifyListeners();
+    saveCartItemsToPrefs();
+  }
+
   // void clear(int serviceId) {
   //   if (_cart.containsKey(serviceId)) {
   //     _cart.remove(serviceId);

@@ -1,25 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:washouse_customer/components/constants/color_constants.dart';
 import 'package:washouse_customer/components/constants/text_constants.dart';
+import 'package:washouse_customer/screens/order/component/no_order.dart';
 
 import '../../../resource/models/order.dart';
-import 'no_order.dart';
 import 'list_widgets/order_card.dart';
 
-class OrderCompleteScreen extends StatelessWidget {
-  const OrderCompleteScreen({super.key});
+class OrderPedingScreen extends StatelessWidget {
+  const OrderPedingScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     int counter = 0;
-    List<Order> completeList = [];
+    List<Order> confirmingList = [];
     for (var item in orderList) {
-      if (item.status.compareTo('Hoàn tất') == 0) {
+      if (item.status.compareTo('Đang chờ') == 0) {
         counter++;
-        completeList.add(item);
+        confirmingList.add(item);
       }
     }
-    if (completeList.isEmpty) {
+    if (confirmingList.isEmpty) {
       return const NoOrderScreen();
     } else {
       return SingleChildScrollView(
@@ -31,11 +31,11 @@ class OrderCompleteScreen extends StatelessWidget {
             itemCount: counter,
             itemBuilder: ((context, index) {
               return OrderedCard(
-                statusColor: completeColor,
-                statusString: completed,
-                status: 'Hoàn tất',
-                isComplete: true,
-                isPending: false,
+                statusColor: pendingdColor,
+                statusString: pending,
+                status: 'Đang chờ',
+                isComplete: false,
+                isPending: true,
                 isCancel: false,
                 isProcessing: false,
                 isShipping: false,

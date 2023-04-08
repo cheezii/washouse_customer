@@ -85,7 +85,7 @@ class OrderCard extends StatelessWidget {
                   children: [
                     Text.rich(
                       TextSpan(
-                        text: 'Tổng cộng:\n',
+                        text: 'Tổng cộng dự kiến:\n',
                         children: [
                           TextSpan(
                             text: checkPrice

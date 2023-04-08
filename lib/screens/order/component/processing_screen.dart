@@ -14,7 +14,7 @@ class OrderProcessingScreen extends StatelessWidget {
     int counter = 0;
     List<Order> processingList = [];
     for (var item in processingList) {
-      if (item.status == 2) {
+      if (item.status.compareTo('Xử lý') == 0) {
         counter++;
         processingList.add(item);
       }
@@ -33,9 +33,9 @@ class OrderProcessingScreen extends StatelessWidget {
               return OrderedCard(
                 statusColor: processingColor,
                 statusString: processing,
-                status: 2,
+                status: 'Xử lý',
                 isComplete: false,
-                isConfirm: false,
+                isPending: false,
                 isCancel: false,
                 isProcessing: true,
                 isShipping: false,

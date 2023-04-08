@@ -8,9 +8,9 @@ import 'card_heading.dart';
 class OrderedCard extends StatelessWidget {
   final Color statusColor;
   final String statusString;
-  final int status;
+  final String status;
   final bool isComplete;
-  final bool isConfirm;
+  final bool isPending;
   final bool isCancel;
   final bool isProcessing;
   final bool isShipping;
@@ -20,7 +20,7 @@ class OrderedCard extends StatelessWidget {
     required this.statusString,
     required this.status,
     required this.isComplete,
-    required this.isConfirm,
+    required this.isPending,
     required this.isCancel,
     required this.isProcessing,
     required this.isShipping,
@@ -47,7 +47,7 @@ class OrderedCard extends StatelessWidget {
               const SizedBox(height: 20),
               CardFooter(
                 isComplete: isComplete,
-                isConfirm: isConfirm,
+                isPending: isPending,
                 isCancel: isCancel,
                 isProcessing: isProcessing,
                 isShipping: isShipping,
