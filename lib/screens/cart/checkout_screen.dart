@@ -254,7 +254,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   const Text(
-                                    'Tổng cộng:',
+                                    'Tổng cộng dự kiến:',
                                     style: TextStyle(fontSize: 17),
                                   ),
                                   Text(

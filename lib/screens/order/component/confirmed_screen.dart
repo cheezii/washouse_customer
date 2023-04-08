@@ -6,20 +6,20 @@ import 'package:washouse_customer/screens/order/component/no_order.dart';
 import '../../../resource/models/order.dart';
 import 'list_widgets/order_card.dart';
 
-class OrderShippingScreen extends StatelessWidget {
-  const OrderShippingScreen({super.key});
+class OrderConfirmedScreen extends StatelessWidget {
+  const OrderConfirmedScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     int counter = 0;
-    List<Order> shippingList = [];
+    List<Order> confirmingList = [];
     for (var item in orderList) {
-      if (item.status == 3) {
+      if (item.status.compareTo('Xác nhận') == 0) {
         counter++;
-        shippingList.add(item);
+        confirmingList.add(item);
       }
     }
-    if (shippingList.isEmpty) {
+    if (confirmingList.isEmpty) {
       return const NoOrderScreen();
     } else {
       return SingleChildScrollView(
@@ -31,14 +31,14 @@ class OrderShippingScreen extends StatelessWidget {
             itemCount: counter,
             itemBuilder: ((context, index) {
               return OrderedCard(
-                statusColor: shippingColor,
-                statusString: shipping,
-                status: 2,
+                statusColor: confirmedColor,
+                statusString: confirmed,
+                status: 'Xác nhận',
                 isComplete: false,
-                isConfirm: false,
+                isPending: false,
                 isCancel: false,
                 isProcessing: false,
-                isShipping: true,
+                isShipping: false,
               );
             }),
           ),

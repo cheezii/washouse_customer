@@ -9,14 +9,14 @@ import '../../order_detail_screen.dart';
 
 class CardFooter extends StatelessWidget {
   final bool isComplete;
-  final bool isConfirm;
+  final bool isPending;
   final bool isCancel;
   final bool isProcessing;
   final bool isShipping;
   const CardFooter({
     Key? key,
     required this.isComplete,
-    required this.isConfirm,
+    required this.isPending,
     required this.isCancel,
     required this.isProcessing,
     required this.isShipping,
@@ -51,7 +51,7 @@ class CardFooter extends StatelessWidget {
               )
             : Container(),
         isCancel ? Text('Đã hủy bởi bạn') : Container(),
-        isConfirm
+        isPending
             ? GestureDetector(
                 onTap: () {},
                 child: Container(
@@ -105,7 +105,7 @@ class CardFooter extends StatelessWidget {
                           child: OrderDetailScreen(
                             isDeliver: true,
                             isComplete: isComplete,
-                            isConfirm: isConfirm,
+                            isConfirm: isPending,
                             isProccessing: isProcessing,
                             isShipping: isShipping,
                           ),

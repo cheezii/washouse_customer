@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:washouse_customer/resource/controller/account_controller.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:washouse_customer/resource/models/transaction_history.dart';
 import '../../components/constants/color_constants.dart';
 import '../../resource/models/wallet.dart';
 import 'components/transaction_widget.dart';
@@ -46,8 +47,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
   Widget build(BuildContext context) {
     if (_wallet != null) {
       isHaveWallet = true;
-
-      TransactionWidget(isAdd: true, time: '20/03/2023 13:23:21', price: 20000);
     }
     return Scaffold(
         appBar: AppBar(
@@ -169,42 +168,43 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                 ),
                               ),
                             ),
-                            GestureDetector(
-                              onTap: () async {},
-                              child: Container(
-                                width: 300,
-                                height: 100,
-                                padding: const EdgeInsets.all(10.0),
-                                child: Card(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(15.0),
-                                  ),
-                                  color: Color.fromARGB(255, 175, 45, 35),
-                                  elevation: 10,
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 10),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: const [
-                                        Icon(
-                                          Icons.add_box_rounded,
-                                          color: Colors.white,
-                                          size: 30,
-                                        ),
-                                        SizedBox(width: 10),
-                                        Text(
-                                          'Liên kết tài khoản VNPAY',
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.w600),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            )
+                            // GestureDetector(
+                            //         onTap: () async {},
+                            //         child: Container(
+                            //           width: 300,
+                            //           height: 100,
+                            //           padding: const EdgeInsets.all(10.0),
+                            //           child: Card(
+                            //             shape: RoundedRectangleBorder(
+                            //               borderRadius: BorderRadius.circular(15.0),
+                            //             ),
+                            //             color: Color.fromARGB(255, 175, 45, 35),
+                            //             elevation: 10,
+                            //             child: Padding(
+                            //               padding: const EdgeInsets.symmetric(
+                            //                   horizontal: 10),
+                            //               child: Row(
+                            //                 mainAxisSize: MainAxisSize.min,
+                            //                 children: const [
+                            //                   Icon(
+                            //                     Icons.add_box_rounded,
+                            //                     color: Colors.white,
+                            //                     size: 30,
+                            //                   ),
+                            //                   SizedBox(width: 10),
+                            //                   Text(
+                            //                     'Liên kết tài khoản VNPAY',
+                            //                     style: TextStyle(
+                            //                         color: Colors.white,
+                            //                         fontWeight: FontWeight.w600),
+                            //                   )
+                            //                 ],
+                            //               ),
+                            //             ),
+                            //           ),
+                            //         ),
+                            //       )
+                            //    : Container()
                           ],
                         ),
                       ),
@@ -219,19 +219,31 @@ class _PaymentScreenState extends State<PaymentScreen> {
                       ),
                       const SizedBox(height: 10),
                       isHaveTransaction
-                          ? Column(
-                              children: [
-                                TransactionWidget(
-                                    isAdd: true,
-                                    time: '20/03/2023 13:23:21',
-                                    price: 20000),
-                                TransactionWidget(
-                                    isAdd: false,
-                                    centerName: 'The Clean House',
-                                    time: '20/03/2023 13:23:21',
-                                    price: 20000),
-                              ],
-                            )
+                          ? ListView.builder(
+                              shrinkWrap: true,
+                              padding: const EdgeInsets.only(top: 16),
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: listTransaction.length,
+                              itemBuilder: (context, index) {
+                                return TransactionWidget(
+                                  isAdd: listTransaction[index].plusOrMinus!,
+                                  time: listTransaction[index].timeStamp!,
+                                  price: listTransaction[index].amount!,
+                                );
+                              })
+                          // Column(
+                          //     children: [
+                          //       TransactionWidget(
+                          //           isAdd: 'plus',
+                          //           time: '20/03/2023 13:23:21',
+                          //           price: 20000),
+                          //       TransactionWidget(
+                          //           isAdd: 'minus',
+                          //           centerName: 'The Clean House',
+                          //           time: '20/03/2023 13:23:21',
+                          //           price: 20000),
+                          //     ],
+                          //   )
                           : Padding(
                               padding: const EdgeInsets.symmetric(
                                   vertical: 90, horizontal: 80),
@@ -260,13 +272,55 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   ),
                 ),
               )
-            : Text(
-                'Bạn chưa kích hoạt ví',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    color: Colors.grey.shade500,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w400),
-              ));
+            : Center(child: CircularProgressIndicator())
+        // Column(
+        //     children: [
+        //       Center(
+        //         child: Text(
+        //           'Bạn chưa kích hoạt ví',
+        //           style: TextStyle(
+        //               color: Colors.grey.shade600,
+        //               fontSize: 18,
+        //               fontWeight: FontWeight.w500),
+        //         ),
+        //       ),
+        //       GestureDetector(
+        //         onTap: () async {},
+        //         child: Container(
+        //           width: 300,
+        //           height: 100,
+        //           padding: const EdgeInsets.all(10.0),
+        //           child: Card(
+        //             shape: RoundedRectangleBorder(
+        //               borderRadius: BorderRadius.circular(15.0),
+        //             ),
+        //             color: Color.fromARGB(255, 175, 45, 35),
+        //             elevation: 10,
+        //             child: Padding(
+        //               padding: const EdgeInsets.symmetric(horizontal: 10),
+        //               child: Row(
+        //                 mainAxisSize: MainAxisSize.min,
+        //                 children: const [
+        //                   Icon(
+        //                     Icons.add_box_rounded,
+        //                     color: Colors.white,
+        //                     size: 30,
+        //                   ),
+        //                   SizedBox(width: 10),
+        //                   Text(
+        //                     'Liên kết tài khoản VNPAY',
+        //                     style: TextStyle(
+        //                         color: Colors.white,
+        //                         fontWeight: FontWeight.w600),
+        //                   )
+        //                 ],
+        //               ),
+        //             ),
+        //           ),
+        //         ),
+        //       )
+        //     ],
+        //   ),
+        );
   }
 }

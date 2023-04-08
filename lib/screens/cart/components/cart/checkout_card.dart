@@ -96,7 +96,7 @@ class _CheckOutCardState extends State<CheckOutCard> {
                 children: [
                   Text.rich(
                     TextSpan(
-                      text: 'Tổng cộng:\n',
+                      text: 'Tổng cộng dự kiến:\n',
                       children: [
                         TextSpan(
                           text: checkPrice
@@ -129,7 +129,7 @@ class _CheckOutCardState extends State<CheckOutCard> {
                       },
                       child: Text(
                         //'Thanh toán (${checkItem ? value.getCounter() : 0})',
-                        'Thanh toán (${value.cartItems.length})',
+                        'Đặt dịch vụ (${value.cartItems.length})',
                         style: const TextStyle(fontSize: 17),
                       ),
                     ),

@@ -8,8 +8,8 @@ import 'package:washouse_customer/utils/time_utils.dart';
 class TransactionWidget extends StatefulWidget {
   final String? centerName;
   final String time;
-  final double price;
-  final bool isAdd;
+  final int price;
+  final String isAdd;
   const TransactionWidget({
     Key? key,
     this.centerName,
@@ -43,7 +43,7 @@ class _TransactionWidgetState extends State<TransactionWidget> {
                   SizedBox(
                     height: 40,
                     width: 40,
-                    child: Image.asset(widget.isAdd
+                    child: Image.asset(widget.isAdd.compareTo('plus') == 0
                         ? 'assets/images/transaction/wallet.png'
                         : 'assets/images/transaction/credit-card-payment.png'),
                   ),
@@ -56,9 +56,9 @@ class _TransactionWidgetState extends State<TransactionWidget> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
                           Text(
-                            widget.isAdd
+                            widget.isAdd.compareTo('plus') == 0
                                 ? 'Nạp tiền vào ví'
-                                : widget.centerName ?? '',
+                                : widget.centerName ?? 'Trả tiền cho dịch vụ',
                             style: TextStyle(
                               fontSize: 18,
                               color: Colors.grey.shade800,
@@ -86,12 +86,14 @@ class _TransactionWidgetState extends State<TransactionWidget> {
               ),
             ),
             Text(
-              widget.isAdd
+              widget.isAdd.compareTo('plus') == 0
                   ? '+${PriceUtils().convertFormatPrice(widget.price.round())} đ'
                   : '-${PriceUtils().convertFormatPrice(widget.price.round())} đ',
               style: TextStyle(
                 fontSize: 16,
-                color: widget.isAdd ? Colors.red : textColor,
+                color: widget.isAdd.compareTo('plus') == 0
+                    ? Colors.red
+                    : textColor,
                 fontWeight: FontWeight.w500,
               ),
             )

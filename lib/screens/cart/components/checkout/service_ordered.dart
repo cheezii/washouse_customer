@@ -107,7 +107,7 @@ class ServiceOrdered extends StatelessWidget {
                                         ),
                                   const Spacer(),
                                   Text(
-                                    '${PriceUtils().convertFormatPrice((cartItems[index].price!.round() * cartItems[index].measurement).toInt())} đ',
+                                    '${PriceUtils().convertFormatPrice((cartItems[index].price!.round()).toInt())} đ',
                                     style: const TextStyle(
                                       color: kPrimaryColor,
                                       fontWeight: FontWeight.bold,

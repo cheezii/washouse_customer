@@ -128,7 +128,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                   const SizedBox(height: 20),
                   SizedBox(
-                    height: size.height * .525,
+                    //height: size.height * .525,
+                    height: size.height * .51,
                     width: size.width,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,

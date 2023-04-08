@@ -179,7 +179,7 @@ class _CartBodyScreenState extends State<CartBodyScreen> {
                                                     setState(() {
                                                       if (measurement > 1) {
                                                         provider
-                                                            .removeFromCartWithQuantity(
+                                                            .removeFromCartWithKilogram(
                                                                 value.cartItems[
                                                                     index]!);
                                                       } else {
@@ -215,7 +215,6 @@ class _CartBodyScreenState extends State<CartBodyScreen> {
                                                     height: 40,
                                                     width: 60,
                                                     child: TextField(
-                                                      readOnly: false,
                                                       controller:
                                                           kilogramController,
                                                       textAlign:
@@ -260,7 +259,7 @@ class _CartBodyScreenState extends State<CartBodyScreen> {
                                                         // value.cartItems[index]
                                                         //     .measurement++;
                                                         provider
-                                                            .addToCartWithQuantity(
+                                                            .addToCartWithKilogram(
                                                                 value.cartItems[
                                                                     index]);
                                                         // provider
@@ -277,7 +276,7 @@ class _CartBodyScreenState extends State<CartBodyScreen> {
                                                                 .measurement =
                                                             _maxMeasurementValue;
                                                         provider
-                                                            .addToCartWithQuantity(
+                                                            .addToCartWithKilogram(
                                                                 value.cartItems[
                                                                     index]);
                                                         // provider
@@ -291,7 +290,7 @@ class _CartBodyScreenState extends State<CartBodyScreen> {
                                                         // value.cartItems[index]
                                                         //     .measurement++;
                                                         provider
-                                                            .addToCartWithQuantity(
+                                                            .addToCartWithKilogram(
                                                                 value.cartItems[
                                                                     index]);
                                                         // provider

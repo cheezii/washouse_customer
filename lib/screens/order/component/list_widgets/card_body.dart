@@ -5,7 +5,7 @@ import '../../../../components/constants/color_constants.dart';
 import '../../../../resource/models/order.dart';
 
 class CardBody extends StatelessWidget {
-  final int status;
+  final String status;
   const CardBody({
     Key? key,
     required this.status,
@@ -15,7 +15,7 @@ class CardBody extends StatelessWidget {
   Widget build(BuildContext context) {
     List<Order> list = [];
     for (var item in orderList) {
-      if (item.status == status) {
+      if (item.status.compareTo(status) == 0) {
         list.add(item);
       }
     }
