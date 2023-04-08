@@ -717,7 +717,45 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                               ? null
                               : serviceArgs.minPrice!.toDouble(),
                           prices: serviceArgs.prices);
-                      provider.addItemToCart(cartItem); //add to cart
+                      print("provider.centerId - ${provider.centerId}");
+                      if (provider.cartItems.isEmpty) {
+                        provider.addItemToCart(cartItem); //add to cart
+                        provider.updateCenter(cartItem.centerId);
+                      } else if (provider.centerId != null &&
+                          provider.centerId != 0 &&
+                          provider.centerId != cartItem.centerId) {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: const Text('Thông báo'),
+                              content: Text(
+                                  'Bạn đang có giỏ hàng của cửa hàng ${provider.centerId}! Đặt với cửa hàng mới hoặc vẫn giữ giỏ hàng cũ'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    provider.removeCart();
+                                    provider.addItemToCart(cartItem);
+                                    provider.updateCenter(cartItem.centerId);
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Text('Đặt mới'),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Text('Giữ lại'),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      } else {
+                        provider.addItemToCart(cartItem); //add to cart
+                        provider.updateCenter(cartItem.centerId);
+                        //provider.centerId =
+                      }
                       //print(cart.length);
                       //provider.addCounter(); //để hiện thị số lượng trong giỏ hàng
                       // productPrice =

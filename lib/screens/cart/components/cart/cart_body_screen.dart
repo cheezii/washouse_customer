@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:washouse_customer/components/constants/color_constants.dart';
+import 'package:washouse_customer/resource/controller/center_controller.dart';
 
 import 'package:washouse_customer/resource/models/cart_item.dart';
 import 'package:washouse_customer/screens/center/component/details/category_menu.dart';
 
 import '../../../../resource/controller/cart_provider.dart';
+import '../../../../resource/models/center.dart';
 import '../../../../utils/formatter_util.dart';
 import '../../../../utils/price_util.dart';
 import '../../../../utils/shared_preferences_util.dart';
@@ -22,15 +24,29 @@ class CartBodyScreen extends StatefulWidget {
 
 class _CartBodyScreenState extends State<CartBodyScreen> {
   //TextEditingController kilogramController = TextEditingController();
+  CenterController centerController = CenterController();
+  LaundryCenter center = LaundryCenter();
   @override
   void initState() {
     super.initState();
     context.read<CartProvider>().loadCartItemsFromPrefs();
+    getCenterDetail();
+  }
+
+  void getCenterDetail() async {
+    centerController.getCenterById(context.read<CartProvider>().centerId!).then(
+      (result) {
+        setState(() {
+          center = result;
+        });
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     var provider = Provider.of<CartProvider>(context);
+    //LaundryCenter center = await centerController.getCenterById(provider.centerId!);
     return Padding(
       padding: const EdgeInsets.only(top: 16, right: 16, left: 16),
       child: Consumer<CartProvider>(builder: (context, value, child) {
@@ -45,18 +61,14 @@ class _CartBodyScreenState extends State<CartBodyScreen> {
                   size: 28,
                 ),
                 SizedBox(width: 6),
-                Text(
-                  'The Clean House', //lấy name của center, mà chưa nghĩ ra :)
-                  //widget.centerName,
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
-                ),
-                ElevatedButton(
-                  onPressed: () async {
-                    await SharedPreferencesUtil.clearSharedPreferences();
-                    // Do something else after clearing SharedPreferences
-                  },
-                  child: Text('Clear cart'),
-                ),
+                (center.title != null)
+                    ? Text(
+                        //'The Clean House', //lấy name của center, mà chưa nghĩ ra :)
+                        center.title!,
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 22),
+                      )
+                    : CircularProgressIndicator()
               ],
             ),
             const SizedBox(height: 16),

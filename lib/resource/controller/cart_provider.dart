@@ -9,13 +9,13 @@ import '../models/cart_item.dart';
 class CartProvider extends ChangeNotifier {
   List<CartItem> _cartItems = [];
   //late int _counter;
-  late String _centerName;
+  int? _centerId = 0;
   late double _totalPrice;
 
   List<CartItem> get cartItems => _cartItems;
 
   //int get counter => _counter;
-  String get centerName => _centerName;
+  int? get centerId => _centerId;
   double get totalPrice => _totalPrice;
 
   CartProvider() {
@@ -25,6 +25,7 @@ class CartProvider extends ChangeNotifier {
   Future<void> loadCartItemsFromPrefs() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? cartItemsJson = prefs.getString('cartItems');
+    //String? centerName = prefs.getString('centerName');
     if (cartItemsJson != null) {
       List<dynamic> cartItemsDynamic = jsonDecode(cartItemsJson);
       _cartItems =
@@ -101,10 +102,31 @@ class CartProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // void _setNameCenter() async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   prefs.setString('center_name', _centerName);
-  // }
+  void updateCenter(int id) {
+    if (_centerId != id) {
+      _centerId = id;
+    }
+    notifyListeners();
+    _setCenter();
+  }
+
+  void removeCart() async {
+    _cartItems.clear();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove('cartItems');
+    notifyListeners();
+    _setCenter();
+  }
+
+  void _setCenter() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setInt('centerId', _centerId);
+  }
+
+  void _getCenter() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    _centerId = prefs.getInt('centerId') ?? null;
+  }
 
   void addTotalPrice(double productPrice) {
     print('productPrice-${productPrice}'); //35

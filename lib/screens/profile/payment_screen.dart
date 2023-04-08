@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:washouse_customer/resource/controller/account_controller.dart';
-
+import 'package:url_launcher/url_launcher.dart';
 import '../../components/constants/color_constants.dart';
 import '../../resource/models/wallet.dart';
 import 'components/transaction_widget.dart';
@@ -124,7 +125,15 @@ class _PaymentScreenState extends State<PaymentScreen> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             GestureDetector(
-                              onTap: () {},
+                              onTap: () async {
+                                const url =
+                                    'https://washouse.azurewebsites.net/api/payments?moneytowallet=200000';
+                                if (await canLaunch(url)) {
+                                  await launch(url);
+                                } else {
+                                  throw 'Could not launch $url';
+                                }
+                              },
                               child: Container(
                                 width: 250,
                                 height: 100,
@@ -161,7 +170,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                               ),
                             ),
                             GestureDetector(
-                              onTap: () {},
+                              onTap: () async {},
                               child: Container(
                                 width: 300,
                                 height: 100,
