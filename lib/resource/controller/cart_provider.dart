@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:washouse_customer/resource/models/promotion.dart';
 import 'package:washouse_customer/utils/cart_util.dart';
 
 import '../models/cart_item.dart';
@@ -11,12 +12,16 @@ class CartProvider extends ChangeNotifier {
   //late int _counter;
   int? _centerId = 0;
   late double _totalPrice;
+  double _discount = 0;
+  String? _promoCode = '';
 
   List<CartItem> get cartItems => _cartItems;
 
   //int get counter => _counter;
   int? get centerId => _centerId;
   double get totalPrice => _totalPrice;
+  double get discount => _discount;
+  String? get promoCode => _promoCode;
 
   CartProvider() {
     loadCartItemsFromPrefs();
@@ -110,6 +115,18 @@ class CartProvider extends ChangeNotifier {
     _setCenter();
   }
 
+  void updatePromotion(PromotionModel promotion) {
+    if (_promoCode != promotion.code) {
+      _promoCode = promotion.code;
+    }
+    if (_discount != promotion.discount) {
+      _discount = promotion.discount;
+    }
+    print(_promoCode);
+    notifyListeners();
+    _setPromotion();
+  }
+
   void removeCart() async {
     _cartItems.clear();
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -126,6 +143,18 @@ class CartProvider extends ChangeNotifier {
   void _getCenter() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     _centerId = prefs.getInt('centerId') ?? null;
+  }
+
+  void _setPromotion() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('promoCode', _promoCode);
+    prefs.setDouble('discount', _discount);
+  }
+
+  void _getPromotion() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    _promoCode = prefs.getString('promoCode');
+    _discount = prefs.getDouble('discount');
   }
 
   void addTotalPrice(double productPrice) {

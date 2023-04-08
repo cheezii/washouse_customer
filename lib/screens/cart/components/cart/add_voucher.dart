@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:page_transition/page_transition.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:washouse_customer/resource/controller/promotion_controller.dart';
 
 import '../../../../components/constants/color_constants.dart';
+import '../../../../resource/controller/cart_provider.dart';
 import '../../../../resource/models/promotion.dart';
 import '../../../center/component/promotion/promotion_widget.dart';
+import '../../cart_screen.dart';
 
 class AddVoucherScreen extends StatefulWidget {
   const AddVoucherScreen({super.key});
@@ -45,6 +49,7 @@ class _AddVoucherScreenState extends State<AddVoucherScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var provider = Provider.of<CartProvider>(context);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -63,10 +68,26 @@ class _AddVoucherScreenState extends State<AddVoucherScreen> {
         centerTitle: true,
         title: const Text('Mã khuyến mãi',
             style: TextStyle(color: Colors.white, fontSize: 23)),
-        actions: const [
-          Padding(
-            padding: EdgeInsets.only(right: 22),
-            child: Icon(Icons.abc, color: kPrimaryColor),
+        actions: [
+          IconButton(
+            onPressed: () {
+              PromotionModel nonPromotion = PromotionModel(
+                  code: '',
+                  discount: 0,
+                  startDate: '',
+                  expireDate: '',
+                  isAvailable: false);
+              provider.updatePromotion(nonPromotion);
+              Navigator.push(
+                  context,
+                  PageTransition(
+                      child: const CartScreen(),
+                      type: PageTransitionType.rightToLeftWithFade));
+            },
+            icon: Icon(
+              Icons.delete,
+              color: Colors.white,
+            ),
           ),
         ],
       ),
@@ -96,22 +117,31 @@ class _AddVoucherScreenState extends State<AddVoucherScreen> {
               ),
             ),
           ),
-          Expanded(
-            child: ListView.builder(
-              itemBuilder: ((context, index) {
-                return Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: PromotionWidget(
-                    description: displayList[index].description!,
-                    expiredDate: displayList[index].expireDate,
-                    code: displayList[index].code,
-                    press: () {},
-                  ),
-                );
-              }),
-              itemCount: displayList.length,
-            ),
-          ),
+          Consumer<CartProvider>(builder: (context, value, child) {
+            return Expanded(
+              child: ListView.builder(
+                itemBuilder: ((context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: PromotionWidget(
+                      description: displayList[index].description!,
+                      expiredDate: displayList[index].expireDate,
+                      code: displayList[index].code,
+                      press: () async {
+                        provider.updatePromotion(displayList[index]);
+                        Navigator.push(
+                            context,
+                            PageTransition(
+                                child: const CartScreen(),
+                                type: PageTransitionType.rightToLeftWithFade));
+                      },
+                    ),
+                  );
+                }),
+                itemCount: displayList.length,
+              ),
+            );
+          }),
         ],
       ),
     );

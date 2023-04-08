@@ -23,6 +23,7 @@ class CheckOutCard extends StatefulWidget {
 class _CheckOutCardState extends State<CheckOutCard> {
   @override
   Widget build(BuildContext context) {
+    var provider = Provider.of<CartProvider>(context);
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
       height: 150,
@@ -65,10 +66,14 @@ class _CheckOutCardState extends State<CheckOutCard> {
                 const SizedBox(width: 10),
                 const Text('Mã khuyến mãi'),
                 const Spacer(),
-                const Text(
-                  'Nhập hoặc chọn mã',
-                  style: TextStyle(color: textNoteColor),
-                ),
+                Consumer<CartProvider>(builder: (context, value, child) {
+                  return Text(
+                    (value.promoCode! != '')
+                        ? value.promoCode!
+                        : 'Chọn mã khuyến mãi',
+                    style: TextStyle(color: textNoteColor),
+                  );
+                }),
                 const SizedBox(width: 10),
                 const Icon(Icons.arrow_forward_ios,
                     size: 12, color: textNoteColor),
@@ -94,22 +99,39 @@ class _CheckOutCardState extends State<CheckOutCard> {
               return Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text.rich(
-                    TextSpan(
-                      text: 'Tổng cộng dự kiến:\n',
-                      children: [
+                  Column(
+                    children: [
+                      Text('Tổng cộng dự kiến'),
+                      (value.discount != 0)
+                          ? Text.rich(
+                              TextSpan(
+                                text: checkPrice
+                                    //? '${PriceUtils().convertFormatPrice(value.getTotalPrice().round())} đ'
+                                    ? '${PriceUtils().convertFormatPrice(value.cartItems.fold(0.0, (sum, item) => sum + item.price!).round())} đ'
+                                    : '0 đ',
+                                style: const TextStyle(
+                                    fontSize: 15,
+                                    color: kPrimaryColor,
+                                    decoration: TextDecoration.lineThrough,
+                                    decorationColor: Colors.black,
+                                    decorationThickness: 2.0,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            )
+                          : SizedBox(),
+                      Text.rich(
                         TextSpan(
                           text: checkPrice
                               //? '${PriceUtils().convertFormatPrice(value.getTotalPrice().round())} đ'
-                              ? '${PriceUtils().convertFormatPrice(value.cartItems.fold(0.0, (sum, item) => sum + item.price!).round())} đ'
+                              ? '${PriceUtils().convertFormatPrice((value.cartItems.fold(0.0, (sum, item) => sum + item.price!) * (1 - value.discount)).round())} đ'
                               : '0 đ',
                           style: const TextStyle(
                               fontSize: 20,
                               color: kPrimaryColor,
                               fontWeight: FontWeight.bold),
                         ),
-                      ],
-                    ),
+                      )
+                    ],
                   ),
                   SizedBox(
                     width: 190,
