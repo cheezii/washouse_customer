@@ -69,6 +69,7 @@ flutter:
     - assets/images/
     - assets/images/category/
     - assets/images/category/outlined/
+    - assets/images/empty/
     - assets/images/logo/
     - assets/images/order/
     - assets/images/post/

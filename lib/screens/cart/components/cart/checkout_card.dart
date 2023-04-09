@@ -106,8 +106,9 @@ class _CheckOutCardState extends State<CheckOutCard> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Tổng cộng dự kiến'),
+                      const Text('Tổng cộng dự kiến'),
                       (value.discount != 0)
                           ? Text.rich(
                               TextSpan(

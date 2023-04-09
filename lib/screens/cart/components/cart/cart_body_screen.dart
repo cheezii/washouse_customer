@@ -497,7 +497,24 @@ class _CartBodyScreenState extends State<CartBodyScreen> {
                       }),
                 ],
               )
-            : Text("Giỏ hàng trống");
+            : Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                        height: 200,
+                        width: 200,
+                        child:
+                            Image.asset('assets/images/empty/empty-cart.png')),
+                    const SizedBox(height: 30),
+                    const Text(
+                      "Giỏ hàng trống",
+                      style:
+                          TextStyle(fontSize: 19, fontWeight: FontWeight.w500),
+                    ),
+                  ],
+                ),
+              );
       }),
     );
   }
