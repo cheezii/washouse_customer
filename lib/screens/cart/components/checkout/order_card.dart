@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
+import 'package:washouse_customer/resource/controller/order_controller.dart';
+import 'package:washouse_customer/screens/home/home_screen.dart';
 import 'package:washouse_customer/utils/price_util.dart';
 
 import '../../../../components/constants/color_constants.dart';
@@ -17,6 +19,7 @@ class OrderCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    OrderController orderController = OrderController(context);
     List<CartItem> cartItems = Provider.of<CartProvider>(context).cartItems;
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
@@ -60,10 +63,18 @@ class OrderCard extends StatelessWidget {
                 const SizedBox(width: 10),
                 const Text('Mã khuyến mãi'),
                 const Spacer(),
-                const Text(
-                  'Nhập hoặc chọn mã',
-                  style: TextStyle(color: textNoteColor),
-                ),
+                // const Text(
+                //   'Nhập hoặc chọn mã',
+                //   style: TextStyle(color: textNoteColor),
+                // ),
+                Consumer<CartProvider>(builder: (context, value, child) {
+                  return Text(
+                    (value.promoCode! != '')
+                        ? value.promoCode!
+                        : 'Chọn mã khuyến mãi',
+                    style: TextStyle(color: textNoteColor),
+                  );
+                }),
                 const SizedBox(width: 10),
                 const Icon(Icons.arrow_forward_ios,
                     size: 12, color: textNoteColor),
@@ -71,63 +82,143 @@ class OrderCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 20),
+          // Consumer<CartProvider>(
+          //   builder: (context, value, child) {
+          //     {
+          //       bool checkPrice;
+          //       if (value.getTotalPrice() > 0) {
+          //         checkPrice = true;
+          //       } else {
+          //         checkPrice = false;
+          //       }
+          //       return Row(
+          //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //         children: [
+          //           Text.rich(
+          //             TextSpan(
+          //               text: 'Tổng cộng dự kiến:\n',
+          //               children: [
+          //                 TextSpan(
+          //                   text: checkPrice
+          //                       //? '${PriceUtils().convertFormatPrice(value.getTotalPrice().round())} đ'
+          //                       ? '${PriceUtils().convertFormatPrice(value.cartItems.fold(0.0, (sum, item) => sum + item.price!).round())} đ'
+          //                       : '0 đ',
+          //                   style: const TextStyle(
+          //                       fontSize: 20,
+          //                       color: kPrimaryColor,
+          //                       fontWeight: FontWeight.bold),
+          //                 ),
+          //               ],
+          //             ),
+          //           ),
+          //           SizedBox(
+          //             width: 190,
+          //             height: 40,
+          //             child: ElevatedButton(
+          //               style: ElevatedButton.styleFrom(
+          //                   shape: RoundedRectangleBorder(
+          //                       borderRadius: BorderRadius.circular(10.0)),
+          //                   backgroundColor: kPrimaryColor),
+          //               onPressed: () {
+          //                 Navigator.push(
+          //                   context,
+          //                   PageTransition(
+          //                       child: CheckoutScreen(
+          //                         //cart: demoCarts[0],
+          //                         cart: cartItems[0],
+          //                       ),
+          //                       type: PageTransitionType.leftToRightWithFade),
+          //                 );
+          //               },
+          //               child: const Text(
+          //                 'Đặt dịch vụ',
+          //                 style: TextStyle(fontSize: 17),
+          //               ),
+          //             ),
+          //           )
+          //         ],
+          //       );
+          //     }
+          //   },
+          // )
           Consumer<CartProvider>(
             builder: (context, value, child) {
-              {
-                bool checkPrice;
-                if (value.getTotalPrice() > 0) {
-                  checkPrice = true;
-                } else {
-                  checkPrice = false;
-                }
-                return Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text.rich(
-                      TextSpan(
-                        text: 'Tổng cộng dự kiến:\n',
-                        children: [
-                          TextSpan(
-                            text: checkPrice
-                                //? '${PriceUtils().convertFormatPrice(value.getTotalPrice().round())} đ'
-                                ? '${PriceUtils().convertFormatPrice(value.cartItems.fold(0.0, (sum, item) => sum + item.price!).round())} đ'
-                                : '0 đ',
-                            style: const TextStyle(
-                                fontSize: 20,
-                                color: kPrimaryColor,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      width: 190,
-                      height: 40,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.0)),
-                            backgroundColor: kPrimaryColor),
-                        onPressed: () {
-                          Navigator.push(
+              bool checkPrice;
+              if (value.getTotalPrice() > 0) {
+                checkPrice = true;
+              } else {
+                checkPrice = false;
+              }
+              bool checkItem;
+              //if (value.getCounter() > 0) {
+              if (value.cartItems.length > 0) {
+                checkItem = true;
+              } else {
+                checkItem = false;
+              }
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    children: [
+                      Text('Tổng cộng dự kiến'),
+                      (value.discount != 0)
+                          ? Text.rich(
+                              TextSpan(
+                                text: checkPrice
+                                    //? '${PriceUtils().convertFormatPrice(value.getTotalPrice().round())} đ'
+                                    ? '${PriceUtils().convertFormatPrice(value.cartItems.fold(0.0, (sum, item) => sum + item.price!).round())} đ'
+                                    : '0 đ',
+                                style: const TextStyle(
+                                    fontSize: 15,
+                                    color: kPrimaryColor,
+                                    decoration: TextDecoration.lineThrough,
+                                    decorationColor: Colors.black,
+                                    decorationThickness: 2.0,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            )
+                          : SizedBox(),
+                      Text.rich(
+                        TextSpan(
+                          text: checkPrice
+                              //? '${PriceUtils().convertFormatPrice(value.getTotalPrice().round())} đ'
+                              ? '${PriceUtils().convertFormatPrice((value.cartItems.fold(0.0, (sum, item) => sum + item.price!) * (1 - value.discount)).round())} đ'
+                              : '0 đ',
+                          style: const TextStyle(
+                              fontSize: 20,
+                              color: kPrimaryColor,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      )
+                    ],
+                  ),
+                  SizedBox(
+                    width: 190,
+                    height: 40,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0)),
+                          backgroundColor: kPrimaryColor),
+                      onPressed: () async {
+                        String? message = await orderController.createOrder();
+                        print(message);
+                        Navigator.push(
                             context,
                             PageTransition(
-                                child: CheckoutScreen(
-                                  //cart: demoCarts[0],
-                                  cart: cartItems[0],
-                                ),
-                                type: PageTransitionType.leftToRightWithFade),
-                          );
-                        },
-                        child: const Text(
-                          'Đặt dịch vụ',
-                          style: TextStyle(fontSize: 17),
-                        ),
+                                child: const Homescreen(),
+                                type: PageTransitionType.rightToLeftWithFade));
+                      },
+                      child: Text(
+                        //'Thanh toán (${checkItem ? value.getCounter() : 0})',
+                        'Đặt dịch vụ (${value.cartItems.length})',
+                        style: const TextStyle(fontSize: 17),
                       ),
-                    )
-                  ],
-                );
-              }
+                    ),
+                  )
+                ],
+              );
             },
           )
         ],

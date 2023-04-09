@@ -24,6 +24,10 @@ class _CheckOutCardState extends State<CheckOutCard> {
   @override
   Widget build(BuildContext context) {
     var provider = Provider.of<CartProvider>(context);
+    bool haveCart = true;
+    if (provider.cartItems.length == 0) {
+      haveCart = false;
+    }
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
       height: 150,
@@ -42,13 +46,15 @@ class _CheckOutCardState extends State<CheckOutCard> {
       child: Column(
         children: [
           GestureDetector(
-            onTap: () {
-              Navigator.push(
-                  context,
-                  PageTransition(
-                      child: const AddVoucherScreen(),
-                      type: PageTransitionType.rightToLeftWithFade));
-            },
+            onTap: haveCart
+                ? () {
+                    Navigator.push(
+                        context,
+                        PageTransition(
+                            child: const AddVoucherScreen(),
+                            type: PageTransitionType.rightToLeftWithFade));
+                  }
+                : null,
             child: Row(
               children: [
                 Container(
@@ -141,14 +147,17 @@ class _CheckOutCardState extends State<CheckOutCard> {
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10.0)),
                           backgroundColor: kPrimaryColor),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          PageTransition(
-                              child: const FillAddressScreen(),
-                              type: PageTransitionType.rightToLeftWithFade),
-                        );
-                      },
+                      onPressed: haveCart
+                          ? () {
+                              Navigator.push(
+                                context,
+                                PageTransition(
+                                    child: const FillAddressScreen(),
+                                    type:
+                                        PageTransitionType.rightToLeftWithFade),
+                              );
+                            }
+                          : null,
                       child: Text(
                         //'Thanh toán (${checkItem ? value.getCounter() : 0})',
                         'Đặt dịch vụ (${value.cartItems.length})',

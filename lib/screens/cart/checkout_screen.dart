@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:washouse_customer/resource/controller/base_controller.dart';
 import 'package:washouse_customer/utils/price_util.dart';
 
 import '../../components/constants/color_constants.dart';
@@ -23,12 +24,13 @@ class CheckoutScreen extends StatefulWidget {
 }
 
 class _CheckoutScreenState extends State<CheckoutScreen> {
+  BaseController baseController = BaseController();
+  TextEditingController noteController = TextEditingController();
   int? payment;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: kBackgroundColor,
-      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         elevation: 0,
         backgroundColor:
@@ -116,6 +118,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                           onChanged: (newVal) {
                             setState(() {
                               payment = newVal;
+                              baseController.saveInttoSharedPreference(
+                                  "paymentMethod", 0);
                             });
                           },
                         ),
@@ -158,6 +162,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                           onChanged: (newVal) {
                             setState(() {
                               payment = newVal;
+                              print(newVal);
+                              baseController.saveInttoSharedPreference(
+                                  "paymentMethod", 1);
                             });
                           },
                         ),
@@ -276,7 +283,26 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   );
                 }
               },
-            )
+            ),
+            TextField(
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                prefixIcon: Icon(
+                  Icons.note_alt_outlined,
+                  color: textColor.withOpacity(.5),
+                ),
+                hintText: 'Có ghi chú cho trung tâm?',
+              ),
+              controller: noteController,
+              onSubmitted: (String value) async {
+                setState(() {
+                  noteController.text = value;
+                });
+                await baseController.saveStringtoSharedPreference(
+                    "customerMessage", value);
+                print(value);
+              },
+            ),
           ],
         ),
       ),

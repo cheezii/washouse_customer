@@ -96,6 +96,8 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
     bool checkPriceType = false;
     int PriceMin = 0;
     int PriceMax = 0;
+    double minPrice =
+        serviceArgs.priceType! ? serviceArgs.minPrice!.toDouble() : 0;
 
     double _maxMeasurementValue = serviceArgs.priceType!
         ? serviceArgs.prices!.last.maxValue!.toDouble()
@@ -209,6 +211,11 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                     style: TextStyle(fontWeight: FontWeight.w600, fontSize: 22),
                   ),
                   const SizedBox(height: 20),
+                  Text(
+                    'Giá dịch vụ tối thiểu : ${PriceUtils().convertFormatPrice(serviceArgs.minPrice!.toInt())} đ',
+                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
+                  ),
+                  const SizedBox(height: 10),
                   const Text(
                     'Mô tả',
                     style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
@@ -765,7 +772,6 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                                   ? null
                                   : serviceArgs.minPrice!.toDouble(),
                               prices: serviceArgs.prices);
-                          print("provider.centerId - ${provider.centerId}");
                           if (provider.cartItems.isEmpty) {
                             provider.addItemToCart(cartItem); //add to cart
                             provider.updateCenter(cartItem.centerId);
@@ -778,7 +784,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                                 return AlertDialog(
                                   title: const Text('Thông báo'),
                                   content: Text(
-                                      'Bạn đang có giỏ hàng của cửa hàng ${provider.centerId}! Đặt với cửa hàng mới hoặc vẫn giữ giỏ hàng cũ'),
+                                      'Bạn đang có giỏ hàng của cửa hàng khác tồn tại! Đặt với cửa hàng mới hoặc vẫn giữ giỏ hàng cũ?'),
                                   actions: [
                                     TextButton(
                                       onPressed: () {
@@ -824,7 +830,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                             const SizedBox(width: 7),
                             Text(
                                 checkPriceType
-                                    ? '${PriceUtils().convertFormatPrice((currPrice * kilogram).round())} đ'
+                                    ? '${PriceUtils().convertFormatPrice(((currPrice * kilogram < minPrice) ? minPrice : (currPrice * kilogram)).round())} đ'
                                     : '${PriceUtils().convertFormatPrice((quantity * serviceArgs.price!).round())} đ',
                                 style: TextStyle(fontSize: 17))
                           ],

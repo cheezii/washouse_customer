@@ -7,6 +7,14 @@ import 'package:path/path.dart';
 import 'package:async/async.dart';
 
 class BaseController {
+  Future<void> printAllSharedPreferences() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    List<String> keys = sharedPreferences.getKeys().toList();
+    keys.forEach((key) {
+      print('$key: ${sharedPreferences.get(key)}');
+    });
+  }
+
   // Define a function to get the value of a key from shared preferences
   Future<String> getStringtoSharedPreference(String key) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -16,6 +24,11 @@ class BaseController {
   Future<int> getInttoSharedPreference(String key) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getInt(key);
+  }
+
+  Future<double> getDoubletoSharedPreference(String key) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getDouble(key);
   }
 
 // Define a function to save a string to shared preferences
@@ -28,6 +41,12 @@ class BaseController {
   Future<void> saveInttoSharedPreference(String saveName, int? saveInt) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setInt(saveName, saveInt);
+  }
+
+  Future<void> saveDoubletoSharedPreference(
+      String saveName, double? saveDouble) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setDouble(saveName, saveDouble);
   }
 
   // Define a function to get the access token from shared preferences

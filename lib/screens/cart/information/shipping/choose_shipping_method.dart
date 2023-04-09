@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:washouse_customer/resource/controller/base_controller.dart';
 import 'package:washouse_customer/resource/models/cart_item.dart';
+import 'package:washouse_customer/screens/cart/checkout_screen.dart';
 import 'package:washouse_customer/screens/cart/information/shipping/shipping_information.dart';
 
 import '../../../../components/constants/color_constants.dart';
+import '../../../../resource/controller/cart_provider.dart';
 import '../../cart_screen.dart';
 
 class ChooseShippingMethod extends StatefulWidget {
@@ -14,9 +18,10 @@ class ChooseShippingMethod extends StatefulWidget {
 
 class _ChooseShippingMethodState extends State<ChooseShippingMethod> {
   int? shippingMethod;
-
+  BaseController baseController = BaseController();
   @override
   Widget build(BuildContext context) {
+    List<CartItem> cartItems = Provider.of<CartProvider>(context).cartItems;
     //0 = không chọn, 1 = một chiều đi, 2 = một chiều về, 3 = 2 chiều
     return Scaffold(
       appBar: AppBar(
@@ -76,6 +81,8 @@ class _ChooseShippingMethodState extends State<ChooseShippingMethod> {
                   onChanged: (newVal) {
                     setState(() {
                       shippingMethod = newVal;
+                      baseController.saveInttoSharedPreference(
+                          "deliveryType", newVal);
                     });
                   },
                 ),
@@ -104,6 +111,8 @@ class _ChooseShippingMethodState extends State<ChooseShippingMethod> {
                   onChanged: (newVal) {
                     setState(() {
                       shippingMethod = newVal;
+                      baseController.saveInttoSharedPreference(
+                          "deliveryType", newVal);
                     });
                   },
                 ),
@@ -132,6 +141,8 @@ class _ChooseShippingMethodState extends State<ChooseShippingMethod> {
                   onChanged: (newVal) {
                     setState(() {
                       shippingMethod = newVal;
+                      baseController.saveInttoSharedPreference(
+                          "deliveryType", newVal);
                     });
                   },
                 ),
@@ -160,6 +171,8 @@ class _ChooseShippingMethodState extends State<ChooseShippingMethod> {
                   onChanged: (newVal) {
                     setState(() {
                       shippingMethod = newVal;
+                      baseController.saveInttoSharedPreference(
+                          "deliveryType", newVal);
                     });
                   },
                 ),
@@ -196,7 +209,7 @@ class _ChooseShippingMethodState extends State<ChooseShippingMethod> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const CartScreen(),
+                    builder: (context) => CheckoutScreen(cart: cartItems[0]),
                   ),
                 );
               } else {

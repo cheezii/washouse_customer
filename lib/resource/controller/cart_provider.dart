@@ -81,6 +81,9 @@ class CartProvider extends ChangeNotifier {
         .indexWhere((item) => item.serviceId == itemToRemove.serviceId);
     removeTotalPrice(_cartItems[existingItemIndex].price!);
     _cartItems.remove(_cartItems[existingItemIndex]);
+    if (_cartItems.length == 0) {
+      _clearIfCartEmpty();
+    }
     notifyListeners();
     saveCartItemsToPrefs();
   }
@@ -97,6 +100,31 @@ class CartProvider extends ChangeNotifier {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     //prefs.setInt('cart_item', _counter);
     prefs.setDouble('total_price', _totalPrice);
+    notifyListeners();
+  }
+
+  void _clearIfCartEmpty() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    //prefs.setInt('cart_item', _counter);
+    prefs.remove('centerId');
+    prefs.remove('total_price');
+    prefs.remove('discount');
+    prefs.remove('customerName');
+    prefs.remove('customerAddressString');
+    prefs.remove('customerMessage');
+    prefs.remove('customerWardId');
+    prefs.remove('paymentMethod');
+    prefs.remove('deliveryType');
+    prefs.remove('preferredDropoffTime');
+    prefs.remove('preferredDropoffTime_Date');
+    prefs.remove('preferredDropoffTime_Time');
+    prefs.remove('preferredDeliverTime_Time');
+    prefs.remove('preferredDeliverTime_Date');
+    prefs.remove('addressString_Dropoff');
+    prefs.remove('addressString_Delivery');
+    prefs.remove('wardId_Dropoff');
+    prefs.remove('promoCode');
+    prefs.remove('cartItems');
     notifyListeners();
   }
 

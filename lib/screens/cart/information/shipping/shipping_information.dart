@@ -4,7 +4,10 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:http/http.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:washouse_customer/resource/controller/base_controller.dart';
+import 'package:washouse_customer/resource/controller/order_controller.dart';
 
 import 'package:washouse_customer/screens/cart/information/shipping/fill_shipping_address.dart';
 
@@ -29,6 +32,7 @@ class FillShippingInformation extends StatefulWidget {
 }
 
 class _FillShippingInformationState extends State<FillShippingInformation> {
+  BaseController baseController = BaseController();
   TextEditingController sendAdressController = TextEditingController();
   TextEditingController receiveAdressController = TextEditingController();
   GlobalKey<FormState> _formSendAddressKey = GlobalKey<FormState>();
@@ -84,6 +88,7 @@ class _FillShippingInformationState extends State<FillShippingInformation> {
 
   @override
   Widget build(BuildContext context) {
+    OrderController orderController = OrderController(context);
     List<CartItem> cartItems = Provider.of<CartProvider>(context).cartItems;
     return Scaffold(
       appBar: AppBar(
@@ -183,10 +188,23 @@ class _FillShippingInformationState extends State<FillShippingInformation> {
                             hint: const Text('Chọn ngày'),
                             value: sendOrderDate,
                             style: const TextStyle(color: textColor),
-                            onChanged: (String? newValue) {
+                            onChanged: (String? newValue) async {
                               setState(() {
                                 sendOrderDate = newValue!;
                               });
+                              String? chooseDate;
+                              if (newValue!.compareTo("Hôm nay") == 0) {
+                                chooseDate = DateFormat('dd-MM-yyyy')
+                                    .format(DateTime.now());
+                              } else if (newValue!.compareTo("Ngày mai") == 0) {
+                                chooseDate = DateFormat('dd-MM-yyyy').format(
+                                    DateTime.now().add(Duration(days: 1)));
+                              }
+                              baseController.saveStringtoSharedPreference(
+                                  "preferredDropoffTime_Date", chooseDate!);
+                              print(await baseController
+                                  .getStringtoSharedPreference(
+                                      "preferredDropoffTime_Date"));
                             },
                           ),
                         ),
@@ -201,8 +219,13 @@ class _FillShippingInformationState extends State<FillShippingInformation> {
                               if (orderTime != null) {
                                 setState(() {
                                   sendOrderTime =
-                                      '${orderTime.hour}:${orderTime.minute}';
+                                      '${orderTime.hour}:${orderTime.minute}:00';
                                 });
+                                baseController.saveStringtoSharedPreference(
+                                    "preferredDropoffTime_Time", sendOrderTime);
+                                print(await baseController
+                                    .getStringtoSharedPreference(
+                                        "preferredDropoffTime_Time"));
                               }
                             },
                             style: ElevatedButton.styleFrom(
@@ -301,10 +324,23 @@ class _FillShippingInformationState extends State<FillShippingInformation> {
                             hint: const Text('Chọn ngày'),
                             value: sendOrderDate,
                             style: const TextStyle(color: textColor),
-                            onChanged: (String? newValue) {
+                            onChanged: (String? newValue) async {
                               setState(() {
                                 receiveOrderDate = newValue!;
                               });
+                              String? chooseDate;
+                              if (newValue!.compareTo("Hôm nay") == 0) {
+                                chooseDate = DateFormat('dd-MM-yyyy')
+                                    .format(DateTime.now());
+                              } else if (newValue!.compareTo("Ngày mai") == 0) {
+                                chooseDate = DateFormat('dd-MM-yyyy').format(
+                                    DateTime.now().add(Duration(days: 1)));
+                              }
+                              baseController.saveStringtoSharedPreference(
+                                  "preferredDeliverTime_Date", chooseDate!);
+                              print(await baseController
+                                  .getStringtoSharedPreference(
+                                      "preferredDeliverTime_Date"));
                             },
                           ),
                         ),
@@ -319,8 +355,14 @@ class _FillShippingInformationState extends State<FillShippingInformation> {
                               if (orderTime != null) {
                                 setState(() {
                                   receiveOrderTime =
-                                      '${orderTime.hour}:${orderTime.minute}';
+                                      '${orderTime.hour}:${orderTime.minute}:00';
                                 });
+                                baseController.saveStringtoSharedPreference(
+                                    "preferredDeliverTime_Time",
+                                    receiveOrderTime);
+                                print(await baseController
+                                    .getStringtoSharedPreference(
+                                        "preferredDeliverTime_Time"));
                               }
                             },
                             style: ElevatedButton.styleFrom(
@@ -679,17 +721,62 @@ class _FillShippingInformationState extends State<FillShippingInformation> {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10.0)),
                 backgroundColor: kPrimaryColor),
-            onPressed: () {
-              // if (_formSendAddressKey.currentState!.validate() ||
-              //     _formReceiveAddressKey.currentState!.validate()) {
-              //   _formSendAddressKey.currentState!.save();
-              //   _formReceiveAddressKey.currentState!.save();
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          CheckoutScreen(cart: cartItems[0])));
-              //}
+            onPressed: () async {
+              bool checkValidateFormSend = widget.isSend;
+              bool checkValidateFormReceive = widget.isReceive;
+              bool check = false;
+              String? DropoffAddress;
+              int? DropoffWardId;
+              String? DeliverAddress;
+              int? DeliverWardId;
+              if (!checkValidateFormSend) {
+                check = _formReceiveAddressKey.currentState!.validate();
+              } else if (!checkValidateFormReceive) {
+                check = _formSendAddressKey.currentState!.validate();
+              } else {
+                check = (_formSendAddressKey.currentState!.validate() ||
+                    _formReceiveAddressKey.currentState!.validate());
+              }
+              // print('sendAdressController.value.text${checkReceiveOrder}');
+              // print('sendAdressController.value.te---xt${checkSendOrder}');
+              // print('2==${widget.isReceive}');
+              // print('1---${widget.isSend}');
+              // print(
+              //     'receiveAdressController.value.text${sendAdressController.value.text}');
+              if (check) {
+                print(
+                    'sendAdressController.value.text${sendAdressController.value.text}');
+                //_formSendAddressKey.currentState!.save();
+                //_formReceiveAddressKey.currentState!.save();
+                if (checkValidateFormSend) {
+                  DropoffAddress = sendAdressController.value.text;
+                  baseController.saveStringtoSharedPreference(
+                      "addressString_Dropoff", sendAdressController.value.text);
+                  DropoffWardId = int.parse(sendWard!);
+                  baseController.saveInttoSharedPreference(
+                      "wardId_Dropoff", int.parse(sendWard!));
+                }
+                if (checkValidateFormReceive) {
+                  DeliverAddress = receiveAdressController.value.text;
+                  baseController.saveStringtoSharedPreference(
+                      "addressString_Delivery",
+                      receiveAdressController.value.text);
+                  DeliverWardId = int.parse(receiveWard!);
+                  baseController.saveInttoSharedPreference(
+                      "wardId_Delivery", int.parse(receiveWard!));
+                }
+                var totalDeliveryPrice =
+                    await orderController.calculateDeliveryPrice(DropoffAddress,
+                        DropoffWardId, DeliverAddress, DeliverWardId);
+                baseController.saveDoubletoSharedPreference(
+                    "deliveryPrice", totalDeliveryPrice);
+                baseController.printAllSharedPreferences();
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            CheckoutScreen(cart: cartItems[0])));
+              }
             },
             child: const Text(
               'Xác nhận',

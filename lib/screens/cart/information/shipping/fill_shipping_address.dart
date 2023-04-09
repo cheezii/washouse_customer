@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:provider/provider.dart';
+import 'package:washouse_customer/resource/controller/base_controller.dart';
 
 import 'package:washouse_customer/resource/models/cart_item.dart';
 import 'package:washouse_customer/screens/cart/checkout_screen.dart';
@@ -20,6 +21,7 @@ class FillAddressScreen extends StatefulWidget {
 }
 
 class _FillAddressScreenState extends State<FillAddressScreen> {
+  BaseController baseController = BaseController();
   TextEditingController nameController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
   TextEditingController adressController = TextEditingController();
@@ -219,6 +221,7 @@ class _FillAddressScreenState extends State<FillAddressScreen> {
                 style: const TextStyle(color: textColor),
                 onChanged: (String? newValue) {
                   setState(() {
+                    myWard = null;
                     myDistrict = newValue!;
                     getWardsList();
                     isSelectedDistrict = true;
@@ -287,13 +290,38 @@ class _FillAddressScreenState extends State<FillAddressScreen> {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10.0)),
                 backgroundColor: kPrimaryColor),
-            onPressed: () {
+            onPressed: () async {
               if (_formNameKey.currentState!.validate() &&
                   _formPhoneNumberKey.currentState!.validate() &&
                   _formAddressKey.currentState!.validate()) {
                 _formNameKey.currentState!.save();
                 _formPhoneNumberKey.currentState!.save();
                 _formAddressKey.currentState!.save();
+                baseController.saveStringtoSharedPreference(
+                    "customerName", nameController.value.text);
+                baseController.saveStringtoSharedPreference(
+                    "customerAddressString", adressController.value.text);
+                baseController.saveStringtoSharedPreference(
+                    "customerPhone", phoneController.value.text);
+                baseController.saveInttoSharedPreference(
+                    "customerWardId", int.parse(myWard!));
+
+                print(
+                    '_formNameKey.currentState!=${nameController.value.text}');
+                print(
+                    'address!=${await baseController.getStringtoSharedPreference("customerAddressString")}');
+                await baseController.printAllSharedPreferences();
+                // print(
+                //     '_formPhoneNumberKey.currentState!=${_formPhoneNumberKey.currentState!}');
+                // print(
+                //     '_formAddressKey.currentState!=${_formAddressKey.currentState!}');
+                // print(
+                //     '_formNameKey.currentState!=${_formNameKey.currentState!}');
+                // print(
+                //     '_formPhoneNumberKey.currentState!=${_formPhoneNumberKey.currentState!}');
+                // print(
+                //     '_formAddressKey.currentState!=${_formAddressKey.currentState!}');
+                // print('myWard=${myWard}');
                 Navigator.push(
                     context,
                     MaterialPageRoute(
