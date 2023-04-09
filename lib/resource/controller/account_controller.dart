@@ -152,6 +152,27 @@ class AccountController {
     }
   }
 
+  Future<String> changeProfileInfo(
+      String fullName, DateTime dob, int gender) async {
+    int userId =
+        await baseController.getInttoSharedPreference("CURRENT_USER_ID");
+    String url = '$baseUrl/accounts/$userId/profile';
+    Map<String, dynamic> queryParams = {};
+    Map<String, dynamic> requestBody = {
+      "fullName": fullName,
+      "dob": dob.toIso8601String(),
+      "gender": gender
+    };
+    http.Response response = await baseController.makeAuthenticatedPutRequest(
+        url, queryParams, requestBody);
+    if (response.statusCode == 200) {
+      return "change information success";
+    } else {
+      // Handle error changing password
+      throw Exception('Error changing information: ${response.statusCode}');
+    }
+  }
+
   Future<String> changePassword(String oldPassword, String newPassword) async {
     int userId =
         await baseController.getInttoSharedPreference("CURRENT_USER_ID");
