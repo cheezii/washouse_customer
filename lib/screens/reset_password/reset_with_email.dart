@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:washouse_customer/components/constants/size.dart';
+import 'package:washouse_customer/resource/controller/verify_controller.dart';
 import 'package:washouse_customer/screens/reset_password/send_otp.dart';
 
 import '../../components/constants/color_constants.dart';
@@ -16,6 +17,7 @@ class ResetWithEmail extends StatefulWidget {
 }
 
 TextEditingController emailController = TextEditingController();
+VerifyController verifyController = VerifyController();
 
 class _ResetWithEmailState extends State<ResetWithEmail> {
   final _formEmailKey = GlobalKey<FormState>();
@@ -80,7 +82,6 @@ class _ResetWithEmailState extends State<ResetWithEmail> {
                         ),
                         labelText: 'Email',
                       ),
-                      keyboardType: TextInputType.number,
                       cursorColor: textColor.withOpacity(.8),
                       controller: emailController,
                     ),
@@ -90,14 +91,32 @@ class _ResetWithEmailState extends State<ResetWithEmail> {
                     width: size.width,
                     height: 45,
                     child: ElevatedButton(
-                      onPressed: () {
+                      onPressed: () async {
                         if (_formEmailKey.currentState!.validate()) {
                           _formEmailKey.currentState!.save();
-                          Navigator.push(
-                              context,
-                              PageTransition(
-                                  child: const ResetWithPhone(),
-                                  type: PageTransitionType.fade));
+                          bool isSend = await verifyController
+                              .getOTPByEmail(emailController.text);
+                          if (isSend) {
+                            Navigator.push(
+                                context,
+                                PageTransition(
+                                    child: const OTPScreen(isSignUp: false),
+                                    type: PageTransitionType.fade));
+                          } else {
+                            showDialog(
+                              context: context,
+                              builder: ((context) => AlertDialog(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(15),
+                                    ),
+                                    title: const Align(
+                                      alignment: Alignment.center,
+                                      child: Text('Lỗi!!'),
+                                    ),
+                                    content: Text('Có lỗi xảy ra rồi'),
+                                  )),
+                            );
+                          }
                         }
                       },
                       style: ElevatedButton.styleFrom(

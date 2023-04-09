@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:washouse_customer/screens/cart/cart_screen.dart';
 import 'package:washouse_customer/screens/center/center_details_screen.dart';
 import 'package:washouse_customer/screens/center/service/service_detail_screen.dart';
+import 'package:washouse_customer/screens/reset_password/send_otp.dart';
 
 import '../../screens/notification/list_notification_screen.dart';
 

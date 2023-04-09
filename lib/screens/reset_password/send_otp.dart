@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:washouse_customer/components/constants/color_constants.dart';
@@ -6,6 +8,7 @@ import 'package:otp_text_field/otp_field.dart';
 import 'package:otp_text_field/style.dart';
 import 'package:washouse_customer/screens/home/base_screen.dart';
 
+import '../../resource/controller/verify_controller.dart';
 import '../started/login.dart';
 import 'change_password.dart';
 
@@ -17,18 +20,53 @@ class OTPScreen extends StatefulWidget {
   State<OTPScreen> createState() => _OTPScreenState();
 }
 
+VerifyController verifyController = VerifyController();
+
 class _OTPScreenState extends State<OTPScreen> {
   OtpFieldController otpController = OtpFieldController();
   bool isOpenKeyboard = false;
+  bool isCountdowning = true;
+  bool isOneDigits = false;
+  Timer? _timer;
+  int _start = 60;
+
+  void startTimer() {
+    const oneSec = Duration(seconds: 1);
+    _timer = Timer.periodic(
+      oneSec,
+      (Timer timer) {
+        if (_start == 0) {
+          setState(() {
+            timer.cancel();
+            isCountdowning = false;
+          });
+        } else {
+          setState(() {
+            _start--;
+            if (_start < 10) {
+              isOneDigits = true;
+            }
+          });
+        }
+      },
+    );
+  }
 
   @override
   void initState() {
+    startTimer();
     super.initState();
     if (WidgetsBinding.instance.window.viewInsets.bottom > 0.0) {
       isOpenKeyboard = true;
     } else {
       isOpenKeyboard = false;
     }
+  }
+
+  @override
+  void dispose() {
+    _timer!.cancel();
+    super.dispose();
   }
 
   @override
@@ -94,49 +132,96 @@ class _OTPScreenState extends State<OTPScreen> {
                     style: TextStyle(fontSize: 28),
                     textFieldAlignment: MainAxisAlignment.spaceAround,
                     fieldStyle: FieldStyle.underline,
-                    onCompleted: (pin) {
-                      print("Completed: " + pin);
-                      widget.isSignUp
-                          ? Navigator.push(
-                              context,
-                              PageTransition(
-                                  child: const Login(),
-                                  type: PageTransitionType
-                                      .fade)) //register thành công
-                          : Navigator.push(
-                              context,
-                              PageTransition(
-                                  child: const ChangePwdScreen(),
-                                  type: PageTransitionType.fade));
+                    onCompleted: (pin) async {
+                      print("Pin: " + pin);
+
+                      bool isTrue = await verifyController.checkOTPByEmail(pin);
+                      if (isTrue) {
+                        widget.isSignUp
+                            ? Navigator.push(
+                                context,
+                                PageTransition(
+                                    child: const Login(),
+                                    type: PageTransitionType
+                                        .fade)) //register thành công
+                            : Navigator.push(
+                                context,
+                                PageTransition(
+                                    child: const ChangePwdScreen(),
+                                    type: PageTransitionType.fade));
+                      } else {
+                        showDialog(
+                          context: context,
+                          builder: ((context) => AlertDialog(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                                title: const Align(
+                                  alignment: Alignment.center,
+                                  child: Text('Lỗi!!'),
+                                ),
+                                content: Text('Sai mã OTP'),
+                              )),
+                        );
+                      }
                     },
                   ),
                   const SizedBox(height: 40),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Chưa nhận được mã xác nhận?',
-                        style: TextStyle(fontSize: 16),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              PageTransition(
-                                  child: const Login(),
-                                  type: PageTransitionType.fade));
-                        },
-                        child: const Text(
-                          'Gửi lại OTP',
+                  isCountdowning
+                      ? Text(
+                          isOneDigits ? '00:0$_start' : '00:$_start',
                           style: TextStyle(
                             fontSize: 16,
-                            color: kPrimaryColor,
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.red,
                           ),
+                        )
+                      : Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Chưa nhận được mã xác nhận?',
+                              style: TextStyle(fontSize: 16),
+                            ),
+                            TextButton(
+                              onPressed: () async {
+                                // bool isSend = await verifyController
+                                //     .getOTPByEmail(emailController.text);
+                                // if (isSend) {
+                                //   Navigator.push(
+                                //       context,
+                                //       PageTransition(
+                                //           child:
+                                //               const OTPScreen(isSignUp: false),
+                                //           type: PageTransitionType.fade));
+                                // } else {
+                                //   showDialog(
+                                //     context: context,
+                                //     builder: ((context) => AlertDialog(
+                                //           shape: RoundedRectangleBorder(
+                                //             borderRadius:
+                                //                 BorderRadius.circular(15),
+                                //           ),
+                                //           title: const Align(
+                                //             alignment: Alignment.center,
+                                //             child: Text('Lỗi!!'),
+                                //           ),
+                                //           content: Text('Có lỗi xảy ra rồi'),
+                                //         )),
+                                //   );
+                                // }
+                              },
+                              child: Text(
+                                'Gửi lại OTP',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: kPrimaryColor,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            )
+                          ],
                         ),
-                      ),
-                    ],
-                  ),
                 ],
               ),
             ),
