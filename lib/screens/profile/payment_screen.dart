@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:washouse_customer/resource/controller/account_controller.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:washouse_customer/resource/models/transaction_history.dart';
+import 'package:washouse_customer/resource/models/wallet_transaction.dart';
 import '../../components/constants/color_constants.dart';
 import '../../resource/models/wallet.dart';
 import 'components/transaction_widget.dart';
@@ -21,6 +23,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
   bool isHaveTransaction = true;
   bool isHaveWallet = false;
   Wallet? _wallet;
+  List<WalletTransactions> listTransaction = [];
+  List<WalletTransactions> listWalletTransaction = [];
+  List<WalletTransactions> newTransList = [];
 
   Future<void> _loadData() async {
     final name =
@@ -32,6 +37,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
     if (wallet != null) {
       setState(() {
         _wallet = wallet;
+        listTransaction = wallet.transactions!;
+        listWalletTransaction = wallet.walletTransactions!;
+        newTransList = listTransaction + listWalletTransaction;
         isHaveWallet = true;
       });
     }
@@ -212,12 +220,23 @@ class _PaymentScreenState extends State<PaymentScreen> {
                             shrinkWrap: true,
                             padding: const EdgeInsets.only(top: 16),
                             physics: const NeverScrollableScrollPhysics(),
-                            itemCount: listTransaction.length,
+                            itemCount: newTransList.length,
                             itemBuilder: (context, index) {
+                              newTransList.sort((a, b) {
+                                DateTime aDate =
+                                    DateFormat('dd-MM-yyyy HH:mm:ss')
+                                        .parse(a.timeStamp!);
+                                DateTime bDate =
+                                    DateFormat('dd-MM-yyyy HH:mm:ss')
+                                        .parse(b.timeStamp!);
+                                return bDate.compareTo(aDate);
+                              });
                               return TransactionWidget(
-                                isAdd: listTransaction[index].plusOrMinus!,
-                                time: listTransaction[index].timeStamp!,
-                                price: listTransaction[index].amount!,
+                                isAdd: newTransList[index]
+                                    .plusOrMinus!
+                                    .toLowerCase(),
+                                time: newTransList[index].timeStamp!,
+                                price: newTransList[index].amount!,
                               );
                             })
                         : Padding(

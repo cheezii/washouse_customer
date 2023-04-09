@@ -5,7 +5,7 @@ class Wallet {
   int? walletId;
   double? balance;
   String? status;
-  List<Transactions>? transactions;
+  List<WalletTransactions>? transactions;
   List<WalletTransactions>? walletTransactions;
 
   Wallet(
@@ -20,9 +20,9 @@ class Wallet {
     balance = json['balance'];
     status = json['status'];
     if (json['transactions'] != null) {
-      transactions = <Transactions>[];
+      transactions = <WalletTransactions>[];
       json['transactions'].forEach((v) {
-        transactions!.add(new Transactions.fromJson(v));
+        transactions!.add(new WalletTransactions.fromJson(v));
       });
     }
     if (json['walletTransactions'] != null) {

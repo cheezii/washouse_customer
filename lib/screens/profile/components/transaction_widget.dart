@@ -8,7 +8,7 @@ import 'package:washouse_customer/utils/time_utils.dart';
 class TransactionWidget extends StatefulWidget {
   final String? centerName;
   final String time;
-  final int price;
+  final double price;
   final String isAdd;
   const TransactionWidget({
     Key? key,

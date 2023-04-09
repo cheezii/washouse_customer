@@ -5,7 +5,7 @@ class WalletTransactions {
   String? plusOrMinus;
   double? amount;
   String? timeStamp;
-  Null? updateTimeStamp;
+  String? updateTimeStamp;
 
   WalletTransactions(
       {this.paymentId,
