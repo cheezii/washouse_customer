@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:washouse_customer/resource/controller/base_controller.dart';
 
 import 'package:washouse_customer/resource/models/cart_item.dart';
@@ -28,6 +29,7 @@ class _FillAddressScreenState extends State<FillAddressScreen> {
   GlobalKey<FormState> _formNameKey = GlobalKey<FormState>();
   GlobalKey<FormState> _formPhoneNumberKey = GlobalKey<FormState>();
   GlobalKey<FormState> _formAddressKey = GlobalKey<FormState>();
+  final _dropDownWardKey = GlobalKey<FormBuilderFieldState>();
   final typePhoneNum = RegExp(r'(((\+|)84)|0)(3|5|7|8|9)+([0-9]{8})\b');
   List districtList = [];
   List wardList = [];
@@ -109,6 +111,14 @@ class _FillAddressScreenState extends State<FillAddressScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              const Text(
+                'Họ và tên',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 14,
+                ),
+              ),
+              const SizedBox(height: 5),
               Form(
                 key: _formNameKey,
                 child: FillingShippingInfo(
@@ -118,6 +128,14 @@ class _FillAddressScreenState extends State<FillAddressScreen> {
                 ),
               ),
               const SizedBox(height: 20),
+              const Text(
+                'Số điện thoại',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 14,
+                ),
+              ),
+              const SizedBox(height: 5),
               Form(
                 key: _formPhoneNumberKey,
                 child: TextFormField(
@@ -133,11 +151,15 @@ class _FillAddressScreenState extends State<FillAddressScreen> {
                     phoneController.text = newValue!;
                   },
                   decoration: const InputDecoration(
-                    labelText: 'Số điện thoại',
-                    labelStyle: TextStyle(
-                      color: Colors.black,
-                      fontSize: 18,
+                    // labelText: 'Số điện thoại',
+                    // labelStyle: TextStyle(
+                    //   color: Colors.black,
+                    //   fontSize: 18,
+                    // ),
+                    border: const OutlineInputBorder(
+                      borderSide: BorderSide(width: 1),
                     ),
+                    contentPadding: EdgeInsets.all(2),
                     hintText: 'Nhập số điện thoại của bạn',
                     hintStyle: TextStyle(
                       color: textNoteColor,
@@ -153,6 +175,14 @@ class _FillAddressScreenState extends State<FillAddressScreen> {
                 ),
               ),
               const SizedBox(height: 20),
+              const Text(
+                'Địa chỉ cá nhân',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 14,
+                ),
+              ),
+              const SizedBox(height: 5),
               Form(
                 key: _formAddressKey,
                 child: FillingShippingInfo(
@@ -170,7 +200,7 @@ class _FillAddressScreenState extends State<FillAddressScreen> {
                 ),
               ),
               const SizedBox(height: 5),
-              DropdownButton(
+              DropdownButtonFormField(
                 isDense: true,
                 isExpanded: true,
                 items: <String>[
@@ -182,9 +212,11 @@ class _FillAddressScreenState extends State<FillAddressScreen> {
                     child: Text(item),
                   );
                 }).toList(),
-                underline: Container(
-                  height: 1,
-                  color: Colors.grey.shade500,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(width: 1),
+                  ),
+                  contentPadding: EdgeInsets.all(2),
                 ),
                 icon: const Icon(Icons.keyboard_arrow_down_rounded),
                 iconSize: 30,
@@ -201,7 +233,7 @@ class _FillAddressScreenState extends State<FillAddressScreen> {
                 ),
               ),
               const SizedBox(height: 5),
-              DropdownButton(
+              DropdownButtonFormField(
                 isDense: true,
                 isExpanded: true,
                 items: districtList.map((item) {
@@ -210,9 +242,11 @@ class _FillAddressScreenState extends State<FillAddressScreen> {
                     child: Text(item['districtName']),
                   );
                 }).toList(),
-                underline: Container(
-                  height: 1,
-                  color: Colors.grey.shade500,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(width: 1),
+                  ),
+                  contentPadding: EdgeInsets.all(2),
                 ),
                 icon: const Icon(Icons.keyboard_arrow_down_rounded),
                 iconSize: 30,
@@ -224,10 +258,8 @@ class _FillAddressScreenState extends State<FillAddressScreen> {
                     myWard = null;
                     myDistrict = newValue!;
                     getWardsList();
-                    isSelectedDistrict = true;
-                    if (myWard!.isNotEmpty) {
-                      myWard = '';
-                    }
+                    _dropDownWardKey.currentState!.reset();
+                    _dropDownWardKey.currentState!.setValue(null);
                   });
                 },
               ),
@@ -240,7 +272,9 @@ class _FillAddressScreenState extends State<FillAddressScreen> {
                 ),
               ),
               //if (isSelectedDistrict)
-              DropdownButton(
+              FormBuilderDropdown(
+                key: _dropDownWardKey,
+                name: 'Phường/xã',
                 isExpanded: true,
                 items: wardList.map((item) {
                   return DropdownMenuItem(
@@ -248,13 +282,15 @@ class _FillAddressScreenState extends State<FillAddressScreen> {
                     child: Text(item['wardName']),
                   );
                 }).toList(),
-                underline: Container(
-                  height: 1,
-                  color: Colors.grey.shade500,
-                ),
                 icon: const Icon(Icons.keyboard_arrow_down_rounded),
                 iconSize: 30,
-                value: myWard,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(width: 1),
+                  ),
+                  contentPadding: EdgeInsets.all(2),
+                ),
+                initialValue: myWard,
                 hint: const Text('Chọn phường/xã'),
                 style: const TextStyle(color: textColor),
                 onChanged: (newValue) {
@@ -363,11 +399,15 @@ class FillingShippingInfo extends StatelessWidget {
         controller.text = newValue!;
       },
       decoration: InputDecoration(
-        labelText: lableText,
-        labelStyle: const TextStyle(
-          color: Colors.black,
-          fontSize: 18,
+        border: const OutlineInputBorder(
+          borderSide: BorderSide(width: 1),
         ),
+        contentPadding: EdgeInsets.all(2),
+        // labelText: lableText,
+        // labelStyle: const TextStyle(
+        //   color: Colors.black,
+        //   fontSize: 18,
+        // ),
         hintText: hintText,
         hintStyle: const TextStyle(
           color: textNoteColor,

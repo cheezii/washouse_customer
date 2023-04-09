@@ -48,6 +48,7 @@ dependencies:
   flutter_switch: ^0.3.2
   url_launcher: ^6.0.3
   flutter_secure_storage: ^8.0.0
+  flutter_form_builder: ^7.8.0
   
 dev_dependencies:
   flutter_test:

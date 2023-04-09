@@ -2,6 +2,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:http/http.dart';
 import 'package:intl/intl.dart';
@@ -32,6 +33,8 @@ class FillShippingInformation extends StatefulWidget {
 }
 
 class _FillShippingInformationState extends State<FillShippingInformation> {
+  final _dropDownSendWardKey = GlobalKey<FormBuilderFieldState>();
+  final _dropDownReceiveWardKey = GlobalKey<FormBuilderFieldState>();
   BaseController baseController = BaseController();
   TextEditingController sendAdressController = TextEditingController();
   TextEditingController receiveAdressController = TextEditingController();
@@ -262,143 +265,143 @@ class _FillShippingInformationState extends State<FillShippingInformation> {
                     )
                   : Container(),
               const SizedBox(height: 10),
-              Row(
-                children: [
-                  const Text(
-                    'Thời gian trả đơn',
-                    style: TextStyle(
-                        fontSize: 18,
-                        color: textBoldColor,
-                        fontWeight: FontWeight.w500),
-                  ),
-                  const Spacer(),
-                  FlutterSwitch(
-                      value: checkReceiveOrder,
-                      width: 50,
-                      height: 25,
-                      toggleSize: 20,
-                      onToggle: (val) {
-                        setState(() {
-                          checkReceiveOrder = val;
-                        });
-                      })
-                ],
-              ),
-              const SizedBox(height: 10),
-              checkReceiveOrder
-                  ? Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        SizedBox(
-                          width: 120,
-                          height: 40,
-                          child: DropdownButtonFormField(
-                            decoration: InputDecoration(
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: const BorderSide(
-                                    color: textColor, width: 1),
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              contentPadding: const EdgeInsets.only(
-                                  left: 8, right: 8, top: 0, bottom: 0),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: const BorderSide(
-                                    color: textColor, width: 1),
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                            ),
-                            isDense: true,
-                            isExpanded: true,
-                            items: <String>['Hôm nay', 'Ngày mai']
-                                .map((String item) {
-                              return DropdownMenuItem<String>(
-                                value: item,
-                                child: Text(item),
-                              );
-                            }).toList(),
-                            icon: const Icon(
-                              Icons.keyboard_arrow_down_rounded,
-                              size: 25,
-                            ),
-                            iconSize: 30,
-                            hint: const Text('Chọn ngày'),
-                            value: sendOrderDate,
-                            style: const TextStyle(color: textColor),
-                            onChanged: (String? newValue) async {
-                              setState(() {
-                                receiveOrderDate = newValue!;
-                              });
-                              String? chooseDate;
-                              if (newValue!.compareTo("Hôm nay") == 0) {
-                                chooseDate = DateFormat('dd-MM-yyyy')
-                                    .format(DateTime.now());
-                              } else if (newValue!.compareTo("Ngày mai") == 0) {
-                                chooseDate = DateFormat('dd-MM-yyyy').format(
-                                    DateTime.now().add(Duration(days: 1)));
-                              }
-                              baseController.saveStringtoSharedPreference(
-                                  "preferredDeliverTime_Date", chooseDate!);
-                              print(await baseController
-                                  .getStringtoSharedPreference(
-                                      "preferredDeliverTime_Date"));
-                            },
-                          ),
-                        ),
-                        SizedBox(
-                          width: 120,
-                          height: 40,
-                          child: ElevatedButton(
-                            onPressed: () async {
-                              TimeOfDay? orderTime = await showTimePicker(
-                                  context: context,
-                                  initialTime: TimeOfDay.now());
-                              if (orderTime != null) {
-                                setState(() {
-                                  receiveOrderTime =
-                                      '${orderTime.hour}:${orderTime.minute}:00';
-                                });
-                                baseController.saveStringtoSharedPreference(
-                                    "preferredDeliverTime_Time",
-                                    receiveOrderTime);
-                                print(await baseController
-                                    .getStringtoSharedPreference(
-                                        "preferredDeliverTime_Time"));
-                              }
-                            },
-                            style: ElevatedButton.styleFrom(
-                              padding: const EdgeInsetsDirectional.symmetric(
-                                  horizontal: 19, vertical: 10),
-                              foregroundColor: kPrimaryColor.withOpacity(.7),
-                              elevation: 0,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                side: const BorderSide(
-                                    color: textColor, width: 1),
-                              ),
-                              backgroundColor: kBackgroundColor,
-                            ),
-                            child: Row(
-                              children: [
-                                Text(
-                                  receiveOrderTime,
-                                  style: TextStyle(
-                                    color: Colors.grey.shade600,
-                                  ),
-                                ),
-                                const Spacer(),
-                                Icon(
-                                  Icons.watch_later_outlined,
-                                  size: 20,
-                                  color: Colors.grey.shade600,
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    )
-                  : Container(),
-              const SizedBox(height: 10),
+              // Row(
+              //   children: [
+              //     const Text(
+              //       'Thời gian trả đơn',
+              //       style: TextStyle(
+              //           fontSize: 18,
+              //           color: textBoldColor,
+              //           fontWeight: FontWeight.w500),
+              //     ),
+              //     const Spacer(),
+              //     FlutterSwitch(
+              //         value: checkReceiveOrder,
+              //         width: 50,
+              //         height: 25,
+              //         toggleSize: 20,
+              //         onToggle: (val) {
+              //           setState(() {
+              //             checkReceiveOrder = val;
+              //           });
+              //         })
+              //   ],
+              // ),
+              // const SizedBox(height: 10),
+              // checkReceiveOrder
+              //     ? Row(
+              //         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              //         children: [
+              //           SizedBox(
+              //             width: 120,
+              //             height: 40,
+              //             child: DropdownButtonFormField(
+              //               decoration: InputDecoration(
+              //                 enabledBorder: OutlineInputBorder(
+              //                   borderSide: const BorderSide(
+              //                       color: textColor, width: 1),
+              //                   borderRadius: BorderRadius.circular(10),
+              //                 ),
+              //                 contentPadding: const EdgeInsets.only(
+              //                     left: 8, right: 8, top: 0, bottom: 0),
+              //                 focusedBorder: OutlineInputBorder(
+              //                   borderSide: const BorderSide(
+              //                       color: textColor, width: 1),
+              //                   borderRadius: BorderRadius.circular(10),
+              //                 ),
+              //               ),
+              //               isDense: true,
+              //               isExpanded: true,
+              //               items: <String>['Hôm nay', 'Ngày mai']
+              //                   .map((String item) {
+              //                 return DropdownMenuItem<String>(
+              //                   value: item,
+              //                   child: Text(item),
+              //                 );
+              //               }).toList(),
+              //               icon: const Icon(
+              //                 Icons.keyboard_arrow_down_rounded,
+              //                 size: 25,
+              //               ),
+              //               iconSize: 30,
+              //               hint: const Text('Chọn ngày'),
+              //               value: sendOrderDate,
+              //               style: const TextStyle(color: textColor),
+              //               onChanged: (String? newValue) async {
+              //                 setState(() {
+              //                   receiveOrderDate = newValue!;
+              //                 });
+              //                 String? chooseDate;
+              //                 if (newValue!.compareTo("Hôm nay") == 0) {
+              //                   chooseDate = DateFormat('dd-MM-yyyy')
+              //                       .format(DateTime.now());
+              //                 } else if (newValue!.compareTo("Ngày mai") == 0) {
+              //                   chooseDate = DateFormat('dd-MM-yyyy').format(
+              //                       DateTime.now().add(Duration(days: 1)));
+              //                 }
+              //                 baseController.saveStringtoSharedPreference(
+              //                     "preferredDeliverTime_Date", chooseDate!);
+              //                 print(await baseController
+              //                     .getStringtoSharedPreference(
+              //                         "preferredDeliverTime_Date"));
+              //               },
+              //             ),
+              //           ),
+              //           SizedBox(
+              //             width: 120,
+              //             height: 40,
+              //             child: ElevatedButton(
+              //               onPressed: () async {
+              //                 TimeOfDay? orderTime = await showTimePicker(
+              //                     context: context,
+              //                     initialTime: TimeOfDay.now());
+              //                 if (orderTime != null) {
+              //                   setState(() {
+              //                     receiveOrderTime =
+              //                         '${orderTime.hour}:${orderTime.minute}:00';
+              //                   });
+              //                   baseController.saveStringtoSharedPreference(
+              //                       "preferredDeliverTime_Time",
+              //                       receiveOrderTime);
+              //                   print(await baseController
+              //                       .getStringtoSharedPreference(
+              //                           "preferredDeliverTime_Time"));
+              //                 }
+              //               },
+              //               style: ElevatedButton.styleFrom(
+              //                 padding: const EdgeInsetsDirectional.symmetric(
+              //                     horizontal: 19, vertical: 10),
+              //                 foregroundColor: kPrimaryColor.withOpacity(.7),
+              //                 elevation: 0,
+              //                 shape: RoundedRectangleBorder(
+              //                   borderRadius: BorderRadius.circular(10),
+              //                   side: const BorderSide(
+              //                       color: textColor, width: 1),
+              //                 ),
+              //                 backgroundColor: kBackgroundColor,
+              //               ),
+              //               child: Row(
+              //                 children: [
+              //                   Text(
+              //                     receiveOrderTime,
+              //                     style: TextStyle(
+              //                       color: Colors.grey.shade600,
+              //                     ),
+              //                   ),
+              //                   const Spacer(),
+              //                   Icon(
+              //                     Icons.watch_later_outlined,
+              //                     size: 20,
+              //                     color: Colors.grey.shade600,
+              //                   )
+              //                 ],
+              //               ),
+              //             ),
+              //           ),
+              //         ],
+              //       )
+              //     : Container(),
+              //const SizedBox(height: 10),
               widget.isSend
                   ? Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -410,6 +413,7 @@ class _FillShippingInformationState extends State<FillShippingInformation> {
                               color: textBoldColor,
                               fontWeight: FontWeight.w500),
                         ),
+                        const SizedBox(height: 10),
                         Form(
                           key: _formSendAddressKey,
                           child: FillingShippingInfo(
@@ -427,7 +431,7 @@ class _FillShippingInformationState extends State<FillShippingInformation> {
                           ),
                         ),
                         const SizedBox(height: 5),
-                        DropdownButton(
+                        DropdownButtonFormField(
                           isDense: true,
                           isExpanded: true,
                           items: <String>[
@@ -439,9 +443,11 @@ class _FillShippingInformationState extends State<FillShippingInformation> {
                               child: Text(item),
                             );
                           }).toList(),
-                          underline: Container(
-                            height: 1,
-                            color: Colors.grey.shade500,
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide(width: 1),
+                            ),
+                            contentPadding: EdgeInsets.all(2),
                           ),
                           icon: const Icon(
                             Icons.keyboard_arrow_down_rounded,
@@ -469,16 +475,18 @@ class _FillShippingInformationState extends State<FillShippingInformation> {
                                 SizedBox(
                                   height: 40,
                                   width: 150,
-                                  child: DropdownButton(
+                                  child: DropdownButtonFormField(
                                     items: districtList.map((item) {
                                       return DropdownMenuItem(
                                         value: item['districtId'].toString(),
                                         child: Text(item['districtName']),
                                       );
                                     }).toList(),
-                                    underline: Container(
-                                      height: 1,
-                                      color: Colors.grey.shade500,
+                                    decoration: const InputDecoration(
+                                      border: OutlineInputBorder(
+                                        borderSide: BorderSide(width: 1),
+                                      ),
+                                      contentPadding: EdgeInsets.all(2),
                                     ),
                                     icon: const Icon(
                                       Icons.keyboard_arrow_down_rounded,
@@ -492,6 +500,10 @@ class _FillShippingInformationState extends State<FillShippingInformation> {
                                       setState(() {
                                         sendDistrict = newValue!;
                                         getWardsList(newValue);
+                                        _dropDownSendWardKey.currentState!
+                                            .reset();
+                                        _dropDownSendWardKey.currentState!
+                                            .setValue(null);
                                       });
                                     },
                                   ),
@@ -513,23 +525,27 @@ class _FillShippingInformationState extends State<FillShippingInformation> {
                                 SizedBox(
                                   height: 40,
                                   width: 200,
-                                  child: DropdownButton(
+                                  child: FormBuilderDropdown(
+                                    key: _dropDownSendWardKey,
+                                    name: 'Phường/xã',
                                     items: wardList.map((item) {
                                       return DropdownMenuItem(
                                         value: item['wardId'].toString(),
                                         child: Text(item['wardName']),
                                       );
                                     }).toList(),
-                                    underline: Container(
-                                      height: 1,
-                                      color: Colors.grey.shade500,
+                                    decoration: const InputDecoration(
+                                      border: OutlineInputBorder(
+                                        borderSide: BorderSide(width: 1),
+                                      ),
+                                      contentPadding: EdgeInsets.all(2),
                                     ),
                                     icon: const Icon(
                                       Icons.keyboard_arrow_down_rounded,
                                       size: 20,
                                     ),
                                     iconSize: 30,
-                                    value: sendWard,
+                                    initialValue: sendWard,
                                     hint: const Text('Chọn phường/xã'),
                                     style: const TextStyle(color: textColor),
                                     onChanged: (newValue) {
@@ -558,6 +574,7 @@ class _FillShippingInformationState extends State<FillShippingInformation> {
                               color: textBoldColor,
                               fontWeight: FontWeight.w500),
                         ),
+                        const SizedBox(height: 10),
                         Form(
                           key: _formReceiveAddressKey,
                           child: FillingShippingInfo(
@@ -575,7 +592,7 @@ class _FillShippingInformationState extends State<FillShippingInformation> {
                           ),
                         ),
                         const SizedBox(height: 5),
-                        DropdownButton(
+                        DropdownButtonFormField(
                           isDense: true,
                           isExpanded: true,
                           items: <String>[
@@ -587,9 +604,11 @@ class _FillShippingInformationState extends State<FillShippingInformation> {
                               child: Text(item),
                             );
                           }).toList(),
-                          underline: Container(
-                            height: 1,
-                            color: Colors.grey.shade500,
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide(width: 1),
+                            ),
+                            contentPadding: EdgeInsets.all(2),
                           ),
                           icon: const Icon(
                             Icons.keyboard_arrow_down_rounded,
@@ -617,16 +636,18 @@ class _FillShippingInformationState extends State<FillShippingInformation> {
                                 SizedBox(
                                   height: 40,
                                   width: 150,
-                                  child: DropdownButton(
+                                  child: DropdownButtonFormField(
                                     items: districtList.map((item) {
                                       return DropdownMenuItem(
                                         value: item['districtId'].toString(),
                                         child: Text(item['districtName']),
                                       );
                                     }).toList(),
-                                    underline: Container(
-                                      height: 1,
-                                      color: Colors.grey.shade500,
+                                    decoration: const InputDecoration(
+                                      border: OutlineInputBorder(
+                                        borderSide: BorderSide(width: 1),
+                                      ),
+                                      contentPadding: EdgeInsets.all(2),
                                     ),
                                     icon: const Icon(
                                       Icons.keyboard_arrow_down_rounded,
@@ -640,6 +661,10 @@ class _FillShippingInformationState extends State<FillShippingInformation> {
                                       setState(() {
                                         receiveDistrict = newValue!;
                                         getWardsList(newValue);
+                                        _dropDownReceiveWardKey.currentState!
+                                            .reset();
+                                        _dropDownReceiveWardKey.currentState!
+                                            .setValue(null);
                                       });
                                     },
                                   ),
@@ -661,23 +686,27 @@ class _FillShippingInformationState extends State<FillShippingInformation> {
                                 SizedBox(
                                   height: 40,
                                   width: 200,
-                                  child: DropdownButton(
+                                  child: FormBuilderDropdown(
+                                    key: _dropDownReceiveWardKey,
+                                    name: 'Phường/xã',
                                     items: wardList.map((item) {
                                       return DropdownMenuItem(
                                         value: item['wardId'].toString(),
                                         child: Text(item['wardName']),
                                       );
                                     }).toList(),
-                                    underline: Container(
-                                      height: 1,
-                                      color: Colors.grey.shade500,
+                                    decoration: const InputDecoration(
+                                      border: OutlineInputBorder(
+                                        borderSide: BorderSide(width: 1),
+                                      ),
+                                      contentPadding: EdgeInsets.all(2),
                                     ),
                                     icon: const Icon(
                                       Icons.keyboard_arrow_down_rounded,
                                       size: 20,
                                     ),
                                     iconSize: 30,
-                                    value: receiveWard,
+                                    initialValue: receiveWard,
                                     hint: const Text('Chọn phường/xã'),
                                     style: const TextStyle(color: textColor),
                                     onChanged: (newValue) {
