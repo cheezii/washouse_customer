@@ -6,6 +6,7 @@ import 'package:percent_indicator/percent_indicator.dart';
 import 'package:provider/provider.dart';
 
 import 'package:washouse_customer/components/constants/color_constants.dart';
+import 'package:washouse_customer/resource/controller/base_controller.dart';
 import 'package:washouse_customer/resource/models/service.dart';
 import 'package:washouse_customer/screens/center/component/details/category_menu.dart';
 
@@ -36,6 +37,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
   Service serviceArgs = Service();
   ServiceController serviceController = ServiceController();
   CenterController centerController = CenterController();
+  BaseController baseController = BaseController();
 
   Service serviceDetails = Service();
 
@@ -96,6 +98,8 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
     bool checkPriceType = false;
     int PriceMin = 0;
     int PriceMax = 0;
+
+    bool checkAdded = false;
     double minPrice =
         serviceArgs.priceType! ? serviceArgs.minPrice!.toDouble() : 0;
 
@@ -211,10 +215,13 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                     style: TextStyle(fontWeight: FontWeight.w600, fontSize: 22),
                   ),
                   const SizedBox(height: 20),
-                  Text(
-                    'Giá dịch vụ tối thiểu : ${PriceUtils().convertFormatPrice(serviceArgs.minPrice!.toInt())} đ',
-                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
-                  ),
+                  checkPriceChart
+                      ? Text(
+                          'Giá dịch vụ tối thiểu : ${PriceUtils().convertFormatPrice(serviceArgs.minPrice!.toInt())} đ',
+                          style: TextStyle(
+                              fontWeight: FontWeight.w600, fontSize: 18),
+                        )
+                      : const SizedBox(height: 0, width: 0),
                   const SizedBox(height: 10),
                   const Text(
                     'Mô tả',
@@ -708,7 +715,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10.0)),
                             backgroundColor: kPrimaryColor),
-                        onPressed: () {
+                        onPressed: () async {
                           // double measurementInput = checkUnitType
                           //     ? int.parse(kilogramController.text)
                           //     : quantity;
@@ -775,9 +782,11 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                           if (provider.cartItems.isEmpty) {
                             provider.addItemToCart(cartItem); //add to cart
                             provider.updateCenter(cartItem.centerId);
+                            checkAdded = true;
                           } else if (provider.centerId != null &&
                               provider.centerId != 0 &&
                               provider.centerId != cartItem.centerId) {
+                            checkAdded = false;
                             showDialog(
                               context: context,
                               builder: (BuildContext context) {
@@ -809,6 +818,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                           } else {
                             provider.addItemToCart(cartItem); //add to cart
                             provider.updateCenter(cartItem.centerId);
+                            checkAdded = true;
                             //provider.centerId =
                           }
                           //print(cart.length);
@@ -818,22 +828,52 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                           // provider.addTotalPrice(productPrice!); //add được rồi
                           //_setNameCenter;
                         },
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Text(
-                              'Đặt',
-                              style: TextStyle(fontSize: 17),
-                            ),
-                            const SizedBox(width: 7),
-                            const Icon(Icons.circle_rounded, size: 3),
-                            const SizedBox(width: 7),
-                            Text(
-                                checkPriceType
-                                    ? '${PriceUtils().convertFormatPrice(((currPrice * kilogram < minPrice) ? minPrice : (currPrice * kilogram)).round())} đ'
-                                    : '${PriceUtils().convertFormatPrice((quantity * serviceArgs.price!).round())} đ',
-                                style: TextStyle(fontSize: 17))
-                          ],
+                        child: GestureDetector(
+                          onTap: () async {
+                            bool checkMax =
+                                (provider.cartItems.last.measurement ==
+                                    _maxMeasurementValue);
+                            await baseController.saveStringtoSharedPreference(
+                                "customerNote", noteController.text);
+                            // ignore: use_build_context_synchronously
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text('Thông báo'),
+                                  content: checkMax
+                                      ? Text(
+                                          'Dịch vụ đã được thêm vào giỏ với lượng tối đa cho phép. ($_maxMeasurementValue ${serviceArgs.unit})')
+                                      : Text('Dịch vụ đã được thêm vào giỏ.'),
+                                  actions: <Widget>[
+                                    ElevatedButton(
+                                      child: Text('Đóng'),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Text(
+                                'Đặt',
+                                style: TextStyle(fontSize: 17),
+                              ),
+                              const SizedBox(width: 7),
+                              const Icon(Icons.circle_rounded, size: 3),
+                              const SizedBox(width: 7),
+                              Text(
+                                  checkPriceType
+                                      ? '${PriceUtils().convertFormatPrice(((currPrice * kilogram < minPrice) ? minPrice : (currPrice * kilogram)).round())} đ'
+                                      : '${PriceUtils().convertFormatPrice((quantity * serviceArgs.price!).round())} đ',
+                                  style: TextStyle(fontSize: 17))
+                            ],
+                          ),
                         ),
                       ),
                     ),

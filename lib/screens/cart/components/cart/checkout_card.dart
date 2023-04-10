@@ -90,12 +90,14 @@ class _CheckOutCardState extends State<CheckOutCard> {
           Consumer<CartProvider>(
             builder: (context, value, child) {
               bool checkPrice;
+              //print("value.getTotalPrice()${value.getTotalPrice()}");
               if (value.getTotalPrice() > 0) {
                 checkPrice = true;
               } else {
                 checkPrice = false;
               }
               bool checkItem;
+              //print("cartLength${value.cartItems.length}");
               //if (value.getCounter() > 0) {
               if (value.cartItems.length > 0) {
                 checkItem = true;
@@ -112,7 +114,8 @@ class _CheckOutCardState extends State<CheckOutCard> {
                       (value.discount != 0)
                           ? Text.rich(
                               TextSpan(
-                                text: checkPrice
+                                text: (checkPrice &&
+                                        value.cartItems.length != 0)
                                     //? '${PriceUtils().convertFormatPrice(value.getTotalPrice().round())} đ'
                                     ? '${PriceUtils().convertFormatPrice(value.cartItems.fold(0.0, (sum, item) => sum + item.price!).round())} đ'
                                     : '0 đ',
@@ -128,7 +131,7 @@ class _CheckOutCardState extends State<CheckOutCard> {
                           : SizedBox(),
                       Text.rich(
                         TextSpan(
-                          text: checkPrice
+                          text: (checkPrice && value.cartItems.length != 0)
                               //? '${PriceUtils().convertFormatPrice(value.getTotalPrice().round())} đ'
                               ? '${PriceUtils().convertFormatPrice((value.cartItems.fold(0.0, (sum, item) => sum + item.price!) * (1 - value.discount)).round())} đ'
                               : '0 đ',

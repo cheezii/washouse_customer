@@ -9,6 +9,7 @@ import 'package:washouse_customer/utils/price_util.dart';
 import '../../../../components/constants/color_constants.dart';
 import '../../../../resource/controller/cart_provider.dart';
 import '../../../../resource/models/cart_item.dart';
+import '../../../home/base_screen.dart';
 import '../../checkout_screen.dart';
 import '../cart/add_voucher.dart';
 
@@ -203,12 +204,20 @@ class OrderCard extends StatelessWidget {
                               borderRadius: BorderRadius.circular(10.0)),
                           backgroundColor: kPrimaryColor),
                       onPressed: () async {
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            });
                         String? message = await orderController.createOrder();
                         print(message);
+                        Navigator.of(context).pop();
                         Navigator.push(
                             context,
                             PageTransition(
-                                child: const Homescreen(),
+                                child: const BaseScreen(),
                                 type: PageTransitionType.rightToLeftWithFade));
                       },
                       child: Text(

@@ -123,7 +123,10 @@ class CartProvider extends ChangeNotifier {
     prefs.remove('addressString_Dropoff');
     prefs.remove('addressString_Delivery');
     prefs.remove('wardId_Dropoff');
+    prefs.remove('wardId_Delivery');
     prefs.remove('promoCode');
+    prefs.remove('customerPhone');
+    prefs.remove('customerNote');
     prefs.remove('cartItems');
     notifyListeners();
   }
