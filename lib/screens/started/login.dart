@@ -150,7 +150,13 @@ class _LoginState extends State<Login> {
                         _formPwdKey.currentState!.save();
                         _formPhoneNumberKey.currentState!.save();
                         //call api change pwd
-
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            });
                         LoginResponseModel? responseModel =
                             await accountController.login(
                                 phoneController.text, passwordController.text);

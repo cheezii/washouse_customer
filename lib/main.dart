@@ -27,6 +27,8 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   Future<String> getAccessToken() => BaseController().getAccessToken();
+  Future<bool> isAccess() =>
+      BaseController().getBooltoSharedPreference('isAccess');
   @override
   Widget build(BuildContext context) {
     HttpOverrides.global = MyHttpOverrides();
@@ -35,8 +37,29 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       onGenerateRoute: RouteGenerator.generateRoute,
       //home: SafeArea(child: Onboarding()),
+      // home: FutureBuilder(
+      //     future: getAccessToken(),
+      //     builder: (context, snapshot) {
+      //       switch (snapshot.connectionState) {
+      //         case ConnectionState.waiting:
+      //           return Container(
+      //             color: Colors.white,
+      //             child: Center(child: CircularProgressIndicator()),
+      //           );
+      //         case ConnectionState.active:
+      //         case ConnectionState.done:
+      //           if (snapshot.hasData) {
+      //             return (snapshot.data == null)
+      //                 ? SafeArea(child: Onboarding())
+      //                 : Login();
+      //           }
+      //           return SafeArea(child: Onboarding()); // error view
+      //         default:
+      //           return SafeArea(child: Onboarding()); // error view
+      //       }
+      //     }),
       home: FutureBuilder(
-          future: getAccessToken(),
+          future: isAccess(),
           builder: (context, snapshot) {
             switch (snapshot.connectionState) {
               case ConnectionState.waiting:
@@ -47,7 +70,7 @@ class MyApp extends StatelessWidget {
               case ConnectionState.active:
               case ConnectionState.done:
                 if (snapshot.hasData) {
-                  return (snapshot.data == null)
+                  return (snapshot.data == false)
                       ? SafeArea(child: Onboarding())
                       : Login();
                 }

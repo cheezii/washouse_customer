@@ -31,6 +31,11 @@ class BaseController {
     return prefs.getDouble(key);
   }
 
+  Future<bool> getBooltoSharedPreference(String key) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(key);
+  }
+
 // Define a function to save a string to shared preferences
   Future<void> saveStringtoSharedPreference(
       String saveName, dynamic? saveString) async {
@@ -47,6 +52,12 @@ class BaseController {
       String saveName, double? saveDouble) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setDouble(saveName, saveDouble);
+  }
+
+  Future<void> saveBooltoSharedPreference(
+      String saveName, bool? saveBool) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(saveName, saveBool);
   }
 
   // Define a function to get the access token from shared preferences
