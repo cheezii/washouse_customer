@@ -4,11 +4,7 @@ import 'package:washouse_customer/components/constants/size.dart';
 import '../../../components/constants/color_constants.dart';
 
 class TitleWithMoreBtn extends StatelessWidget {
-  const TitleWithMoreBtn({
-    super.key,
-    required this.title,
-    required this.press,
-  });
+  const TitleWithMoreBtn({super.key, required this.title, required this.press, s});
   final String title;
   final GestureTapCallback press;
 
