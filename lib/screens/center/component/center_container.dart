@@ -48,8 +48,7 @@ class CenterContainer extends StatelessWidget {
                   children: [
                     Text(
                       name!,
-                      style: const TextStyle(
-                          fontWeight: FontWeight.w600, fontSize: 18),
+                      style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
                     ),
                     const SizedBox(height: 3),
                     Row(
@@ -61,8 +60,7 @@ class CenterContainer extends StatelessWidget {
                                 children: [
                                   const Icon(Icons.circle_rounded, size: 5),
                                   const SizedBox(width: 5),
-                                  const Icon(Icons.star_rounded,
-                                      color: kPrimaryColor),
+                                  const Icon(Icons.star_rounded, color: kPrimaryColor),
                                   Text('$rating'),
                                 ],
                               )

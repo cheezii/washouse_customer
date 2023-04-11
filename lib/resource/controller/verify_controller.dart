@@ -6,8 +6,7 @@ import '../../components/constants/text_constants.dart';
 
 class VerifyController {
   Future<bool> getOTPByEmail(String email) async {
-    Response response =
-        await post(Uri.parse('$baseUrl/verifys/send/mail?email=$email'));
+    Response response = await post(Uri.parse('$baseUrl/verifys/send/mail?email=$email'));
     try {
       var data = jsonDecode(response.body);
       if (data['statusCode'] == 200) {

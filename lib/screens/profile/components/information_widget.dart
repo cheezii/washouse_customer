@@ -63,8 +63,7 @@ class InformationWidget extends StatelessWidget {
                   )
                 : Padding(
                     padding: const EdgeInsets.only(right: 12),
-                    child: Icon(Icons.edit_off_rounded,
-                        color: Colors.grey.shade500),
+                    child: Icon(Icons.edit_off_rounded, color: Colors.grey.shade500),
                   ),
           ],
         ),

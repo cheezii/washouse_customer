@@ -38,10 +38,7 @@ class BoxInfo extends StatelessWidget {
           const SizedBox(width: 15),
           Text(
             title,
-            style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: Colors.grey.shade800),
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.grey.shade800),
           ),
           const Spacer(),
           TextButton(

@@ -23,8 +23,7 @@ class SearchOrderScreen extends StatelessWidget {
         ),
         title: const Align(
           alignment: Alignment.center,
-          child: Text('Tìm kiếm đơn hàng',
-              style: TextStyle(color: textColor, fontSize: 27)),
+          child: Text('Tìm kiếm đơn hàng', style: TextStyle(color: textColor, fontSize: 27)),
         ),
         actions: [
           GestureDetector(

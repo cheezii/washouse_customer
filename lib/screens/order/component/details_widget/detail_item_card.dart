@@ -43,10 +43,7 @@ class DetailItemCard extends StatelessWidget {
                 child: Text(
                   //cart.service.name!,
                   cart.name,
-                  style: const TextStyle(
-                      fontSize: 17,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold),
+                  style: const TextStyle(fontSize: 17, color: Colors.black, fontWeight: FontWeight.bold),
                   maxLines: 2,
                 ),
               ),
@@ -54,9 +51,7 @@ class DetailItemCard extends StatelessWidget {
               Row(
                 children: [
                   Text(
-                    cart.unit!.compareTo('Kg') == 0
-                        ? 'KL: x${cart.measurement}'
-                        : 'SL: x${cart.measurement.toInt()}',
+                    cart.unit!.compareTo('Kg') == 0 ? 'KL: x${cart.measurement}' : 'SL: x${cart.measurement.toInt()}',
                     style: const TextStyle(color: textColor, fontSize: 16),
                   ),
                   const Spacer(),

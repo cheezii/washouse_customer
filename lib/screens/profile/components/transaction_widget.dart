@@ -56,9 +56,7 @@ class _TransactionWidgetState extends State<TransactionWidget> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
                           Text(
-                            widget.isAdd.compareTo('plus') == 0
-                                ? 'Nạp tiền vào ví'
-                                : widget.centerName ?? 'Trả tiền cho dịch vụ',
+                            widget.isAdd.compareTo('plus') == 0 ? 'Nạp tiền vào ví' : widget.centerName ?? 'Trả tiền cho dịch vụ',
                             style: TextStyle(
                               fontSize: 18,
                               color: Colors.grey.shade800,
@@ -72,10 +70,7 @@ class _TransactionWidgetState extends State<TransactionWidget> {
                             child: Text(
                               TimeUtils().getDisplayTime(widget.time),
                               maxLines: 2,
-                              style: TextStyle(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w300,
-                                  color: Colors.grey.shade600),
+                              style: TextStyle(fontSize: 13, fontWeight: FontWeight.w300, color: Colors.grey.shade600),
                             ),
                           )
                         ],
@@ -91,9 +86,7 @@ class _TransactionWidgetState extends State<TransactionWidget> {
                   : '-${PriceUtils().convertFormatPrice(widget.price.round())} đ',
               style: TextStyle(
                 fontSize: 16,
-                color: widget.isAdd.compareTo('plus') == 0
-                    ? Colors.red
-                    : textColor,
+                color: widget.isAdd.compareTo('plus') == 0 ? Colors.red : textColor,
                 fontWeight: FontWeight.w500,
               ),
             )

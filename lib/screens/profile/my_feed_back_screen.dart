@@ -33,8 +33,7 @@ class _MyFeedbackScreenState extends State<MyFeedbackScreen> {
             ),
           ),
           centerTitle: true,
-          title: const Text('Đánh giá của tôi',
-              style: TextStyle(color: textColor, fontSize: 25)),
+          title: const Text('Đánh giá của tôi', style: TextStyle(color: textColor, fontSize: 25)),
           bottom: const TabBar(
             unselectedLabelColor: textColor,
             labelColor: textColor,

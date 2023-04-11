@@ -22,10 +22,7 @@ class _AddVoucherScreenState extends State<AddVoucherScreen> {
   PromotionController promotionController = PromotionController();
   void getSuggest(String value) {
     setState(() {
-      displayList = displayList
-          .where((element) =>
-              element.code.toLowerCase().contains(value.toLowerCase()))
-          .toList();
+      displayList = displayList.where((element) => element.code.toLowerCase().contains(value.toLowerCase())).toList();
     });
   }
 
@@ -38,8 +35,7 @@ class _AddVoucherScreenState extends State<AddVoucherScreen> {
   void promotionList() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     int centerId = prefs.getInt('centerId');
-    var promotions =
-        await promotionController.getPromotionListOfCenter(centerId);
+    var promotions = await promotionController.getPromotionListOfCenter(centerId);
     if (promotions.isNotEmpty) {
       setState(() {
         displayList = promotions;
@@ -54,8 +50,7 @@ class _AddVoucherScreenState extends State<AddVoucherScreen> {
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         elevation: 0,
-        backgroundColor:
-            kPrimaryColor, //Theme.of(context).scaffoldBackgroundColor
+        backgroundColor: kPrimaryColor, //Theme.of(context).scaffoldBackgroundColor
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);
@@ -66,23 +61,13 @@ class _AddVoucherScreenState extends State<AddVoucherScreen> {
           ),
         ),
         centerTitle: true,
-        title: const Text('Mã khuyến mãi',
-            style: TextStyle(color: Colors.white, fontSize: 23)),
+        title: const Text('Mã khuyến mãi', style: TextStyle(color: Colors.white, fontSize: 23)),
         actions: [
           IconButton(
             onPressed: () {
-              PromotionModel nonPromotion = PromotionModel(
-                  code: '',
-                  discount: 0,
-                  startDate: '',
-                  expireDate: '',
-                  isAvailable: false);
+              PromotionModel nonPromotion = PromotionModel(code: '', discount: 0, startDate: '', expireDate: '', isAvailable: false);
               provider.updatePromotion(nonPromotion);
-              Navigator.push(
-                  context,
-                  PageTransition(
-                      child: const CartScreen(),
-                      type: PageTransitionType.rightToLeftWithFade));
+              Navigator.push(context, PageTransition(child: const CartScreen(), type: PageTransitionType.rightToLeftWithFade));
             },
             icon: Icon(
               Icons.delete,
@@ -129,11 +114,7 @@ class _AddVoucherScreenState extends State<AddVoucherScreen> {
                       code: displayList[index].code,
                       press: () async {
                         provider.updatePromotion(displayList[index]);
-                        Navigator.push(
-                            context,
-                            PageTransition(
-                                child: const CartScreen(),
-                                type: PageTransitionType.rightToLeftWithFade));
+                        Navigator.push(context, PageTransition(child: const CartScreen(), type: PageTransitionType.rightToLeftWithFade));
                       },
                     ),
                   );

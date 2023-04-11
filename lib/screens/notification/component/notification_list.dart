@@ -50,12 +50,7 @@ class _NotificationListState extends State<NotificationList> {
                         decoration: const BoxDecoration(
                           color: kPrimaryColor,
                           shape: BoxShape.circle,
-                          boxShadow: [
-                            BoxShadow(
-                                blurRadius: 1,
-                                color: kPrimaryColor,
-                                spreadRadius: 1)
-                          ],
+                          boxShadow: [BoxShadow(blurRadius: 1, color: kPrimaryColor, spreadRadius: 1)],
                         ),
                         child: CircleAvatar(
                           backgroundImage: AssetImage(widget.image),
@@ -84,10 +79,7 @@ class _NotificationListState extends State<NotificationList> {
                                 child: Text(
                                   widget.content,
                                   maxLines: 2,
-                                  style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: fontWeight,
-                                      color: Colors.grey.shade600),
+                                  style: TextStyle(fontSize: 14, fontWeight: fontWeight, color: Colors.grey.shade600),
                                 ),
                               )
                             ],
@@ -98,9 +90,7 @@ class _NotificationListState extends State<NotificationList> {
                   ),
                 ),
                 Text(
-                  checkOver24h
-                      ? TimeUtils().getDisplayName(widget.time)
-                      : TimeUtils().getDisplayName(widget.time.split(' ')[1]),
+                  checkOver24h ? TimeUtils().getDisplayName(widget.time) : TimeUtils().getDisplayName(widget.time.split(' ')[1]),
                   style: TextStyle(
                     fontSize: 12,
                     color: Colors.grey.shade600,

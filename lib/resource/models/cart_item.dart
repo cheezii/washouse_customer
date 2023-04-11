@@ -105,8 +105,7 @@ class CartItem {
     this.unit,
   });
 
-  factory CartItem.fromJson(String jsonStr) =>
-      CartItem.fromMap(json.decode(jsonStr));
+  factory CartItem.fromJson(String jsonStr) => CartItem.fromMap(json.decode(jsonStr));
 
   String toJson() => json.encode(toMap());
 

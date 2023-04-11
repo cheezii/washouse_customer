@@ -8,12 +8,7 @@ class Wallet {
   List<WalletTransactions>? transactions;
   List<WalletTransactions>? walletTransactions;
 
-  Wallet(
-      {this.walletId,
-      this.balance,
-      this.status,
-      this.transactions,
-      this.walletTransactions});
+  Wallet({this.walletId, this.balance, this.status, this.transactions, this.walletTransactions});
 
   Wallet.fromJson(Map<String, dynamic> json) {
     walletId = json['walletId'];
@@ -42,8 +37,7 @@ class Wallet {
       data['transactions'] = this.transactions!.map((v) => v.toJson()).toList();
     }
     if (this.walletTransactions != null) {
-      data['walletTransactions'] =
-          this.walletTransactions!.map((v) => v.toJson()).toList();
+      data['walletTransactions'] = this.walletTransactions!.map((v) => v.toJson()).toList();
     }
     return data;
   }

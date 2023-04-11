@@ -8,15 +8,7 @@ class CurrentUser {
   String? avatar;
   int? locationId;
 
-  CurrentUser(
-      {this.tokenId,
-      this.accountId,
-      this.email,
-      this.phone,
-      this.roleType,
-      this.name,
-      this.avatar,
-      this.locationId});
+  CurrentUser({this.tokenId, this.accountId, this.email, this.phone, this.roleType, this.name, this.avatar, this.locationId});
 
   CurrentUser.fromJson(Map<String, dynamic> json) {
     tokenId = json['tokenId'];

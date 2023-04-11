@@ -43,14 +43,12 @@ class _ChangePwdScreenState extends State<ChangePwdScreen> {
                   const SizedBox(height: kDefaultPadding),
                   const Text(
                     'Tạo mật khẩu mới',
-                    style:
-                        TextStyle(fontSize: 40.0, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 40.0, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: kDefaultPadding / 2),
                   const Text(
                     'Mật khẩu mới của bạn phải khác với mật khẩu đã tạo trước đó.',
-                    style:
-                        TextStyle(fontSize: 18.0, fontWeight: FontWeight.w400),
+                    style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w400),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: kDefaultPadding),
@@ -80,9 +78,7 @@ class _ChangePwdScreenState extends State<ChangePwdScreen> {
                           suffix: InkWell(
                             onTap: _togglePasswordView,
                             child: Icon(
-                              _isPassHidden
-                                  ? Icons.visibility
-                                  : Icons.visibility_off,
+                              _isPassHidden ? Icons.visibility : Icons.visibility_off,
                             ),
                           )),
                       cursorColor: textColor.withOpacity(.8),
@@ -118,9 +114,7 @@ class _ChangePwdScreenState extends State<ChangePwdScreen> {
                           suffix: InkWell(
                             onTap: _toggleConPasswordView,
                             child: Icon(
-                              _isConPassHidden
-                                  ? Icons.visibility
-                                  : Icons.visibility_off,
+                              _isConPassHidden ? Icons.visibility : Icons.visibility_off,
                             ),
                           )),
                       cursorColor: textColor.withOpacity(.8),
@@ -133,21 +127,14 @@ class _ChangePwdScreenState extends State<ChangePwdScreen> {
                     height: 45,
                     child: ElevatedButton(
                       onPressed: () {
-                        if (_formPwdKey.currentState!.validate() &&
-                            _formConPwdKey.currentState!.validate()) {
+                        if (_formPwdKey.currentState!.validate() && _formConPwdKey.currentState!.validate()) {
                           _formPwdKey.currentState!.save();
                           _formConPwdKey.currentState!.save();
-                          Navigator.push(
-                              context,
-                              PageTransition(
-                                  child: const Login(),
-                                  type: PageTransitionType.fade));
+                          Navigator.push(context, PageTransition(child: const Login(), type: PageTransitionType.fade));
                         }
                       },
                       style: ElevatedButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0)),
-                          backgroundColor: kPrimaryColor),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)), backgroundColor: kPrimaryColor),
                       child: const Text(
                         'Tạo mật khẩu',
                         style: TextStyle(fontSize: 18.0),
@@ -159,11 +146,7 @@ class _ChangePwdScreenState extends State<ChangePwdScreen> {
                     alignment: Alignment.centerRight,
                     child: TextButton(
                       onPressed: () {
-                        Navigator.push(
-                            context,
-                            PageTransition(
-                                child: const Login(),
-                                type: PageTransitionType.fade));
+                        Navigator.push(context, PageTransition(child: const Login(), type: PageTransitionType.fade));
                       },
                       child: const Text(
                         'Quay lại trang đăng nhập',

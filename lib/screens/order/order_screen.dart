@@ -23,19 +23,11 @@ class OrderScreen extends StatelessWidget {
             elevation: 0,
             automaticallyImplyLeading: false,
             backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-            title: const Text('Đơn hàng',
-                style: TextStyle(
-                    color: textColor,
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold)),
+            title: const Text('Đơn hàng', style: TextStyle(color: textColor, fontSize: 30, fontWeight: FontWeight.bold)),
             actions: [
               GestureDetector(
                 onTap: () {
-                  Navigator.push(
-                      context,
-                      PageTransition(
-                          child: const SearchOrderScreen(),
-                          type: PageTransitionType.fade));
+                  Navigator.push(context, PageTransition(child: const SearchOrderScreen(), type: PageTransitionType.fade));
                 },
                 child: const Padding(
                   padding: EdgeInsets.only(right: 16),
@@ -48,11 +40,7 @@ class OrderScreen extends StatelessWidget {
               ),
               TextButton(
                 onPressed: () {
-                  Navigator.push(
-                      context,
-                      PageTransition(
-                          child: const OrderHistoryScreen(),
-                          type: PageTransitionType.rightToLeftWithFade));
+                  Navigator.push(context, PageTransition(child: const OrderHistoryScreen(), type: PageTransitionType.rightToLeftWithFade));
                 },
                 child: const Text(
                   'Lịch sử',

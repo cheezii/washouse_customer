@@ -36,8 +36,7 @@ class _ManageAccountScreenState extends State<ManageAccountScreen> {
           ),
         ),
         centerTitle: true,
-        title: const Text('Quản lý tài khoản',
-            style: TextStyle(color: textColor, fontSize: 25)),
+        title: const Text('Quản lý tài khoản', style: TextStyle(color: textColor, fontSize: 25)),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 25),
@@ -67,11 +66,8 @@ class _ManageAccountScreenState extends State<ManageAccountScreen> {
                   context: context,
                   builder: (context) {
                     return AlertDialog(
-                      title: const Align(
-                          alignment: Alignment.center,
-                          child: Text('Đăng xuất')),
-                      content:
-                          const Text('Bạn có chắc là muốn đăng xuất không?'),
+                      title: const Align(alignment: Alignment.center, child: Text('Đăng xuất')),
+                      content: const Text('Bạn có chắc là muốn đăng xuất không?'),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15),
                       ),
@@ -82,14 +78,11 @@ class _ManageAccountScreenState extends State<ManageAccountScreen> {
                             ElevatedButton(
                               child: const Text(
                                 'Không, ở lại',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w700,
-                                    color: kPrimaryColor),
+                                style: TextStyle(fontWeight: FontWeight.w700, color: kPrimaryColor),
                               ),
                               style: ElevatedButton.styleFrom(
                                   elevation: 0,
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(30)),
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
                                   backgroundColor: kBackgroundColor),
                               onPressed: () {
                                 // Perform some action
@@ -99,23 +92,16 @@ class _ManageAccountScreenState extends State<ManageAccountScreen> {
                             ElevatedButton(
                               child: const Text(
                                 'Đúng thế',
-                                style: TextStyle(
-                                    color: Colors.red,
-                                    fontWeight: FontWeight.w700),
+                                style: TextStyle(color: Colors.red, fontWeight: FontWeight.w700),
                               ),
                               style: ElevatedButton.styleFrom(
                                   elevation: 0,
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(30)),
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
                                   backgroundColor: kBackgroundColor),
                               onPressed: () {
                                 // Perform some action
                                 Navigator.of(context).pop();
-                                Navigator.push(
-                                    context,
-                                    PageTransition(
-                                        child: const Login(),
-                                        type: PageTransitionType.fade));
+                                Navigator.push(context, PageTransition(child: const Login(), type: PageTransitionType.fade));
                               },
                             ),
                           ],

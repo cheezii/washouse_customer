@@ -28,8 +28,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
   List<WalletTransactions> newTransList = [];
 
   Future<void> _loadData() async {
-    final name =
-        await baseController.getStringtoSharedPreference("CURRENT_USER_NAME");
+    final name = await baseController.getStringtoSharedPreference("CURRENT_USER_NAME");
   }
 
   void getMyWallet() async {
@@ -71,8 +70,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
             ),
           ),
           centerTitle: true,
-          title: const Text('Ví của tôi',
-              style: TextStyle(color: textColor, fontSize: 25)),
+          title: const Text('Ví của tôi', style: TextStyle(color: textColor, fontSize: 25)),
         ),
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -110,9 +108,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                       height: 5,
                     ),
                     Text(
-                      isHidden
-                          ? '******'
-                          : '${PriceUtils().convertFormatPrice(_wallet!.balance!.round())} đ',
+                      isHidden ? '******' : '${PriceUtils().convertFormatPrice(_wallet!.balance!.round())} đ',
                       style: const TextStyle(
                         fontSize: 22,
                         fontWeight: FontWeight.w500,
@@ -125,8 +121,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 isHaveWallet
                     ? GestureDetector(
                         onTap: () async {
-                          const url =
-                              'https://washouse.azurewebsites.net/api/payments?moneytowallet=200000';
+                          const url = 'https://washouse.azurewebsites.net/api/payments?moneytowallet=200000';
                           if (await canLaunch(url)) {
                             await launch(url);
                           } else {
@@ -144,23 +139,19 @@ class _PaymentScreenState extends State<PaymentScreen> {
                             color: Color.fromARGB(255, 27, 122, 199),
                             elevation: 10,
                             child: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 10),
+                              padding: const EdgeInsets.symmetric(horizontal: 10),
                               child: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: <Widget>[
                                   SizedBox(
                                     width: 40,
                                     height: 40,
-                                    child: Image.asset(
-                                        'assets/images/transaction/wallet.png'),
+                                    child: Image.asset('assets/images/transaction/wallet.png'),
                                   ),
                                   const SizedBox(width: 10),
                                   const Text(
                                     'Nạp tiền vào ví',
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w600),
+                                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
                                   )
                                 ],
                               ),
@@ -181,8 +172,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                             color: Color.fromARGB(255, 175, 45, 35),
                             elevation: 10,
                             child: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 10),
+                              padding: const EdgeInsets.symmetric(horizontal: 10),
                               child: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: const [
@@ -194,9 +184,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                   SizedBox(width: 10),
                                   Text(
                                     'Liên kết tài khoản VNPAY',
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w600),
+                                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
                                   )
                                 ],
                               ),
@@ -223,25 +211,18 @@ class _PaymentScreenState extends State<PaymentScreen> {
                             itemCount: newTransList.length,
                             itemBuilder: (context, index) {
                               newTransList.sort((a, b) {
-                                DateTime aDate =
-                                    DateFormat('dd-MM-yyyy HH:mm:ss')
-                                        .parse(a.timeStamp!);
-                                DateTime bDate =
-                                    DateFormat('dd-MM-yyyy HH:mm:ss')
-                                        .parse(b.timeStamp!);
+                                DateTime aDate = DateFormat('dd-MM-yyyy HH:mm:ss').parse(a.timeStamp!);
+                                DateTime bDate = DateFormat('dd-MM-yyyy HH:mm:ss').parse(b.timeStamp!);
                                 return bDate.compareTo(aDate);
                               });
                               return TransactionWidget(
-                                isAdd: newTransList[index]
-                                    .plusOrMinus!
-                                    .toLowerCase(),
+                                isAdd: newTransList[index].plusOrMinus!.toLowerCase(),
                                 time: newTransList[index].timeStamp!,
                                 price: newTransList[index].amount!,
                               );
                             })
                         : Padding(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 90, horizontal: 80),
+                            padding: const EdgeInsets.symmetric(vertical: 90, horizontal: 80),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -249,23 +230,18 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                 SizedBox(
                                   width: 100,
                                   height: 100,
-                                  child: Image.asset(
-                                      'assets/images/transaction/transaction-history.png'),
+                                  child: Image.asset('assets/images/transaction/transaction-history.png'),
                                 ),
                                 const SizedBox(height: 15),
                                 Text(
                                   'Bạn chưa có giao dịch nào',
-                                  style: TextStyle(
-                                      color: Colors.grey.shade500,
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w400),
+                                  style: TextStyle(color: Colors.grey.shade500, fontSize: 18, fontWeight: FontWeight.w400),
                                 )
                               ],
                             ),
                           )
                     : Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 90, horizontal: 80),
+                        padding: const EdgeInsets.symmetric(vertical: 90, horizontal: 80),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -273,16 +249,12 @@ class _PaymentScreenState extends State<PaymentScreen> {
                             SizedBox(
                               width: 100,
                               height: 100,
-                              child: Image.asset(
-                                  'assets/images/transaction/transaction-history.png'),
+                              child: Image.asset('assets/images/transaction/transaction-history.png'),
                             ),
                             const SizedBox(height: 15),
                             Text(
                               'Bạn chưa có giao dịch nào',
-                              style: TextStyle(
-                                  color: Colors.grey.shade500,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w400),
+                              style: TextStyle(color: Colors.grey.shade500, fontSize: 18, fontWeight: FontWeight.w400),
                             )
                           ],
                         ),

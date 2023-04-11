@@ -9,8 +9,7 @@ import '../../components/constants/text_constants.dart';
 
 class MapUserController {
   Future<MapUser> getCurrentLocation(double lat, double long) async {
-    Response response = await get(
-        Uri.parse('$baseUrl/maps/location?latitude=$lat&longitude=$long'));
+    Response response = await get(Uri.parse('$baseUrl/maps/location?latitude=$lat&longitude=$long'));
     if (response.statusCode == 200) {
       var data = json.decode(response.body);
       return MapUser.fromJson(data);
@@ -37,8 +36,7 @@ class MapUserController {
       }
     }
     if (permission == LocationPermission.deniedForever) {
-      showDialog(
-          'Location permissions are permanently denied, we cannot request permissions.');
+      showDialog('Location permissions are permanently denied, we cannot request permissions.');
       return false;
     }
     return true;

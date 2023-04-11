@@ -32,12 +32,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future<void> _loadData() async {
-    final name =
-        await baseController.getStringtoSharedPreference("CURRENT_USER_NAME");
-    final email =
-        await baseController.getStringtoSharedPreference("CURRENT_USER_EMAIL");
-    final avatar =
-        await baseController.getStringtoSharedPreference("CURRENT_USER_AVATAR");
+    final name = await baseController.getStringtoSharedPreference("CURRENT_USER_NAME");
+    final email = await baseController.getStringtoSharedPreference("CURRENT_USER_EMAIL");
+    final avatar = await baseController.getStringtoSharedPreference("CURRENT_USER_AVATAR");
     setState(() {
       _currentUserName = name != "" ? name : "Undentified Name";
       _currentUserEmail = email != "" ? email : "Undentified Email";
@@ -72,11 +69,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     IconButton(
                       onPressed: () {
-                        Navigator.push(
-                            context,
-                            PageTransition(
-                                child: const ListNotificationScreen(),
-                                type: PageTransitionType.rightToLeftWithFade));
+                        Navigator.push(context, PageTransition(child: const ListNotificationScreen(), type: PageTransitionType.rightToLeftWithFade));
                       },
                       icon: const Icon(
                         Icons.notifications,
@@ -140,12 +133,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           txtColor: textColor,
                           iconColor: textColor,
                           press: () {
-                            Navigator.push(
-                                context,
-                                PageTransition(
-                                    child: const InfomationScreen(),
-                                    type: PageTransitionType
-                                        .leftToRightWithFade));
+                            Navigator.push(context, PageTransition(child: const InfomationScreen(), type: PageTransitionType.leftToRightWithFade));
                           },
                         ),
                         const SizedBox(height: 10),
@@ -155,12 +143,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           txtColor: textColor,
                           iconColor: textColor,
                           press: () {
-                            Navigator.push(
-                                context,
-                                PageTransition(
-                                    child: PaymentScreen(),
-                                    type: PageTransitionType
-                                        .rightToLeftWithFade));
+                            Navigator.push(context, PageTransition(child: PaymentScreen(), type: PageTransitionType.rightToLeftWithFade));
                           },
                         ),
                         const SizedBox(height: 10),
@@ -170,12 +153,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           txtColor: textColor,
                           iconColor: textColor,
                           press: () {
-                            Navigator.push(
-                                context,
-                                PageTransition(
-                                    child: MyFeedbackScreen(),
-                                    type: PageTransitionType
-                                        .rightToLeftWithFade));
+                            Navigator.push(context, PageTransition(child: MyFeedbackScreen(), type: PageTransitionType.rightToLeftWithFade));
                           },
                         ),
                         const SizedBox(height: 10),
@@ -203,9 +181,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           press: () {
                             Navigator.push(
                               context,
-                              PageTransition(
-                                  child: ManageAccountScreen(),
-                                  type: PageTransitionType.rightToLeftWithFade),
+                              PageTransition(child: ManageAccountScreen(), type: PageTransitionType.rightToLeftWithFade),
                             );
                           },
                         ),

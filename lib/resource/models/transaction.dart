@@ -5,8 +5,7 @@ class Transactions {
   double? amount;
   String? timeStamp;
 
-  Transactions(
-      {this.type, this.status, this.plusOrMinus, this.amount, this.timeStamp});
+  Transactions({this.type, this.status, this.plusOrMinus, this.amount, this.timeStamp});
 
   Transactions.fromJson(Map<String, dynamic> json) {
     type = json['type'];

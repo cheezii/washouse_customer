@@ -30,17 +30,12 @@ class OrderHistoryScreen extends StatelessWidget {
           ),
           title: const Align(
             alignment: Alignment.center,
-            child: Text('Lịch sử giao dịch',
-                style: TextStyle(color: textColor, fontSize: 27)),
+            child: Text('Lịch sử giao dịch', style: TextStyle(color: textColor, fontSize: 27)),
           ),
           actions: [
             GestureDetector(
               onTap: () {
-                Navigator.push(
-                    context,
-                    PageTransition(
-                        child: const SearchOrderScreen(),
-                        type: PageTransitionType.fade));
+                Navigator.push(context, PageTransition(child: const SearchOrderScreen(), type: PageTransitionType.fade));
               },
               child: const Padding(
                 padding: EdgeInsets.only(right: 16),

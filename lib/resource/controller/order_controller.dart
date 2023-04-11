@@ -32,37 +32,25 @@ class OrderController {
     var orderDetails = [];
     var deliveries = [];
 
-    orderBody.centerId =
-        await baseController.getInttoSharedPreference("centerId");
-    order.customerName =
-        await baseController.getStringtoSharedPreference("customerName");
-    order.customerAddressString = await baseController
-        .getStringtoSharedPreference("customerAddressString");
-    order.customerWardId =
-        await baseController.getInttoSharedPreference("customerWardId");
-    order.customerEmail =
-        await baseController.getStringtoSharedPreference("CURRENT_USER_EMAIL");
-    order.customerMobile =
-        await baseController.getStringtoSharedPreference("customerPhone");
-    order.customerMessage =
-        await baseController.getStringtoSharedPreference("customerMessage");
-    order.deliveryType =
-        await baseController.getInttoSharedPreference("deliveryType");
-    String? preferredDropoffTime_Date = await baseController
-        .getStringtoSharedPreference("preferredDropoffTime_Date");
-    String? preferredDropoffTime_Time = await baseController
-        .getStringtoSharedPreference("preferredDropoffTime_Time");
+    orderBody.centerId = await baseController.getInttoSharedPreference("centerId");
+    order.customerName = await baseController.getStringtoSharedPreference("customerName");
+    order.customerAddressString = await baseController.getStringtoSharedPreference("customerAddressString");
+    order.customerWardId = await baseController.getInttoSharedPreference("customerWardId");
+    order.customerEmail = await baseController.getStringtoSharedPreference("CURRENT_USER_EMAIL");
+    order.customerMobile = await baseController.getStringtoSharedPreference("customerPhone");
+    order.customerMessage = await baseController.getStringtoSharedPreference("customerMessage");
+    order.deliveryType = await baseController.getInttoSharedPreference("deliveryType");
+    String? preferredDropoffTime_Date = await baseController.getStringtoSharedPreference("preferredDropoffTime_Date");
+    String? preferredDropoffTime_Time = await baseController.getStringtoSharedPreference("preferredDropoffTime_Time");
     if (preferredDropoffTime_Date != null &&
         preferredDropoffTime_Time != null &&
         preferredDropoffTime_Date != "" &&
         preferredDropoffTime_Time != "") {
       print(preferredDropoffTime_Date + " " + preferredDropoffTime_Time);
-      order.preferredDropoffTime =
-          preferredDropoffTime_Date + " " + preferredDropoffTime_Time;
+      order.preferredDropoffTime = preferredDropoffTime_Date + " " + preferredDropoffTime_Time;
     }
 
-    List<CartItem> listCartItems =
-        Provider.of<CartProvider>(context, listen: false).cartItems;
+    List<CartItem> listCartItems = Provider.of<CartProvider>(context, listen: false).cartItems;
     print(listCartItems.length);
     for (var element in listCartItems) {
       var orderDetail = new Order_Details();
@@ -74,47 +62,38 @@ class OrderController {
       orderDetails.add(orderDetail);
     }
 
-    order.deliveryPrice =
-        await baseController.getDoubletoSharedPreference("deliveryPrice");
+    order.deliveryPrice = await baseController.getDoubletoSharedPreference("deliveryPrice");
 
     if (order.deliveryType == 1 || order.deliveryType == 3) {
       var delivery = new Deliveries();
-      delivery.addressString = await baseController
-          .getStringtoSharedPreference("addressString_Dropoff");
-      delivery.wardId =
-          await baseController.getInttoSharedPreference("wardId_Dropoff");
+      delivery.addressString = await baseController.getStringtoSharedPreference("addressString_Dropoff");
+      delivery.wardId = await baseController.getInttoSharedPreference("wardId_Dropoff");
       delivery.deliveryType = false;
       deliveries.add(delivery);
     }
     if (order.deliveryType == 2 || order.deliveryType == 3) {
       var delivery = new Deliveries();
-      delivery.addressString = await baseController
-          .getStringtoSharedPreference("addressString_Delivery");
-      delivery.wardId =
-          await baseController.getInttoSharedPreference("wardId_Delivery");
+      delivery.addressString = await baseController.getStringtoSharedPreference("addressString_Delivery");
+      delivery.wardId = await baseController.getInttoSharedPreference("wardId_Delivery");
       delivery.deliveryType = true;
       deliveries.add(delivery);
     }
-    String promotionCode =
-        await baseController.getStringtoSharedPreference("promoCode");
+    String promotionCode = await baseController.getStringtoSharedPreference("promoCode");
     if (promotionCode != "") {
       orderBody.promoCode = promotionCode;
     }
-    orderBody.paymentMethod =
-        await baseController.getInttoSharedPreference("paymentMethod");
+    orderBody.paymentMethod = await baseController.getInttoSharedPreference("paymentMethod");
 
     orderBody.deliveries = deliveries.cast<Deliveries>();
     orderBody.orderDetails = orderDetails.cast<Order_Details>();
     orderBody.order = order;
     if (orderBody.order!.preferredDropoffTime == null) {
-      orderBody.order!.preferredDropoffTime =
-          DateFormat('dd-MM-yyyy HH:mm:ss').format(DateTime.now());
+      orderBody.order!.preferredDropoffTime = DateFormat('dd-MM-yyyy HH:mm:ss').format(DateTime.now());
     }
     OrderBody requestBody = orderBody;
     print(requestBody.toJson());
     final headers = {'Content-Type': 'application/json'};
-    http.Response response = await http.post(Uri.parse('$baseUrl/orders'),
-        headers: headers, body: json.encode(requestBody.toJson()));
+    http.Response response = await http.post(Uri.parse('$baseUrl/orders'), headers: headers, body: json.encode(requestBody.toJson()));
     dynamic responseData = json.decode(response.body);
     print(responseData["message"]);
     // Make the authenticated POST requests
@@ -137,15 +116,9 @@ class OrderController {
   }
 
   Future<double> calculateDeliveryPrice(
-      String? DropoffAddress,
-      int? DropoffWardId,
-      String? DeliverAddress,
-      int? DeliverWardId,
-      bool checkDropoff,
-      bool checkDeliver) async {
+      String? DropoffAddress, int? DropoffWardId, String? DeliverAddress, int? DeliverWardId, bool checkDropoff, bool checkDeliver) async {
     String url = '$baseUrl/orders/delivery-price';
-    List<CartItem> listCartItems =
-        Provider.of<CartProvider>(context, listen: false).cartItems;
+    List<CartItem> listCartItems = Provider.of<CartProvider>(context, listen: false).cartItems;
     double totalWeight = 0;
     for (var element in listCartItems) {
       if (element.weight != null) {
@@ -182,11 +155,8 @@ class OrderController {
     }
 
     print(queryParams.toString());
-    final response = await http.get(Uri.parse(url +
-        '?' +
-        Uri(
-            queryParameters: queryParams
-                .map((key, value) => MapEntry(key, value.toString()))).query));
+    final response =
+        await http.get(Uri.parse(url + '?' + Uri(queryParameters: queryParams.map((key, value) => MapEntry(key, value.toString()))).query));
     dynamic responseData = json.decode(response.body);
     print(responseData["message"]);
     // Make the authenticated POST requests

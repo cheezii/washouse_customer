@@ -57,8 +57,7 @@ class _SignUpState extends State<SignUp> {
                   const SizedBox(height: kDefaultPadding),
                   const Text(
                     'Đăng ký',
-                    style:
-                        TextStyle(fontSize: 40.0, fontWeight: FontWeight.w700),
+                    style: TextStyle(fontSize: 40.0, fontWeight: FontWeight.w700),
                   ),
                   const SizedBox(height: kDefaultPadding),
                   Form(
@@ -119,9 +118,7 @@ class _SignUpState extends State<SignUp> {
                           suffix: InkWell(
                             onTap: _togglePasswordView,
                             child: Icon(
-                              _isPassHidden
-                                  ? Icons.visibility
-                                  : Icons.visibility_off,
+                              _isPassHidden ? Icons.visibility : Icons.visibility_off,
                             ),
                           )),
                       cursorColor: textColor.withOpacity(.8),
@@ -157,9 +154,7 @@ class _SignUpState extends State<SignUp> {
                           suffix: InkWell(
                             onTap: _toggleConPasswordView,
                             child: Icon(
-                              _isConPassHidden
-                                  ? Icons.visibility
-                                  : Icons.visibility_off,
+                              _isConPassHidden ? Icons.visibility : Icons.visibility_off,
                             ),
                           )),
                       cursorColor: textColor.withOpacity(.8),
@@ -196,9 +191,7 @@ class _SignUpState extends State<SignUp> {
                         }
                       },
                       style: ElevatedButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0)),
-                          backgroundColor: kPrimaryColor),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)), backgroundColor: kPrimaryColor),
                       child: const Text(
                         'Đăng ký',
                         style: TextStyle(fontSize: 18.0),
@@ -210,8 +203,7 @@ class _SignUpState extends State<SignUp> {
                     children: const [
                       Expanded(child: Divider()),
                       Padding(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: kDefaultPadding / 2),
+                        padding: EdgeInsets.symmetric(horizontal: kDefaultPadding / 2),
                         child: Text('HOẶC'),
                       ),
                       Expanded(child: Divider()),
@@ -241,8 +233,7 @@ class _SignUpState extends State<SignUp> {
                         border: Border.all(color: kPrimaryColor),
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 10),
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
@@ -341,8 +332,7 @@ class _SignUpState extends State<SignUp> {
       );
       //}
     } else {
-      Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (Context) => BaseScreen()));
+      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (Context) => BaseScreen()));
     }
   }
 

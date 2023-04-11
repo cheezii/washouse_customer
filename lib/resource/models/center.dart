@@ -69,9 +69,7 @@ class LaundryCenter {
         centerDeliveryPrices?.add(new CenterDeliveryPrice.fromJson(v));
       });
     }
-    centerLocation = json['centerLocation'] != null
-        ? new CenterLocation.fromJson(json['centerLocation'])
-        : null;
+    centerLocation = json['centerLocation'] != null ? new CenterLocation.fromJson(json['centerLocation']) : null;
     if (json['centerOperatingHours'] != null) {
       centerOperatingHours = <CenterOperatingHours>[];
       json['centerOperatingHours'].forEach((v) {

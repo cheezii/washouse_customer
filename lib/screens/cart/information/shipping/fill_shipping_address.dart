@@ -61,8 +61,7 @@ class _FillAddressScreenState extends State<FillAddressScreen> {
 
   Future getWardsList() async {
     int districtId = int.parse(myDistrict!);
-    Response response =
-        await get(Uri.parse('$baseUrl/districts/$districtId/wards'));
+    Response response = await get(Uri.parse('$baseUrl/districts/$districtId/wards'));
     if (response.statusCode == 200) {
       var data = json.decode(response.body);
       setState(() {
@@ -74,20 +73,16 @@ class _FillAddressScreenState extends State<FillAddressScreen> {
   }
 
   Future<void> _loadData() async {
-    final name =
-        await baseController.getStringtoSharedPreference("CURRENT_USER_NAME");
-    final phone =
-        await baseController.getStringtoSharedPreference("CURRENT_USER_PHONE");
-    final locationId = await baseController
-        .getInttoSharedPreference("CURRENT_USER_LOCATION_ID");
+    final name = await baseController.getStringtoSharedPreference("CURRENT_USER_NAME");
+    final phone = await baseController.getStringtoSharedPreference("CURRENT_USER_PHONE");
+    final locationId = await baseController.getInttoSharedPreference("CURRENT_USER_LOCATION_ID");
     setState(() {
       _currentUserName = name != "" ? name : "Undentified Name";
       _currentUserPhone = phone != "" ? phone : "Undentified Phone";
       _currentUserLocationId = locationId != 0 ? locationId : 0;
     });
     print(_currentUserLocationId);
-    Response response =
-        await get(Uri.parse('$baseUrl/locations/$_currentUserLocationId'));
+    Response response = await get(Uri.parse('$baseUrl/locations/$_currentUserLocationId'));
     if (response.statusCode == 200) {
       var data = json.decode(response.body);
       setState(() {
@@ -95,8 +90,7 @@ class _FillAddressScreenState extends State<FillAddressScreen> {
         _currentUserWardId = data['data']['ward']['wardId'];
         _currentUserWardName = data['data']['ward']['wardName'];
         _currentUserDistrictId = data['data']['ward']['district']['districtId'];
-        _currentUserDistrictName =
-            data['data']['ward']['district']['districtName'];
+        _currentUserDistrictName = data['data']['ward']['district']['districtName'];
       });
       print(_currentUserAddressString);
     } else {
@@ -120,8 +114,7 @@ class _FillAddressScreenState extends State<FillAddressScreen> {
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         elevation: 0,
-        backgroundColor:
-            kPrimaryColor, //Theme.of(context).scaffoldBackgroundColor
+        backgroundColor: kPrimaryColor, //Theme.of(context).scaffoldBackgroundColor
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);
@@ -134,8 +127,7 @@ class _FillAddressScreenState extends State<FillAddressScreen> {
         ),
         title: const Align(
           alignment: Alignment.center,
-          child: Text('Thông tin khách hàng',
-              style: TextStyle(color: Colors.white, fontSize: 24)),
+          child: Text('Thông tin khách hàng', style: TextStyle(color: Colors.white, fontSize: 24)),
         ),
         actions: const [
           Padding(
@@ -271,10 +263,7 @@ class _FillAddressScreenState extends State<FillAddressScreen> {
                   DropdownButtonFormField(
                     isDense: true,
                     isExpanded: true,
-                    items: <String>[
-                      'Thành phố Hồ Chí Minh',
-                      'Chọn tỉnh / thành phố'
-                    ].map((String item) {
+                    items: <String>['Thành phố Hồ Chí Minh', 'Chọn tỉnh / thành phố'].map((String item) {
                       return DropdownMenuItem<String>(
                         value: item,
                         child: Text(item),
@@ -319,9 +308,7 @@ class _FillAddressScreenState extends State<FillAddressScreen> {
                     icon: const Icon(Icons.keyboard_arrow_down_rounded),
                     iconSize: 30,
                     value: myDistrict,
-                    hint: !_isChecked
-                        ? const Text('Chọn quận/huyện')
-                        : Text(_currentUserDistrictName),
+                    hint: !_isChecked ? const Text('Chọn quận/huyện') : Text(_currentUserDistrictName),
                     style: const TextStyle(color: textColor),
                     onChanged: (String? newValue) {
                       setState(() {
@@ -362,9 +349,7 @@ class _FillAddressScreenState extends State<FillAddressScreen> {
                       contentPadding: EdgeInsets.all(2),
                     ),
                     initialValue: myWard,
-                    hint: !_isChecked
-                        ? const Text('Chọn phường/xã')
-                        : Text(_currentUserWardName),
+                    hint: !_isChecked ? const Text('Chọn phường/xã') : Text(_currentUserWardName),
                     style: const TextStyle(color: textColor),
                     onChanged: (newValue) {
                       setState(() {
@@ -384,8 +369,7 @@ class _FillAddressScreenState extends State<FillAddressScreen> {
         height: 70,
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(30), topRight: Radius.circular(30)),
+          borderRadius: const BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30)),
           boxShadow: [
             BoxShadow(
               offset: const Offset(0, -15),
@@ -398,36 +382,25 @@ class _FillAddressScreenState extends State<FillAddressScreen> {
           width: 190,
           height: 40,
           child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0)),
-                backgroundColor: kPrimaryColor),
+            style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)), backgroundColor: kPrimaryColor),
             onPressed: () async {
-              if (_formNameKey.currentState!.validate() &&
-                  _formPhoneNumberKey.currentState!.validate() &&
-                  _formAddressKey.currentState!.validate()) {
+              if (_formNameKey.currentState!.validate() && _formPhoneNumberKey.currentState!.validate() && _formAddressKey.currentState!.validate()) {
                 _formNameKey.currentState!.save();
                 _formPhoneNumberKey.currentState!.save();
                 _formAddressKey.currentState!.save();
-                baseController.saveStringtoSharedPreference(
-                    "customerName", nameController.value.text);
-                baseController.saveStringtoSharedPreference(
-                    "customerAddressString", adressController.value.text);
-                baseController.saveStringtoSharedPreference(
-                    "customerPhone", phoneController.value.text);
+                baseController.saveStringtoSharedPreference("customerName", nameController.value.text);
+                baseController.saveStringtoSharedPreference("customerAddressString", adressController.value.text);
+                baseController.saveStringtoSharedPreference("customerPhone", phoneController.value.text);
                 int wardChoosen = 0;
                 if (_isChecked) {
                   wardChoosen = _currentUserWardId!;
                 } else {
                   wardChoosen = int.parse(myWard!);
                 }
-                baseController.saveInttoSharedPreference(
-                    "customerWardId", wardChoosen);
+                baseController.saveInttoSharedPreference("customerWardId", wardChoosen);
 
-                print(
-                    '_formNameKey.currentState!=${nameController.value.text}');
-                print(
-                    'address!=${await baseController.getStringtoSharedPreference("customerAddressString")}');
+                print('_formNameKey.currentState!=${nameController.value.text}');
+                print('address!=${await baseController.getStringtoSharedPreference("customerAddressString")}');
                 await baseController.printAllSharedPreferences();
                 // print(
                 //     '_formPhoneNumberKey.currentState!=${_formPhoneNumberKey.currentState!}');
@@ -440,11 +413,7 @@ class _FillAddressScreenState extends State<FillAddressScreen> {
                 // print(
                 //     '_formAddressKey.currentState!=${_formAddressKey.currentState!}');
                 // print('myWard=${myWard}');
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) =>
-                            CheckoutScreen(cart: cartItems[0])));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => CheckoutScreen(cart: cartItems[0])));
               }
             },
             child: const Text(

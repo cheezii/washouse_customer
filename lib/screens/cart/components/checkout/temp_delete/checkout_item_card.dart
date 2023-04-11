@@ -40,10 +40,7 @@ class CheckoutItemCard extends StatelessWidget {
                 child: Text(
                   //cart.service.name!,
                   cart.name,
-                  style: const TextStyle(
-                      fontSize: 17,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold),
+                  style: const TextStyle(fontSize: 17, color: Colors.black, fontWeight: FontWeight.bold),
                   maxLines: 2,
                 ),
               ),

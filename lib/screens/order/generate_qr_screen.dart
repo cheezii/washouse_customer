@@ -26,8 +26,7 @@ class GenerateQRCodeScreen extends StatelessWidget {
         ),
         title: const Align(
           alignment: Alignment.center,
-          child: Text('QR đơn hàng',
-              style: TextStyle(color: textColor, fontSize: 27)),
+          child: Text('QR đơn hàng', style: TextStyle(color: textColor, fontSize: 27)),
         ),
         actions: [
           GestureDetector(
@@ -54,10 +53,7 @@ class GenerateQRCodeScreen extends StatelessWidget {
             const SizedBox(height: 10),
             const Text(
               'Bạn đã đặt hàng thành công!',
-              style: TextStyle(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 22,
-                  color: kPrimaryColor),
+              style: TextStyle(fontWeight: FontWeight.w600, fontSize: 22, color: kPrimaryColor),
             ),
             const SizedBox(height: 10),
             const Text(

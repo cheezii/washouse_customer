@@ -6,8 +6,7 @@ class Order {
   String deliveryType;
   DateTime createdDate;
   String serviceName;
-  String
-      status; //0 = đang chờ, 1 = xác nhận, 2 = xử lý, 3 = sẵn sàng, 4 = hoàn tất, 5 = đã hủy
+  String status; //0 = đang chờ, 1 = xác nhận, 2 = xử lý, 3 = sẵn sàng, 4 = hoàn tất, 5 = đã hủy
   int quantity;
   Order({
     required this.id,

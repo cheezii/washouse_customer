@@ -22,8 +22,7 @@ class ProfileWidget extends StatelessWidget {
     return ElevatedButton(
       onPressed: press,
       style: ElevatedButton.styleFrom(
-          padding:
-              EdgeInsetsDirectional.symmetric(horizontal: 19, vertical: 16),
+          padding: EdgeInsetsDirectional.symmetric(horizontal: 19, vertical: 16),
           foregroundColor: kPrimaryColor.withOpacity(.7),
           elevation: 0,
           shape: RoundedRectangleBorder(

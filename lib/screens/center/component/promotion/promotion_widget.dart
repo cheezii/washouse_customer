@@ -94,8 +94,7 @@ class PromotionWidget extends StatelessWidget {
               width: size.width * 0.24,
               child: Text(
                 code,
-                style: TextStyle(
-                    color: Colors.grey.shade600, fontWeight: FontWeight.w600),
+                style: TextStyle(color: Colors.grey.shade600, fontWeight: FontWeight.w600),
               ),
             )
           ],

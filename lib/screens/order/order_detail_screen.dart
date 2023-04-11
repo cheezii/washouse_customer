@@ -65,17 +65,12 @@ class OrderDetailScreen extends StatelessWidget {
         ),
         title: const Align(
           alignment: Alignment.center,
-          child: Text('Chi tiết đơn hàng',
-              style: TextStyle(color: textColor, fontSize: 27)),
+          child: Text('Chi tiết đơn hàng', style: TextStyle(color: textColor, fontSize: 27)),
         ),
         actions: [
           IconButton(
               onPressed: () {
-                Navigator.push(
-                    context,
-                    PageTransition(
-                        child: const GenerateQRCodeScreen(),
-                        type: PageTransitionType.rightToLeftWithFade));
+                Navigator.push(context, PageTransition(child: const GenerateQRCodeScreen(), type: PageTransitionType.rightToLeftWithFade));
               },
               icon: const Icon(
                 Icons.qr_code_2_rounded,
@@ -98,8 +93,7 @@ class OrderDetailScreen extends StatelessWidget {
                     children: [
                       Text(
                         '#${orderList[0].id}',
-                        style: const TextStyle(
-                            fontWeight: FontWeight.w600, fontSize: 20),
+                        style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 20),
                       ),
                       //DetailHeading(statusColor: statusColor, status: status)
                     ],
@@ -151,10 +145,7 @@ class OrderDetailScreen extends StatelessWidget {
                 children: [
                   const Text(
                     'Phương thức vận chuyển',
-                    style: TextStyle(
-                        color: textColor,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600),
+                    style: TextStyle(color: textColor, fontSize: 20, fontWeight: FontWeight.w600),
                   ),
                   const SizedBox(height: 6),
                   Padding(
@@ -163,8 +154,7 @@ class OrderDetailScreen extends StatelessWidget {
                       children: [
                         SizedBox(
                           width: 35,
-                          child:
-                              Image.asset('assets/images/shipping/ship-di.png'),
+                          child: Image.asset('assets/images/shipping/ship-di.png'),
                         ),
                         const SizedBox(width: 8),
                         const Text(
@@ -185,10 +175,7 @@ class OrderDetailScreen extends StatelessWidget {
                 children: [
                   const Text(
                     'Phương thức thanh toán',
-                    style: TextStyle(
-                        color: textColor,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600),
+                    style: TextStyle(color: textColor, fontSize: 20, fontWeight: FontWeight.w600),
                   ),
                   const SizedBox(height: 6),
                   Padding(
@@ -197,8 +184,7 @@ class OrderDetailScreen extends StatelessWidget {
                       children: [
                         SizedBox(
                           width: 35,
-                          child: Image.asset(
-                              'assets/images/shipping/cash-on-delivery.png'),
+                          child: Image.asset('assets/images/shipping/cash-on-delivery.png'),
                         ),
                         const SizedBox(width: 8),
                         const Text(
@@ -219,10 +205,7 @@ class OrderDetailScreen extends StatelessWidget {
                 children: [
                   const Text(
                     'Chi tiết thanh toán',
-                    style: TextStyle(
-                        color: textColor,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w700),
+                    style: TextStyle(color: textColor, fontSize: 18, fontWeight: FontWeight.w700),
                   ),
                   const SizedBox(height: 10),
                   Padding(
@@ -238,10 +221,7 @@ class OrderDetailScreen extends StatelessWidget {
                             ),
                             Text(
                               '285000 đ',
-                              style: TextStyle(
-                                  fontSize: 16,
-                                  color: textColor,
-                                  fontWeight: FontWeight.bold),
+                              style: TextStyle(fontSize: 16, color: textColor, fontWeight: FontWeight.bold),
                             )
                           ],
                         ),
@@ -255,10 +235,7 @@ class OrderDetailScreen extends StatelessWidget {
                             ),
                             Text(
                               '0 đ',
-                              style: TextStyle(
-                                  fontSize: 16,
-                                  color: textColor,
-                                  fontWeight: FontWeight.bold),
+                              style: TextStyle(fontSize: 16, color: textColor, fontWeight: FontWeight.bold),
                             )
                           ],
                         ),
@@ -272,10 +249,7 @@ class OrderDetailScreen extends StatelessWidget {
                             ),
                             Text(
                               '0 đ',
-                              style: TextStyle(
-                                  fontSize: 16,
-                                  color: textColor,
-                                  fontWeight: FontWeight.bold),
+                              style: TextStyle(fontSize: 16, color: textColor, fontWeight: FontWeight.bold),
                             )
                           ],
                         ),
@@ -293,10 +267,7 @@ class OrderDetailScreen extends StatelessWidget {
                             ),
                             Text(
                               '285000 đ',
-                              style: TextStyle(
-                                  fontSize: 17,
-                                  color: kPrimaryColor,
-                                  fontWeight: FontWeight.bold),
+                              style: TextStyle(fontSize: 17, color: kPrimaryColor, fontWeight: FontWeight.bold),
                             )
                           ],
                         ),
@@ -316,9 +287,7 @@ class OrderDetailScreen extends StatelessWidget {
               height: 70,
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(30),
-                    topRight: Radius.circular(30)),
+                borderRadius: const BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30)),
                 boxShadow: [
                   BoxShadow(
                     offset: const Offset(0, -15),
@@ -332,9 +301,7 @@ class OrderDetailScreen extends StatelessWidget {
                 height: 40,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0)),
-                      backgroundColor: cancelColor),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)), backgroundColor: cancelColor),
                   onPressed: () {},
                   child: const Text(
                     'Hủy dịch vụ',
@@ -345,14 +312,11 @@ class OrderDetailScreen extends StatelessWidget {
             )
           : isShipping
               ? Container(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+                  padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
                   height: 70,
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: const BorderRadius.only(
-                        topLeft: Radius.circular(30),
-                        topRight: Radius.circular(30)),
+                    borderRadius: const BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30)),
                     boxShadow: [
                       BoxShadow(
                         offset: const Offset(0, -15),
@@ -366,9 +330,7 @@ class OrderDetailScreen extends StatelessWidget {
                     height: 40,
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0)),
-                          backgroundColor: kPrimaryColor),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)), backgroundColor: kPrimaryColor),
                       onPressed: () {},
                       child: const Text(
                         'Thanh toán',

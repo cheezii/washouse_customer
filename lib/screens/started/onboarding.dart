@@ -43,8 +43,7 @@ class _OnboardingState extends State<Onboarding> {
         ),
         actions: [
           Padding(
-            padding: const EdgeInsets.only(
-                right: kDefaultPadding, top: kDefaultPadding),
+            padding: const EdgeInsets.only(right: kDefaultPadding, top: kDefaultPadding),
             child: InkWell(
               onTap: () {
                 Navigator.pushReplacement(
@@ -115,9 +114,7 @@ class _OnboardingState extends State<Onboarding> {
                     if (currentIndex < 2) {
                       currentIndex++;
                       if (currentIndex < 3) {
-                        _pageController.nextPage(
-                            duration: const Duration(microseconds: 300),
-                            curve: Curves.easeIn);
+                        _pageController.nextPage(duration: const Duration(microseconds: 300), curve: Curves.easeIn);
                       }
                     } else {
                       Navigator.pushReplacement(

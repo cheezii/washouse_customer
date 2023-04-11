@@ -38,8 +38,7 @@ class _ChatUserListState extends State<ChatUserList> {
         );
       },
       child: Container(
-        padding:
-            const EdgeInsets.only(left: 16, right: 16, top: 10, bottom: 10),
+        padding: const EdgeInsets.only(left: 16, right: 16, top: 10, bottom: 10),
         child: Row(
           children: <Widget>[
             Expanded(
@@ -60,8 +59,7 @@ class _ChatUserListState extends State<ChatUserList> {
                           const SizedBox(height: 6),
                           Text(
                             widget.secondaryText,
-                            style: TextStyle(
-                                fontSize: 14, color: Colors.grey.shade500),
+                            style: TextStyle(fontSize: 14, color: Colors.grey.shade500),
                           )
                         ],
                       ),
@@ -72,11 +70,7 @@ class _ChatUserListState extends State<ChatUserList> {
             ),
             Text(
               widget.time,
-              style: TextStyle(
-                  fontSize: 12,
-                  color: widget.isMessageRead
-                      ? Colors.pink
-                      : Colors.grey.shade500),
+              style: TextStyle(fontSize: 12, color: widget.isMessageRead ? Colors.pink : Colors.grey.shade500),
             )
           ],
         ),

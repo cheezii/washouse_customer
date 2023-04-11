@@ -13,16 +13,13 @@ class PromotionController {
     List<PromotionModel> promotionList = [];
     try {
       String url = '$baseUrl/promotions/center/$centerId';
-      Response response =
-          await baseController.makeAuthenticatedRequest(url, {});
+      Response response = await baseController.makeAuthenticatedRequest(url, {});
       if (response.statusCode == 200) {
         // Handle successful response
         var data = jsonDecode(response.body)['data'] as List;
         promotionList = data.map((e) => PromotionModel.fromJson(e)).toList();
         print(promotionList.length);
-        promotionList = promotionList
-            .where((element) => element.isAvailable == true)
-            .toList();
+        promotionList = promotionList.where((element) => element.isAvailable == true).toList();
         print(promotionList.length);
       } else {
         // Handle error response

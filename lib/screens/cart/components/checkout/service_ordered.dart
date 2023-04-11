@@ -32,8 +32,7 @@ class ServiceOrdered extends StatelessWidget {
                     SizedBox(width: 6),
                     Text(
                       'The Clean House',
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                     )
                   ],
                 ),
@@ -82,10 +81,7 @@ class ServiceOrdered extends StatelessWidget {
                                 child: Text(
                                   //demoCarts[index].service.name!,
                                   cartItems[index].name,
-                                  style: const TextStyle(
-                                      fontSize: 17,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold),
+                                  style: const TextStyle(fontSize: 17, color: Colors.black, fontWeight: FontWeight.bold),
                                   maxLines: 2,
                                 ),
                               ),
@@ -96,14 +92,12 @@ class ServiceOrdered extends StatelessWidget {
                                       ? Text(
                                           //'KL: x${demoCarts[index].measurement} kg',
                                           'KL: x${cartItems[index].measurement} kg',
-                                          style: const TextStyle(
-                                              color: textColor, fontSize: 16),
+                                          style: const TextStyle(color: textColor, fontSize: 16),
                                         )
                                       : Text(
                                           //'SL: x${demoCarts[index].measurement}',
                                           'SL: x${cartItems[index].measurement.round()}',
-                                          style: const TextStyle(
-                                              color: textColor, fontSize: 16),
+                                          style: const TextStyle(color: textColor, fontSize: 16),
                                         ),
                                   const Spacer(),
                                   Text(

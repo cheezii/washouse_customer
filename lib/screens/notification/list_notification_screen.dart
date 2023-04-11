@@ -28,8 +28,7 @@ class ListNotificationScreen extends StatelessWidget {
           ),
         ),
         centerTitle: true,
-        title: const Text('Thông báo',
-            style: TextStyle(color: Colors.white, fontSize: 27)),
+        title: const Text('Thông báo', style: TextStyle(color: Colors.white, fontSize: 27)),
         actions: [
           IconButton(
             onPressed: () {},

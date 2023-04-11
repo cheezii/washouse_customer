@@ -9,8 +9,7 @@ class ChangePassWordAlertDialog extends StatefulWidget {
   const ChangePassWordAlertDialog({super.key});
 
   @override
-  State<ChangePassWordAlertDialog> createState() =>
-      _ChangePassWordAlertDialogState();
+  State<ChangePassWordAlertDialog> createState() => _ChangePassWordAlertDialogState();
 }
 
 BaseController _baseController = BaseController();
@@ -34,8 +33,7 @@ class _ChangePassWordAlertDialogState extends State<ChangePassWordAlertDialog> {
   }
 
   Future<void> _loadData() async {
-    final passwordSaved = await _baseController
-        .getStringtoSharedPreference("CURRENT_USER_PASSWORD");
+    final passwordSaved = await _baseController.getStringtoSharedPreference("CURRENT_USER_PASSWORD");
     setState(() {
       _passwordSaved = passwordSaved;
     });
@@ -72,10 +70,7 @@ class _ChangePassWordAlertDialogState extends State<ChangePassWordAlertDialog> {
               ),
               decoration: InputDecoration(
                 labelText: 'Mật khẩu hiện tại',
-                labelStyle: const TextStyle(
-                    color: textBoldColor,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w500),
+                labelStyle: const TextStyle(color: textBoldColor, fontSize: 18, fontWeight: FontWeight.w500),
                 hintStyle: TextStyle(
                   fontSize: 16,
                   color: Colors.grey.shade500,
@@ -106,10 +101,7 @@ class _ChangePassWordAlertDialogState extends State<ChangePassWordAlertDialog> {
               ),
               decoration: InputDecoration(
                 labelText: 'Mật khẩu mới',
-                labelStyle: const TextStyle(
-                    color: textBoldColor,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w500),
+                labelStyle: const TextStyle(color: textBoldColor, fontSize: 18, fontWeight: FontWeight.w500),
                 hintStyle: TextStyle(
                   fontSize: 16,
                   color: Colors.grey.shade500,
@@ -145,10 +137,7 @@ class _ChangePassWordAlertDialogState extends State<ChangePassWordAlertDialog> {
               ),
               decoration: InputDecoration(
                 labelText: 'Xác nhận mật khẩu',
-                labelStyle: const TextStyle(
-                    color: textBoldColor,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w500),
+                labelStyle: const TextStyle(color: textBoldColor, fontSize: 18, fontWeight: FontWeight.w500),
                 hintStyle: TextStyle(
                   fontSize: 16,
                   color: Colors.grey.shade500,
@@ -170,20 +159,16 @@ class _ChangePassWordAlertDialogState extends State<ChangePassWordAlertDialog> {
           width: MediaQuery.of(context).size.width,
           child: ElevatedButton(
             onPressed: () async {
-              if (_formOldPwdKey.currentState!.validate() &&
-                  _formPwdKey.currentState!.validate() &&
-                  _formConfirmKey.currentState!.validate()) {
+              if (_formOldPwdKey.currentState!.validate() && _formPwdKey.currentState!.validate() && _formConfirmKey.currentState!.validate()) {
                 //check _formPwdKey = _formConfirmKey
 
                 _formOldPwdKey.currentState!.save();
                 _formPwdKey.currentState!.save();
                 _formConfirmKey.currentState!.save();
                 //call api change pwd
-                String message = await _accountController.changePassword(
-                    oldPassword, newPassword);
+                String message = await _accountController.changePassword(oldPassword, newPassword);
                 if (message.compareTo("change password success") == 0) {
-                  await _baseController.saveStringtoSharedPreference(
-                      "CURRENT_USER_PASSWORD", passwordController.text);
+                  await _baseController.saveStringtoSharedPreference("CURRENT_USER_PASSWORD", passwordController.text);
                   Navigator.of(context).pop();
                   // ignore: use_build_context_synchronously
                   showDialog(
@@ -226,14 +211,12 @@ class _ChangePassWordAlertDialogState extends State<ChangePassWordAlertDialog> {
               }
             },
             style: ElevatedButton.styleFrom(
-                padding: const EdgeInsetsDirectional.symmetric(
-                    horizontal: 19, vertical: 10),
+                padding: const EdgeInsetsDirectional.symmetric(horizontal: 19, vertical: 10),
                 foregroundColor: kPrimaryColor.withOpacity(.7),
                 elevation: 0,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20),
-                  side: BorderSide(
-                      color: kPrimaryColor.withOpacity(.5), width: 1),
+                  side: BorderSide(color: kPrimaryColor.withOpacity(.5), width: 1),
                 ),
                 backgroundColor: kPrimaryColor),
             child: const Text(

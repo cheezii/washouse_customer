@@ -11,6 +11,4 @@ class Shipping {
 }
 
 Shipping shipping = Shipping(
-    fullName: 'Phan Nguyễn Quỳnh Chi',
-    shippedAddress: '477 Man Thiện, phường Tăng Nhơn Phú A, thành phố Thủ Đức',
-    shippedPhone: '0912345678');
+    fullName: 'Phan Nguyễn Quỳnh Chi', shippedAddress: '477 Man Thiện, phường Tăng Nhơn Phú A, thành phố Thủ Đức', shippedPhone: '0912345678');

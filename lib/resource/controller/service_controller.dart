@@ -11,8 +11,7 @@ BaseController baseController = BaseController();
 class ServiceController {
   List<Service> serviceList = [];
   Future<List<Service>> getServiceListByCenterId(int centerID) async {
-    Response response =
-        await get(Uri.parse('$baseUrl/centers/$centerID/services'));
+    Response response = await get(Uri.parse('$baseUrl/centers/$centerID/services'));
     try {
       var data = jsonDecode(response.body);
       if (response.statusCode == 200) {

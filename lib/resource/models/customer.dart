@@ -32,8 +32,7 @@ class Customer {
     email = json['email'];
     profilePic = json['profilePic'];
     addressString = json['addressString'];
-    address =
-        json['address'] != null ? new Address.fromJson(json['address']) : null;
+    address = json['address'] != null ? new Address.fromJson(json['address']) : null;
     walletId = json['walletId'];
     gender = json['gender'];
     dob = json['dob'];
@@ -65,8 +64,7 @@ class Address {
   double? latitude;
   double? longitude;
 
-  Address(
-      {this.id, this.addressString, this.ward, this.latitude, this.longitude});
+  Address({this.id, this.addressString, this.ward, this.latitude, this.longitude});
 
   Address.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -99,9 +97,7 @@ class Ward {
   Ward.fromJson(Map<String, dynamic> json) {
     wardId = json['wardId'];
     wardName = json['wardName'];
-    district = json['district'] != null
-        ? new District.fromJson(json['district'])
-        : null;
+    district = json['district'] != null ? new District.fromJson(json['district']) : null;
   }
 
   Map<String, dynamic> toJson() {

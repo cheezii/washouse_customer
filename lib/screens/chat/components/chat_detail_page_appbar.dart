@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:washouse_customer/components/constants/color_constants.dart';
 
-class ChatDetailPageAppbar extends StatelessWidget
-    implements PreferredSizeWidget {
+class ChatDetailPageAppbar extends StatelessWidget implements PreferredSizeWidget {
   const ChatDetailPageAppbar({super.key});
 
   @override

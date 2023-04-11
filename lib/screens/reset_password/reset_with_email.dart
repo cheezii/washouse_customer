@@ -21,8 +21,7 @@ VerifyController verifyController = VerifyController();
 
 class _ResetWithEmailState extends State<ResetWithEmail> {
   final _formEmailKey = GlobalKey<FormState>();
-  final typeEmail = RegExp(
-      r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
+  final typeEmail = RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -44,14 +43,12 @@ class _ResetWithEmailState extends State<ResetWithEmail> {
                   const SizedBox(height: 20),
                   const Text(
                     'Đặt lại mật khẩu',
-                    style:
-                        TextStyle(fontSize: 40.0, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 40.0, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: kDefaultPadding),
                   const Text(
                     'Nhập email của bạn, chúng tôi sẽ gửi mã OTP đến để cài lại mật khẩu.',
-                    style:
-                        TextStyle(fontSize: 18.0, fontWeight: FontWeight.w400),
+                    style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w400),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: kDefaultPadding),
@@ -94,14 +91,9 @@ class _ResetWithEmailState extends State<ResetWithEmail> {
                       onPressed: () async {
                         if (_formEmailKey.currentState!.validate()) {
                           _formEmailKey.currentState!.save();
-                          bool isSend = await verifyController
-                              .getOTPByEmail(emailController.text);
+                          bool isSend = await verifyController.getOTPByEmail(emailController.text);
                           if (isSend) {
-                            Navigator.push(
-                                context,
-                                PageTransition(
-                                    child: const OTPScreen(isSignUp: false),
-                                    type: PageTransitionType.fade));
+                            Navigator.push(context, PageTransition(child: const OTPScreen(isSignUp: false), type: PageTransitionType.fade));
                           } else {
                             showDialog(
                               context: context,
@@ -120,9 +112,7 @@ class _ResetWithEmailState extends State<ResetWithEmail> {
                         }
                       },
                       style: ElevatedButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0)),
-                          backgroundColor: kPrimaryColor),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)), backgroundColor: kPrimaryColor),
                       child: const Text(
                         'Tiếp tục',
                         style: TextStyle(fontSize: 18.0),
@@ -135,11 +125,7 @@ class _ResetWithEmailState extends State<ResetWithEmail> {
                     children: [
                       TextButton(
                         onPressed: () {
-                          Navigator.push(
-                              context,
-                              PageTransition(
-                                  child: const ResetWithPhone(),
-                                  type: PageTransitionType.fade));
+                          Navigator.push(context, PageTransition(child: const ResetWithPhone(), type: PageTransitionType.fade));
                         },
                         child: const Text(
                           'Đặt lại bằng điện thoại',
@@ -151,11 +137,7 @@ class _ResetWithEmailState extends State<ResetWithEmail> {
                       ),
                       TextButton(
                         onPressed: () {
-                          Navigator.push(
-                              context,
-                              PageTransition(
-                                  child: const Login(),
-                                  type: PageTransitionType.fade));
+                          Navigator.push(context, PageTransition(child: const Login(), type: PageTransitionType.fade));
                         },
                         child: const Text(
                           'Quay lại trang đăng nhập',

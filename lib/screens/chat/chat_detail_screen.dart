@@ -25,21 +25,15 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
     ChatMessage(message: 'Hello bạn', type: MessageType.Receiver),
     ChatMessage(message: 'Hi bạn', type: MessageType.Sender),
     ChatMessage(message: 'Nay làm tới đâu dồi?', type: MessageType.Receiver),
-    ChatMessage(
-        message: 'Ốm sốt chả làm được gì đây :))', type: MessageType.Sender),
-    ChatMessage(
-        message: 'Bốn ngày là nộp phạt 20k nhá :))',
-        type: MessageType.Receiver),
+    ChatMessage(message: 'Ốm sốt chả làm được gì đây :))', type: MessageType.Sender),
+    ChatMessage(message: 'Bốn ngày là nộp phạt 20k nhá :))', type: MessageType.Receiver),
   ];
 
   List<SendMenuItems> menuItems = [
-    SendMenuItems(
-        text: 'Photos & Videos', icon: Icons.image, color: Colors.amber),
+    SendMenuItems(text: 'Photos & Videos', icon: Icons.image, color: Colors.amber),
     //SendMenuItems(text: 'Documents',icon: Icons.insert_drive_file_rounded,color: Colors.blue),
-    SendMenuItems(
-        text: 'Record', icon: Icons.mic_rounded, color: Colors.orange),
-    SendMenuItems(
-        text: 'Location', icon: Icons.location_on_rounded, color: Colors.green),
+    SendMenuItems(text: 'Record', icon: Icons.mic_rounded, color: Colors.orange),
+    SendMenuItems(text: 'Location', icon: Icons.location_on_rounded, color: Colors.green),
     SendMenuItems(text: 'Contacts', icon: Icons.person, color: Colors.purple),
   ];
 

@@ -57,11 +57,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     ),
                     IconButton(
                       onPressed: () {
-                        Navigator.push(
-                            context,
-                            PageTransition(
-                                child: const ListNotificationScreen(),
-                                type: PageTransitionType.rightToLeftWithFade));
+                        Navigator.push(context, PageTransition(child: const ListNotificationScreen(), type: PageTransitionType.rightToLeftWithFade));
                       },
                       icon: const Icon(
                         Icons.notifications,

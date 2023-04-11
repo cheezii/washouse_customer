@@ -27,8 +27,7 @@ class _ChooseShippingMethodState extends State<ChooseShippingMethod> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        backgroundColor:
-            kPrimaryColor, //Theme.of(context).scaffoldBackgroundColor
+        backgroundColor: kPrimaryColor, //Theme.of(context).scaffoldBackgroundColor
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);
@@ -41,8 +40,7 @@ class _ChooseShippingMethodState extends State<ChooseShippingMethod> {
         ),
         title: const Align(
           alignment: Alignment.center,
-          child: Text('Phương thức vận chuyển',
-              style: TextStyle(color: Colors.white, fontSize: 22)),
+          child: Text('Phương thức vận chuyển', style: TextStyle(color: Colors.white, fontSize: 22)),
         ),
         actions: const [
           Padding(
@@ -82,8 +80,7 @@ class _ChooseShippingMethodState extends State<ChooseShippingMethod> {
                   onChanged: (newVal) {
                     setState(() {
                       shippingMethod = newVal;
-                      baseController.saveInttoSharedPreference(
-                          "deliveryType", newVal);
+                      baseController.saveInttoSharedPreference("deliveryType", newVal);
                     });
                   },
                 ),
@@ -112,8 +109,7 @@ class _ChooseShippingMethodState extends State<ChooseShippingMethod> {
                   onChanged: (newVal) {
                     setState(() {
                       shippingMethod = newVal;
-                      baseController.saveInttoSharedPreference(
-                          "deliveryType", newVal);
+                      baseController.saveInttoSharedPreference("deliveryType", newVal);
                     });
                   },
                 ),
@@ -142,8 +138,7 @@ class _ChooseShippingMethodState extends State<ChooseShippingMethod> {
                   onChanged: (newVal) {
                     setState(() {
                       shippingMethod = newVal;
-                      baseController.saveInttoSharedPreference(
-                          "deliveryType", newVal);
+                      baseController.saveInttoSharedPreference("deliveryType", newVal);
                     });
                   },
                 ),
@@ -172,8 +167,7 @@ class _ChooseShippingMethodState extends State<ChooseShippingMethod> {
                   onChanged: (newVal) {
                     setState(() {
                       shippingMethod = newVal;
-                      baseController.saveInttoSharedPreference(
-                          "deliveryType", newVal);
+                      baseController.saveInttoSharedPreference("deliveryType", newVal);
                     });
                   },
                 ),
@@ -187,8 +181,7 @@ class _ChooseShippingMethodState extends State<ChooseShippingMethod> {
         height: 70,
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(30), topRight: Radius.circular(30)),
+          borderRadius: const BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30)),
           boxShadow: [
             BoxShadow(
               offset: const Offset(0, -15),
@@ -201,10 +194,7 @@ class _ChooseShippingMethodState extends State<ChooseShippingMethod> {
           width: 190,
           height: 40,
           child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0)),
-                backgroundColor: kPrimaryColor),
+            style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)), backgroundColor: kPrimaryColor),
             onPressed: () {
               if (shippingMethod == 0) {
                 baseController.saveDoubletoSharedPreference("deliveryPrice", 0);

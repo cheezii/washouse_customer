@@ -15,8 +15,7 @@ class DetailHeading extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       status,
-      style: TextStyle(
-          color: statusColor, fontSize: 17, fontWeight: FontWeight.w600),
+      style: TextStyle(color: statusColor, fontSize: 17, fontWeight: FontWeight.w600),
     );
   }
 }

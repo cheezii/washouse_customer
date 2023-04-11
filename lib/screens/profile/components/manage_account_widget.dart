@@ -23,8 +23,7 @@ class ManageAccountWidget extends StatelessWidget {
     return ElevatedButton(
       onPressed: press,
       style: ElevatedButton.styleFrom(
-          padding: const EdgeInsetsDirectional.symmetric(
-              horizontal: 19, vertical: 16),
+          padding: const EdgeInsetsDirectional.symmetric(horizontal: 19, vertical: 16),
           foregroundColor: kPrimaryColor.withOpacity(.7),
           elevation: 0,
           shape: RoundedRectangleBorder(

@@ -6,13 +6,7 @@ class OrderBody {
   String? promoCode;
   int? paymentMethod;
 
-  OrderBody(
-      {this.centerId,
-      this.order,
-      this.orderDetails,
-      this.deliveries,
-      this.promoCode,
-      this.paymentMethod});
+  OrderBody({this.centerId, this.order, this.orderDetails, this.deliveries, this.promoCode, this.paymentMethod});
 
   OrderBody.fromJson(Map<String, dynamic> json) {
     centerId = json['centerId'];
@@ -111,12 +105,7 @@ class Order_Details {
   String? customerNote;
   String? staffNote;
 
-  Order_Details(
-      {this.serviceId,
-      this.measurement,
-      this.price,
-      this.customerNote,
-      this.staffNote});
+  Order_Details({this.serviceId, this.measurement, this.price, this.customerNote, this.staffNote});
 
   Order_Details.fromJson(Map<String, dynamic> json) {
     serviceId = json['serviceId'];

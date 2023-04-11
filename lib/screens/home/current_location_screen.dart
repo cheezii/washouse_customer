@@ -23,8 +23,7 @@ class _CurrentLocationScreenState extends State<CurrentLocationScreen> {
     ),
   );
 
-  static const CameraPosition initialCameraPosition = CameraPosition(
-      target: LatLng(10.848859594691582, 106.79760178715512), zoom: 14);
+  static const CameraPosition initialCameraPosition = CameraPosition(target: LatLng(10.848859594691582, 106.79760178715512), zoom: 14);
 
   Set<Marker> markers = {};
   String query = '';
@@ -57,16 +56,12 @@ class _CurrentLocationScreenState extends State<CurrentLocationScreen> {
         onPressed: () async {
           Position position = await _determinePosition();
 
-          googleMapController.animateCamera(CameraUpdate.newCameraPosition(
-              CameraPosition(
-                  target: LatLng(position.latitude, position.longitude),
-                  zoom: 14)));
+          googleMapController
+              .animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: LatLng(position.latitude, position.longitude), zoom: 14)));
 
           markers.clear();
 
-          markers.add(Marker(
-              markerId: const MarkerId('currentLocation'),
-              position: LatLng(position.latitude, position.longitude)));
+          markers.add(Marker(markerId: const MarkerId('currentLocation'), position: LatLng(position.latitude, position.longitude)));
 
           setState(() {});
         },

@@ -6,13 +6,7 @@ class TransactionHistory {
   int? amount;
   String? timeStamp;
 
-  TransactionHistory(
-      {this.paymentId,
-      this.type,
-      this.status,
-      this.plusOrMinus,
-      this.amount,
-      this.timeStamp});
+  TransactionHistory({this.paymentId, this.type, this.status, this.plusOrMinus, this.amount, this.timeStamp});
 
   TransactionHistory.fromJson(Map<String, dynamic> json) {
     paymentId = json['paymentId'];
@@ -36,16 +30,6 @@ class TransactionHistory {
 }
 
 List<TransactionHistory> listTransaction = [
-  TransactionHistory(
-      paymentId: 1,
-      status: 'success',
-      plusOrMinus: 'plus',
-      amount: 35000,
-      timeStamp: '20/02/2023 20:20:20'),
-  TransactionHistory(
-      paymentId: 1,
-      status: 'success',
-      plusOrMinus: 'minus',
-      amount: 35000,
-      timeStamp: '20/02/2023 20:20:20'),
+  TransactionHistory(paymentId: 1, status: 'success', plusOrMinus: 'plus', amount: 35000, timeStamp: '20/02/2023 20:20:20'),
+  TransactionHistory(paymentId: 1, status: 'success', plusOrMinus: 'minus', amount: 35000, timeStamp: '20/02/2023 20:20:20'),
 ];

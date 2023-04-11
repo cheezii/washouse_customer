@@ -8,8 +8,7 @@ class FeedbackToServiceScreen extends StatefulWidget {
   const FeedbackToServiceScreen({super.key});
 
   @override
-  State<FeedbackToServiceScreen> createState() =>
-      _FeedbackToServiceScreenState();
+  State<FeedbackToServiceScreen> createState() => _FeedbackToServiceScreenState();
 }
 
 class _FeedbackToServiceScreenState extends State<FeedbackToServiceScreen> {

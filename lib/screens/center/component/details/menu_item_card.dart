@@ -53,15 +53,13 @@ class MenuItemCard extends StatelessWidget {
                 image, // replace with your own image URL
                 width: 110, // set your desired width here
                 height: 110, // set your desired height here
-                fit: BoxFit
-                    .cover, // set the image fit to cover the entire container
+                fit: BoxFit.cover, // set the image fit to cover the entire container
                 loadingBuilder: (context, child, loadingProgress) {
                   if (loadingProgress == null) return child;
                   return Center(
                     child: CircularProgressIndicator(
                         value: loadingProgress.expectedTotalBytes != null
-                            ? loadingProgress.cumulativeBytesLoaded.toDouble() /
-                                loadingProgress.expectedTotalBytes!.toDouble()
+                            ? loadingProgress.cumulativeBytesLoaded.toDouble() / loadingProgress.expectedTotalBytes!.toDouble()
                             : null),
                   );
                 }, // replace with your own loading widget
@@ -87,8 +85,7 @@ class MenuItemCard extends StatelessWidget {
                     // wrap the Text widget in an Expanded widget
                     child: Text(
                       title,
-                      style: const TextStyle(
-                          fontSize: 18, fontWeight: FontWeight.bold),
+                      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                   ),
                   Expanded(

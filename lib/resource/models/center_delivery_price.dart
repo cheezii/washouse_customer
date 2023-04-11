@@ -4,11 +4,7 @@ class CenterDeliveryPrice {
   late double maxWeight;
   late double price;
 
-  CenterDeliveryPrice(
-      {required this.id,
-      required this.maxDistance,
-      required this.maxWeight,
-      required this.price});
+  CenterDeliveryPrice({required this.id, required this.maxDistance, required this.maxWeight, required this.price});
 
   CenterDeliveryPrice.fromJson(Map<String, dynamic> json) {
     id = json['id'];

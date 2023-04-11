@@ -28,8 +28,7 @@ class FillShippingInformation extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<FillShippingInformation> createState() =>
-      _FillShippingInformationState();
+  State<FillShippingInformation> createState() => _FillShippingInformationState();
 }
 
 class _FillShippingInformationState extends State<FillShippingInformation> {
@@ -71,8 +70,7 @@ class _FillShippingInformationState extends State<FillShippingInformation> {
 
   Future getWardsList(String district) async {
     int districtId = int.parse(district);
-    Response response =
-        await get(Uri.parse('$baseUrl/districts/$districtId/wards'));
+    Response response = await get(Uri.parse('$baseUrl/districts/$districtId/wards'));
     if (response.statusCode == 200) {
       var data = json.decode(response.body);
       setState(() {
@@ -97,8 +95,7 @@ class _FillShippingInformationState extends State<FillShippingInformation> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        backgroundColor:
-            kPrimaryColor, //Theme.of(context).scaffoldBackgroundColor
+        backgroundColor: kPrimaryColor, //Theme.of(context).scaffoldBackgroundColor
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);
@@ -111,8 +108,7 @@ class _FillShippingInformationState extends State<FillShippingInformation> {
         ),
         title: const Align(
           alignment: Alignment.center,
-          child: Text('Thông tin vận chuyển',
-              style: TextStyle(color: Colors.white, fontSize: 22)),
+          child: Text('Thông tin vận chuyển', style: TextStyle(color: Colors.white, fontSize: 22)),
         ),
         actions: const [
           Padding(
@@ -134,10 +130,7 @@ class _FillShippingInformationState extends State<FillShippingInformation> {
                 children: [
                   const Text(
                     'Thời gian gửi đơn',
-                    style: TextStyle(
-                        fontSize: 18,
-                        color: textBoldColor,
-                        fontWeight: FontWeight.w500),
+                    style: TextStyle(fontSize: 18, color: textBoldColor, fontWeight: FontWeight.w500),
                   ),
                   const Spacer(),
                   FlutterSwitch(
@@ -163,22 +156,18 @@ class _FillShippingInformationState extends State<FillShippingInformation> {
                           child: DropdownButtonFormField(
                             decoration: InputDecoration(
                               enabledBorder: OutlineInputBorder(
-                                borderSide: const BorderSide(
-                                    color: textColor, width: 1),
+                                borderSide: const BorderSide(color: textColor, width: 1),
                                 borderRadius: BorderRadius.circular(10),
                               ),
-                              contentPadding: const EdgeInsets.only(
-                                  left: 8, right: 8, top: 0, bottom: 0),
+                              contentPadding: const EdgeInsets.only(left: 8, right: 8, top: 0, bottom: 0),
                               focusedBorder: OutlineInputBorder(
-                                borderSide: const BorderSide(
-                                    color: textColor, width: 1),
+                                borderSide: const BorderSide(color: textColor, width: 1),
                                 borderRadius: BorderRadius.circular(10),
                               ),
                             ),
                             isDense: true,
                             isExpanded: true,
-                            items: <String>['Hôm nay', 'Ngày mai']
-                                .map((String item) {
+                            items: <String>['Hôm nay', 'Ngày mai'].map((String item) {
                               return DropdownMenuItem<String>(
                                 value: item,
                                 child: Text(item),
@@ -198,17 +187,12 @@ class _FillShippingInformationState extends State<FillShippingInformation> {
                               });
                               String? chooseDate;
                               if (newValue!.compareTo("Hôm nay") == 0) {
-                                chooseDate = DateFormat('dd-MM-yyyy')
-                                    .format(DateTime.now());
+                                chooseDate = DateFormat('dd-MM-yyyy').format(DateTime.now());
                               } else if (newValue!.compareTo("Ngày mai") == 0) {
-                                chooseDate = DateFormat('dd-MM-yyyy').format(
-                                    DateTime.now().add(Duration(days: 1)));
+                                chooseDate = DateFormat('dd-MM-yyyy').format(DateTime.now().add(Duration(days: 1)));
                               }
-                              baseController.saveStringtoSharedPreference(
-                                  "preferredDropoffTime_Date", chooseDate!);
-                              print(await baseController
-                                  .getStringtoSharedPreference(
-                                      "preferredDropoffTime_Date"));
+                              baseController.saveStringtoSharedPreference("preferredDropoffTime_Date", chooseDate!);
+                              print(await baseController.getStringtoSharedPreference("preferredDropoffTime_Date"));
                             },
                           ),
                         ),
@@ -217,30 +201,22 @@ class _FillShippingInformationState extends State<FillShippingInformation> {
                           height: 40,
                           child: ElevatedButton(
                             onPressed: () async {
-                              TimeOfDay? orderTime = await showTimePicker(
-                                  context: context,
-                                  initialTime: TimeOfDay.now());
+                              TimeOfDay? orderTime = await showTimePicker(context: context, initialTime: TimeOfDay.now());
                               if (orderTime != null) {
                                 setState(() {
-                                  sendOrderTime =
-                                      '${orderTime.hour}:${orderTime.minute}:00';
+                                  sendOrderTime = '${orderTime.hour}:${orderTime.minute}:00';
                                 });
-                                baseController.saveStringtoSharedPreference(
-                                    "preferredDropoffTime_Time", sendOrderTime);
-                                print(await baseController
-                                    .getStringtoSharedPreference(
-                                        "preferredDropoffTime_Time"));
+                                baseController.saveStringtoSharedPreference("preferredDropoffTime_Time", sendOrderTime);
+                                print(await baseController.getStringtoSharedPreference("preferredDropoffTime_Time"));
                               }
                             },
                             style: ElevatedButton.styleFrom(
-                              padding: const EdgeInsetsDirectional.symmetric(
-                                  horizontal: 19, vertical: 10),
+                              padding: const EdgeInsetsDirectional.symmetric(horizontal: 19, vertical: 10),
                               foregroundColor: kPrimaryColor.withOpacity(.7),
                               elevation: 0,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10),
-                                side: const BorderSide(
-                                    color: textColor, width: 1),
+                                side: const BorderSide(color: textColor, width: 1),
                               ),
                               backgroundColor: kBackgroundColor,
                             ),
@@ -409,10 +385,7 @@ class _FillShippingInformationState extends State<FillShippingInformation> {
                       children: [
                         const Text(
                           'Địa chỉ lấy đơn',
-                          style: TextStyle(
-                              fontSize: 18,
-                              color: textBoldColor,
-                              fontWeight: FontWeight.w500),
+                          style: TextStyle(fontSize: 18, color: textBoldColor, fontWeight: FontWeight.w500),
                         ),
                         const SizedBox(height: 10),
                         Form(
@@ -435,10 +408,7 @@ class _FillShippingInformationState extends State<FillShippingInformation> {
                         DropdownButtonFormField(
                           isDense: true,
                           isExpanded: true,
-                          items: <String>[
-                            'Thành phố Hồ Chí Minh',
-                            'Chọn tỉnh / thành phố'
-                          ].map((String item) {
+                          items: <String>['Thành phố Hồ Chí Minh', 'Chọn tỉnh / thành phố'].map((String item) {
                             return DropdownMenuItem<String>(
                               value: item,
                               child: Text(item),
@@ -501,10 +471,8 @@ class _FillShippingInformationState extends State<FillShippingInformation> {
                                       setState(() {
                                         sendDistrict = newValue!;
                                         getWardsList(newValue);
-                                        _dropDownSendWardKey.currentState!
-                                            .reset();
-                                        _dropDownSendWardKey.currentState!
-                                            .setValue(null);
+                                        _dropDownSendWardKey.currentState!.reset();
+                                        _dropDownSendWardKey.currentState!.setValue(null);
                                       });
                                     },
                                   ),
@@ -570,10 +538,7 @@ class _FillShippingInformationState extends State<FillShippingInformation> {
                       children: [
                         const Text(
                           'Địa chỉ trả đơn',
-                          style: TextStyle(
-                              fontSize: 18,
-                              color: textBoldColor,
-                              fontWeight: FontWeight.w500),
+                          style: TextStyle(fontSize: 18, color: textBoldColor, fontWeight: FontWeight.w500),
                         ),
                         const SizedBox(height: 10),
                         Form(
@@ -596,10 +561,7 @@ class _FillShippingInformationState extends State<FillShippingInformation> {
                         DropdownButtonFormField(
                           isDense: true,
                           isExpanded: true,
-                          items: <String>[
-                            'Thành phố Hồ Chí Minh',
-                            'Chọn tỉnh / thành phố'
-                          ].map((String item) {
+                          items: <String>['Thành phố Hồ Chí Minh', 'Chọn tỉnh / thành phố'].map((String item) {
                             return DropdownMenuItem<String>(
                               value: item,
                               child: Text(item),
@@ -662,10 +624,8 @@ class _FillShippingInformationState extends State<FillShippingInformation> {
                                       setState(() {
                                         receiveDistrict = newValue!;
                                         getWardsList(newValue);
-                                        _dropDownReceiveWardKey.currentState!
-                                            .reset();
-                                        _dropDownReceiveWardKey.currentState!
-                                            .setValue(null);
+                                        _dropDownReceiveWardKey.currentState!.reset();
+                                        _dropDownReceiveWardKey.currentState!.setValue(null);
                                       });
                                     },
                                   ),
@@ -733,8 +693,7 @@ class _FillShippingInformationState extends State<FillShippingInformation> {
         height: 70,
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(30), topRight: Radius.circular(30)),
+          borderRadius: const BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30)),
           boxShadow: [
             BoxShadow(
               offset: const Offset(0, -15),
@@ -747,10 +706,7 @@ class _FillShippingInformationState extends State<FillShippingInformation> {
           width: 190,
           height: 40,
           child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0)),
-                backgroundColor: kPrimaryColor),
+            style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)), backgroundColor: kPrimaryColor),
             onPressed: () async {
               bool checkValidateFormSend = widget.isSend;
               bool checkValidateFormReceive = widget.isReceive;
@@ -764,8 +720,7 @@ class _FillShippingInformationState extends State<FillShippingInformation> {
               } else if (!checkValidateFormReceive) {
                 check = _formSendAddressKey.currentState!.validate();
               } else {
-                check = (_formSendAddressKey.currentState!.validate() ||
-                    _formReceiveAddressKey.currentState!.validate());
+                check = (_formSendAddressKey.currentState!.validate() || _formReceiveAddressKey.currentState!.validate());
               }
               // print('sendAdressController.value.text${checkReceiveOrder}');
               // print('sendAdressController.value.te---xt${checkSendOrder}');
@@ -786,38 +741,22 @@ class _FillShippingInformationState extends State<FillShippingInformation> {
                 //_formReceiveAddressKey.currentState!.save();
                 if (checkValidateFormSend && widget.isSend) {
                   DropoffAddress = sendAdressController.value.text;
-                  baseController.saveStringtoSharedPreference(
-                      "addressString_Dropoff", sendAdressController.value.text);
+                  baseController.saveStringtoSharedPreference("addressString_Dropoff", sendAdressController.value.text);
                   DropoffWardId = int.parse(sendWard!);
-                  baseController.saveInttoSharedPreference(
-                      "wardId_Dropoff", int.parse(sendWard!));
+                  baseController.saveInttoSharedPreference("wardId_Dropoff", int.parse(sendWard!));
                 }
                 if (checkValidateFormReceive && widget.isReceive) {
                   DeliverAddress = receiveAdressController.value.text;
-                  baseController.saveStringtoSharedPreference(
-                      "addressString_Delivery",
-                      receiveAdressController.value.text);
+                  baseController.saveStringtoSharedPreference("addressString_Delivery", receiveAdressController.value.text);
                   DeliverWardId = int.parse(receiveWard!);
-                  baseController.saveInttoSharedPreference(
-                      "wardId_Delivery", int.parse(receiveWard!));
+                  baseController.saveInttoSharedPreference("wardId_Delivery", int.parse(receiveWard!));
                 }
-                var totalDeliveryPrice =
-                    await orderController.calculateDeliveryPrice(
-                        DropoffAddress,
-                        DropoffWardId,
-                        DeliverAddress,
-                        DeliverWardId,
-                        widget.isSend,
-                        widget.isReceive);
-                baseController.saveDoubletoSharedPreference(
-                    "deliveryPrice", totalDeliveryPrice);
+                var totalDeliveryPrice = await orderController.calculateDeliveryPrice(
+                    DropoffAddress, DropoffWardId, DeliverAddress, DeliverWardId, widget.isSend, widget.isReceive);
+                baseController.saveDoubletoSharedPreference("deliveryPrice", totalDeliveryPrice);
                 provider.updateDeliveryPrice();
                 baseController.printAllSharedPreferences();
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) =>
-                            CheckoutScreen(cart: cartItems[0])));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => CheckoutScreen(cart: cartItems[0])));
               }
             },
             child: const Text(

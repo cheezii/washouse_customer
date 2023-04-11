@@ -33,8 +33,7 @@ class _CheckOutCardState extends State<CheckOutCard> {
       height: 150,
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(30), topRight: Radius.circular(30)),
+        borderRadius: const BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30)),
         boxShadow: [
           BoxShadow(
             offset: const Offset(0, -15),
@@ -48,11 +47,7 @@ class _CheckOutCardState extends State<CheckOutCard> {
           GestureDetector(
             onTap: haveCart
                 ? () {
-                    Navigator.push(
-                        context,
-                        PageTransition(
-                            child: const AddVoucherScreen(),
-                            type: PageTransitionType.rightToLeftWithFade));
+                    Navigator.push(context, PageTransition(child: const AddVoucherScreen(), type: PageTransitionType.rightToLeftWithFade));
                   }
                 : null,
             child: Row(
@@ -74,15 +69,12 @@ class _CheckOutCardState extends State<CheckOutCard> {
                 const Spacer(),
                 Consumer<CartProvider>(builder: (context, value, child) {
                   return Text(
-                    (value.promoCode! != '')
-                        ? value.promoCode!
-                        : 'Chọn mã khuyến mãi',
+                    (value.promoCode! != '') ? value.promoCode! : 'Chọn mã khuyến mãi',
                     style: TextStyle(color: textNoteColor),
                   );
                 }),
                 const SizedBox(width: 10),
-                const Icon(Icons.arrow_forward_ios,
-                    size: 12, color: textNoteColor),
+                const Icon(Icons.arrow_forward_ios, size: 12, color: textNoteColor),
               ],
             ),
           ),
@@ -114,8 +106,7 @@ class _CheckOutCardState extends State<CheckOutCard> {
                       (value.discount != 0)
                           ? Text.rich(
                               TextSpan(
-                                text: (checkPrice &&
-                                        value.cartItems.length != 0)
+                                text: (checkPrice && value.cartItems.length != 0)
                                     //? '${PriceUtils().convertFormatPrice(value.getTotalPrice().round())} đ'
                                     ? '${PriceUtils().convertFormatPrice(value.cartItems.fold(0.0, (sum, item) => sum + item.price!).round())} đ'
                                     : '0 đ',
@@ -135,10 +126,7 @@ class _CheckOutCardState extends State<CheckOutCard> {
                               //? '${PriceUtils().convertFormatPrice(value.getTotalPrice().round())} đ'
                               ? '${PriceUtils().convertFormatPrice((value.cartItems.fold(0.0, (sum, item) => sum + item.price!) * (1 - value.discount)).round())} đ'
                               : '0 đ',
-                          style: const TextStyle(
-                              fontSize: 20,
-                              color: kPrimaryColor,
-                              fontWeight: FontWeight.bold),
+                          style: const TextStyle(fontSize: 20, color: kPrimaryColor, fontWeight: FontWeight.bold),
                         ),
                       )
                     ],
@@ -148,17 +136,12 @@ class _CheckOutCardState extends State<CheckOutCard> {
                     height: 40,
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0)),
-                          backgroundColor: kPrimaryColor),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)), backgroundColor: kPrimaryColor),
                       onPressed: haveCart
                           ? () {
                               Navigator.push(
                                 context,
-                                PageTransition(
-                                    child: const FillAddressScreen(),
-                                    type:
-                                        PageTransitionType.rightToLeftWithFade),
+                                PageTransition(child: const FillAddressScreen(), type: PageTransitionType.rightToLeftWithFade),
                               );
                             }
                           : null,

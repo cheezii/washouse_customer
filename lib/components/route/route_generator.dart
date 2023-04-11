@@ -18,9 +18,7 @@ class RouteGenerator {
         return MaterialPageRoute(
           builder: (context) {
             final arrguments = settings.arguments as ScreenArguments;
-            return ServiceDetailScreen(
-                centerData: arrguments.screen1,
-                serviceData: arrguments.screen2);
+            return ServiceDetailScreen(centerData: arrguments.screen1, serviceData: arrguments.screen2);
             // return ServiceDetailScreen(serviceData: args);
           },
         );

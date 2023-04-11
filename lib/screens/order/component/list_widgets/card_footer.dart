@@ -30,11 +30,7 @@ class CardFooter extends StatelessWidget {
         isComplete
             ? GestureDetector(
                 onTap: () {
-                  Navigator.push(
-                      context,
-                      PageTransition(
-                          child: const FeedbackOrderScreen(),
-                          type: PageTransitionType.fade));
+                  Navigator.push(context, PageTransition(child: const FeedbackOrderScreen(), type: PageTransitionType.fade));
                 },
                 child: Container(
                   alignment: Alignment.bottomRight,
@@ -43,8 +39,7 @@ class CardFooter extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: const Padding(
-                    padding:
-                        EdgeInsets.only(top: 9, bottom: 9, right: 20, left: 20),
+                    padding: EdgeInsets.only(top: 9, bottom: 9, right: 20, left: 20),
                     child: Text('Viết đánh giá'),
                   ),
                 ),
@@ -61,8 +56,7 @@ class CardFooter extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.only(
-                        top: 9, bottom: 9, right: 20, left: 20),
+                    padding: const EdgeInsets.only(top: 9, bottom: 9, right: 20, left: 20),
                     child: Text(
                       'Hủy đơn',
                       style: TextStyle(color: cancelColor),
@@ -75,11 +69,7 @@ class CardFooter extends StatelessWidget {
         isCancel
             ? GestureDetector(
                 onTap: () {
-                  Navigator.push(
-                      context,
-                      PageTransition(
-                          child: const CancelDetailScreen(),
-                          type: PageTransitionType.rightToLeftWithFade));
+                  Navigator.push(context, PageTransition(child: const CancelDetailScreen(), type: PageTransitionType.rightToLeftWithFade));
                 },
                 child: Container(
                   alignment: Alignment.bottomRight,
@@ -88,8 +78,7 @@ class CardFooter extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.only(
-                        top: 9, bottom: 9, right: 20, left: 20),
+                    padding: const EdgeInsets.only(top: 9, bottom: 9, right: 20, left: 20),
                     child: Text(
                       'Chi tiết đơn hủy',
                       style: TextStyle(color: cancelColor),
@@ -118,8 +107,7 @@ class CardFooter extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: const Padding(
-                    padding:
-                        EdgeInsets.only(top: 9, bottom: 9, right: 20, left: 20),
+                    padding: EdgeInsets.only(top: 9, bottom: 9, right: 20, left: 20),
                     child: Text('Xem chi tiết'),
                   ),
                 ),

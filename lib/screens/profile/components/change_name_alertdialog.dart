@@ -41,10 +41,7 @@ class _ChangeNameAlertDialogState extends State<ChangeNameAlertDialog> {
               ),
               decoration: InputDecoration(
                 labelText: 'Tên mới',
-                labelStyle: const TextStyle(
-                    color: textBoldColor,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w500),
+                labelStyle: const TextStyle(color: textBoldColor, fontSize: 18, fontWeight: FontWeight.w500),
                 hintStyle: TextStyle(
                   fontSize: 16,
                   color: Colors.grey.shade500,
@@ -72,14 +69,12 @@ class _ChangeNameAlertDialogState extends State<ChangeNameAlertDialog> {
               }
             },
             style: ElevatedButton.styleFrom(
-                padding: const EdgeInsetsDirectional.symmetric(
-                    horizontal: 19, vertical: 10),
+                padding: const EdgeInsetsDirectional.symmetric(horizontal: 19, vertical: 10),
                 foregroundColor: kPrimaryColor.withOpacity(.7),
                 elevation: 0,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20),
-                  side: BorderSide(
-                      color: kPrimaryColor.withOpacity(.5), width: 1),
+                  side: BorderSide(color: kPrimaryColor.withOpacity(.5), width: 1),
                 ),
                 backgroundColor: kPrimaryColor),
             child: const Text(

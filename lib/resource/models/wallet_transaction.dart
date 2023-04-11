@@ -7,14 +7,7 @@ class WalletTransactions {
   String? timeStamp;
   String? updateTimeStamp;
 
-  WalletTransactions(
-      {this.paymentId,
-      this.type,
-      this.status,
-      this.plusOrMinus,
-      this.amount,
-      this.timeStamp,
-      this.updateTimeStamp});
+  WalletTransactions({this.paymentId, this.type, this.status, this.plusOrMinus, this.amount, this.timeStamp, this.updateTimeStamp});
 
   WalletTransactions.fromJson(Map<String, dynamic> json) {
     paymentId = json['paymentId'];

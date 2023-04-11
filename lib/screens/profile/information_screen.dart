@@ -60,16 +60,11 @@ class _InfomationScreenState extends State<InfomationScreen> {
   }
 
   Future<void> _loadData() async {
-    final name =
-        await baseController.getStringtoSharedPreference("CURRENT_USER_NAME");
-    final email =
-        await baseController.getStringtoSharedPreference("CURRENT_USER_EMAIL");
-    final avatar =
-        await baseController.getStringtoSharedPreference("CURRENT_USER_AVATAR");
-    final userId =
-        await baseController.getInttoSharedPreference("CURRENT_USER_ID");
-    final currentCustomer =
-        await accountController.getCustomerInfomation(userId);
+    final name = await baseController.getStringtoSharedPreference("CURRENT_USER_NAME");
+    final email = await baseController.getStringtoSharedPreference("CURRENT_USER_EMAIL");
+    final avatar = await baseController.getStringtoSharedPreference("CURRENT_USER_AVATAR");
+    final userId = await baseController.getInttoSharedPreference("CURRENT_USER_ID");
+    final currentCustomer = await accountController.getCustomerInfomation(userId);
     setState(() {
       _currentUserName = name != "" ? name : "Undentified Name";
       _currentUserEmail = email != "" ? email : "Undentified Email";
@@ -100,9 +95,7 @@ class _InfomationScreenState extends State<InfomationScreen> {
           genderDisplay = '- Chọn -';
       }
     }
-    if (_currentCustomer != null &&
-        _currentCustomer!.dob != null &&
-        _currentCustomer!.dob!.isNotEmpty) {
+    if (_currentCustomer != null && _currentCustomer!.dob != null && _currentCustomer!.dob!.isNotEmpty) {
       birthday = _currentCustomer!.dob!;
     }
     return Scaffold(
@@ -120,8 +113,7 @@ class _InfomationScreenState extends State<InfomationScreen> {
           ),
         ),
         centerTitle: true,
-        title: const Text('Hồ sơ',
-            style: TextStyle(color: textColor, fontSize: 25)),
+        title: const Text('Hồ sơ', style: TextStyle(color: textColor, fontSize: 25)),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
@@ -178,30 +170,19 @@ class _InfomationScreenState extends State<InfomationScreen> {
                                   ),
                                   TextButton(
                                     onPressed: () async {
-                                      Map<String, String> responseMap =
-                                          await baseController
-                                              .upload(_imageFile!);
+                                      Map<String, String> responseMap = await baseController.upload(_imageFile!);
                                       String messageChangeProfilePicture =
-                                          await accountController
-                                              .changeProfilePicture(
-                                                  responseMap['savedFileName']!,
-                                                  _currentUserId);
-                                      if (messageChangeProfilePicture.compareTo(
-                                              "update profile picture success") ==
-                                          0) {
+                                          await accountController.changeProfilePicture(responseMap['savedFileName']!, _currentUserId);
+                                      if (messageChangeProfilePicture.compareTo("update profile picture success") == 0) {
                                         //save avatar Preference
-                                        await baseController
-                                            .saveStringtoSharedPreference(
-                                                "CURRENT_USER_AVATAR",
-                                                responseMap['signedUrl']);
+                                        await baseController.saveStringtoSharedPreference("CURRENT_USER_AVATAR", responseMap['signedUrl']);
                                         Navigator.of(context).pop();
                                         showDialog(
                                           context: context,
                                           builder: (BuildContext context) {
                                             return AlertDialog(
                                               title: const Text('Thông báo'),
-                                              content: const Text(
-                                                  'Bạn đã đổi ảnh đại diện thành công!'),
+                                              content: const Text('Bạn đã đổi ảnh đại diện thành công!'),
                                               actions: [
                                                 TextButton(
                                                   onPressed: () {
@@ -220,8 +201,7 @@ class _InfomationScreenState extends State<InfomationScreen> {
                                           builder: (BuildContext context) {
                                             return AlertDialog(
                                               title: const Text('Thông báo'),
-                                              content: const Text(
-                                                  'Có lỗi trong quá trình xử lý!'),
+                                              content: const Text('Có lỗi trong quá trình xử lý!'),
                                               actions: [
                                                 TextButton(
                                                   onPressed: () {
@@ -248,8 +228,7 @@ class _InfomationScreenState extends State<InfomationScreen> {
                             builder: (BuildContext context) {
                               return AlertDialog(
                                 title: const Text('Thông báo'),
-                                content:
-                                    const Text('Có lỗi trong quá trình xử lý!'),
+                                content: const Text('Có lỗi trong quá trình xử lý!'),
                                 actions: [
                                   TextButton(
                                     onPressed: () {
@@ -265,8 +244,7 @@ class _InfomationScreenState extends State<InfomationScreen> {
 
                         //}
                       },
-                      child: const Text('Đổi ảnh đại diện',
-                          style: TextStyle(fontSize: 17))),
+                      child: const Text('Đổi ảnh đại diện', style: TextStyle(fontSize: 17))),
                 ],
               ),
               Column(
@@ -276,24 +254,14 @@ class _InfomationScreenState extends State<InfomationScreen> {
                       subTitle: _currentUserName,
                       canChange: true,
                       press: () {
-                        showDialog(
-                            context: context,
-                            builder: ((context) =>
-                                const ChangeNameAlertDialog()));
+                        showDialog(context: context, builder: ((context) => const ChangeNameAlertDialog()));
                       }),
                   InformationWidget(
                       title: 'Số điện thoại',
-                      subTitle: (_currentCustomer != null &&
-                              _currentCustomer!.phone != null)
-                          ? _currentCustomer!.phone!
-                          : '- Chọn -',
+                      subTitle: (_currentCustomer != null && _currentCustomer!.phone != null) ? _currentCustomer!.phone! : '- Chọn -',
                       canChange: false,
                       press: () {}),
-                  InformationWidget(
-                      title: 'Email',
-                      subTitle: _currentUserEmail,
-                      canChange: false,
-                      press: () {}),
+                  InformationWidget(title: 'Email', subTitle: _currentUserEmail, canChange: false, press: () {}),
                   InformationWidget(
                       title: 'Giới tính',
                       subTitle: genderDisplay,
@@ -301,21 +269,18 @@ class _InfomationScreenState extends State<InfomationScreen> {
                       press: () {
                         showModalBottomSheet(
                             context: context,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20.0)),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
                             builder: ((context) => StatefulBuilder(
                                   builder: (context, setState) => Container(
                                     height: 380,
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 10, horizontal: 10),
+                                    padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                                     child: StatefulBuilder(
                                       builder: (context, setState) => Column(
                                         children: [
                                           Row(
                                             children: [
                                               IconButton(
-                                                  icon: const Icon(
-                                                      Icons.close_rounded),
+                                                  icon: const Icon(Icons.close_rounded),
                                                   onPressed: () {
                                                     Navigator.pop(context);
                                                   }),
@@ -323,16 +288,11 @@ class _InfomationScreenState extends State<InfomationScreen> {
                                               const Text(
                                                 'Chọn giới tính',
                                                 textAlign: TextAlign.center,
-                                                style: TextStyle(
-                                                    fontSize: 20,
-                                                    fontWeight:
-                                                        FontWeight.w600),
+                                                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
                                               ),
                                             ],
                                           ),
-                                          Divider(
-                                              thickness: 1,
-                                              color: Colors.grey.shade300),
+                                          Divider(thickness: 1, color: Colors.grey.shade300),
                                           const SizedBox(height: 10),
                                           ListTile(
                                             title: const Text('Nam'),
@@ -342,12 +302,10 @@ class _InfomationScreenState extends State<InfomationScreen> {
                                               onChanged: (value) {
                                                 setState(() {
                                                   gender = value;
-                                                  genderDisplay =
-                                                      value.toString();
+                                                  genderDisplay = value.toString();
                                                 });
                                                 this.setState(() {
-                                                  genderDisplay =
-                                                      value.toString();
+                                                  genderDisplay = value.toString();
                                                 });
                                               },
                                             ),
@@ -362,8 +320,7 @@ class _InfomationScreenState extends State<InfomationScreen> {
                                                   gender = value;
                                                 });
                                                 this.setState(() {
-                                                  genderDisplay =
-                                                      value.toString();
+                                                  genderDisplay = value.toString();
                                                 });
                                               },
                                             ),
@@ -376,12 +333,10 @@ class _InfomationScreenState extends State<InfomationScreen> {
                                               onChanged: (value) {
                                                 setState(() {
                                                   gender = value;
-                                                  genderDisplay =
-                                                      value.toString();
+                                                  genderDisplay = value.toString();
                                                 });
                                                 this.setState(() {
-                                                  genderDisplay =
-                                                      value.toString();
+                                                  genderDisplay = value.toString();
                                                 });
                                               },
                                             ),
@@ -397,15 +352,9 @@ class _InfomationScreenState extends State<InfomationScreen> {
                                               },
                                               style: ElevatedButton.styleFrom(
                                                   elevation: 0,
-                                                  shape: RoundedRectangleBorder(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              30)),
-                                                  backgroundColor:
-                                                      kPrimaryColor),
-                                              child: const Text('Lưu',
-                                                  style:
-                                                      TextStyle(fontSize: 17)),
+                                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                                                  backgroundColor: kPrimaryColor),
+                                              child: const Text('Lưu', style: TextStyle(fontSize: 17)),
                                             ),
                                           ),
                                         ],
@@ -422,21 +371,18 @@ class _InfomationScreenState extends State<InfomationScreen> {
                         showModalBottomSheet(
                           context: context,
                           isScrollControlled: true,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20.0)),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
                           builder: ((context) => StatefulBuilder(
                                 builder: (context, setState) => Container(
                                   height: 530,
                                   color: Colors.white,
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 10, horizontal: 10),
+                                  padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                                   child: Column(
                                     children: [
                                       Row(
                                         children: [
                                           IconButton(
-                                              icon: const Icon(
-                                                  Icons.close_rounded),
+                                              icon: const Icon(Icons.close_rounded),
                                               onPressed: () {
                                                 Navigator.pop(context);
                                               }),
@@ -444,34 +390,25 @@ class _InfomationScreenState extends State<InfomationScreen> {
                                           const Text(
                                             'Chọn ngày sinh',
                                             textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.w600),
+                                            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
                                           ),
                                         ],
                                       ),
-                                      Divider(
-                                          thickness: 1,
-                                          color: Colors.grey.shade300),
+                                      Divider(thickness: 1, color: Colors.grey.shade300),
                                       const SizedBox(height: 10),
                                       TextField(
                                         controller: dateController,
                                         readOnly: true,
                                         decoration: const InputDecoration(
-                                          contentPadding:
-                                              EdgeInsets.symmetric(vertical: 4),
+                                          contentPadding: EdgeInsets.symmetric(vertical: 4),
                                         ),
-                                        style: const TextStyle(
-                                            fontSize: 18,
-                                            color: textColor,
-                                            fontWeight: FontWeight.w500),
+                                        style: const TextStyle(fontSize: 18, color: textColor, fontWeight: FontWeight.w500),
                                       ),
                                       const SizedBox(height: 2),
                                       const TextField(
                                         readOnly: true,
                                         decoration: InputDecoration(
-                                          hintText:
-                                              '*Lưu ý: Bạn phải trên 18 tuổi để sử dụng dịch vụ',
+                                          hintText: '*Lưu ý: Bạn phải trên 18 tuổi để sử dụng dịch vụ',
                                           hintStyle: TextStyle(
                                             fontSize: 12,
                                             color: Colors.red,
@@ -489,11 +426,9 @@ class _InfomationScreenState extends State<InfomationScreen> {
                                             dateOrder: DatePickerDateOrder.dmy,
                                             mode: CupertinoDatePickerMode.date,
                                             backgroundColor: Colors.white,
-                                            onDateTimeChanged:
-                                                (DateTime newDate) {
+                                            onDateTimeChanged: (DateTime newDate) {
                                               setState(() {
-                                                dateController.text =
-                                                    '${newDate.day}/${newDate.month}/${newDate.year}';
+                                                dateController.text = '${newDate.day}/${newDate.month}/${newDate.year}';
                                               });
                                             }),
                                       ),
@@ -504,20 +439,15 @@ class _InfomationScreenState extends State<InfomationScreen> {
                                         child: ElevatedButton(
                                           onPressed: () {
                                             this.setState(() {
-                                              birthdayDisplay =
-                                                  dateController.text;
+                                              birthdayDisplay = dateController.text;
                                             });
                                             Navigator.pop(context);
                                           },
                                           style: ElevatedButton.styleFrom(
                                               elevation: 0,
-                                              shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          30)),
+                                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
                                               backgroundColor: kPrimaryColor),
-                                          child: const Text('Lưu',
-                                              style: TextStyle(fontSize: 17)),
+                                          child: const Text('Lưu', style: TextStyle(fontSize: 17)),
                                         ),
                                       ),
                                     ],

@@ -37,15 +37,13 @@ class CartProvider extends ChangeNotifier {
     //String? centerName = prefs.getString('centerName');
     if (cartItemsJson != null) {
       List<dynamic> cartItemsDynamic = jsonDecode(cartItemsJson);
-      _cartItems =
-          cartItemsDynamic.map((item) => CartItem.fromJson(item)).toList();
+      _cartItems = cartItemsDynamic.map((item) => CartItem.fromJson(item)).toList();
       notifyListeners();
     }
   }
 
   void addItemToCart(CartItem newItem) {
-    int existingItemIndex =
-        _cartItems.indexWhere((item) => item.serviceId == newItem.serviceId);
+    int existingItemIndex = _cartItems.indexWhere((item) => item.serviceId == newItem.serviceId);
     if (existingItemIndex == -1) {
       newItem.price = CartUtils.getTotalPriceOfCartItem(newItem);
       print('newItem.price:${newItem.price}');
@@ -55,8 +53,7 @@ class CartProvider extends ChangeNotifier {
     } else {
       CartItem existingItem = _cartItems[existingItemIndex];
       if (newItem.priceType) {
-        double totalMeasurement =
-            existingItem.measurement + newItem.measurement;
+        double totalMeasurement = existingItem.measurement + newItem.measurement;
         double maxCapacity = newItem.prices!.last.maxValue!.toDouble();
         if (totalMeasurement <= maxCapacity) {
           newItem.measurement = totalMeasurement;
@@ -64,8 +61,7 @@ class CartProvider extends ChangeNotifier {
         } else {
           newItem.measurement = maxCapacity;
           newItem.price = CartUtils.getTotalPriceOfCartItem(newItem);
-          print(
-              "Measurement capacity exceeded for item with serviceId ${existingItem.serviceId}");
+          print("Measurement capacity exceeded for item with serviceId ${existingItem.serviceId}");
         }
       } else {
         newItem.measurement = newItem.measurement + existingItem.measurement;
@@ -81,8 +77,7 @@ class CartProvider extends ChangeNotifier {
   }
 
   void removeItemFromCart(CartItem itemToRemove) {
-    int existingItemIndex = _cartItems
-        .indexWhere((item) => item.serviceId == itemToRemove.serviceId);
+    int existingItemIndex = _cartItems.indexWhere((item) => item.serviceId == itemToRemove.serviceId);
     removeTotalPrice(_cartItems[existingItemIndex].price!);
     _cartItems.remove(_cartItems[existingItemIndex]);
     if (_cartItems.length == 0) {
@@ -98,12 +93,10 @@ class CartProvider extends ChangeNotifier {
 
   Future<void> saveCartItemsToPrefs() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<dynamic> cartItemsDynamic =
-        _cartItems.map((item) => item.toJson()).toList();
+    List<dynamic> cartItemsDynamic = _cartItems.map((item) => item.toJson()).toList();
     String cartItemsJson = jsonEncode(cartItemsDynamic);
     print(cartItemsJson);
-    if (!cartItemsJson.isEmpty)
-      await prefs.setString('cartItems', cartItemsJson);
+    if (!cartItemsJson.isEmpty) await prefs.setString('cartItems', cartItemsJson);
   }
 
   void _setPrefItems() async {
@@ -245,8 +238,7 @@ class CartProvider extends ChangeNotifier {
     print('productPriceRemove-${productPrice}');
     print('_totalPriceRemove-${_totalPrice}'); //0
     print('_Remove-${(_totalPrice - productPrice)}'); //0
-    _totalPrice =
-        (_totalPrice - productPrice) > 0 ? _totalPrice - productPrice : 0;
+    _totalPrice = (_totalPrice - productPrice) > 0 ? _totalPrice - productPrice : 0;
     print('_totalPriceAfterRemove-${_totalPrice}');
     _setPrefItems();
     notifyListeners();
@@ -328,8 +320,7 @@ class CartProvider extends ChangeNotifier {
     //   addTotalPrice(cart_item.price!);
     //   _cartItems.add(cart_item);
     // }
-    int existingItemIndex =
-        _cartItems.indexWhere((item) => item.serviceId == cart_item.serviceId);
+    int existingItemIndex = _cartItems.indexWhere((item) => item.serviceId == cart_item.serviceId);
     CartItem existingItem = _cartItems[existingItemIndex];
     if (cart_item.priceType) {
       double totalMeasurement = existingItem.measurement + 1;
@@ -340,8 +331,7 @@ class CartProvider extends ChangeNotifier {
       } else {
         cart_item.measurement = maxCapacity;
         cart_item.price = CartUtils.getTotalPriceOfCartItem(cart_item);
-        print(
-            "Measurement capacity exceeded for item with serviceId ${existingItem.serviceId}");
+        print("Measurement capacity exceeded for item with serviceId ${existingItem.serviceId}");
       }
     } else {
       cart_item.measurement = 1 + existingItem.measurement;
@@ -371,8 +361,7 @@ class CartProvider extends ChangeNotifier {
     // }
     // saveCartItemsToPrefs();
     // notifyListeners();
-    int existingItemIndex =
-        _cartItems.indexWhere((item) => item.serviceId == cart_item.serviceId);
+    int existingItemIndex = _cartItems.indexWhere((item) => item.serviceId == cart_item.serviceId);
     CartItem existingItem = _cartItems[existingItemIndex];
     removeTotalPrice(existingItem.price!);
     cart_item.measurement = existingItem.measurement - 1;
@@ -386,12 +375,10 @@ class CartProvider extends ChangeNotifier {
   }
 
   void addToCartWithKilogram(CartItem cart_item) {
-    int existingItemIndex =
-        _cartItems.indexWhere((item) => item.serviceId == cart_item.serviceId);
+    int existingItemIndex = _cartItems.indexWhere((item) => item.serviceId == cart_item.serviceId);
     CartItem existingItem = _cartItems[existingItemIndex];
     if (cart_item.priceType) {
-      double totalMeasurement =
-          double.parse((existingItem.measurement + 0.1).toStringAsFixed(1));
+      double totalMeasurement = double.parse((existingItem.measurement + 0.1).toStringAsFixed(1));
       double maxCapacity = cart_item.prices!.last.maxValue!.toDouble();
       if (totalMeasurement <= maxCapacity) {
         cart_item.measurement = totalMeasurement;
@@ -399,12 +386,10 @@ class CartProvider extends ChangeNotifier {
       } else {
         cart_item.measurement = maxCapacity;
         cart_item.price = CartUtils.getTotalPriceOfCartItem(cart_item);
-        print(
-            "Measurement capacity exceeded for item with serviceId ${existingItem.serviceId}");
+        print("Measurement capacity exceeded for item with serviceId ${existingItem.serviceId}");
       }
     } else {
-      cart_item.measurement =
-          double.parse((0.1 + existingItem.measurement).toStringAsFixed(1));
+      cart_item.measurement = double.parse((0.1 + existingItem.measurement).toStringAsFixed(1));
       cart_item.price = CartUtils.getTotalPriceOfCartItem(cart_item);
     }
     removeTotalPrice(existingItem.price!);
@@ -416,12 +401,10 @@ class CartProvider extends ChangeNotifier {
   }
 
   void removeFromCartWithKilogram(CartItem cart_item) {
-    int existingItemIndex =
-        _cartItems.indexWhere((item) => item.serviceId == cart_item.serviceId);
+    int existingItemIndex = _cartItems.indexWhere((item) => item.serviceId == cart_item.serviceId);
     CartItem existingItem = _cartItems[existingItemIndex];
     removeTotalPrice(existingItem.price!);
-    cart_item.measurement =
-        double.parse((existingItem.measurement - 0.1).toStringAsFixed(1));
+    cart_item.measurement = double.parse((existingItem.measurement - 0.1).toStringAsFixed(1));
     cart_item.price = CartUtils.getTotalPriceOfCartItem(cart_item);
     _cartItems.removeAt(existingItemIndex);
 

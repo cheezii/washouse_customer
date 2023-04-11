@@ -48,8 +48,7 @@ class CenterController {
 
     try {
       final url = "$baseUrl/centers";
-      final response =
-          await baseController.makeAuthenticatedRequest(url, queryParameters);
+      final response = await baseController.makeAuthenticatedRequest(url, queryParameters);
       //print(url);
       //print(queryParameters);
       if (response.statusCode == 200) {
@@ -67,8 +66,7 @@ class CenterController {
     return centerList;
   }
 
-  Future<String?> getResponseMessage(String? searchString, String? sortSring,
-      String? min, String? max, String? categoryService) async {
+  Future<String?> getResponseMessage(String? searchString, String? sortSring, String? min, String? max, String? categoryService) async {
     Position position = await Geolocator.getCurrentPosition();
     double lat = position.latitude;
     double long = position.longitude;
@@ -96,8 +94,7 @@ class CenterController {
     Position position = await Geolocator.getCurrentPosition();
     double lat = position.latitude;
     double long = position.longitude;
-    Response response = await get(Uri.parse(
-        '$baseUrl/centers?Sort=location&CurrentUserLatitude=$lat&CurrentUserLongitude=$long'));
+    Response response = await get(Uri.parse('$baseUrl/centers?Sort=location&CurrentUserLatitude=$lat&CurrentUserLongitude=$long'));
     try {
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body)['data']['items'] as List;

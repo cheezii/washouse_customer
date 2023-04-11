@@ -44,10 +44,7 @@ class CardBody extends StatelessWidget {
                 width: 200,
                 child: Text(
                   list[0].serviceName,
-                  style: const TextStyle(
-                      fontSize: 17,
-                      color: Colors.black,
-                      fontWeight: FontWeight.w500),
+                  style: const TextStyle(fontSize: 17, color: Colors.black, fontWeight: FontWeight.w500),
                   maxLines: 2,
                 ),
               ),

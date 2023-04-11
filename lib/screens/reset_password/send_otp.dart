@@ -105,22 +105,17 @@ class _OTPScreenState extends State<OTPScreen> {
                       : SizedBox(
                           height: 300,
                           width: 300,
-                          child: Image.asset(
-                              'assets/images/started/authenticate.png'),
+                          child: Image.asset('assets/images/started/authenticate.png'),
                         ),
                   const SizedBox(height: 40),
                   const Text(
                     'Nhập mã xác minh',
-                    style:
-                        TextStyle(fontSize: 40.0, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 40.0, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 20),
                   Text(
-                    widget.isSignUp
-                        ? 'Nhập mã OTP được gửi đến số điện thoại của bạn.'
-                        : 'Nhập mã OTP được gửi đến email/số điện thoại của bạn.',
-                    style: const TextStyle(
-                        fontSize: 18.0, fontWeight: FontWeight.w400),
+                    widget.isSignUp ? 'Nhập mã OTP được gửi đến số điện thoại của bạn.' : 'Nhập mã OTP được gửi đến email/số điện thoại của bạn.',
+                    style: const TextStyle(fontSize: 18.0, fontWeight: FontWeight.w400),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 20),
@@ -138,17 +133,8 @@ class _OTPScreenState extends State<OTPScreen> {
                       bool isTrue = await verifyController.checkOTPByEmail(pin);
                       if (isTrue) {
                         widget.isSignUp
-                            ? Navigator.push(
-                                context,
-                                PageTransition(
-                                    child: const Login(),
-                                    type: PageTransitionType
-                                        .fade)) //register thành công
-                            : Navigator.push(
-                                context,
-                                PageTransition(
-                                    child: const ChangePwdScreen(),
-                                    type: PageTransitionType.fade));
+                            ? Navigator.push(context, PageTransition(child: const Login(), type: PageTransitionType.fade)) //register thành công
+                            : Navigator.push(context, PageTransition(child: const ChangePwdScreen(), type: PageTransitionType.fade));
                       } else {
                         showDialog(
                           context: context,

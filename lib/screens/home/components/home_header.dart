@@ -44,24 +44,20 @@ class _HomeHeaderState extends State<HomeHeader> {
 
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text(
-              'Location services are disabled. Please enable the services')));
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Location services are disabled. Please enable the services')));
       return false;
     }
     permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
-        ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Location permissions are denied')));
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Location permissions are denied')));
         return false;
       }
     }
     if (permission == LocationPermission.deniedForever) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text(
-              'Location permissions are permanently denied, we cannot request permissions.')));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text('Location permissions are permanently denied, we cannot request permissions.')));
       return false;
     }
     return true;
@@ -71,8 +67,7 @@ class _HomeHeaderState extends State<HomeHeader> {
     final hasPermission = await _handleLocationPermission();
 
     if (!hasPermission) return;
-    await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
-        .then((Position position) {
+    await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high).then((Position position) {
       setState(() {
         _currentPosition = position;
         isLoading = false;
@@ -84,9 +79,7 @@ class _HomeHeaderState extends State<HomeHeader> {
   }
 
   Future<void> _getAddressFromLatLng(Position position) async {
-    await placemarkFromCoordinates(
-            _currentPosition!.latitude, _currentPosition!.longitude)
-        .then((List<Placemark> placemarks) {
+    await placemarkFromCoordinates(_currentPosition!.latitude, _currentPosition!.longitude).then((List<Placemark> placemarks) {
       Placemark place = placemarks[0];
       setState(() {
         _currentAddress = '${place.street}';
@@ -140,9 +133,7 @@ class _HomeHeaderState extends State<HomeHeader> {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        PageTransition(
-                            child: const CurrentLocationScreen(),
-                            type: PageTransitionType.fade),
+                        PageTransition(child: const CurrentLocationScreen(), type: PageTransitionType.fade),
                       );
                     },
                     icon: const Icon(
@@ -154,11 +145,7 @@ class _HomeHeaderState extends State<HomeHeader> {
               ),
               IconButton(
                 onPressed: () {
-                  Navigator.push(
-                      context,
-                      PageTransition(
-                          child: const ListNotificationScreen(),
-                          type: PageTransitionType.rightToLeftWithFade));
+                  Navigator.push(context, PageTransition(child: const ListNotificationScreen(), type: PageTransitionType.rightToLeftWithFade));
                 },
                 icon: const Icon(
                   Icons.notifications,
@@ -174,16 +161,10 @@ class _HomeHeaderState extends State<HomeHeader> {
             height: 45,
             child: ElevatedButton(
               onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const SearchCenterScreen()));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const SearchCenterScreen()));
               },
               style: ElevatedButton.styleFrom(
-                  elevation: 0,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30)),
-                  backgroundColor: Colors.grey.shade200),
+                  elevation: 0, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)), backgroundColor: Colors.grey.shade200),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -194,10 +175,7 @@ class _HomeHeaderState extends State<HomeHeader> {
                   SizedBox(width: 10),
                   Text(
                     'Tìm tiệm giặt',
-                    style: TextStyle(
-                        fontSize: 18.0,
-                        color: Colors.grey.shade700,
-                        fontWeight: FontWeight.w400),
+                    style: TextStyle(fontSize: 18.0, color: Colors.grey.shade700, fontWeight: FontWeight.w400),
                   ),
                 ],
               ),

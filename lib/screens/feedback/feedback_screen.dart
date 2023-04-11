@@ -31,8 +31,7 @@ class _FeedbackOrderScreen extends State<FeedbackOrderScreen> {
         ),
         title: const Align(
           alignment: Alignment.center,
-          child: Text('Đánh giá đơn hàng',
-              style: TextStyle(color: textColor, fontSize: 27)),
+          child: Text('Đánh giá đơn hàng', style: TextStyle(color: textColor, fontSize: 27)),
         ),
         actions: [
           GestureDetector(
@@ -110,8 +109,7 @@ class _FeedbackOrderScreen extends State<FeedbackOrderScreen> {
                   maxLength: 500,
                   decoration: InputDecoration(
                     hintText: 'Nhập nội dung đánh giá',
-                    contentPadding: const EdgeInsets.only(
-                        top: 8, left: 8, right: 8, bottom: 8),
+                    contentPadding: const EdgeInsets.only(top: 8, left: 8, right: 8, bottom: 8),
                     enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(
                         color: Colors.grey.shade600,
@@ -129,8 +127,7 @@ class _FeedbackOrderScreen extends State<FeedbackOrderScreen> {
         height: 70,
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(30), topRight: Radius.circular(30)),
+          borderRadius: const BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30)),
           boxShadow: [
             BoxShadow(
               offset: const Offset(0, -15),
@@ -143,10 +140,7 @@ class _FeedbackOrderScreen extends State<FeedbackOrderScreen> {
           width: 190,
           height: 40,
           child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0)),
-                backgroundColor: kPrimaryColor),
+            style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)), backgroundColor: kPrimaryColor),
             onPressed: () {},
             child: const Text(
               'Gửi đánh giá',

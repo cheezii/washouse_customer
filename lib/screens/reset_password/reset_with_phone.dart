@@ -42,14 +42,12 @@ class _ResetWithPhoneState extends State<ResetWithPhone> {
                   const SizedBox(height: kDefaultPadding),
                   const Text(
                     'Đặt lại mật khẩu',
-                    style:
-                        TextStyle(fontSize: 40.0, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 40.0, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: kDefaultPadding),
                   const Text(
                     'Nhập số điện thoại của bạn, chúng tôi sẽ gửi mã OTP đến để cài lại mật khẩu.',
-                    style:
-                        TextStyle(fontSize: 18.0, fontWeight: FontWeight.w400),
+                    style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w400),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: kDefaultPadding),
@@ -87,25 +85,18 @@ class _ResetWithPhoneState extends State<ResetWithPhone> {
                   ),
                   const SizedBox(height: kDefaultPadding),
                   Container(
-                    padding: EdgeInsets.only(
-                        bottom: MediaQuery.of(context).viewPadding.bottom),
+                    padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewPadding.bottom),
                     width: size.width,
                     height: 45,
                     child: ElevatedButton(
                       onPressed: () {
                         if (_formPhoneNumKey.currentState!.validate()) {
                           _formPhoneNumKey.currentState!.save();
-                          Navigator.push(
-                              context,
-                              PageTransition(
-                                  child: const OTPScreen(isSignUp: false),
-                                  type: PageTransitionType.fade));
+                          Navigator.push(context, PageTransition(child: const OTPScreen(isSignUp: false), type: PageTransitionType.fade));
                         }
                       },
                       style: ElevatedButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0)),
-                          backgroundColor: kPrimaryColor),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)), backgroundColor: kPrimaryColor),
                       child: const Text(
                         'Tiếp tục',
                         style: TextStyle(fontSize: 18.0),
@@ -118,11 +109,7 @@ class _ResetWithPhoneState extends State<ResetWithPhone> {
                     children: [
                       TextButton(
                         onPressed: () {
-                          Navigator.push(
-                              context,
-                              PageTransition(
-                                  child: const ResetWithEmail(),
-                                  type: PageTransitionType.fade));
+                          Navigator.push(context, PageTransition(child: const ResetWithEmail(), type: PageTransitionType.fade));
                         },
                         child: const Text(
                           'Đặt lại bằng email',
@@ -134,11 +121,7 @@ class _ResetWithPhoneState extends State<ResetWithPhone> {
                       ),
                       TextButton(
                         onPressed: () {
-                          Navigator.push(
-                              context,
-                              PageTransition(
-                                  child: const Login(),
-                                  type: PageTransitionType.fade));
+                          Navigator.push(context, PageTransition(child: const Login(), type: PageTransitionType.fade));
                         },
                         child: const Text(
                           'Quay lại trang đăng nhập',

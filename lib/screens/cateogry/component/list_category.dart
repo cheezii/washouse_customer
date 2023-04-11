@@ -34,10 +34,7 @@ class ListCategory extends StatelessWidget {
                         color: Colors.transparent,
                         child: Text(
                           name,
-                          style: const TextStyle(
-                              fontSize: 17,
-                              color: textColor,
-                              fontWeight: FontWeight.w600),
+                          style: const TextStyle(fontSize: 17, color: textColor, fontWeight: FontWeight.w600),
                         )),
                   )
                 ],
