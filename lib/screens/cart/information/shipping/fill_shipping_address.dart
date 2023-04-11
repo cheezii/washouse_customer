@@ -37,8 +37,16 @@ class _FillAddressScreenState extends State<FillAddressScreen> {
   String? myDistrict;
   String? myWard;
 
+  bool _isChecked = false;
   var isSelectedDistrict = false;
-
+  String _currentUserName = '';
+  String _currentUserPhone = '';
+  int _currentUserLocationId = 0;
+  String _currentUserAddressString = "";
+  int? _currentUserWardId;
+  String _currentUserWardName = "";
+  int? _currentUserDistrictId;
+  String _currentUserDistrictName = "";
   Future getDistrictList() async {
     Response response = await get(Uri.parse('$baseUrl/districts'));
     if (response.statusCode == 200) {
@@ -65,9 +73,43 @@ class _FillAddressScreenState extends State<FillAddressScreen> {
     }
   }
 
+  Future<void> _loadData() async {
+    final name =
+        await baseController.getStringtoSharedPreference("CURRENT_USER_NAME");
+    final phone =
+        await baseController.getStringtoSharedPreference("CURRENT_USER_PHONE");
+    final locationId = await baseController
+        .getInttoSharedPreference("CURRENT_USER_LOCATION_ID");
+    setState(() {
+      _currentUserName = name != "" ? name : "Undentified Name";
+      _currentUserPhone = phone != "" ? phone : "Undentified Phone";
+      _currentUserLocationId = locationId != 0 ? locationId : 0;
+    });
+    print(_currentUserLocationId);
+    Response response =
+        await get(Uri.parse('$baseUrl/locations/$_currentUserLocationId'));
+    if (response.statusCode == 200) {
+      var data = json.decode(response.body);
+      setState(() {
+        _currentUserAddressString = data['data']['addressString'];
+        _currentUserWardId = data['data']['ward']['wardId'];
+        _currentUserWardName = data['data']['ward']['wardName'];
+        _currentUserDistrictId = data['data']['ward']['district']['districtId'];
+        _currentUserDistrictName =
+            data['data']['ward']['district']['districtName'];
+      });
+      print(_currentUserAddressString);
+    } else {
+      throw Exception("Lỗi khi load Json");
+    }
+  }
+
   @override
   void initState() {
     getDistrictList();
+    _loadData();
+    //print(_currentUserLocationId);
+    //getLocationById(_currentUserLocationId);
     super.initState();
   }
 
@@ -107,200 +149,234 @@ class _FillAddressScreenState extends State<FillAddressScreen> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
-        child: Form(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Họ và tên',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 14,
-                ),
-              ),
-              const SizedBox(height: 5),
-              Form(
-                key: _formNameKey,
-                child: FillingShippingInfo(
-                  lableText: 'Họ và tên',
-                  hintText: 'Nhập họ và tên của bạn',
-                  controller: nameController,
-                ),
-              ),
-              const SizedBox(height: 20),
-              const Text(
-                'Số điện thoại',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 14,
-                ),
-              ),
-              const SizedBox(height: 5),
-              Form(
-                key: _formPhoneNumberKey,
-                child: TextFormField(
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'Không được để trống trường này';
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Checkbox(
+                  value: _isChecked,
+                  onChanged: (bool? value) {
+                    if (value!) {
+                      nameController.text = _currentUserName;
+                      phoneController.text = _currentUserPhone;
+                      adressController.text = _currentUserAddressString;
+                      // myDistrict = _currentUserDistrictName;
+                      // _dropDownWardKey.currentState!
+                      //     .setValue(_currentUserWardName);
                     }
-                    if (!typePhoneNum.hasMatch(value)) {
-                      return 'Số điện thoại phải có mười số';
-                    }
+                    ;
+                    setState(() {
+                      _isChecked = value!;
+                    });
                   },
-                  onSaved: (newValue) {
-                    phoneController.text = newValue!;
-                  },
-                  decoration: const InputDecoration(
-                    // labelText: 'Số điện thoại',
-                    // labelStyle: TextStyle(
-                    //   color: Colors.black,
-                    //   fontSize: 18,
-                    // ),
-                    border: const OutlineInputBorder(
-                      borderSide: BorderSide(width: 1),
+                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                ),
+                Text('Đặt hàng cho chính tôi', style: TextStyle(fontSize: 20)),
+              ],
+            ),
+            Form(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Họ và tên',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 14,
                     ),
-                    contentPadding: EdgeInsets.all(2),
-                    hintText: 'Nhập số điện thoại của bạn',
-                    hintStyle: TextStyle(
-                      color: textNoteColor,
+                  ),
+                  const SizedBox(height: 5),
+                  Form(
+                    key: _formNameKey,
+                    child: FillingShippingInfo(
+                      lableText: 'Họ và tên',
+                      hintText: 'Nhập họ và tên của bạn',
+                      controller: nameController,
                     ),
-                    floatingLabelBehavior: FloatingLabelBehavior.always,
                   ),
-                  keyboardType: TextInputType.number,
-                  controller: phoneController,
-                  style: const TextStyle(
-                    color: textColor,
-                    fontSize: 16,
+                  const SizedBox(height: 20),
+                  const Text(
+                    'Số điện thoại',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 14,
+                    ),
                   ),
-                ),
-              ),
-              const SizedBox(height: 20),
-              const Text(
-                'Địa chỉ cá nhân',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 14,
-                ),
-              ),
-              const SizedBox(height: 5),
-              Form(
-                key: _formAddressKey,
-                child: FillingShippingInfo(
-                  lableText: 'Địa chỉ cá nhân',
-                  hintText: 'Nhập số nhà, tên đường...',
-                  controller: adressController,
-                ),
-              ),
-              const SizedBox(height: 25),
-              const Text(
-                'Tỉnh / thành phố',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 14,
-                ),
-              ),
-              const SizedBox(height: 5),
-              DropdownButtonFormField(
-                isDense: true,
-                isExpanded: true,
-                items: <String>[
-                  'Thành phố Hồ Chí Minh',
-                  'Chọn tỉnh / thành phố'
-                ].map((String item) {
-                  return DropdownMenuItem<String>(
-                    value: item,
-                    child: Text(item),
-                  );
-                }).toList(),
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide(width: 1),
+                  const SizedBox(height: 5),
+                  Form(
+                    key: _formPhoneNumberKey,
+                    child: TextFormField(
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'Không được để trống trường này';
+                        }
+                        if (!typePhoneNum.hasMatch(value)) {
+                          return 'Số điện thoại phải có mười số';
+                        }
+                      },
+                      onSaved: (newValue) {
+                        phoneController.text = newValue!;
+                      },
+                      decoration: const InputDecoration(
+                        // labelText: 'Số điện thoại',
+                        // labelStyle: TextStyle(
+                        //   color: Colors.black,
+                        //   fontSize: 18,
+                        // ),
+                        border: const OutlineInputBorder(
+                          borderSide: BorderSide(width: 1),
+                        ),
+                        contentPadding: EdgeInsets.all(2),
+                        hintText: 'Nhập số điện thoại của bạn',
+                        hintStyle: TextStyle(
+                          color: textNoteColor,
+                        ),
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                      ),
+                      keyboardType: TextInputType.number,
+                      controller: phoneController,
+                      style: const TextStyle(
+                        color: textColor,
+                        fontSize: 16,
+                      ),
+                    ),
                   ),
-                  contentPadding: EdgeInsets.all(2),
-                ),
-                icon: const Icon(Icons.keyboard_arrow_down_rounded),
-                iconSize: 30,
-                hint: const Text('Thành phố Hồ Chí Minh'),
-                style: const TextStyle(color: textColor),
-                onChanged: null,
-              ),
-              const SizedBox(height: 25),
-              const Text(
-                'Quận / huyện',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 14,
-                ),
-              ),
-              const SizedBox(height: 5),
-              DropdownButtonFormField(
-                isDense: true,
-                isExpanded: true,
-                items: districtList.map((item) {
-                  return DropdownMenuItem(
-                    value: item['districtId'].toString(),
-                    child: Text(item['districtName']),
-                  );
-                }).toList(),
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide(width: 1),
+                  const SizedBox(height: 20),
+                  const Text(
+                    'Địa chỉ cá nhân',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 14,
+                    ),
                   ),
-                  contentPadding: EdgeInsets.all(2),
-                ),
-                icon: const Icon(Icons.keyboard_arrow_down_rounded),
-                iconSize: 30,
-                value: myDistrict,
-                hint: const Text('Chọn quận/huyện'),
-                style: const TextStyle(color: textColor),
-                onChanged: (String? newValue) {
-                  setState(() {
-                    myWard = null;
-                    myDistrict = newValue!;
-                    getWardsList();
-                    _dropDownWardKey.currentState!.reset();
-                    _dropDownWardKey.currentState!.setValue(null);
-                  });
-                },
-              ),
-              const SizedBox(height: 25),
-              const Text(
-                'Phường / xã',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 14,
-                ),
-              ),
-              //if (isSelectedDistrict)
-              FormBuilderDropdown(
-                key: _dropDownWardKey,
-                name: 'Phường/xã',
-                isExpanded: true,
-                items: wardList.map((item) {
-                  return DropdownMenuItem(
-                    value: item['wardId'].toString(),
-                    child: Text(item['wardName']),
-                  );
-                }).toList(),
-                icon: const Icon(Icons.keyboard_arrow_down_rounded),
-                iconSize: 30,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide(width: 1),
+                  const SizedBox(height: 5),
+                  Form(
+                    key: _formAddressKey,
+                    child: FillingShippingInfo(
+                      lableText: 'Địa chỉ cá nhân',
+                      hintText: 'Nhập số nhà, tên đường...',
+                      controller: adressController,
+                    ),
                   ),
-                  contentPadding: EdgeInsets.all(2),
-                ),
-                initialValue: myWard,
-                hint: const Text('Chọn phường/xã'),
-                style: const TextStyle(color: textColor),
-                onChanged: (newValue) {
-                  setState(() {
-                    myWard = newValue!;
-                  });
-                },
+                  const SizedBox(height: 25),
+                  const Text(
+                    'Tỉnh / thành phố',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 14,
+                    ),
+                  ),
+                  const SizedBox(height: 5),
+                  DropdownButtonFormField(
+                    isDense: true,
+                    isExpanded: true,
+                    items: <String>[
+                      'Thành phố Hồ Chí Minh',
+                      'Chọn tỉnh / thành phố'
+                    ].map((String item) {
+                      return DropdownMenuItem<String>(
+                        value: item,
+                        child: Text(item),
+                      );
+                    }).toList(),
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(width: 1),
+                      ),
+                      contentPadding: EdgeInsets.all(2),
+                    ),
+                    icon: const Icon(Icons.keyboard_arrow_down_rounded),
+                    iconSize: 30,
+                    hint: const Text('Thành phố Hồ Chí Minh'),
+                    style: const TextStyle(color: textColor),
+                    onChanged: null,
+                  ),
+                  const SizedBox(height: 25),
+                  const Text(
+                    'Quận / huyện',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 14,
+                    ),
+                  ),
+                  const SizedBox(height: 5),
+                  DropdownButtonFormField(
+                    isDense: true,
+                    isExpanded: true,
+                    items: districtList.map((item) {
+                      return DropdownMenuItem(
+                        value: item['districtId'].toString(),
+                        child: Text(item['districtName']),
+                      );
+                    }).toList(),
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(width: 1),
+                      ),
+                      contentPadding: EdgeInsets.all(2),
+                    ),
+                    icon: const Icon(Icons.keyboard_arrow_down_rounded),
+                    iconSize: 30,
+                    value: myDistrict,
+                    hint: !_isChecked
+                        ? const Text('Chọn quận/huyện')
+                        : Text(_currentUserDistrictName),
+                    style: const TextStyle(color: textColor),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        _isChecked = false;
+                        myWard = null;
+                        myDistrict = newValue!;
+                        getWardsList();
+                        _dropDownWardKey.currentState!.reset();
+                        _dropDownWardKey.currentState!.setValue(null);
+                      });
+                    },
+                  ),
+                  const SizedBox(height: 25),
+                  const Text(
+                    'Phường / xã',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 14,
+                    ),
+                  ),
+                  //if (isSelectedDistrict)
+                  FormBuilderDropdown(
+                    key: _dropDownWardKey,
+                    name: 'Phường/xã',
+                    isExpanded: true,
+                    items: wardList.map((item) {
+                      return DropdownMenuItem(
+                        value: item['wardId'].toString(),
+                        child: Text(item['wardName']),
+                      );
+                    }).toList(),
+                    icon: const Icon(Icons.keyboard_arrow_down_rounded),
+                    iconSize: 30,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(width: 1),
+                      ),
+                      contentPadding: EdgeInsets.all(2),
+                    ),
+                    initialValue: myWard,
+                    hint: !_isChecked
+                        ? const Text('Chọn phường/xã')
+                        : Text(_currentUserWardName),
+                    style: const TextStyle(color: textColor),
+                    onChanged: (newValue) {
+                      setState(() {
+                        _isChecked = false;
+                        myWard = newValue!;
+                      });
+                    },
+                  )
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
       bottomNavigationBar: Container(
@@ -339,8 +415,14 @@ class _FillAddressScreenState extends State<FillAddressScreen> {
                     "customerAddressString", adressController.value.text);
                 baseController.saveStringtoSharedPreference(
                     "customerPhone", phoneController.value.text);
+                int wardChoosen = 0;
+                if (_isChecked) {
+                  wardChoosen = _currentUserWardId!;
+                } else {
+                  wardChoosen = int.parse(myWard!);
+                }
                 baseController.saveInttoSharedPreference(
-                    "customerWardId", int.parse(myWard!));
+                    "customerWardId", wardChoosen);
 
                 print(
                     '_formNameKey.currentState!=${nameController.value.text}');
