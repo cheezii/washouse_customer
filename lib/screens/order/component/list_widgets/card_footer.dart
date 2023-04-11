@@ -69,7 +69,7 @@ class CardFooter extends StatelessWidget {
         isCancel
             ? GestureDetector(
                 onTap: () {
-                  Navigator.push(context, PageTransition(child: const CancelDetailScreen(), type: PageTransitionType.rightToLeftWithFade));
+                  //Navigator.push(context, PageTransition(child: const CancelDetailScreen(), type: PageTransitionType.rightToLeftWithFade));
                 },
                 child: Container(
                   alignment: Alignment.bottomRight,

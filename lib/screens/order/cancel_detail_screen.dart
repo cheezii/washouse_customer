@@ -2,11 +2,54 @@ import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 
 import '../../components/constants/color_constants.dart';
+import '../../resource/controller/order_controller.dart';
+import '../../resource/models/response_models/order_detail_information.dart';
 import 'component/details_widget/detail_service.dart';
 import 'search_order_screen.dart';
 
-class CancelDetailScreen extends StatelessWidget {
-  const CancelDetailScreen({super.key});
+class CancelDetailScreen extends StatefulWidget {
+  const CancelDetailScreen({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  State<CancelDetailScreen> createState() => _CancelDetailScreenState();
+}
+
+class _CancelDetailScreenState extends State<CancelDetailScreen> {
+  late OrderController orderController;
+  Order_Infomation order_infomation = Order_Infomation();
+  bool isLoading = false;
+  @override
+  void initState() {
+    super.initState();
+    orderController = OrderController(context);
+    // centerArgs = widget.orderId;
+    getOrderDetailInformation();
+  }
+
+  void getOrderDetailInformation() async {
+    // Show loading indicator
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      // Wait for getOrderInformation to complete
+      Order_Infomation result = await orderController.getOrderInformation('20230411_0000007');
+      setState(() {
+        // Update state with loaded data
+        order_infomation = result;
+        isLoading = false;
+      });
+    } catch (e) {
+      // Handle error
+      setState(() {
+        isLoading = false;
+      });
+      print('Error loading data: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +106,7 @@ class CancelDetailScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      'vào 06-03-2023 12:23',
+                      '${order_infomation.orderTrackings!.firstWhere((element) => (element.status!.compareTo("cancelled") == 0)).createdDate}',
                       style: TextStyle(fontSize: 16, color: Colors.grey.shade600),
                     ),
                   ],
@@ -79,7 +122,9 @@ class CancelDetailScreen extends StatelessWidget {
           const SizedBox(height: 10),
           Divider(thickness: 8, color: Colors.grey.shade200),
           const SizedBox(height: 10),
-          const DetailService(),
+          DetailService(
+            order_information: order_infomation,
+          ),
           const SizedBox(height: 10),
           Column(
             children: const [

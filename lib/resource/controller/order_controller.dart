@@ -17,6 +17,7 @@ import 'package:washouse_customer/resource/models/wallet.dart';
 
 import '../../components/constants/text_constants.dart';
 import '../models/cart_item.dart';
+import '../models/response_models/order_detail_information.dart';
 
 BaseController baseController = BaseController();
 
@@ -175,5 +176,27 @@ class OrderController {
 
       return 0;
     }
+  }
+
+  Future<Order_Infomation> getOrderInformation(String orderId) async {
+    var order_Infomation = new Order_Infomation();
+    try {
+      String url = '$baseUrl/orders/search';
+      Map<String, dynamic> queryParams = {"OrderId": orderId, "Phone": await baseController.getStringtoSharedPreference("CURRENT_USER_PHONE")};
+      //print(queryParams.toString());
+      Response response = await baseController.makeAuthenticatedRequest(url, queryParams);
+      if (response.statusCode == 200) {
+        // Handle successful response
+        order_Infomation = Order_Infomation?.fromJson(jsonDecode(response.body)["data"]);
+        //print(currentUser.name);
+        // Do something with the user data...
+      } else {
+        // Handle error response
+        throw Exception('Error fetching user data: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('error: getOrderInformation-$e');
+    }
+    return order_Infomation;
   }
 }

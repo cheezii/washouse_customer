@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:washouse_customer/resource/models/response_models/order_detail_information.dart';
 import 'package:washouse_customer/utils/price_util.dart';
 
 import '../../../../components/constants/color_constants.dart';
@@ -7,7 +8,7 @@ import '../../../../resource/controller/cart_provider.dart';
 import '../../../../resource/models/cart_item.dart';
 
 class DetailItemCard extends StatelessWidget {
-  final CartItem cart;
+  final OrderedDetails cart;
   const DetailItemCard({
     super.key,
     required this.cart,
@@ -29,7 +30,7 @@ class DetailItemCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(15),
               ),
               //child: Image.asset(cart.service.image!),
-              child: Image.network(cart.thumbnail!),
+              child: cart.image != null ? Image.network(cart.image!) : Image.asset('assets/images/service/washnfold.png'),
             ),
           ),
         ),
@@ -42,7 +43,7 @@ class DetailItemCard extends StatelessWidget {
                 width: 200,
                 child: Text(
                   //cart.service.name!,
-                  cart.name,
+                  cart.serviceName!,
                   style: const TextStyle(fontSize: 17, color: Colors.black, fontWeight: FontWeight.bold),
                   maxLines: 2,
                 ),
@@ -51,7 +52,7 @@ class DetailItemCard extends StatelessWidget {
               Row(
                 children: [
                   Text(
-                    cart.unit!.compareTo('Kg') == 0 ? 'KL: x${cart.measurement}' : 'SL: x${cart.measurement.toInt()}',
+                    cart.unit!.compareTo('Kg') == 0 ? 'KL: x${cart.measurement}' : 'SL: x${cart.measurement!.toInt()}',
                     style: const TextStyle(color: textColor, fontSize: 16),
                   ),
                   const Spacer(),

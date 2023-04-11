@@ -1,17 +1,22 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:washouse_customer/resource/controller/order_controller.dart';
 
 import 'package:washouse_customer/resource/models/order.dart';
+import 'package:washouse_customer/resource/models/response_models/order_detail_information.dart';
 import 'package:washouse_customer/resource/models/shipping.dart';
 import 'package:washouse_customer/screens/order/component/details_widget/detail_heading.dart';
+import 'package:washouse_customer/utils/order_util.dart';
 
 import '../../components/constants/color_constants.dart';
+import '../../utils/price_util.dart';
 import 'component/details_widget/detail_service.dart';
 import 'generate_qr_screen.dart';
 import 'search_order_screen.dart';
 
-class OrderDetailScreen extends StatelessWidget {
+class OrderDetailScreen extends StatefulWidget {
+  final orderId;
   final bool isDeliver;
   final bool isComplete;
   final bool isConfirm;
@@ -24,7 +29,47 @@ class OrderDetailScreen extends StatelessWidget {
     required this.isConfirm,
     required this.isProccessing,
     required this.isShipping,
+    this.orderId,
   }) : super(key: key);
+
+  @override
+  State<OrderDetailScreen> createState() => _OrderDetailScreenState();
+}
+
+class _OrderDetailScreenState extends State<OrderDetailScreen> {
+  late OrderController orderController;
+  Order_Infomation order_infomation = Order_Infomation();
+  bool isLoading = false;
+  @override
+  void initState() {
+    super.initState();
+    orderController = OrderController(context);
+    // centerArgs = widget.orderId;
+    getOrderDetailInformation();
+  }
+
+  void getOrderDetailInformation() async {
+    // Show loading indicator
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      // Wait for getOrderInformation to complete
+      Order_Infomation result = await orderController.getOrderInformation('20230411_0000009');
+      setState(() {
+        // Update state with loaded data
+        order_infomation = result;
+        isLoading = false;
+      });
+    } catch (e) {
+      // Handle error
+      setState(() {
+        isLoading = false;
+      });
+      print('Error loading data: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -92,7 +137,7 @@ class OrderDetailScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        '#${orderList[0].id}',
+                        'Đơn hàng: ${order_infomation.id}',
                         style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 20),
                       ),
                       //DetailHeading(statusColor: statusColor, status: status)
@@ -100,7 +145,7 @@ class OrderDetailScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 6),
                   Text(
-                    orderList[0].createdDate.toString(),
+                    order_infomation.orderTrackings != null ? order_infomation.orderTrackings!.first.createdDate.toString() : '1',
                     style: TextStyle(fontSize: 16, color: Colors.grey.shade700),
                   ),
                 ],
@@ -118,17 +163,17 @@ class OrderDetailScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 6),
                   Text(
-                    shipping.fullName,
+                    order_infomation.customerName!,
                     style: const TextStyle(fontSize: 16, color: textColor),
                   ),
                   const SizedBox(height: 6),
                   Text(
-                    shipping.shippedPhone,
+                    order_infomation.customerMobile!,
                     style: TextStyle(color: Colors.grey.shade600, fontSize: 16),
                   ),
                   const SizedBox(height: 6),
                   Text(
-                    shipping.shippedAddress,
+                    order_infomation.customerAddress!,
                     style: TextStyle(color: Colors.grey.shade600, fontSize: 16),
                     overflow: TextOverflow.clip,
                   ),
@@ -136,7 +181,9 @@ class OrderDetailScreen extends StatelessWidget {
               ),
             ),
             separateLine(),
-            const DetailService(),
+            DetailService(
+              order_information: order_infomation,
+            ),
             separateLine(),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -157,8 +204,8 @@ class OrderDetailScreen extends StatelessWidget {
                           child: Image.asset('assets/images/shipping/ship-di.png'),
                         ),
                         const SizedBox(width: 8),
-                        const Text(
-                          'Không sử dụng dịch vụ vận chuyển',
+                        Text(
+                          OrderUtils.getTextOfDeliveryType(order_infomation.deliveryType!),
                           style: TextStyle(fontSize: 16),
                         ),
                       ],
@@ -187,8 +234,8 @@ class OrderDetailScreen extends StatelessWidget {
                           child: Image.asset('assets/images/shipping/cash-on-delivery.png'),
                         ),
                         const SizedBox(width: 8),
-                        const Text(
-                          'Thanh toán bằng tiền mặt',
+                        Text(
+                          OrderUtils.getTextOfDeliveryType(order_infomation.orderPayment!.paymentMethod!),
                           style: TextStyle(fontSize: 16),
                         ),
                       ],
@@ -214,13 +261,13 @@ class OrderDetailScreen extends StatelessWidget {
                       children: [
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: const [
-                            Text(
+                          children: [
+                            const Text(
                               'Tạm tính:',
                               style: TextStyle(fontSize: 16),
                             ),
                             Text(
-                              '285000 đ',
+                              '${PriceUtils().convertFormatPrice((order_infomation.totalOrderValue!).round())} đ',
                               style: TextStyle(fontSize: 16, color: textColor, fontWeight: FontWeight.bold),
                             )
                           ],
@@ -228,13 +275,15 @@ class OrderDetailScreen extends StatelessWidget {
                         const SizedBox(height: 15),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: const [
-                            Text(
+                          children: [
+                            const Text(
                               'Mã giảm giá:',
                               style: TextStyle(fontSize: 16),
                             ),
                             Text(
-                              '0 đ',
+                              order_infomation.orderPayment!.discount != null
+                                  ? '${PriceUtils().convertFormatPrice((order_infomation.totalOrderValue! * (1 - order_infomation.orderPayment!.discount!)).round())} đ'
+                                  : '0 đ',
                               style: TextStyle(fontSize: 16, color: textColor, fontWeight: FontWeight.bold),
                             )
                           ],
@@ -242,13 +291,13 @@ class OrderDetailScreen extends StatelessWidget {
                         const SizedBox(height: 15),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: const [
-                            Text(
+                          children: [
+                            const Text(
                               'Phí ship:',
                               style: TextStyle(fontSize: 16),
                             ),
                             Text(
-                              '0 đ',
+                              '${PriceUtils().convertFormatPrice((order_infomation.deliveryPrice!).round())} đ',
                               style: TextStyle(fontSize: 16, color: textColor, fontWeight: FontWeight.bold),
                             )
                           ],
@@ -260,13 +309,13 @@ class OrderDetailScreen extends StatelessWidget {
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: const [
-                            Text(
+                          children: [
+                            const Text(
                               'Tổng cộng:',
                               style: TextStyle(fontSize: 17),
                             ),
                             Text(
-                              '285000 đ',
+                              '${PriceUtils().convertFormatPrice((order_infomation.orderPayment!.paymentTotal!).round())} đ',
                               style: TextStyle(fontSize: 17, color: kPrimaryColor, fontWeight: FontWeight.bold),
                             )
                           ],
@@ -281,7 +330,7 @@ class OrderDetailScreen extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: isConfirm
+      bottomNavigationBar: widget.isConfirm
           ? Container(
               padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
               height: 70,
@@ -310,7 +359,7 @@ class OrderDetailScreen extends StatelessWidget {
                 ),
               ),
             )
-          : isShipping
+          : widget.isShipping
               ? Container(
                   padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
                   height: 70,
