@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:washouse_customer/resource/controller/cart_provider.dart';
 import 'package:washouse_customer/resource/models/current_user.dart';
@@ -55,20 +56,9 @@ class OrderController {
         preferredDropoffTime_Time != null &&
         preferredDropoffTime_Date != "" &&
         preferredDropoffTime_Time != "") {
+      print(preferredDropoffTime_Date + " " + preferredDropoffTime_Time);
       order.preferredDropoffTime =
           preferredDropoffTime_Date + " " + preferredDropoffTime_Time;
-    }
-
-    String? preferredDeliverTime_Date = await baseController
-        .getStringtoSharedPreference("preferredDeliverTime_Date");
-    String? preferredDeliverTime_Time = await baseController
-        .getStringtoSharedPreference("preferredDeliverTime_Time");
-    if (preferredDeliverTime_Date != null &&
-        preferredDeliverTime_Time != null &&
-        preferredDeliverTime_Date != "" &&
-        preferredDeliverTime_Time != "") {
-      order.preferredDeliverTime =
-          preferredDeliverTime_Date + " " + preferredDeliverTime_Time;
     }
 
     List<CartItem> listCartItems =
@@ -116,6 +106,10 @@ class OrderController {
     orderBody.deliveries = deliveries.cast<Deliveries>();
     orderBody.orderDetails = orderDetails.cast<Order_Details>();
     orderBody.order = order;
+    if (orderBody.order!.preferredDropoffTime == null) {
+      orderBody.order!.preferredDropoffTime =
+          DateFormat('dd-MM-yyyy HH:mm:ss').format(DateTime.now());
+    }
     OrderBody requestBody = orderBody;
     print(requestBody.toJson());
     final headers = {'Content-Type': 'application/json'};
@@ -142,8 +136,13 @@ class OrderController {
     }
   }
 
-  Future<double> calculateDeliveryPrice(String? DropoffAddress,
-      int? DropoffWardId, String? DeliverAddress, int? DeliverWardId) async {
+  Future<double> calculateDeliveryPrice(
+      String? DropoffAddress,
+      int? DropoffWardId,
+      String? DeliverAddress,
+      int? DeliverWardId,
+      bool checkDropoff,
+      bool checkDeliver) async {
     String url = '$baseUrl/orders/delivery-price';
     List<CartItem> listCartItems =
         Provider.of<CartProvider>(context, listen: false).cartItems;
@@ -153,19 +152,41 @@ class OrderController {
         totalWeight = totalWeight + element.measurement * element.weight!;
       }
     }
-    final Map<String, dynamic> queryParams = {
-      'CenterId': await baseController.getInttoSharedPreference("centerId"),
-      'TotalWeight': totalWeight,
-      'DropoffAddress': DropoffAddress,
-      'DropoffWardId': DropoffWardId,
-      'DeliverAddress': DeliverAddress,
-      'DeliverWardId': DeliverWardId,
-      'DeliveryType':
-          await baseController.getInttoSharedPreference("deliveryType")
-    };
+    late Map<String, dynamic> queryParams;
+    if (checkDropoff && checkDeliver) {
+      queryParams = {
+        'CenterId': await baseController.getInttoSharedPreference("centerId"),
+        'TotalWeight': totalWeight,
+        'DropoffAddress': DropoffAddress,
+        'DropoffWardId': DropoffWardId ?? 0,
+        'DeliverAddress': DeliverAddress,
+        'DeliverWardId': DeliverWardId ?? 0,
+        'DeliveryType': 3
+      };
+    } else if (checkDropoff && !checkDeliver) {
+      queryParams = {
+        'CenterId': await baseController.getInttoSharedPreference("centerId"),
+        'TotalWeight': totalWeight,
+        'DropoffAddress': DropoffAddress,
+        'DropoffWardId': DropoffWardId ?? 0,
+        'DeliveryType': 1
+      };
+    } else if (!checkDropoff && checkDeliver) {
+      queryParams = {
+        'CenterId': await baseController.getInttoSharedPreference("centerId"),
+        'TotalWeight': totalWeight,
+        'DeliverAddress': DeliverAddress,
+        'DeliverWardId': DeliverWardId ?? 0,
+        'DeliveryType': 2
+      };
+    }
 
-    final response = await http
-        .get(Uri.parse(url + '?' + Uri(queryParameters: queryParams).query));
+    print(queryParams.toString());
+    final response = await http.get(Uri.parse(url +
+        '?' +
+        Uri(
+            queryParameters: queryParams
+                .map((key, value) => MapEntry(key, value.toString()))).query));
     dynamic responseData = json.decode(response.body);
     print(responseData["message"]);
     // Make the authenticated POST requests
@@ -177,7 +198,7 @@ class OrderController {
       // Request was successful, parse the response body
       dynamic responseData = json.decode(response.body);
       // Do something with the response data
-      return double.parse(responseData["data"]["deliveryPrice"]);
+      return responseData["data"]["deliveryPrice"];
     } else {
       // Request failed, handle the error
       print(responseData["message"]);

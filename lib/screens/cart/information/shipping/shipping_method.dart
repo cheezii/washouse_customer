@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../../../components/constants/color_constants.dart';
+import '../../../../resource/controller/cart_provider.dart';
 import 'choose_shipping_method.dart';
 
 class ShippingMethod extends StatelessWidget {
@@ -43,10 +45,26 @@ class ShippingMethod extends StatelessWidget {
                             Image.asset('assets/images/shipping/ship-di.png'),
                       ),
                       const SizedBox(width: 8),
-                      const Text(
-                        'Không sử dụng dịch vụ vận chuyển',
-                        style: TextStyle(fontSize: 16),
-                      ),
+                      Consumer<CartProvider>(
+                        builder: (context, value, child) {
+                          String textReturn;
+                          if (value.deliveryType == 0) {
+                            textReturn = 'Không sử dụng dịch vụ vận chuyển';
+                          } else if (value.deliveryType == 1) {
+                            textReturn = 'Vận chuyển từ bạn tới cửa hàng';
+                          } else if (value.deliveryType == 2) {
+                            textReturn = 'Vận chuyển từ cửa hàng đến bạn';
+                          } else if (value.deliveryType == 3) {
+                            textReturn = 'Vận chuyển hai chiều';
+                          } else {
+                            textReturn = 'Không sử dụng dịch vụ vận chuyển';
+                          }
+                          return Text(
+                            textReturn,
+                            style: const TextStyle(fontSize: 16),
+                          );
+                        },
+                      )
                     ],
                   ),
                 ),

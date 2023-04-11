@@ -91,6 +91,7 @@ class _FillShippingInformationState extends State<FillShippingInformation> {
 
   @override
   Widget build(BuildContext context) {
+    var provider = Provider.of<CartProvider>(context);
     OrderController orderController = OrderController(context);
     List<CartItem> cartItems = Provider.of<CartProvider>(context).cartItems;
     return Scaffold(
@@ -773,11 +774,17 @@ class _FillShippingInformationState extends State<FillShippingInformation> {
               // print(
               //     'receiveAdressController.value.text${sendAdressController.value.text}');
               if (check) {
-                print(
-                    'sendAdressController.value.text${sendAdressController.value.text}');
+                print('DropoffAddress - $DropoffAddress');
+                print('DropoffWardId - $DropoffWardId');
+                print('DeliverAddress - $DeliverAddress');
+                print('DeliverWardId - $DeliverWardId');
+                print('widget.isSend - ${widget.isSend}');
+                print('checkValidateFormSend- ${checkValidateFormSend}');
+                print('widget.isSend - ${widget.isReceive}');
+                print('checkValidateFormReceive- ${checkValidateFormReceive}');
                 //_formSendAddressKey.currentState!.save();
                 //_formReceiveAddressKey.currentState!.save();
-                if (checkValidateFormSend) {
+                if (checkValidateFormSend && widget.isSend) {
                   DropoffAddress = sendAdressController.value.text;
                   baseController.saveStringtoSharedPreference(
                       "addressString_Dropoff", sendAdressController.value.text);
@@ -785,7 +792,7 @@ class _FillShippingInformationState extends State<FillShippingInformation> {
                   baseController.saveInttoSharedPreference(
                       "wardId_Dropoff", int.parse(sendWard!));
                 }
-                if (checkValidateFormReceive) {
+                if (checkValidateFormReceive && widget.isReceive) {
                   DeliverAddress = receiveAdressController.value.text;
                   baseController.saveStringtoSharedPreference(
                       "addressString_Delivery",
@@ -795,10 +802,16 @@ class _FillShippingInformationState extends State<FillShippingInformation> {
                       "wardId_Delivery", int.parse(receiveWard!));
                 }
                 var totalDeliveryPrice =
-                    await orderController.calculateDeliveryPrice(DropoffAddress,
-                        DropoffWardId, DeliverAddress, DeliverWardId);
+                    await orderController.calculateDeliveryPrice(
+                        DropoffAddress,
+                        DropoffWardId,
+                        DeliverAddress,
+                        DeliverWardId,
+                        widget.isSend,
+                        widget.isReceive);
                 baseController.saveDoubletoSharedPreference(
                     "deliveryPrice", totalDeliveryPrice);
+                provider.updateDeliveryPrice();
                 baseController.printAllSharedPreferences();
                 Navigator.push(
                     context,

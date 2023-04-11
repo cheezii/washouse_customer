@@ -21,6 +21,7 @@ class _ChooseShippingMethodState extends State<ChooseShippingMethod> {
   BaseController baseController = BaseController();
   @override
   Widget build(BuildContext context) {
+    var provider = Provider.of<CartProvider>(context);
     List<CartItem> cartItems = Provider.of<CartProvider>(context).cartItems;
     //0 = không chọn, 1 = một chiều đi, 2 = một chiều về, 3 = 2 chiều
     return Scaffold(
@@ -206,6 +207,8 @@ class _ChooseShippingMethodState extends State<ChooseShippingMethod> {
                 backgroundColor: kPrimaryColor),
             onPressed: () {
               if (shippingMethod == 0) {
+                baseController.saveDoubletoSharedPreference("deliveryPrice", 0);
+                provider.updateDeliveryPrice();
                 Navigator.push(
                   context,
                   MaterialPageRoute(

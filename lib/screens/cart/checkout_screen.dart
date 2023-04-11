@@ -207,7 +207,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                   ),
                                   Text(
                                     //'${PriceUtils().convertFormatPrice(value.getTotalPrice().round())} đ',
-                                    '${PriceUtils().convertFormatPrice(value.cartItems.fold(0.0, (sum, item) => sum + item.price!).round())} đ',
+                                    (value.cartItems != null &&
+                                            value.cartItems.isNotEmpty)
+                                        ? '${PriceUtils().convertFormatPrice(value.cartItems.fold(0.0, (sum, item) => sum + item.price!).round())} đ'
+                                        : '0 đ',
                                     style: const TextStyle(
                                         fontSize: 16,
                                         color: textColor,
@@ -219,13 +222,16 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                               Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
-                                children: const [
-                                  Text(
+                                children: [
+                                  const Text(
                                     'Mã giảm giá:',
                                     style: TextStyle(fontSize: 16),
                                   ),
                                   Text(
-                                    '0 đ',
+                                    (value.discount != null &&
+                                            value.discount != 0)
+                                        ? '- ${PriceUtils().convertFormatPrice((value.cartItems.fold(0.0, (sum, item) => sum + item.price!) * (value.discount)).round())} đ'
+                                        : '- 0 đ',
                                     style: TextStyle(
                                         fontSize: 16,
                                         color: textColor,
@@ -237,14 +243,17 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                               Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
-                                children: const [
-                                  Text(
+                                children: [
+                                  const Text(
                                     'Phí ship:',
                                     style: TextStyle(fontSize: 16),
                                   ),
                                   Text(
-                                    '0 đ',
-                                    style: TextStyle(
+                                    (value.deliveryPrice != null &&
+                                            value.deliveryPrice != 0)
+                                        ? '${PriceUtils().convertFormatPrice(value.deliveryPrice.round())} đ'
+                                        : '0 đ',
+                                    style: const TextStyle(
                                         fontSize: 16,
                                         color: textColor,
                                         fontWeight: FontWeight.bold),
@@ -266,7 +275,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                   ),
                                   Text(
                                     //'${PriceUtils().convertFormatPrice(value.getTotalPrice().round())} đ',
-                                    '${PriceUtils().convertFormatPrice(value.cartItems.fold(0.0, (sum, item) => sum + item.price!).round())} đ',
+                                    (value.cartItems.isNotEmpty)
+                                        ? '${PriceUtils().convertFormatPrice((value.cartItems.fold(0.0, (sum, item) => sum + item.price!) * (1 - value.discount) + value.deliveryPrice).round())} đ'
+                                        : '0 đ',
+
                                     style: const TextStyle(
                                         fontSize: 17,
                                         color: kPrimaryColor,

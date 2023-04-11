@@ -169,7 +169,7 @@ class OrderCard extends StatelessWidget {
                               TextSpan(
                                 text: checkPrice
                                     //? '${PriceUtils().convertFormatPrice(value.getTotalPrice().round())} đ'
-                                    ? '${PriceUtils().convertFormatPrice(value.cartItems.fold(0.0, (sum, item) => sum + item.price!).round())} đ'
+                                    ? '${PriceUtils().convertFormatPrice((value.cartItems.fold(0.0, (sum, item) => sum + item.price!) + value.deliveryPrice).round())} đ'
                                     : '0 đ',
                                 style: const TextStyle(
                                     fontSize: 15,
@@ -185,7 +185,7 @@ class OrderCard extends StatelessWidget {
                         TextSpan(
                           text: checkPrice
                               //? '${PriceUtils().convertFormatPrice(value.getTotalPrice().round())} đ'
-                              ? '${PriceUtils().convertFormatPrice((value.cartItems.fold(0.0, (sum, item) => sum + item.price!) * (1 - value.discount)).round())} đ'
+                              ? '${PriceUtils().convertFormatPrice((value.cartItems.fold(0.0, (sum, item) => sum + item.price!) * (1 - value.discount) + value.deliveryPrice).round())} đ'
                               : '0 đ',
                           style: const TextStyle(
                               fontSize: 20,

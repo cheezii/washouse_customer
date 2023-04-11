@@ -13,6 +13,8 @@ class CartProvider extends ChangeNotifier {
   int? _centerId = 0;
   double _totalPrice = 0;
   double _discount = 0;
+  double _deliveryPrice = 0;
+  int _deliveryType = 0;
   String? _promoCode = '';
 
   List<CartItem> get cartItems => _cartItems;
@@ -21,6 +23,8 @@ class CartProvider extends ChangeNotifier {
   int? get centerId => _centerId;
   double get totalPrice => _totalPrice;
   double get discount => _discount;
+  double get deliveryPrice => _deliveryPrice;
+  int get deliveryType => _deliveryType;
   String? get promoCode => _promoCode;
 
   CartProvider() {
@@ -83,6 +87,7 @@ class CartProvider extends ChangeNotifier {
     _cartItems.remove(_cartItems[existingItemIndex]);
     if (_cartItems.length == 0) {
       _discount = 0;
+      _deliveryPrice = 0;
       _totalPrice = 0;
       _promoCode = "";
       _clearIfCartEmpty();
@@ -133,6 +138,17 @@ class CartProvider extends ChangeNotifier {
     prefs.remove('customerPhone');
     prefs.remove('customerNote');
     prefs.remove('cartItems');
+    prefs.remove('deliveryPrice');
+    prefs.remove('total_price');
+    prefs.remove('customerNote');
+    prefs.remove('centerId');
+    prefs.remove('customerName');
+    prefs.remove('customerPhone');
+    prefs.remove('customerWardId');
+    prefs.remove('deliveryType');
+    prefs.remove('addressString_Dropoff');
+    prefs.remove('customerMessage');
+    prefs.remove('paymentMethod');
     notifyListeners();
   }
 
@@ -167,6 +183,11 @@ class CartProvider extends ChangeNotifier {
     _cartItems.clear();
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.remove('cartItems');
+    _discount = 0;
+    _deliveryPrice = 0;
+    _totalPrice = 0;
+    _promoCode = "";
+    _clearIfCartEmpty();
     notifyListeners();
     _setCenter();
   }
@@ -191,6 +212,23 @@ class CartProvider extends ChangeNotifier {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     _promoCode = prefs.getString('promoCode');
     _discount = prefs.getDouble('discount');
+  }
+
+  void _setDeliveryPrice() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    _deliveryPrice = prefs.getDouble('deliveryPrice');
+    _deliveryType = prefs.getInt("deliveryType");
+  }
+
+  void _getDeliveryPrice() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    _deliveryPrice = prefs.getDouble('deliveryPrice');
+    _deliveryType = prefs.getInt('deliveryType');
+  }
+
+  void updateDeliveryPrice() {
+    notifyListeners();
+    _setDeliveryPrice();
   }
 
   void addTotalPrice(double productPrice) {
