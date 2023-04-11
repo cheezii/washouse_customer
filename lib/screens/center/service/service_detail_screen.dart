@@ -716,9 +716,6 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                                 borderRadius: BorderRadius.circular(10.0)),
                             backgroundColor: kPrimaryColor),
                         onPressed: () async {
-                          // double measurementInput = checkUnitType
-                          //     ? int.parse(kilogramController.text)
-                          //     : quantity;
                           double measurementInput;
                           //debugPrint('Selected value: $selectedDropdownValue');
                           // checkUnitType
@@ -779,7 +776,9 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                                   ? null
                                   : serviceArgs.minPrice!.toDouble(),
                               prices: serviceArgs.prices);
+
                           if (provider.cartItems.isEmpty) {
+                            print("provider.cartItems.isEmpty");
                             provider.addItemToCart(cartItem); //add to cart
                             provider.updateCenter(cartItem.centerId);
                             checkAdded = true;
@@ -816,11 +815,45 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                               },
                             );
                           } else {
+                            print("else");
                             provider.addItemToCart(cartItem); //add to cart
                             provider.updateCenter(cartItem.centerId);
                             checkAdded = true;
                             //provider.centerId =
                           }
+                          bool checkMax = (provider.cartItems.length != 0 &&
+                              provider.cartItems.last.measurement ==
+                                  _maxMeasurementValue);
+                          await baseController.saveStringtoSharedPreference(
+                              "customerNote", noteController.text);
+                          // ignore: use_build_context_synchronously
+                          checkAdded
+                              ? showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: Text('Thông báo'),
+                                      content: checkMax
+                                          ? Text(
+                                              'Dịch vụ đã được thêm vào giỏ với lượng tối đa cho phép. ($_maxMeasurementValue ${serviceArgs.unit})')
+                                          : Text(
+                                              'Dịch vụ đã được thêm vào giỏ.'),
+                                      actions: <Widget>[
+                                        ElevatedButton(
+                                          child: Text('Đóng'),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                )
+                              : "";
+                          // double measurementInput = checkUnitType
+                          //     ? int.parse(kilogramController.text)
+                          //     : quantity;
+
                           //print(cart.length);
                           //provider.addCounter(); //để hiện thị số lượng trong giỏ hàng
                           // productPrice =
@@ -828,52 +861,22 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                           // provider.addTotalPrice(productPrice!); //add được rồi
                           //_setNameCenter;
                         },
-                        child: GestureDetector(
-                          onTap: () async {
-                            bool checkMax =
-                                (provider.cartItems.last.measurement ==
-                                    _maxMeasurementValue);
-                            await baseController.saveStringtoSharedPreference(
-                                "customerNote", noteController.text);
-                            // ignore: use_build_context_synchronously
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  title: Text('Thông báo'),
-                                  content: checkMax
-                                      ? Text(
-                                          'Dịch vụ đã được thêm vào giỏ với lượng tối đa cho phép. ($_maxMeasurementValue ${serviceArgs.unit})')
-                                      : Text('Dịch vụ đã được thêm vào giỏ.'),
-                                  actions: <Widget>[
-                                    ElevatedButton(
-                                      child: Text('Đóng'),
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                    ),
-                                  ],
-                                );
-                              },
-                            );
-                          },
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Text(
-                                'Đặt',
-                                style: TextStyle(fontSize: 17),
-                              ),
-                              const SizedBox(width: 7),
-                              const Icon(Icons.circle_rounded, size: 3),
-                              const SizedBox(width: 7),
-                              Text(
-                                  checkPriceType
-                                      ? '${PriceUtils().convertFormatPrice(((currPrice * kilogram < minPrice) ? minPrice : (currPrice * kilogram)).round())} đ'
-                                      : '${PriceUtils().convertFormatPrice((quantity * serviceArgs.price!).round())} đ',
-                                  style: TextStyle(fontSize: 17))
-                            ],
-                          ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Text(
+                              'Đặt',
+                              style: TextStyle(fontSize: 17),
+                            ),
+                            const SizedBox(width: 7),
+                            const Icon(Icons.circle_rounded, size: 3),
+                            const SizedBox(width: 7),
+                            Text(
+                                checkPriceType
+                                    ? '${PriceUtils().convertFormatPrice(((currPrice * kilogram < minPrice) ? minPrice : (currPrice * kilogram)).round())} đ'
+                                    : '${PriceUtils().convertFormatPrice((quantity * serviceArgs.price!).round())} đ',
+                                style: TextStyle(fontSize: 17))
+                          ],
                         ),
                       ),
                     ),

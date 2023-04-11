@@ -11,7 +11,7 @@ class CartProvider extends ChangeNotifier {
   List<CartItem> _cartItems = [];
   //late int _counter;
   int? _centerId = 0;
-  late double _totalPrice;
+  double _totalPrice = 0;
   double _discount = 0;
   String? _promoCode = '';
 
@@ -82,6 +82,9 @@ class CartProvider extends ChangeNotifier {
     removeTotalPrice(_cartItems[existingItemIndex].price!);
     _cartItems.remove(_cartItems[existingItemIndex]);
     if (_cartItems.length == 0) {
+      _discount = 0;
+      _totalPrice = 0;
+      _promoCode = "";
       _clearIfCartEmpty();
     }
     notifyListeners();
@@ -93,7 +96,9 @@ class CartProvider extends ChangeNotifier {
     List<dynamic> cartItemsDynamic =
         _cartItems.map((item) => item.toJson()).toList();
     String cartItemsJson = jsonEncode(cartItemsDynamic);
-    await prefs.setString('cartItems', cartItemsJson);
+    print(cartItemsJson);
+    if (!cartItemsJson.isEmpty)
+      await prefs.setString('cartItems', cartItemsJson);
   }
 
   void _setPrefItems() async {
@@ -107,7 +112,7 @@ class CartProvider extends ChangeNotifier {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     //prefs.setInt('cart_item', _counter);
     prefs.remove('centerId');
-    prefs.remove('total_price');
+    prefs.setDouble('total_price', 0);
     prefs.remove('discount');
     prefs.remove('customerName');
     prefs.remove('customerAddressString');

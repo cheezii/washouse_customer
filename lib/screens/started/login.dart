@@ -178,9 +178,16 @@ class _LoginState extends State<Login> {
                               baseController.saveStringtoSharedPreference(
                                   "CURRENT_USER_AVATAR",
                                   currentUserModel.avatar);
+                              baseController.saveStringtoSharedPreference(
+                                  "CURRENT_USER_PHONE", currentUserModel.phone);
                               baseController.saveInttoSharedPreference(
                                   "CURRENT_USER_ID",
                                   currentUserModel.accountId!);
+                              if (currentUserModel.locationId != null) {
+                                baseController.saveInttoSharedPreference(
+                                    "CURRENT_USER_LOCATION_ID",
+                                    currentUserModel.locationId!);
+                              }
                               baseController.saveStringtoSharedPreference(
                                   "CURRENT_USER_PASSWORD",
                                   passwordController.text);

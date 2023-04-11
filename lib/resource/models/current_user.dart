@@ -6,6 +6,7 @@ class CurrentUser {
   String? roleType;
   String? name;
   String? avatar;
+  int? locationId;
 
   CurrentUser(
       {this.tokenId,
@@ -14,7 +15,8 @@ class CurrentUser {
       this.phone,
       this.roleType,
       this.name,
-      this.avatar});
+      this.avatar,
+      this.locationId});
 
   CurrentUser.fromJson(Map<String, dynamic> json) {
     tokenId = json['tokenId'];
@@ -24,6 +26,7 @@ class CurrentUser {
     roleType = json['roleType'];
     name = json['name'];
     avatar = json['avatar'];
+    locationId = json['locationId'];
   }
 
   Map<String, dynamic> toJson() {
@@ -35,6 +38,7 @@ class CurrentUser {
     data['roleType'] = this.roleType;
     data['name'] = this.name;
     data['avatar'] = this.avatar;
+    data['locationId'] = this.locationId;
     return data;
   }
 }

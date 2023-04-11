@@ -90,8 +90,8 @@ class _CheckOutCardState extends State<CheckOutCard> {
           Consumer<CartProvider>(
             builder: (context, value, child) {
               bool checkPrice;
-              //print("value.getTotalPrice()${value.getTotalPrice()}");
               if (value.getTotalPrice() > 0) {
+                //print("value.getTotalPrice()${value.getTotalPrice()}");
                 checkPrice = true;
               } else {
                 checkPrice = false;

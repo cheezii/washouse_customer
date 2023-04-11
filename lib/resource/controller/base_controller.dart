@@ -11,7 +11,7 @@ class BaseController {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     List<String> keys = sharedPreferences.getKeys().toList();
     keys.forEach((key) {
-      print('$key: ${sharedPreferences.get(key)}');
+      print('SP-$key: ${sharedPreferences.get(key)}');
     });
   }
 
