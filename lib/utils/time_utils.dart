@@ -17,8 +17,7 @@ class TimeUtils {
 
     TimeOfDay timeClose;
 
-    timeClose =
-        TimeOfDay(hour: int.parse(closeHr), minute: int.parse(closeMin));
+    timeClose = TimeOfDay(hour: int.parse(closeHr), minute: int.parse(closeMin));
 
     int nowInMinutes = timeNow.hour * 60 + timeNow.minute;
     int openTimeInMinutes = timeOpen.hour * 60 + timeOpen.minute;
@@ -37,15 +36,13 @@ class TimeUtils {
 
     TimeOfDay timeClose;
 
-    timeClose =
-        TimeOfDay(hour: int.parse(closeHr), minute: int.parse(closeMin));
+    timeClose = TimeOfDay(hour: int.parse(closeHr), minute: int.parse(closeMin));
 
     int nowInMinutes = timeNow.hour * 60 + timeNow.minute;
     int closeTimeInMinutes = timeClose.hour * 60 + timeClose.minute;
 
 //handling day change ie pm to am
-    if (closeTimeInMinutes - 30 < nowInMinutes &&
-        nowInMinutes < closeTimeInMinutes) {
+    if (closeTimeInMinutes - 30 < nowInMinutes && nowInMinutes < closeTimeInMinutes) {
       return true;
     }
 
@@ -84,7 +81,7 @@ class TimeUtils {
   String changeDateFormat(String dateChange) {
     var time = dateChange.split(' ')[1] as String;
     var day = dateChange.split(' ')[0] as String;
-    DateTime date = DateFormat('dd/MM/yyyy').parse(day);
+    DateTime date = DateFormat('dd-MM-yyyy').parse(day);
     String formattedDate = DateFormat('yyyy-MM-dd').format(date);
     return formattedDate + ' ' + time;
   }

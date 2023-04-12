@@ -2,13 +2,60 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:washouse_customer/resource/models/notification_modal.dart';
+import 'package:washouse_customer/resource/controller/notification_controller.dart';
 
 import '../../components/constants/color_constants.dart';
+import '../../resource/models/response_models/notification_item_response.dart';
+import '../../resource/models/response_models/notification.dart';
 import 'component/notification_list.dart';
 
-class ListNotificationScreen extends StatelessWidget {
-  const ListNotificationScreen({super.key});
+class ListNotificationScreen extends StatefulWidget {
+  const ListNotificationScreen({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  State<ListNotificationScreen> createState() => _ListNotificationScreenState();
+}
+
+class _ListNotificationScreenState extends State<ListNotificationScreen> {
+  NotificationController notificationController = NotificationController();
+  List<NotificationItem> notifications = [];
+  int countUnread = 0;
+  bool isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // centerArgs = widget.orderId;
+    getNotifications();
+  }
+
+  void getNotifications() async {
+    // Show loading indicator
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      // Wait for getOrderInformation to complete
+      NotificationResponse result = await notificationController.getNotifications();
+      setState(() {
+        // Update state with loaded data
+        if (result.notifications != null) {
+          notifications = result.notifications!;
+          countUnread = result.numOfUnread!;
+        }
+        isLoading = false;
+      });
+    } catch (e) {
+      // Handle error
+      setState(() {
+        isLoading = false;
+      });
+      print('Error loading data: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,23 +89,23 @@ class ListNotificationScreen extends StatelessWidget {
       ),
       body: Column(
         children: [
-          ListView.builder(
-            itemCount: listNoti.length,
-            shrinkWrap: true,
-            padding: const EdgeInsets.only(top: 16),
-            physics: const NeverScrollableScrollPhysics(),
-            itemBuilder: (context, index) {
-              return Padding(
-                padding: const EdgeInsets.symmetric(vertical: 5),
-                child: NotificationList(
-                  title: 'Thông báo từ hệ thống',
-                  content: listNoti[index].content,
-                  image: 'assets/images/logo/washouse-favicon.png',
-                  time: listNoti[index].day,
-                  isNotiRead: false,
-                ),
-              );
-            },
+          Expanded(
+            child: ListView.builder(
+              itemCount: notifications.length,
+              padding: const EdgeInsets.only(top: 16),
+              itemBuilder: (context, index) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 5),
+                  child: NotificationList(
+                    title: notifications[index].title!,
+                    content: notifications[index].content!,
+                    image: 'assets/images/logo/washouse-favicon.png',
+                    time: notifications[index].createdDate!,
+                    isNotiRead: notifications[index].isRead!,
+                  ),
+                );
+              },
+            ),
           ),
         ],
       ),
