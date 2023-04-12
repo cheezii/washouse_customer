@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:washouse_customer/resource/models/response_models/order_item_list.dart';
 
 import '../../../../components/constants/color_constants.dart';
 import '../../../feedback/feedback_screen.dart';
@@ -13,13 +14,15 @@ class CardFooter extends StatelessWidget {
   final bool isCancel;
   final bool isProcessing;
   final bool isShipping;
-  const CardFooter({
+  Order_Item orderItem;
+  CardFooter({
     Key? key,
     required this.isComplete,
     required this.isPending,
     required this.isCancel,
     required this.isProcessing,
     required this.isShipping,
+    required this.orderItem,
   }) : super(key: key);
 
   @override
@@ -68,9 +71,14 @@ class CardFooter extends StatelessWidget {
         const Spacer(),
         isCancel
             ? GestureDetector(
-                onTap: () {
-                  //Navigator.push(context, PageTransition(child: const CancelDetailScreen(), type: PageTransitionType.rightToLeftWithFade));
-                },
+                // onTap: () {
+                //   Navigator.push(context, PageTransition(child: CancelDetailScreen(orderId: orderItem.orderId!), type: PageTransitionType.rightToLeftWithFade));
+                // },
+                onTap: () => Navigator.pushNamed(
+                  context,
+                  '/cancelDetailScreen',
+                  arguments: orderItem.orderId!,
+                ),
                 child: Container(
                   alignment: Alignment.bottomRight,
                   decoration: BoxDecoration(
@@ -92,6 +100,7 @@ class CardFooter extends StatelessWidget {
                       context,
                       PageTransition(
                           child: OrderDetailScreen(
+                            orderId: orderItem.orderId!,
                             isDeliver: true,
                             isComplete: isComplete,
                             isConfirm: isPending,

@@ -3,9 +3,11 @@ import 'package:intl/intl.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:washouse_customer/resource/controller/account_controller.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:washouse_customer/resource/controller/base_controller.dart';
 import 'package:washouse_customer/resource/models/transaction_history.dart';
 import 'package:washouse_customer/resource/models/wallet_transaction.dart';
 import '../../components/constants/color_constants.dart';
+import '../../resource/controller/payment_controller.dart';
 import '../../resource/models/wallet.dart';
 import 'components/transaction_widget.dart';
 import '../../../../utils/price_util.dart';
@@ -19,6 +21,8 @@ class PaymentScreen extends StatefulWidget {
 
 class _PaymentScreenState extends State<PaymentScreen> {
   AccountController accountController = AccountController();
+  BaseController baseController = BaseController();
+  PaymentController paymentController = PaymentController();
   bool isHidden = true;
   bool isHaveTransaction = true;
   bool isHaveWallet = false;
@@ -50,6 +54,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
     getMyWallet();
   }
 
+  final _formKey = GlobalKey<FormState>();
+  late int _value;
   @override
   Widget build(BuildContext context) {
     if (_wallet != null) {
@@ -121,12 +127,60 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 isHaveWallet
                     ? GestureDetector(
                         onTap: () async {
-                          const url = 'https://washouse.azurewebsites.net/api/payments?moneytowallet=200000';
-                          if (await canLaunch(url)) {
-                            await launch(url);
-                          } else {
-                            throw 'Could not launch $url';
-                          }
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: const Text('Số tiền'),
+                                  content: Form(
+                                    key: _formKey,
+                                    child: TextFormField(
+                                      autofocus: true,
+                                      keyboardType: TextInputType.number,
+                                      validator: (value) {
+                                        if (value!.isEmpty) {
+                                          return 'Hãy nhập số tiền cần nạp vào tài khoản';
+                                        }
+                                        final numberValue = double.tryParse(value);
+                                        if (numberValue == null || numberValue < 10000) {
+                                          return 'Số tiền nạp vào tài khoản tối thiểu 10.000 đồng';
+                                        }
+                                        return null;
+                                      },
+                                      onSaved: (value) {
+                                        _value = int.parse(value!);
+                                      },
+                                      decoration: InputDecoration(
+                                        hintText: 'Nhập số tiền nạp vào ví',
+                                      ),
+                                    ),
+                                  ),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      child: Text('Hủy bỏ'),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
+                                    ElevatedButton(
+                                      child: Text('Tiếp tục'),
+                                      onPressed: () async {
+                                        if (_formKey.currentState!.validate()) {
+                                          _formKey.currentState!.save();
+                                          String url = await paymentController.lauchVnpayLink(_value);
+
+                                          if (await canLaunch(url)) {
+                                            await launch(url);
+                                          } else {
+                                            throw 'Could not launch $url';
+                                          }
+                                          Navigator.of(context).pop(_value);
+                                        }
+                                      },
+                                    ),
+                                  ],
+                                );
+                              });
                         },
                         child: Container(
                           width: 250,

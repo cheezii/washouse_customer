@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:washouse_customer/screens/cart/cart_screen.dart';
 import 'package:washouse_customer/screens/center/center_details_screen.dart';
 import 'package:washouse_customer/screens/center/service/service_detail_screen.dart';
+import 'package:washouse_customer/screens/order/cancel_detail_screen.dart';
 import 'package:washouse_customer/screens/reset_password/send_otp.dart';
 
 import '../../screens/notification/list_notification_screen.dart';
@@ -30,6 +31,10 @@ class RouteGenerator {
       case '/listNotification':
         return MaterialPageRoute(
           builder: (context) => ListNotificationScreen(),
+        );
+      case '/cancelDetailScreen':
+        return MaterialPageRoute(
+          builder: (context) => CancelDetailScreen(orderId: args),
         );
       default:
         return _errorRoute();

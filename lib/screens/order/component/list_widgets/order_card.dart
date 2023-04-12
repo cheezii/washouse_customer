@@ -1,11 +1,13 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
+import 'package:washouse_customer/resource/models/response_models/order_item_list.dart';
 
 import 'card_body.dart';
 import 'card_footer.dart';
 import 'card_heading.dart';
 
 class OrderedCard extends StatelessWidget {
+  final Order_Item orderItem;
   final Color statusColor;
   final String statusString;
   final String status;
@@ -24,6 +26,7 @@ class OrderedCard extends StatelessWidget {
     required this.isCancel,
     required this.isProcessing,
     required this.isShipping,
+    required this.orderItem,
   }) : super(key: key);
 
   @override
@@ -41,11 +44,16 @@ class OrderedCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              CardHeading(statusColor: statusColor, status: statusString),
+              CardHeading(
+                statusColor: statusColor,
+                status: statusString,
+                orderItem: orderItem,
+              ),
               const SizedBox(height: 10),
-              CardBody(status: status),
+              CardBody(orderItem: orderItem, status: status),
               const SizedBox(height: 20),
               CardFooter(
+                orderItem: orderItem,
                 isComplete: isComplete,
                 isPending: isPending,
                 isCancel: isCancel,

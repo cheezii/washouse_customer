@@ -204,9 +204,13 @@ class _FillShippingInformationState extends State<FillShippingInformation> {
                               TimeOfDay? orderTime = await showTimePicker(context: context, initialTime: TimeOfDay.now());
                               if (orderTime != null) {
                                 setState(() {
-                                  sendOrderTime = '${orderTime.hour}:${orderTime.minute}:00';
+                                  sendOrderTime = '${orderTime.hour}:${orderTime.minute}';
                                 });
-                                baseController.saveStringtoSharedPreference("preferredDropoffTime_Time", sendOrderTime);
+                                String hourSave = orderTime.hour.toString().padLeft(2, '0');
+                                String minuteSave = orderTime.minute.toString().padLeft(2, '0');
+                                String secondSave = '00';
+                                String sendOrderTimeSave = '$hourSave:$minuteSave:$secondSave';
+                                baseController.saveStringtoSharedPreference("preferredDropoffTime_Time", sendOrderTimeSave);
                                 print(await baseController.getStringtoSharedPreference("preferredDropoffTime_Time"));
                               }
                             },

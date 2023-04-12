@@ -8,9 +8,8 @@ import 'component/details_widget/detail_service.dart';
 import 'search_order_screen.dart';
 
 class CancelDetailScreen extends StatefulWidget {
-  const CancelDetailScreen({
-    Key? key,
-  }) : super(key: key);
+  final orderId;
+  const CancelDetailScreen({super.key, this.orderId});
 
   @override
   State<CancelDetailScreen> createState() => _CancelDetailScreenState();
@@ -36,7 +35,9 @@ class _CancelDetailScreenState extends State<CancelDetailScreen> {
 
     try {
       // Wait for getOrderInformation to complete
-      Order_Infomation result = await orderController.getOrderInformation('20230411_0000007');
+      Order_Infomation result = await orderController.getOrderInformation(widget.orderId);
+      await Future.delayed(Duration(seconds: 5));
+      print('result.toJson()${result.toJson()}');
       setState(() {
         // Update state with loaded data
         order_infomation = result;
@@ -106,7 +107,9 @@ class _CancelDetailScreenState extends State<CancelDetailScreen> {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      '${order_infomation.orderTrackings!.firstWhere((element) => (element.status!.compareTo("cancelled") == 0)).createdDate}',
+                      (order_infomation.orderTrackings != null)
+                          ? '${order_infomation.orderTrackings!.firstWhere((element) => (element.status!.compareTo("cancelled") == 0)).createdDate}'
+                          : ' now ',
                       style: TextStyle(fontSize: 16, color: Colors.grey.shade600),
                     ),
                   ],

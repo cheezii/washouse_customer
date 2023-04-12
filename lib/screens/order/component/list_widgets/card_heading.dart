@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:washouse_customer/components/constants/color_constants.dart';
+import 'package:washouse_customer/resource/models/response_models/order_item_list.dart';
 
 import '../../../../resource/models/order.dart';
 
 class CardHeading extends StatelessWidget {
-  const CardHeading({
-    super.key,
-    required this.statusColor,
-    required this.status,
-  });
+  Order_Item orderItem;
+  CardHeading({super.key, required this.statusColor, required this.status, required this.orderItem});
 
   final Color statusColor;
   final String status;
@@ -27,7 +25,7 @@ class CardHeading extends StatelessWidget {
             ),
             const SizedBox(width: 4),
             Text(
-              orderList[0].centerName,
+              orderItem.centerName!,
               style: const TextStyle(
                 fontSize: 19,
                 fontWeight: FontWeight.w700,

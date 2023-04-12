@@ -10,13 +10,14 @@ import 'package:washouse_customer/screens/order/component/details_widget/detail_
 import 'package:washouse_customer/utils/order_util.dart';
 
 import '../../components/constants/color_constants.dart';
+import '../../resource/controller/tracking_controller.dart';
 import '../../utils/price_util.dart';
 import 'component/details_widget/detail_service.dart';
 import 'generate_qr_screen.dart';
 import 'search_order_screen.dart';
 
 class OrderDetailScreen extends StatefulWidget {
-  final orderId;
+  final String orderId;
   final bool isDeliver;
   final bool isComplete;
   final bool isConfirm;
@@ -29,7 +30,7 @@ class OrderDetailScreen extends StatefulWidget {
     required this.isConfirm,
     required this.isProccessing,
     required this.isShipping,
-    this.orderId,
+    required this.orderId,
   }) : super(key: key);
 
   @override
@@ -38,6 +39,7 @@ class OrderDetailScreen extends StatefulWidget {
 
 class _OrderDetailScreenState extends State<OrderDetailScreen> {
   late OrderController orderController;
+  TrackingController trackingController = TrackingController();
   Order_Infomation order_infomation = Order_Infomation();
   bool isLoading = false;
   @override
@@ -56,7 +58,8 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
 
     try {
       // Wait for getOrderInformation to complete
-      Order_Infomation result = await orderController.getOrderInformation('20230411_0000009');
+      Order_Infomation result = await orderController.getOrderInformation(widget.orderId);
+      print(result.toJson());
       setState(() {
         // Update state with loaded data
         order_infomation = result;
@@ -235,7 +238,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                         ),
                         const SizedBox(width: 8),
                         Text(
-                          OrderUtils.getTextOfDeliveryType(order_infomation.orderPayment!.paymentMethod!),
+                          OrderUtils.getTextOfPaymentMethod(order_infomation.orderPayment!.paymentMethod!),
                           style: TextStyle(fontSize: 16),
                         ),
                       ],
@@ -282,7 +285,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                             ),
                             Text(
                               order_infomation.orderPayment!.discount != null
-                                  ? '${PriceUtils().convertFormatPrice((order_infomation.totalOrderValue! * (1 - order_infomation.orderPayment!.discount!)).round())} đ'
+                                  ? '- ${PriceUtils().convertFormatPrice((order_infomation.totalOrderValue! * (order_infomation.orderPayment!.discount!)).round())} đ'
                                   : '0 đ',
                               style: TextStyle(fontSize: 16, color: textColor, fontWeight: FontWeight.bold),
                             )
@@ -351,7 +354,69 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)), backgroundColor: cancelColor),
-                  onPressed: () {},
+                  onPressed: () async {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Text('Thông báo'),
+                          content: Text(
+                              'Bạn có chắn chắn muốn hủy đơn hàng ${widget.orderId}? Vui lòng đợi trong giây lát để cửa hàng xác nhận đơn hàng của bạn nhé!'),
+                          actions: [
+                            TextButton(
+                              onPressed: () async {
+                                String result = await trackingController.cancelledOrder(widget.orderId);
+                                if (result.compareTo("success") == 0) {
+                                  // showDialog() {
+                                  //   return AlertDialog(
+                                  //     title: const Text('Thông báo'),
+                                  //     content: Text('Đơn hàng của bạn đã hủy thành công!'),
+                                  //     actions: [
+                                  //       TextButton(
+                                  //         onPressed: () {
+                                  //           Navigator.of(context).pop();
+                                  //         },
+                                  //         child: Text('OK'),
+                                  //       )
+                                  //     ],
+                                  //   );
+                                  // }
+
+                                  //Navigator.of(context).pop();
+
+                                  Navigator.of(context).pop();
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        title: const Text('Thông báo'),
+                                        content: Text('Đơn hàng đã được hủy thành công!'),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: Text('OK'),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                } else {}
+                              },
+                              child: Text('Xác nhận hủy'),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: Text('Giữ lại'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
                   child: const Text(
                     'Hủy dịch vụ',
                     style: TextStyle(fontSize: 17),

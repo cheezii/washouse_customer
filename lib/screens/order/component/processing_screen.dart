@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:washouse_customer/components/constants/color_constants.dart';
 import 'package:washouse_customer/components/constants/text_constants.dart';
 import 'package:washouse_customer/resource/models/order.dart';
+import 'package:washouse_customer/resource/models/response_models/order_item_list.dart';
 import 'package:washouse_customer/screens/order/component/no_order.dart';
 
 import 'list_widgets/order_card.dart';
 
 class OrderProcessingScreen extends StatelessWidget {
-  const OrderProcessingScreen({super.key});
+  List<Order_Item> orderListProcessing;
+
+  OrderProcessingScreen(this.orderListProcessing, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -31,6 +34,7 @@ class OrderProcessingScreen extends StatelessWidget {
             itemCount: counter,
             itemBuilder: ((context, index) {
               return OrderedCard(
+                orderItem: orderListProcessing[index],
                 statusColor: processingColor,
                 statusString: processing,
                 status: 'Xử lý',

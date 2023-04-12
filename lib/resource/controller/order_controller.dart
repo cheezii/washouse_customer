@@ -18,6 +18,7 @@ import 'package:washouse_customer/resource/models/wallet.dart';
 import '../../components/constants/text_constants.dart';
 import '../models/cart_item.dart';
 import '../models/response_models/order_detail_information.dart';
+import '../models/response_models/order_item_list.dart';
 
 BaseController baseController = BaseController();
 
@@ -198,5 +199,37 @@ class OrderController {
       print('error: getOrderInformation-$e');
     }
     return order_Infomation;
+  }
+
+  Future<List<Order_Item>> getOrderList(
+      int? Page, int? PageSize, String? SearchString, String? FromDate, String? ToDate, String? Status, String? OrderType) async {
+    List<Order_Item> orderItems = [];
+    try {
+      String url = '$baseUrl/orders';
+      Map<String, dynamic> queryParams = {
+        "Page": Page.toString(),
+        "PageSize": PageSize.toString(),
+        "SearchString": SearchString,
+        "FromDate": FromDate,
+        "ToDate": ToDate,
+        "Status": Status,
+        "OrderType": OrderType,
+      };
+      //print(queryParams.toString());
+      Response response = await baseController.makeAuthenticatedRequest(url, queryParams);
+      print(response.body);
+      if (response.statusCode == 200) {
+        // Handle successful response
+        var data = jsonDecode(response.body)["data"]['items'] as List;
+        orderItems = data.map((e) => Order_Item.fromJson(e)).toList();
+        // Do something with the user data...
+      } else {
+        // Handle error response
+        throw Exception('Error fetching user data: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('error: getOrderList-$e');
+    }
+    return orderItems;
   }
 }

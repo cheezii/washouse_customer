@@ -261,65 +261,8 @@ class CartProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // int getCounter() {
-  //   _getPrefItems();
-  //   return _counter;
-  // }
-
-  //Map<int, CartItem> _cart = {};
-
-  // late int _counter;
-  // late String _centerName;
-  // late double _totalPrice;
-  // late CartItem _cartSave; //check thử thui
-
-  // CartItem get cartSave => _cartSave; //check thử thui
-  // Map<int, CartItem> get cart => _cart;
-
-  // int get counter => _counter;
-  // String get centerName => _centerName;
-  // double get totalPrice => _totalPrice;
-
-  // void _setPrefItems() async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   prefs.setInt('cart_item', _counter);
-  //   prefs.setDouble('total_price', _totalPrice);
-  //   notifyListeners();
-  // }
-
-  // void _getPrefItems() async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   _counter = prefs.getInt('cart_item') ?? 0;
-  //   _totalPrice = prefs.getDouble('total_price') ?? 0;
-  //   notifyListeners();
-  // }
-
-  // void _setNameCenter() async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   prefs.setString('center_name', _centerName);
-  // }
-
-  // //có thể viết đè value của key đã có
-  // void addToCartWithKg(CartItem item) {
-  //   int id = item.service.id!;
-  //   _cart[id] = item;
-  //   notifyListeners();
-  // }
-
   //kiểm tra đã có trong cart thì tăng 1, k thì thêm vào cart
   void addToCartWithQuantity(CartItem cart_item) {
-    // int existingItemIndex =
-    //     _cartItems.indexWhere((item) => item.serviceId == cart_item.serviceId);
-    // if (existingItemIndex >= 0) {
-    //   // _cartItems[existingItemIndex].measurement =
-    //   //     _cartItems[existingItemIndex].measurement + 1;
-    //   //print(_cartItems[existingItemIndex].measurement);
-    //   _cartItems[existingItemIndex].price =
-    //       CartUtils.getTotalPriceOfCartItem(cart_item);
-    // } else {
-    //   addTotalPrice(cart_item.price!);
-    //   _cartItems.add(cart_item);
-    // }
     int existingItemIndex = _cartItems.indexWhere((item) => item.serviceId == cart_item.serviceId);
     CartItem existingItem = _cartItems[existingItemIndex];
     if (cart_item.priceType) {
@@ -347,20 +290,6 @@ class CartProvider extends ChangeNotifier {
 
   //có thì trừ không thì xóa
   void removeFromCartWithQuantity(CartItem cart_item) {
-    // int existingItemIndex =
-    //     _cartItems.indexWhere((item) => item.serviceId == cart_item.serviceId);
-    // if (existingItemIndex >= 0) {
-    //   _cartItems[existingItemIndex].measurement =
-    //       _cartItems[existingItemIndex].measurement - 1;
-
-    //   _cartItems[existingItemIndex].price =
-    //       CartUtils.getTotalPriceOfCartItem(cart_item);
-    // } else {
-    //   removeTotalPrice(_cartItems[existingItemIndex].price!);
-    //   _cartItems.remove(_cartItems[existingItemIndex]);
-    // }
-    // saveCartItemsToPrefs();
-    // notifyListeners();
     int existingItemIndex = _cartItems.indexWhere((item) => item.serviceId == cart_item.serviceId);
     CartItem existingItem = _cartItems[existingItemIndex];
     removeTotalPrice(existingItem.price!);
@@ -413,45 +342,4 @@ class CartProvider extends ChangeNotifier {
     notifyListeners();
     saveCartItemsToPrefs();
   }
-
-  // void clear(int serviceId) {
-  //   if (_cart.containsKey(serviceId)) {
-  //     _cart.remove(serviceId);
-  //     notifyListeners();
-  //   }
-  // }
-
-  // void addTotalPrice(double productPrice) {
-  //   _totalPrice = _totalPrice + productPrice;
-  //   _setPrefItems();
-  //   notifyListeners();
-  // }
-
-  // void removeTotalPrice(double productPrice) {
-  //   _totalPrice = _totalPrice - productPrice;
-  //   _setPrefItems();
-  //   notifyListeners();
-  // }
-
-  // num getTotalPrice() {
-  //   _getPrefItems();
-  //   return _totalPrice;
-  // }
-
-  // void addCounter() {
-  //   _counter++;
-  //   _setPrefItems();
-  //   notifyListeners();
-  // }
-
-  // void removerCounter() {
-  //   _counter--;
-  //   _setPrefItems();
-  //   notifyListeners();
-  // }
-
-  // int getCounter() {
-  //   _getPrefItems();
-  //   return _counter;
-  // }
 }
