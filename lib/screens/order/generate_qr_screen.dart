@@ -1,14 +1,19 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 import '../../components/constants/color_constants.dart';
 
 class GenerateQRCodeScreen extends StatelessWidget {
-  const GenerateQRCodeScreen({super.key});
+  final orderID;
+  const GenerateQRCodeScreen({
+    Key? key,
+    required this.orderID,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    String qrData = 'lib/screens/home/home_screen.dart';
+    var qrData = orderID as String;
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(

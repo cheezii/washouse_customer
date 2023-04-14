@@ -11,21 +11,21 @@ class OrderedCard extends StatelessWidget {
   final Color statusColor;
   final String statusString;
   final String status;
-  final bool isComplete;
-  final bool isPending;
-  final bool isCancel;
-  final bool isProcessing;
-  final bool isShipping;
+  // final bool isComplete;
+  // final bool isPending;
+  // final bool isCancel;
+  // final bool isProcessing;
+  // final bool isShipping;
   const OrderedCard({
     Key? key,
     required this.statusColor,
     required this.statusString,
     required this.status,
-    required this.isComplete,
-    required this.isPending,
-    required this.isCancel,
-    required this.isProcessing,
-    required this.isShipping,
+    // required this.isComplete,
+    // required this.isPending,
+    // required this.isCancel,
+    // required this.isProcessing,
+    // required this.isShipping,
     required this.orderItem,
   }) : super(key: key);
 
@@ -54,11 +54,12 @@ class OrderedCard extends StatelessWidget {
               const SizedBox(height: 20),
               CardFooter(
                 orderItem: orderItem,
-                isComplete: isComplete,
-                isPending: isPending,
-                isCancel: isCancel,
-                isProcessing: isProcessing,
-                isShipping: isShipping,
+                status: status,
+                // isComplete: isComplete,
+                // isPending: isPending,
+                // isCancel: isCancel,
+                // isProcessing: isProcessing,
+                // isShipping: isShipping,
               ),
             ],
           ),

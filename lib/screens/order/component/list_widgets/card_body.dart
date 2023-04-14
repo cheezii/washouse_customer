@@ -57,7 +57,7 @@ class CardBody extends StatelessWidget {
               Row(
                 children: [
                   Text(
-                    'SL: x${orderItem.orderedServices!.first.measurement}',
+                    orderItem.orderedServices!.first.unit == 'Kg' ? 'KL: x${orderItem.orderedServices!.first.measurement} kg' : 'SL: x${orderItem.orderedServices!.first.measurement}',
                     style: const TextStyle(color: textColor, fontSize: 16),
                   ),
                   const Text('  |  '),
@@ -65,6 +65,8 @@ class CardBody extends StatelessWidget {
                     '${PriceUtils().convertFormatPrice((orderItem.orderedServices!.first.price!).round())} đ',
                     style: const TextStyle(
                       fontSize: 16,
+                      color: kPrimaryColor,
+                      fontWeight: FontWeight.w500
                     ),
                   )
                 ],

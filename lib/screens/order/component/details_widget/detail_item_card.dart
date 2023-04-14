@@ -52,7 +52,7 @@ class DetailItemCard extends StatelessWidget {
               Row(
                 children: [
                   Text(
-                    cart.unit!.compareTo('Kg') == 0 ? 'KL: x${cart.measurement}' : 'SL: x${cart.measurement!.toInt()}',
+                    cart.unit!.compareTo('Kg') == 0 ? 'KL: x${cart.measurement} kg' : 'SL: x${cart.measurement!.toInt()}',
                     style: const TextStyle(color: textColor, fontSize: 16),
                   ),
                   const Spacer(),

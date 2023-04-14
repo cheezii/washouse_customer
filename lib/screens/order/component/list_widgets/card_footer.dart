@@ -9,19 +9,11 @@ import '../../cancel_detail_screen.dart';
 import '../../order_detail_screen.dart';
 
 class CardFooter extends StatelessWidget {
-  final bool isComplete;
-  final bool isPending;
-  final bool isCancel;
-  final bool isProcessing;
-  final bool isShipping;
+  final String status;
   Order_Item orderItem;
   CardFooter({
     Key? key,
-    required this.isComplete,
-    required this.isPending,
-    required this.isCancel,
-    required this.isProcessing,
-    required this.isShipping,
+    required this.status,
     required this.orderItem,
   }) : super(key: key);
 
@@ -30,7 +22,7 @@ class CardFooter extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        isComplete
+        status == 'Hoàn tất'
             ? GestureDetector(
                 onTap: () {
                   Navigator.push(context, PageTransition(child: const FeedbackOrderScreen(), type: PageTransitionType.fade));
@@ -48,13 +40,13 @@ class CardFooter extends StatelessWidget {
                 ),
               )
             : Container(),
-        isCancel
+        status == 'Đã hủy'
             ? Text(
                 'Đã huỷ',
                 style: TextStyle(color: cancelColor),
               )
             : Container(),
-        isShipping
+        status == 'Sẵn sàng'
             ? GestureDetector(
                 onTap: () {
                   Navigator.push(
@@ -62,31 +54,32 @@ class CardFooter extends StatelessWidget {
                       PageTransition(
                           child: OrderDetailScreen(
                             orderId: orderItem.orderId!,
-                            isDeliver: true,
-                            isComplete: isComplete,
-                            isConfirm: isPending,
-                            isProccessing: isProcessing,
-                            isShipping: isShipping,
+                            status: status,
+                            // isDeliver: true,
+                            // isComplete: isComplete,
+                            // isConfirm: isPending,
+                            // isProccessing: isProcessing,
+                            // isShipping: isShipping,
                           ),
                           type: PageTransitionType.rightToLeftWithFade));
                 },
                 child: Container(
                   alignment: Alignment.bottomRight,
                   decoration: BoxDecoration(
-                    border: Border.all(color: cancelColor),
+                    border: Border.all(color: kPrimaryColor),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Padding(
                     padding: const EdgeInsets.only(top: 9, bottom: 9, right: 20, left: 20),
                     child: Text(
                       'Thanh toán bằng ví',
-                      style: TextStyle(color: Colors.green),
+                      style: TextStyle(color: textColor),
                     ),
                   ),
                 ),
               )
             : Container(),
-        isPending
+        status == 'Đang chờ'
             ? GestureDetector(
                 onTap: () {},
                 child: Container(
@@ -106,7 +99,7 @@ class CardFooter extends StatelessWidget {
               )
             : Container(),
         const Spacer(),
-        isCancel
+        status == 'Đã hủy'
             ? GestureDetector(
                 // onTap: () {
                 //   Navigator.push(context, PageTransition(child: CancelDetailScreen(orderId: orderItem.orderId!), type: PageTransitionType.rightToLeftWithFade));
@@ -138,11 +131,12 @@ class CardFooter extends StatelessWidget {
                       PageTransition(
                           child: OrderDetailScreen(
                             orderId: orderItem.orderId!,
-                            isDeliver: true,
-                            isComplete: isComplete,
-                            isConfirm: isPending,
-                            isProccessing: isProcessing,
-                            isShipping: isShipping,
+                            status: status,
+                            // isDeliver: true,
+                            // isComplete: isComplete,
+                            // isConfirm: isPending,
+                            // isProccessing: isProcessing,
+                            // isShipping: isShipping,
                           ),
                           type: PageTransitionType.rightToLeftWithFade));
                 },
