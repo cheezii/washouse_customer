@@ -10,6 +10,7 @@ import 'package:washouse_customer/resource/controller/center_controller.dart';
 import 'package:washouse_customer/resource/controller/location_controller.dart';
 import 'package:washouse_customer/resource/controller/map_controller.dart';
 import 'package:washouse_customer/screens/cateogry/category_list_screen.dart';
+import 'package:washouse_customer/screens/home/components/categories_skeleton.dart';
 import 'package:washouse_customer/screens/home/components/nearby_center_home_skeleton.dart';
 import '../../resource/controller/category_controller.dart';
 import '../../resource/models/category.dart';
@@ -111,9 +112,7 @@ class _HomescreenState extends State<Homescreen> {
                       future: categoryController.getCategoriesList(),
                       builder: ((context, snapshot) {
                         if (snapshot.connectionState == ConnectionState.waiting) {
-                          return const Center(
-                            child: CircularProgressIndicator(),
-                          );
+                          return const CategoriesSkeleton();
                         } else if (snapshot.hasData) {
                           categoryList = snapshot.data!;
                           return GridView.builder(
