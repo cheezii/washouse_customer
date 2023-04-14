@@ -20,10 +20,12 @@ import 'component/list_center_skeleton.dart';
 
 class ListCenterScreen extends StatefulWidget {
   final String? pageName;
+  final String? CategoryServices;
   final bool isNearby;
   final bool isSearch;
   const ListCenterScreen({
     Key? key,
+    this.CategoryServices,
     this.pageName,
     required this.isNearby,
     required this.isSearch,
@@ -136,6 +138,7 @@ class _ListCenterScreenState extends State<ListCenterScreen> {
     Size size = MediaQuery.of(context).size;
     searchController.text = widget.pageName!;
     _filter.searchString = widget.pageName!;
+    _filter.categoryServices = widget.CategoryServices;
     if (widget.pageName! == "Tiệm giặt gần đây") {
       _filter.searchString = null;
       _filter.sort = "location";

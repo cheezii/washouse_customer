@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:page_transition/page_transition.dart';
+import 'package:washouse_customer/screens/center/center_details_screen.dart';
 
 import '../../components/constants/color_constants.dart';
 import '../../resource/controller/category_controller.dart';
 import '../../resource/models/category.dart';
+import '../center/list_center.dart';
 import 'component/list_category.dart';
 
 class ListCategoryScreen extends StatefulWidget {
@@ -104,7 +107,14 @@ class _ListCategoryScreenState extends State<ListCategoryScreen> {
                       return ListCategory(
                         image: categoryList[index].image!,
                         name: categoryList[index].categoryName!,
-                        press: () {},
+                        press: () {
+                          int categoryId = categoryList[index].id!;
+                          Navigator.push(
+                              context,
+                              PageTransition(
+                                  child: ListCenterScreen(CategoryServices: "$categoryId", pageName: "", isNearby: false, isSearch: false),
+                                  type: PageTransitionType.rightToLeftWithFade));
+                        },
                       );
                     },
                   );

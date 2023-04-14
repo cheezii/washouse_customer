@@ -92,7 +92,7 @@ class BaseController {
       },
     );
     print(response.body);
-    if (response.statusCode == 401) {
+    if (response.statusCode == 401 || response.statusCode == 403) {
       // If the access token is expired, use the refresh token to get a new one
       String refreshToken = await getRefreshToken();
       http.Response tokenResponse = await http.post(

@@ -30,9 +30,9 @@ class ServiceCategory {
       this.updatedBy});
 
   ServiceCategory.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
+    id = json['categoryId'];
     categoryName = json['categoryName'];
-    alias = json['alias'];
+    alias = json['categoryAlias'];
     description = json['description'];
     image = json['image'];
     status = json['status'];

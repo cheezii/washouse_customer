@@ -19,6 +19,7 @@ class _CancelDetailScreenState extends State<CancelDetailScreen> {
   late OrderController orderController;
   Order_Infomation order_infomation = Order_Infomation();
   bool isLoading = false;
+  bool _isDisposed = false;
   @override
   void initState() {
     super.initState();
@@ -34,15 +35,18 @@ class _CancelDetailScreenState extends State<CancelDetailScreen> {
     });
 
     try {
+      print('result.bbbbbbbtoJson()');
       // Wait for getOrderInformation to complete
       Order_Infomation result = await orderController.getOrderInformation(widget.orderId);
       await Future.delayed(Duration(seconds: 5));
       print('result.toJson()${result.toJson()}');
-      setState(() {
-        // Update state with loaded data
-        order_infomation = result;
-        isLoading = false;
-      });
+      if (!_isDisposed) {
+        setState(() {
+          // Update state with loaded data
+          order_infomation = result;
+          isLoading = false;
+        });
+      }
     } catch (e) {
       // Handle error
       setState(() {
@@ -50,6 +54,12 @@ class _CancelDetailScreenState extends State<CancelDetailScreen> {
       });
       print('Error loading data: $e');
     }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _isDisposed = true;
   }
 
   @override

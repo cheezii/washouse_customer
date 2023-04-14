@@ -12,6 +12,7 @@ const String ready = 'Sẵn sàng';
 const String completed = 'Hoàn tất';
 
 //Api constant
-const String baseUrl = 'https://washouse.azurewebsites.net/api';
+const String baseUrl = 'https://api-washouse.azurewebsites.net/api';
 //const String baseUrl = 'https://localhost:44360/api';
 const String apiKey = 'AIzaSyDkPbok7azcZ9mht1nD-RjJy1wJOkhlo7M';
+const String serverUrl = 'https://api-washouse.azurewebsites.net/messageHub';

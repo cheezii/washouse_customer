@@ -129,7 +129,14 @@ class _HomescreenState extends State<Homescreen> {
                               return CategoryCard(
                                 icon: categoryList[index].image!,
                                 text: categoryList[index].categoryName!,
-                                press: () {},
+                                press: () {
+                                  int categoryId = categoryList[index].id!;
+                                  Navigator.push(
+                                      context,
+                                      PageTransition(
+                                          child: ListCenterScreen(CategoryServices: "$categoryId", pageName: "", isNearby: false, isSearch: false),
+                                          type: PageTransitionType.rightToLeftWithFade));
+                                },
                               );
                             }),
                           );

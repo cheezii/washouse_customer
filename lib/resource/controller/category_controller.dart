@@ -6,8 +6,8 @@ import 'package:washouse_customer/resource/models/category.dart';
 import '../../components/constants/text_constants.dart';
 
 class CategoryController {
-  List<ServiceCategory> cateList = [];
   Future<List<ServiceCategory>> getCategoriesList() async {
+    List<ServiceCategory> cateList = [];
     Response response = await get(Uri.parse('$baseUrl/service-categories'));
     try {
       if (response.statusCode == 200) {

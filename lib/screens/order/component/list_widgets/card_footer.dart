@@ -48,7 +48,44 @@ class CardFooter extends StatelessWidget {
                 ),
               )
             : Container(),
-        isCancel ? Text('Đã hủy bởi bạn') : Container(),
+        isCancel
+            ? Text(
+                'Đã huỷ',
+                style: TextStyle(color: cancelColor),
+              )
+            : Container(),
+        isShipping
+            ? GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      PageTransition(
+                          child: OrderDetailScreen(
+                            orderId: orderItem.orderId!,
+                            isDeliver: true,
+                            isComplete: isComplete,
+                            isConfirm: isPending,
+                            isProccessing: isProcessing,
+                            isShipping: isShipping,
+                          ),
+                          type: PageTransitionType.rightToLeftWithFade));
+                },
+                child: Container(
+                  alignment: Alignment.bottomRight,
+                  decoration: BoxDecoration(
+                    border: Border.all(color: cancelColor),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 9, bottom: 9, right: 20, left: 20),
+                    child: Text(
+                      'Thanh toán bằng ví',
+                      style: TextStyle(color: Colors.green),
+                    ),
+                  ),
+                ),
+              )
+            : Container(),
         isPending
             ? GestureDetector(
                 onTap: () {},
