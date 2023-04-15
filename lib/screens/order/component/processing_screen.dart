@@ -14,15 +14,15 @@ class OrderProcessingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    int counter = 0;
-    List<Order> processingList = [];
-    for (var item in processingList) {
-      if (item.status.compareTo('Xử lý') == 0) {
-        counter++;
-        processingList.add(item);
-      }
-    }
-    if (processingList.isEmpty) {
+    // int counter = 0;
+    // List<Order> processingList = [];
+    // for (var item in processingList) {
+    //   if (item.status.compareTo('Xử lý') == 0) {
+    //     counter++;
+    //     processingList.add(item);
+    //   }
+    // }
+    if (orderListProcessing.isEmpty) {
       return const NoOrderScreen();
     } else {
       return SingleChildScrollView(
@@ -31,7 +31,7 @@ class OrderProcessingScreen extends StatelessWidget {
           child: ListView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            itemCount: counter,
+            itemCount: orderListProcessing.length,
             itemBuilder: ((context, index) {
               return OrderedCard(
                 orderItem: orderListProcessing[index],

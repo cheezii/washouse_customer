@@ -189,7 +189,7 @@ class OrderController {
       if (response.statusCode == 200) {
         // Handle successful response
         order_Infomation = Order_Infomation?.fromJson(jsonDecode(response.body)["data"]);
-        //print(currentUser.name);
+        print(order_Infomation.orderTrackings != null);
         // Do something with the user data...
       } else {
         // Handle error response
@@ -231,5 +231,29 @@ class OrderController {
       print('error: getOrderList-$e');
     }
     return orderItems;
+  }
+
+  Future<String> paymentOrder(String orderId) async {
+    var order_Infomation = new Order_Infomation();
+    try {
+      String url = '$baseUrl/orders/$orderId/payment';
+      Map<String, dynamic> queryParams = {"OrderId": orderId};
+      //print(queryParams.toString());
+      Response response = await baseController.makeAuthenticatedRequest(url, queryParams);
+      print(response.body);
+      var data = jsonDecode(response.body)["message"];
+      if (response.statusCode == 200) {
+        // Handle successful response
+        return data;
+        // Do something with the user data...
+      } else {
+        // Handle error response
+        throw Exception('Error fetching paymentOrder: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('error: paymentOrder-$e');
+
+      return 'error_fetch';
+    }
   }
 }

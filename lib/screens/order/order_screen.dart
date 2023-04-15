@@ -62,6 +62,7 @@ class _OrderScreenState extends State<OrderScreen> {
     var orderListPending = orderItems.where((element) => element.status!.toLowerCase().compareTo('pending') == 0).toList();
     var orderListConfirmed = orderItems.where((element) => element.status!.toLowerCase().compareTo('confirmed') == 0).toList();
     var orderListProcessing = orderItems.where((element) => element.status!.toLowerCase().compareTo('processing') == 0).toList();
+    print('processing-${orderListProcessing.length}');
     var orderListReady = orderItems.where((element) => element.status!.toLowerCase().compareTo('ready') == 0).toList();
     return DefaultTabController(
       initialIndex: 0,

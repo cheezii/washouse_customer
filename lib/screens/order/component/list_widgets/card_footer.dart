@@ -81,7 +81,21 @@ class CardFooter extends StatelessWidget {
             : Container(),
         status == 'Đang chờ'
             ? GestureDetector(
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      PageTransition(
+                          child: OrderDetailScreen(
+                            orderId: orderItem.orderId!,
+                            status: status,
+                            // isDeliver: true,
+                            // isComplete: isComplete,
+                            // isConfirm: isPending,
+                            // isProccessing: isProcessing,
+                            // isShipping: isShipping,
+                          ),
+                          type: PageTransitionType.rightToLeftWithFade));
+                },
                 child: Container(
                   alignment: Alignment.bottomRight,
                   decoration: BoxDecoration(

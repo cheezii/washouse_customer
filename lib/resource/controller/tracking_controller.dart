@@ -22,11 +22,11 @@ class TrackingController {
         // Do something with the user data...
       } else {
         // Handle error response
-        throw Exception('Error fetching lauchVnpayLink: ${response.statusCode}');
+        throw Exception('Error fetching cancelledOrder: ${response.statusCode}');
       }
     } catch (e) {
+      print('error: paymentOrder-$e');
       return 'error_fetch';
-      print('error: lauchVnpayLink-$e');
     }
   }
 }

@@ -60,7 +60,7 @@ class CartUtils {
   static double getTotalPriceOfCartItem(CartItem item) {
     double currentPrice = 0;
     double totalCurrentPrice = 0;
-    if (item.priceType!) {
+    if (item.priceType) {
       bool check = false;
       for (var itemPrice in item.prices!) {
         if (item.measurement <= itemPrice.maxValue! && !check) {
@@ -72,8 +72,7 @@ class CartUtils {
       }
       print('currentPrice-${currentPrice}');
       print('item.minPrice-${item.minPrice}');
-      if (item.minPrice != null &&
-          currentPrice * item.measurement < item.minPrice!) {
+      if (item.minPrice != null && currentPrice * item.measurement < item.minPrice!) {
         totalCurrentPrice = item.minPrice!.toDouble();
       } else {
         totalCurrentPrice = currentPrice * item.measurement;
