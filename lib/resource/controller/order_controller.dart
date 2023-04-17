@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:washouse_customer/resource/controller/cart_provider.dart';
+import 'package:washouse_customer/resource/provider/cart_provider.dart';
 import 'package:washouse_customer/resource/models/current_user.dart';
 import 'package:washouse_customer/resource/models/customer.dart';
 import 'package:washouse_customer/resource/models/map_user.dart';

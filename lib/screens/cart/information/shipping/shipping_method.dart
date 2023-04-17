@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../components/constants/color_constants.dart';
-import '../../../../resource/controller/cart_provider.dart';
+import '../../../../resource/provider/cart_provider.dart';
 import 'choose_shipping_method.dart';
 
 class ShippingMethod extends StatelessWidget {

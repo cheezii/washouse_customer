@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 class CurrentUser {
   String? tokenId;
   int? accountId;
@@ -7,8 +8,21 @@ class CurrentUser {
   String? name;
   String? avatar;
   int? locationId;
+  String? chattingWith;
+  String? pushToken;
 
-  CurrentUser({this.tokenId, this.accountId, this.email, this.phone, this.roleType, this.name, this.avatar, this.locationId});
+  CurrentUser({
+    this.tokenId,
+    this.accountId,
+    this.email,
+    this.phone,
+    this.roleType,
+    this.name,
+    this.avatar,
+    this.locationId,
+    this.chattingWith,
+    this.pushToken,
+  });
 
   CurrentUser.fromJson(Map<String, dynamic> json) {
     tokenId = json['tokenId'];
@@ -19,6 +33,8 @@ class CurrentUser {
     name = json['name'];
     avatar = json['avatar'];
     locationId = json['locationId'];
+    chattingWith = json['chattingWith'];
+    pushToken = json['pushToken'];
   }
 
   Map<String, dynamic> toJson() {
@@ -31,6 +47,8 @@ class CurrentUser {
     data['name'] = this.name;
     data['avatar'] = this.avatar;
     data['locationId'] = this.locationId;
+    data['chattingWith'] = this.chattingWith;
+    data['pushToken'] = this.pushToken;
     return data;
   }
 }

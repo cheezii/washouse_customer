@@ -6,7 +6,7 @@ import 'package:washouse_customer/resource/controller/order_controller.dart';
 import 'package:washouse_customer/utils/price_util.dart';
 
 import '../../../../components/constants/color_constants.dart';
-import '../../../../resource/controller/cart_provider.dart';
+import '../../../../resource/provider/cart_provider.dart';
 import '../../../../resource/models/cart_item.dart';
 import '../../../order/generate_qr_screen.dart';
 import '../cart/add_voucher.dart';

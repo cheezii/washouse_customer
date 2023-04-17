@@ -15,7 +15,7 @@ import '../../../resource/controller/service_controller.dart';
 import '../../../utils/formatter_util.dart';
 import '../../../utils/price_util.dart';
 
-import 'package:washouse_customer/resource/controller/cart_provider.dart';
+import 'package:washouse_customer/resource/provider/cart_provider.dart';
 import 'package:washouse_customer/resource/models/cart_item.dart';
 import 'package:washouse_customer/resource/models/center.dart';
 

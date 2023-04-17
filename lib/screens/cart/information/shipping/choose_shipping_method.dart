@@ -6,7 +6,7 @@ import 'package:washouse_customer/screens/cart/checkout_screen.dart';
 import 'package:washouse_customer/screens/cart/information/shipping/shipping_information.dart';
 
 import '../../../../components/constants/color_constants.dart';
-import '../../../../resource/controller/cart_provider.dart';
+import '../../../../resource/provider/cart_provider.dart';
 import '../../cart_screen.dart';
 
 class ChooseShippingMethod extends StatefulWidget {
