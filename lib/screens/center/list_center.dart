@@ -61,6 +61,7 @@ class _ListCenterScreenState extends State<ListCenterScreen> {
   Color boxCateColor = Colors.white;
   Color boxRangeColor = Colors.white;
   Color boxDeliveryColor = Colors.white;
+  Color boxOnlinePaymentColor = Colors.white;
   Color selectedColor = Colors.grey.shade300;
 
   bool isLoadingCate = true;
@@ -138,10 +139,10 @@ class _ListCenterScreenState extends State<ListCenterScreen> {
     Size size = MediaQuery.of(context).size;
     searchController.text = widget.pageName!;
     _filter.searchString = widget.pageName!;
-    _filter.categoryServices = widget.CategoryServices;
+    //_filter.categoryServices = widget.CategoryServices;
     if (widget.pageName! == "Tiệm giặt gần đây") {
       _filter.searchString = null;
-      _filter.sort = "location";
+      //_filter.sort = "location";
     }
     listAction = centerController.getCenterList(_filter);
     // if (widget.isNearby) {
@@ -327,10 +328,12 @@ class _ListCenterScreenState extends State<ListCenterScreen> {
                           if (boxDeliveryColor.value == selectedColor.value) {
                             setState(() {
                               boxDeliveryColor = Colors.white;
+                              _filter.hasDelivery = false;
                             });
                           } else {
                             setState(() {
                               boxDeliveryColor = selectedColor;
+                              _filter.hasDelivery = true;
                             });
                           }
                         },
@@ -349,6 +352,47 @@ class _ListCenterScreenState extends State<ListCenterScreen> {
                               children: const [
                                 Text(
                                   'Vận chuyển',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                //SizedBox(width: 4),
+                                //Icon(Icons.keyboard_arrow_down_rounded)
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 15),
+                      GestureDetector(
+                        onTap: () {
+                          if (boxOnlinePaymentColor.value == selectedColor.value) {
+                            setState(() {
+                              boxOnlinePaymentColor = Colors.white;
+                              _filter.hasOnlinePayment = false;
+                            });
+                          } else {
+                            setState(() {
+                              boxOnlinePaymentColor = selectedColor;
+                              _filter.hasOnlinePayment = true;
+                            });
+                          }
+                        },
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 200),
+                          width: 200,
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey.shade300),
+                            borderRadius: BorderRadius.circular(20),
+                            color: boxOnlinePaymentColor,
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(10),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: const [
+                                Text(
+                                  'Thanh toán trực tuyến',
                                   style: TextStyle(
                                     fontWeight: FontWeight.w600,
                                   ),
@@ -380,15 +424,21 @@ class _ListCenterScreenState extends State<ListCenterScreen> {
                       shrinkWrap: true,
                       itemCount: centerList.length,
                       itemBuilder: ((context, index) {
+                        var centerCategoriesName = centerList[index].centerServices!.toList().map((service) => service.serviceCategoryName);
                         bool hasRating = centerList[index].rating != null ? true : false;
                         return Padding(
                           padding: const EdgeInsets.symmetric(vertical: 10),
                           child: CenterContainer(
                             thumbnail: centerList[index].thumbnail!,
                             name: centerList[index].title!,
+                            address: centerList[index].centerAddress,
                             distance: centerList[index].distance!,
-                            rating: hasRating ? centerList[index].rating! : null,
-                            hasRating: hasRating,
+                            // rating: hasRating ? centerList[index].rating! : null,
+                            // hasRating: hasRating,
+                            rating: 4.1,
+                            hasRating: true,
+                            isOpening: centerList[index].isOpening!,
+                            centerCategoriesName: centerCategoriesName,
                             press: () => Navigator.pushNamed(
                               context,
                               '/centerDetails',
@@ -535,11 +585,13 @@ class _ListCenterScreenState extends State<ListCenterScreen> {
                       if (minBudgetController.text.isNotEmpty || maxBudgetController.text.isNotEmpty) {
                         minBudgetController.clear();
                         maxBudgetController.clear();
+                        _filter.budgetRange = null;
                       } else {
                         Navigator.pop(context);
                         setState(() {
                           boxRangeColor = Colors.white;
                           budgetRange = 'Khoảng giá';
+                          _filter.budgetRange = null;
                         });
                       }
                     },
@@ -560,35 +612,40 @@ class _ListCenterScreenState extends State<ListCenterScreen> {
                       int min = int.parse(minBudgetController.text);
                       int max = int.parse(maxBudgetController.text);
                       _filter.budgetRange = "$min-$max";
-                      print(_filter.budgetRange);
+                      //print(_filter.budgetRange);
                       if (min > max) {
                         errorMsg = 'Giá tối thiểu phải nhỏ hơn giá tối đa';
                       }
                       if (min < 0 || max < 0) {
                         errorMsg = 'Giá cả không thể bé hơn 0!';
                       }
-                      print(errorMsg);
                       if (errorMsg.isNotEmpty) {
-                        AlertDialog(
-                          title: const Text('Oops'),
-                          content: SingleChildScrollView(
-                            child: ListBody(
-                              children: <Widget>[
-                                Text(errorMsg),
-                              ],
-                            ),
-                          ),
-                          actions: <Widget>[
-                            TextButton(
-                              style: TextButton.styleFrom(
-                                textStyle: Theme.of(context).textTheme.labelLarge,
+                        print(errorMsg);
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: const Text('Lỗi'),
+                              content: SingleChildScrollView(
+                                child: ListBody(
+                                  children: <Widget>[
+                                    Text(errorMsg),
+                                  ],
+                                ),
                               ),
-                              child: const Text('Tôi hiểu rồi'),
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                            ),
-                          ],
+                              actions: <Widget>[
+                                TextButton(
+                                  style: TextButton.styleFrom(
+                                    textStyle: Theme.of(context).textTheme.labelLarge,
+                                  ),
+                                  child: const Text('Tôi hiểu rồi'),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                              ],
+                            );
+                          },
                         );
                       } else {
                         setState(() {
@@ -746,9 +803,15 @@ class _ListCenterScreenState extends State<ListCenterScreen> {
                   child: ElevatedButton(
                     onPressed: () {
                       setState(() {
+                        //filterCate = 'Loại dịch vụ';
+                        //boxCateColor = Colors.white;
+                        cateListChoose = [];
+                        _filter.categoryServices = null;
+                        Navigator.pop(context);
+                      });
+                      this.setState(() {
                         filterCate = 'Loại dịch vụ';
                         boxCateColor = Colors.white;
-                        cateListChoose = [];
                       });
                     },
                     style: ElevatedButton.styleFrom(
@@ -837,6 +900,7 @@ class _ListCenterScreenState extends State<ListCenterScreen> {
                         setState(() {
                           sortedBy = null;
                           _filter.sort = null;
+                          Navigator.pop(context);
                         });
                         this.setState(() {
                           sortChoosen = 'Sắp xếp theo';

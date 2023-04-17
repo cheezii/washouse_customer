@@ -12,7 +12,7 @@ class CenterUtils {
   }
 
   bool checkHasRating(LaundryCenter centers) {
-    if (centers.rating != null) {
+    if (centers.numOfRating != null && centers.numOfRating != 0) {
       return true;
     } else {
       return false;

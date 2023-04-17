@@ -18,6 +18,9 @@ class LaundryCenter {
   num? maxPrice;
   bool? monthOff;
   bool? hasDelivery;
+  bool? hasOnlinePayment;
+  bool? isOpening;
+  int? numOfPromotionAvailable;
   List<CenterDeliveryPrice>? centerDeliveryPrices;
   CenterLocation? centerLocation;
   List<CenterOperatingHours>? centerOperatingHours;
@@ -38,6 +41,9 @@ class LaundryCenter {
       this.maxPrice,
       this.monthOff,
       this.hasDelivery,
+      this.hasOnlinePayment,
+      this.isOpening,
+      this.numOfPromotionAvailable,
       this.centerDeliveryPrices,
       this.centerLocation,
       this.centerOperatingHours});
@@ -63,6 +69,9 @@ class LaundryCenter {
     maxPrice = json['maxPrice'];
     monthOff = json['monthOff'];
     hasDelivery = json['hasDelivery'];
+    hasOnlinePayment = json['hasOnlinePayment'];
+    isOpening = json['isOpening'];
+    numOfPromotionAvailable = json['numOfPromotionAvailable'];
     if (json['centerDeliveryPrices'] != null) {
       centerDeliveryPrices = <CenterDeliveryPrice>[];
       json['centerDeliveryPrices'].forEach((v) {

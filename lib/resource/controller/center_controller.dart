@@ -32,7 +32,8 @@ class CenterController {
     filter.currentUserLongitude = position.longitude;
     filter.page = 1;
     filter.pageSize = 1000;
-    filter.hasDelivery = true;
+    filter.hasDelivery ??= false;
+    filter.hasOnlinePayment ??= false;
     final queryParameters = {
       'page': filter.page?.toString(),
       'pageSize': filter.pageSize?.toString(),
@@ -42,10 +43,11 @@ class CenterController {
       'additions': filter.additions,
       'searchString': filter.searchString,
       'hasDelivery': filter.hasDelivery?.toString(),
+      'hasOnlinePayment': filter.hasOnlinePayment?.toString(),
       'currentUserLatitude': filter.currentUserLatitude?.toString(),
       'currentUserLongitude': filter.currentUserLongitude?.toString(),
     };
-
+    print(queryParameters.toString());
     try {
       final url = "$baseUrl/centers";
       final response = await baseController.makeAuthenticatedRequest(url, queryParameters);

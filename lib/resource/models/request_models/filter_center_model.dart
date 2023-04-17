@@ -7,6 +7,7 @@ class FilterCenterRequest {
   String? additions;
   String? searchString;
   bool? hasDelivery;
+  bool? hasOnlinePayment;
   double? currentUserLatitude;
   double? currentUserLongitude;
 
@@ -19,6 +20,7 @@ class FilterCenterRequest {
       this.additions,
       this.searchString,
       this.hasDelivery,
+      this.hasOnlinePayment,
       this.currentUserLatitude,
       this.currentUserLongitude});
 
@@ -31,6 +33,7 @@ class FilterCenterRequest {
     additions = json['Additions'];
     searchString = json['searchString'];
     hasDelivery = json['hasDelivery'];
+    hasOnlinePayment = json['hasOnlinePayment'];
     currentUserLatitude = json['currentUserLatitude'];
     currentUserLongitude = json['currentUserLongitude'];
   }
@@ -45,6 +48,7 @@ class FilterCenterRequest {
     data['Additions'] = this.additions;
     data['searchString'] = this.searchString;
     data['hasDelivery'] = this.hasDelivery;
+    data['hasOnlinePayment'] = this.hasOnlinePayment;
     data['currentUserLatitude'] = this.currentUserLatitude;
     data['currentUserLongitude'] = this.currentUserLongitude;
     return data;

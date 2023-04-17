@@ -4,6 +4,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:dio/dio.dart';
 import 'package:skeletons/skeletons.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 import 'package:washouse_customer/components/constants/color_constants.dart';
 import 'package:washouse_customer/resource/controller/center_controller.dart';
@@ -13,6 +14,7 @@ import 'package:washouse_customer/screens/cateogry/category_list_screen.dart';
 import 'package:washouse_customer/screens/home/components/categories_skeleton.dart';
 import 'package:washouse_customer/screens/home/components/nearby_center_home_skeleton.dart';
 import '../../resource/controller/category_controller.dart';
+import '../../resource/controller/post_controller.dart';
 import '../../resource/models/category.dart';
 import '../../resource/models/post.dart';
 import 'package:washouse_customer/resource/models/center.dart';
@@ -31,10 +33,13 @@ class Homescreen extends StatefulWidget {
 class _HomescreenState extends State<Homescreen> {
   CenterController centerController = CenterController();
   CategoryController categoryController = CategoryController();
+  PostController postController = PostController();
   bool isLoading = true;
   bool isAcceptLocation = true;
   bool isLoadingCate = true;
+  bool isLoadingPost = false;
   List<ServiceCategory> categoryList = [];
+  List<Post> postList = [];
 
   Future<bool> _handleLocationPermission() async {
     bool serviceEnabled;
@@ -81,10 +86,35 @@ class _HomescreenState extends State<Homescreen> {
     }
   }
 
+  void getPosts() async {
+    // Show loading indicator
+    setState(() {
+      isLoadingPost = true;
+    });
+
+    try {
+      print(13);
+      // Wait for getOrderInformation to complete
+      List<Post> result = await postController.getPosts();
+      setState(() {
+        // Update state with loaded data
+        postList = result;
+        isLoadingPost = false;
+      });
+    } catch (e) {
+      // Handle error
+      setState(() {
+        isLoadingPost = false;
+      });
+      print('Error loading post: $e');
+    }
+  }
+
   @override
   void initState() {
     getPermissionLocation();
     getCategory();
+    getPosts();
     super.initState();
   }
 
@@ -274,94 +304,104 @@ class _HomescreenState extends State<Homescreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Column(
                   children: [
-                    TitleWithMoreBtn(title: 'Blog tiệm giặt', press: () {}),
+                    TitleWithMoreBtn(title: 'Bài đăng', press: () {}),
                   ],
                 ),
               ),
-              SizedBox(
-                height: size.height * 0.27,
-                child: PageView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: postList.length,
-                  itemBuilder: (context, index) {
-                    return SizedBox(
-                      height: 230,
-                      child: Stack(
-                        children: [
-                          Positioned(
-                            top: 35,
-                            left: 15,
-                            child: Material(
-                              child: Container(
-                                height: 150,
-                                width: size.width * 0.88,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(0.0),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.grey.withOpacity(0.3),
-                                      offset: const Offset(-10.0, 10.0),
-                                      blurRadius: 20.0,
-                                      spreadRadius: 4.0,
+              isLoadingPost
+                  ? SizedBox(
+                      height: size.height * 0.27,
+                      child: Center(
+                          child: LoadingAnimationWidget.twistingDots(
+                        leftDotColor: const Color(0xFF1A1A3F),
+                        rightDotColor: const Color(0xFFEA3799),
+                        size: 200,
+                      )),
+                    )
+                  : SizedBox(
+                      height: size.height * 0.27,
+                      child: PageView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: postList.length,
+                        itemBuilder: (context, index) {
+                          return SizedBox(
+                            height: 230,
+                            child: Stack(
+                              children: [
+                                Positioned(
+                                  top: 35,
+                                  left: 15,
+                                  child: Material(
+                                    child: Container(
+                                      height: 150,
+                                      width: size.width * 0.88,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(0.0),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.grey.withOpacity(0.3),
+                                            offset: const Offset(-10.0, 10.0),
+                                            blurRadius: 20.0,
+                                            spreadRadius: 4.0,
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                          Positioned(
-                            top: 10,
-                            left: 25,
-                            child: Card(
-                              elevation: 10,
-                              shadowColor: Colors.grey.withOpacity(0.5),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15),
-                              ),
-                              child: Container(
-                                height: 150,
-                                width: 150,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  image: DecorationImage(
-                                    fit: BoxFit.cover,
-                                    image: AssetImage(postList[index].thumbnail),
                                   ),
                                 ),
-                              ),
-                            ),
-                          ),
-                          Positioned(
-                            top: 60,
-                            left: 187,
-                            child: SizedBox(
-                              height: 150,
-                              width: 180,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    postList[index].title,
-                                    style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
+                                Positioned(
+                                  top: 10,
+                                  left: 25,
+                                  child: Card(
+                                    elevation: 10,
+                                    shadowColor: Colors.grey.withOpacity(0.5),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(15),
+                                    ),
+                                    child: Container(
+                                      height: 150,
+                                      width: 150,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        image: DecorationImage(
+                                          fit: BoxFit.cover,
+                                          image: AssetImage(postList[index].thumbnail!),
+                                        ),
+                                      ),
+                                    ),
                                   ),
-                                  const SizedBox(height: 5),
-                                  Text(
-                                    postList[index].content,
-                                    style: const TextStyle(fontSize: 15, color: textNoteColor),
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 2,
+                                ),
+                                Positioned(
+                                  top: 60,
+                                  left: 187,
+                                  child: SizedBox(
+                                    height: 150,
+                                    width: 180,
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          postList[index].title!,
+                                          style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
+                                        ),
+                                        const SizedBox(height: 5),
+                                        Text(
+                                          postList[index].content!,
+                                          style: const TextStyle(fontSize: 15, color: textNoteColor),
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 2,
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                ],
-                              ),
+                                )
+                              ],
                             ),
-                          )
-                        ],
+                          );
+                        },
                       ),
-                    );
-                  },
-                ),
-              ),
+                    ),
             ],
           ),
         ),

@@ -30,13 +30,13 @@ class PostCard extends StatelessWidget {
             Align(
               alignment: Alignment.topRight,
               child: Image.asset(
-                post.thumbnail,
+                post.thumbnail!,
                 height: kCategoryCardImageSize,
               ),
             ),
             const SizedBox(height: 10),
             Text(
-              post.title,
+              post.title!,
               style: const TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 20.0,
