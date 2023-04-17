@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:washouse_customer/resource/controller/promotion_controller.dart';
 
 import '../../../../components/constants/color_constants.dart';
-import '../../../../resource/controller/cart_provider.dart';
+import '../../../../resource/provider/cart_provider.dart';
 import '../../../../resource/models/promotion.dart';
 import '../../../center/component/promotion/promotion_widget.dart';
 import '../../cart_screen.dart';

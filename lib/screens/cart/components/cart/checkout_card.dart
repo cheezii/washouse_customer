@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:washouse_customer/screens/cart/information/shipping/fill_shipping_address.dart';
 
 import '../../../../components/constants/color_constants.dart';
-import '../../../../resource/controller/cart_provider.dart';
+import '../../../../resource/provider/cart_provider.dart';
 import '../../../../resource/models/cart_item.dart';
 import '../../../../utils/price_util.dart';
 import '../../checkout_screen.dart';

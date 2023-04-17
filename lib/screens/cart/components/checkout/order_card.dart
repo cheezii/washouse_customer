@@ -7,7 +7,7 @@ import 'package:washouse_customer/screens/home/home_screen.dart';
 import 'package:washouse_customer/utils/price_util.dart';
 
 import '../../../../components/constants/color_constants.dart';
-import '../../../../resource/controller/cart_provider.dart';
+import '../../../../resource/provider/cart_provider.dart';
 import '../../../../resource/models/cart_item.dart';
 import '../../../home/base_screen.dart';
 import '../../checkout_screen.dart';

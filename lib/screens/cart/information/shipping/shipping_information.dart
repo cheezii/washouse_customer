@@ -14,7 +14,7 @@ import 'package:washouse_customer/screens/cart/information/shipping/fill_shippin
 
 import '../../../../components/constants/color_constants.dart';
 import '../../../../components/constants/text_constants.dart';
-import '../../../../resource/controller/cart_provider.dart';
+import '../../../../resource/provider/cart_provider.dart';
 import '../../../../resource/models/cart_item.dart';
 import '../../checkout_screen.dart';
 

@@ -4,6 +4,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:washouse_customer/screens/profile/components/change_password_alertdialog.dart';
 
 import '../../components/constants/color_constants.dart';
@@ -98,11 +99,16 @@ class _ManageAccountScreenState extends State<ManageAccountScreen> {
                                   elevation: 0,
                                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
                                   backgroundColor: kBackgroundColor),
-                              onPressed: () {
+                              onPressed: () async {
+                                SharedPreferences preferences = await SharedPreferences.getInstance();
                                 // Perform some action
                                 Navigator.of(context).pop();
                                 Navigator.push(context, PageTransition(child: const Login(), type: PageTransitionType.fade));
-                              },
+                                await preferences.remove("CURRENT_CUSTOMER_ID");
+                                await preferences.remove("CURRENT_USER_NAME");
+                                await preferences.remove("CURRENT_USER_EMAIL");
+                                await preferences.remove("CURRENT_USER_AVATAR");
+                              }
                             ),
                           ],
                         )

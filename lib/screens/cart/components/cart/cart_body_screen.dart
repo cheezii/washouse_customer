@@ -8,7 +8,7 @@ import 'package:washouse_customer/resource/controller/center_controller.dart';
 import 'package:washouse_customer/resource/models/cart_item.dart';
 import 'package:washouse_customer/screens/center/component/details/category_menu.dart';
 
-import '../../../../resource/controller/cart_provider.dart';
+import '../../../../resource/provider/cart_provider.dart';
 import '../../../../resource/models/center.dart';
 import '../../../../utils/formatter_util.dart';
 import '../../../../utils/price_util.dart';
@@ -79,12 +79,10 @@ class _CartBodyScreenState extends State<CartBodyScreen> {
                       itemCount: value.cartItems.length,
                       itemBuilder: (context, index) {
                         int? id = value.cartItems[index].serviceId;
-                        num measurement =
-                            value.cartItems[index]?.measurement ?? 0;
-                        //ServiceDemo? service = cart[index]?.service;
+                        num measurement = value.cartItems[index].measurement;
                         String? unit = value.cartItems[index].unit ?? '';
                         String image = value.cartItems[index].thumbnail ?? '';
-                        double? price = value.cartItems[index].price! ?? 0;
+                        double? price = value.cartItems[index].price!;
                         double? productPrice = price * measurement;
                         bool checkPriceType = false;
                         double _maxMeasurementValue =
@@ -92,7 +90,7 @@ class _CartBodyScreenState extends State<CartBodyScreen> {
                                 ? value.cartItems[index].prices!.last.maxValue!
                                     .toDouble()
                                 : 0;
-                        if (value.cartItems[index].priceType!) {
+                        if (value.cartItems[index].priceType) {
                           checkPriceType = true;
                         }
 
@@ -191,7 +189,7 @@ class _CartBodyScreenState extends State<CartBodyScreen> {
                                                                 1) {
                                                               provider.removeFromCartWithKilogram(
                                                                   value.cartItems[
-                                                                      index]!);
+                                                                      index]);
                                                             } else {
                                                               provider.removeItemFromCart(
                                                                   value.cartItems[
@@ -366,7 +364,7 @@ class _CartBodyScreenState extends State<CartBodyScreen> {
                                                           provider
                                                               .removeFromCartWithQuantity(
                                                                   value.cartItems[
-                                                                      index]!);
+                                                                      index]);
                                                         } else {
                                                           provider
                                                               .removeItemFromCart(

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:washouse_customer/components/constants/color_constants.dart';
-import 'package:washouse_customer/resource/controller/cart_provider.dart';
+import 'package:washouse_customer/resource/provider/cart_provider.dart';
 import 'package:washouse_customer/screens/home/home_screen.dart';
 import 'package:badges/badges.dart' as badges;
 
