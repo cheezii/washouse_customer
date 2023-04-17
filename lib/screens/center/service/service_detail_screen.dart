@@ -162,7 +162,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
           ),
           SliverToBoxAdapter(
             child: Container(
-              height: 80,
+              height: 87,
               decoration: BoxDecoration(
                 border: Border(
                   bottom: BorderSide(width: 1.0, color: Colors.grey.shade300),
@@ -181,19 +181,26 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                     ),
                   ),
                   const SizedBox(width: 10),
-                  SizedBox(
-                    width: size.width * 0.25,
-                    child: Text(
-                      checkPriceType
-                          ? '${PriceUtils().convertFormatPrice(serviceArgs.prices!.last.price!.toInt())} đ - ${PriceUtils().convertFormatPrice(serviceArgs.prices!.first.price!.toInt())} đ'
-                          : '${PriceUtils().convertFormatPrice(serviceArgs.price!.toInt())} đ',
-                      style: const TextStyle(
-                        color: kPrimaryColor,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      SizedBox(
+                        width: size.width * 0.25,
+                        child: Text(
+                          checkPriceType
+                              ? '${PriceUtils().convertFormatPrice(serviceArgs.prices!.last.price!.toInt())} đ - ${PriceUtils().convertFormatPrice(serviceArgs.prices!.first.price!.toInt())} đ'
+                              : '${PriceUtils().convertFormatPrice(serviceArgs.price!.toInt())} đ',
+                          style: const TextStyle(
+                            color: kPrimaryColor,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
+                      Text('Đơn vị tính: ${serviceArgs.unit}',
+                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.grey.shade800)),
+                    ],
+                  )
                 ],
               ),
             ),
@@ -211,9 +218,18 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                   ),
                   const SizedBox(height: 20),
                   checkPriceChart
-                      ? Text(
-                          'Giá dịch vụ tối thiểu : ${PriceUtils().convertFormatPrice(serviceArgs.minPrice!.toInt())} đ',
-                          style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
+                      ? Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Giá dịch vụ tối thiểu : ${PriceUtils().convertFormatPrice(serviceArgs.minPrice!.toInt())} đ',
+                              style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
+                            ),
+                            const Text(
+                              '*Nếu giá tiền của dịch vụ bạn đặt tính theo bảng giá dưới mức giá tối thiểu, giá tiền của dịch vụ sẽ là giá tối thiểu',
+                              style: TextStyle(fontWeight: FontWeight.w400, fontSize: 14, color: Colors.red, fontStyle: FontStyle.italic),
+                            ),
+                          ],
                         )
                       : const SizedBox(height: 0, width: 0),
                   const SizedBox(height: 10),
@@ -526,25 +542,33 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                                   alignment: Alignment.center,
                                   child: SizedBox(
                                     height: 50,
-                                    child: TextField(
-                                      readOnly: false,
-                                      controller: kilogramController,
-                                      textAlign: TextAlign.center,
-                                      keyboardType: TextInputType.number,
-                                      inputFormatters: [MaxValueFormatter(_maxMeasurementValue)],
-                                      onChanged: (value) {
-                                        setState(() {
-                                          kilogram = double.parse(value.toString());
-                                        });
-                                      },
-                                      decoration: const InputDecoration(
-                                        enabledBorder: InputBorder.none,
-                                        contentPadding: EdgeInsets.all(0),
-                                      ),
-                                      style: const TextStyle(
-                                        height: 1.4,
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w500,
+                                    child: Align(
+                                      alignment: Alignment.center,
+                                      child: SizedBox(
+                                        height: 50,
+                                        child: TextField(
+                                          readOnly: false,
+                                          controller: kilogramController,
+                                          textAlign: TextAlign.center,
+                                          keyboardType: TextInputType.numberWithOptions(decimal: true),
+                                          inputFormatters: [
+                                            FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,1}')),
+                                          ],
+                                          onChanged: (value) {
+                                            setState(() {
+                                              kilogram = double.parse(value.toString());
+                                            });
+                                          },
+                                          decoration: const InputDecoration(
+                                            enabledBorder: InputBorder.none,
+                                            contentPadding: EdgeInsets.all(0),
+                                          ),
+                                          style: const TextStyle(
+                                            height: 1.4,
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -713,7 +737,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                               thumbnail: serviceArgs.image,
                               price: totalCurrentPrice,
                               unitPrice: currentPrice,
-                              customerNote: null,
+                              customerNote: noteController.text,
                               weight: serviceArgs.rate! * measurementInput.toDouble(),
                               unit: serviceArgs.unit,
                               minPrice: serviceArgs.minPrice == null ? null : serviceArgs.minPrice!.toDouble(),
@@ -760,7 +784,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                             //provider.centerId =
                           }
                           bool checkMax = (provider.cartItems.length != 0 && provider.cartItems.last.measurement == _maxMeasurementValue);
-                          await baseController.saveStringtoSharedPreference("customerNote", noteController.text);
+                          //await baseController.saveStringtoSharedPreference("customerNote", noteController.text);
                           // ignore: use_build_context_synchronously
                           checkAdded
                               // ignore: use_build_context_synchronously
@@ -800,7 +824,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             const Text(
-                              'Đặt',
+                              'Thêm',
                               style: TextStyle(fontSize: 17),
                             ),
                             const SizedBox(width: 7),

@@ -65,15 +65,15 @@ class OrderController {
     }
 
     order.deliveryPrice = await baseController.getDoubletoSharedPreference("deliveryPrice");
-
-    if (order.deliveryType == 1 || order.deliveryType == 3) {
+    if (order.deliveryType == null || (order.deliveryType != null && order.deliveryType == 0)) {
+      order.deliveryType = 0;
+    } else if (order.deliveryType == 1 || order.deliveryType == 3) {
       var delivery = new Deliveries();
       delivery.addressString = await baseController.getStringtoSharedPreference("addressString_Dropoff");
       delivery.wardId = await baseController.getInttoSharedPreference("wardId_Dropoff");
       delivery.deliveryType = false;
       deliveries.add(delivery);
-    }
-    if (order.deliveryType == 2 || order.deliveryType == 3) {
+    } else if (order.deliveryType == 2 || order.deliveryType == 3) {
       var delivery = new Deliveries();
       delivery.addressString = await baseController.getStringtoSharedPreference("addressString_Delivery");
       delivery.wardId = await baseController.getInttoSharedPreference("wardId_Delivery");
@@ -85,7 +85,7 @@ class OrderController {
       orderBody.promoCode = promotionCode;
     }
     orderBody.paymentMethod = await baseController.getInttoSharedPreference("paymentMethod");
-
+    if (orderBody.paymentMethod == null) orderBody.paymentMethod = 0;
     orderBody.deliveries = deliveries.cast<Deliveries>();
     orderBody.orderDetails = orderDetails.cast<Order_Details>();
     orderBody.order = order;
@@ -97,7 +97,7 @@ class OrderController {
     final headers = {'Content-Type': 'application/json'};
     http.Response response = await http.post(Uri.parse('$baseUrl/orders'), headers: headers, body: json.encode(requestBody.toJson()));
     dynamic responseData = json.decode(response.body);
-    print(responseData["message"]);
+    print(responseData);
     // Make the authenticated POST requests
     // http.Response response = await baseController.makeAuthenticatedPostRequest(
     //     url, queryParams, requestBody);
@@ -110,10 +110,12 @@ class OrderController {
       baseController.printAllSharedPreferences();
       // Do something with the response data
       print(responseData);
+
+      return responseData["data"]["orderId"];
     } else {
       // Request failed, handle the error
       dynamic responseData = json.decode(response.body);
-      print(responseData["message"]);
+      print(responseData);
     }
   }
 

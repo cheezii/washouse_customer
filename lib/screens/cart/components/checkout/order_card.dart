@@ -3,14 +3,12 @@ import 'package:flutter_svg/svg.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 import 'package:washouse_customer/resource/controller/order_controller.dart';
-import 'package:washouse_customer/screens/home/home_screen.dart';
 import 'package:washouse_customer/utils/price_util.dart';
 
 import '../../../../components/constants/color_constants.dart';
 import '../../../../resource/controller/cart_provider.dart';
 import '../../../../resource/models/cart_item.dart';
-import '../../../home/base_screen.dart';
-import '../../checkout_screen.dart';
+import '../../../order/generate_qr_screen.dart';
 import '../cart/add_voucher.dart';
 
 class OrderCard extends StatelessWidget {
@@ -66,7 +64,7 @@ class OrderCard extends StatelessWidget {
                 Consumer<CartProvider>(builder: (context, value, child) {
                   return Text(
                     (value.promoCode! != '') ? value.promoCode! : 'Chọn mã khuyến mãi',
-                    style: TextStyle(color: textNoteColor),
+                    style: const TextStyle(color: textNoteColor),
                   );
                 }),
                 const SizedBox(width: 10),
@@ -198,10 +196,32 @@ class OrderCard extends StatelessWidget {
                                 child: CircularProgressIndicator(),
                               );
                             });
-                        String? message = await orderController.createOrder();
-                        print(message);
-                        Navigator.of(context).pop();
-                        Navigator.push(context, PageTransition(child: const BaseScreen(), type: PageTransitionType.rightToLeftWithFade));
+                        String? orderId = await orderController.createOrder();
+                        print(orderId);
+                        if (orderId != null && orderId.length == 16) {
+                          Navigator.of(context).pop();
+                          Navigator.push(
+                              context, PageTransition(child: GenerateQRCodeScreen(orderID: orderId), type: PageTransitionType.rightToLeftWithFade));
+                        } else {
+                          Navigator.of(context).pop();
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text('Thông báo'),
+                                content: Text('Có lỗi xảy ra trong quá trình đặt hàng'),
+                                actions: <Widget>[
+                                  ElevatedButton(
+                                    child: Text('Đóng'),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        }
                       },
                       child: Text(
                         //'Thanh toán (${checkItem ? value.getCounter() : 0})',

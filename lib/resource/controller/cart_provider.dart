@@ -138,11 +138,13 @@ class CartProvider extends ChangeNotifier {
     prefs.remove('customerName');
     prefs.remove('customerPhone');
     prefs.remove('customerWardId');
+    print(111111111111111);
+    print(prefs.getString("customerName"));
     prefs.remove('deliveryType');
     prefs.remove('addressString_Dropoff');
     prefs.remove('customerMessage');
     prefs.remove('paymentMethod');
-    notifyListeners();
+    //notifyListeners();
   }
 
   void _getPrefItems() async {

@@ -1,6 +1,8 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:washouse_customer/screens/order/order_screen.dart';
 
 import '../../components/constants/color_constants.dart';
 
@@ -22,6 +24,7 @@ class GenerateQRCodeScreen extends StatelessWidget {
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);
+            Navigator.push(context, PageTransition(child: OrderScreen(), type: PageTransitionType.rightToLeftWithFade));
           },
           icon: const Icon(
             Icons.arrow_back_ios_new_rounded,
