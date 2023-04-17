@@ -8,6 +8,9 @@ import 'category_menu.dart';
 class MenuItemCard extends StatelessWidget {
   final String title;
   final String description;
+  final String? unit;
+  final bool priceType;
+  final num? rating;
   final String image;
   final String price;
   final GestureTapCallback press;
@@ -16,6 +19,9 @@ class MenuItemCard extends StatelessWidget {
     required this.title,
     required this.description,
     required this.image,
+    required this.unit,
+    required this.rating,
+    required this.priceType,
     required this.price,
     required this.press,
   }) : super(key: key);
@@ -81,24 +87,69 @@ class MenuItemCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Expanded(
-                    // wrap the Text widget in an Expanded widget
-                    child: Text(
-                      title,
-                      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: [
+                        Text(
+                          title,
+                          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(width: 4),
+                        (rating != null && rating != 0)
+                            ? Row(
+                                children: [
+                                  const Icon(Icons.circle_rounded, size: 6),
+                                  const SizedBox(width: 5),
+                                  Text(rating.toString(), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: kPrimaryColor)),
+                                  const SizedBox(
+                                      width: 35,
+                                      child: Icon(
+                                        Icons.star_rounded,
+                                        color: kPrimaryColor,
+                                        size: 20,
+                                      )),
+                                ],
+                              )
+                            : const SizedBox(width: 0),
+                      ],
                     ),
                   ),
+                  SizedBox(height: 1),
                   Expanded(
                     child: Text(
                       description,
                       style: const TextStyle(
                         fontSize: 15,
                       ),
-                      maxLines: 2,
+                      maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 1),
+                  Row(
+                    children: [
+                      Text(
+                        'Đơn vị tính: ${unit!}',
+                        style: const TextStyle(
+                          fontSize: 15,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 1),
+                  Row(
+                    children: [
+                      Text(
+                        priceType ? 'Giá theo bảng giá' : 'Giá cố định',
+                        style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                  ),
                   Text(
                     multiplePrice
                         ? '${PriceUtils().convertFormatPrice(minPrice.toInt())} đ - ${PriceUtils().convertFormatPrice(maxPrice.toInt())} đ'

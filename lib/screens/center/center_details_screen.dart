@@ -89,7 +89,9 @@ class _CenterDetailScreenState extends State<CenterDetailScreen> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     int listLength = centerDetails.centerServices != null ? centerDetails.centerServices!.length : 0;
-    //print(centerDetails.centerServices!.length);
+
+    print('centerDetails.numOfRating');
+    print(centerDetails.numOfRating);
 
     //centerDetails.centerServices![0].services![0].serviceName; //mẫu lấy service của center
 
@@ -183,6 +185,9 @@ class _CenterDetailScreenState extends State<CenterDetailScreen> {
                                   title: items[index].serviceName!,
                                   image: items[index].image == null ? "none" : items[index].image!,
                                   description: items[index].description!,
+                                  unit: items[index].unit,
+                                  priceType: items[index].priceType!,
+                                  rating: items[index].rating,
                                   price: items[index].priceType!
                                       ? '${items[index].prices!.last.price}-${items[index].prices!.first.price}'
                                       : items[index].price!.toString(),
@@ -264,7 +269,7 @@ class _CenterDetailScreenState extends State<CenterDetailScreen> {
     bool isHasDelivery = CenterUtils().checkHasDelivery(centerArgs);
     bool isHasRating = CenterUtils().checkHasRating(centerArgs);
     bool isHavePromotion = true;
-
+    if (centerArgs.numOfPromotionAvailable == 0) isHavePromotion = false;
     return Positioned(
       top: top,
       child: Transform(
@@ -295,7 +300,7 @@ class _CenterDetailScreenState extends State<CenterDetailScreen> {
                   size: size,
                   icon: 'assets/images/service/coupon.png',
                   title: 'Thông tin khuyến mãi',
-                  pressText: 'Xem thêm',
+                  pressText: centerDetails.numOfPromotionAvailable == null ? '' : '${centerDetails.numOfPromotionAvailable} khuyến mãi',
                   press: () {
                     showModalBottomSheet(
                         context: context,
