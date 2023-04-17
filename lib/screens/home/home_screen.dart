@@ -274,7 +274,7 @@ class _HomescreenState extends State<Homescreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Column(
                   children: [
-                    TitleWithMoreBtn(title: 'Blog tiệm giặt', press: () {}),
+                    TitleWithMoreBtn(title: 'Bài đăng', press: () {}),
                   ],
                 ),
               ),

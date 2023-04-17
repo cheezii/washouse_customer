@@ -12,6 +12,7 @@ class Post {
     required this.content,
   });
 }
+//List<Post> postList =
 
 List<Post> postList = [
   Post(

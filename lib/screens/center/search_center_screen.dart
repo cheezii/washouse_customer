@@ -92,9 +92,11 @@ class _SearchCenterScreenState extends State<SearchCenterScreen> {
             return ListTile(
               leading: Icon(Icons.search_rounded),
               title: Text(suggetsList[index].title!),
-              onTap: () {
-                //Navigator.push(context, Ma)
-              },
+              onTap: () => Navigator.pushNamed(
+                context,
+                '/centerDetails',
+                arguments: suggetsList[index],
+              ),
             );
           }),
     );
