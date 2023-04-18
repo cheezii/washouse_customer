@@ -11,7 +11,7 @@ class FeedbackWidget extends StatelessWidget {
   final String name;
   final String date;
   final String content;
-  final double rating;
+  final int rating;
   final bool isLess;
   final GestureTapCallback press;
   const FeedbackWidget({
@@ -38,7 +38,7 @@ class FeedbackWidget extends StatelessWidget {
             margin: const EdgeInsets.only(right: 16.0),
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage(avatar),
+                image: NetworkImage(avatar),
                 fit: BoxFit.cover,
               ),
               borderRadius: BorderRadius.circular(44.0),
@@ -57,7 +57,7 @@ class FeedbackWidget extends StatelessWidget {
               ),
               const SizedBox(height: 10),
               RatingBarIndicator(
-                rating: rating,
+                rating: rating.toDouble(),
                 itemBuilder: (context, index) => const Icon(
                   Icons.star,
                   color: kPrimaryColor,

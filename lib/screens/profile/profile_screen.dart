@@ -112,13 +112,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       fontWeight: FontWeight.w400,
                     ),
                   ),
-                  Text(
-                    '$_currentUserEmail',
-                    style: TextStyle(
-                      color: textColor.withOpacity(.5),
-                      fontSize: 18,
-                    ),
-                  ),
+                  // Text(
+                  //   '$_currentUserEmail',
+                  //   style: TextStyle(
+                  //     color: textColor.withOpacity(.5),
+                  //     fontSize: 18,
+                  //   ),
+                  // ),
                   const SizedBox(height: 20),
                   SizedBox(
                     //height: size.height * .525,

@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:washouse_customer/resource/models/current_user.dart';
 import 'package:washouse_customer/resource/models/customer.dart';
+import 'package:washouse_customer/resource/models/feedback.dart';
 import 'package:washouse_customer/resource/models/map_user.dart';
 import 'package:washouse_customer/resource/models/response_models/LoginResponseModel.dart';
 import 'package:washouse_customer/resource/models/token.dart';
@@ -193,6 +194,34 @@ class AccountController {
       }
     } catch (e) {
       print('error: getMyWallet-$e');
+      throw e;
+    }
+  }
+
+  Future<List<FeedbackModel>?> getMyFeedback() async {
+    List<FeedbackModel>? feedbacks = [];
+    try {
+      String url = '$baseUrl/accounts/my-feedback';
+      Map<String, dynamic> queryParams = {'Page': '1', 'PageSize': '30'};
+      Response response = await baseController.makeAuthenticatedRequest(url, queryParams);
+      if (response.statusCode == 200) {
+        // Handle successful response
+        var data = jsonDecode(response.body)['data']['items'] as List;
+        // Handle successful response
+        feedbacks = data.map((e) => FeedbackModel.fromJson(e)).toList();
+        // feedbacks = jsonDecode(response.body)["data"]["items"] != null
+        //     ? FeedbackModel?.fromJson(jsonDecode(response.body)["data"]["items"]) as List<FeedbackModel>
+        //     : null;
+        //Map<String, dynamic> accountDetails = json.decode(response.body);
+        return feedbacks;
+        //print(currentUser.name);
+        // Do something with the user data...
+      } else {
+        // Handle error response
+        throw Exception('Error fetching feedbacks data: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('error: getMyfeedbacks-$e');
       throw e;
     }
   }

@@ -24,7 +24,7 @@ AccountController accountController = AccountController();
 
 class _InfomationScreenState extends State<InfomationScreen> {
   TextEditingController dateController = TextEditingController();
-  DateTime date = DateTime.now().subtract(const Duration(days: 18 * 365 + 4));
+  DateTime date = DateTime.now().subtract(const Duration(days: 15 * 365 + 3));
   String? gender;
   String genderDisplay = '- Chọn -';
   String? birthday;
@@ -408,7 +408,7 @@ class _InfomationScreenState extends State<InfomationScreen> {
                                       const TextField(
                                         readOnly: true,
                                         decoration: InputDecoration(
-                                          hintText: '*Lưu ý: Bạn phải trên 18 tuổi để sử dụng dịch vụ',
+                                          hintText: '*Lưu ý: Bạn phải trên 15 tuổi để sử dụng dịch vụ',
                                           hintStyle: TextStyle(
                                             fontSize: 12,
                                             color: Colors.red,
