@@ -39,8 +39,10 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
 
     try {
       // Wait for getOrderInformation to complete
-      List<Order_Item> completedResult = await orderController.getOrderList(1, 100, null, null, null, "completed", null);
-      List<Order_Item> cancelledResult = await orderController.getOrderList(1, 100, null, null, null, "cancelled", null);
+      List<Order_Item> completedResult = await orderController.getOrderList(
+          1, 100, null, null, null, "completed", null);
+      List<Order_Item> cancelledResult = await orderController.getOrderList(
+          1, 100, null, null, null, "cancelled", null);
 
       setState(() {
         // Update state with loaded data
@@ -76,14 +78,17 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
               size: 24,
             ),
           ),
-          title: const Align(
-            alignment: Alignment.center,
-            child: Text('Lịch sử giao dịch', style: TextStyle(color: textColor, fontSize: 27)),
-          ),
+          centerTitle: true,
+          title: const Text('Lịch sử giao dịch',
+              style: TextStyle(color: textColor, fontSize: 27)),
           actions: [
             GestureDetector(
               onTap: () {
-                Navigator.push(context, PageTransition(child: const SearchOrderScreen(), type: PageTransitionType.fade));
+                Navigator.push(
+                    context,
+                    PageTransition(
+                        child: const SearchOrderScreen(),
+                        type: PageTransitionType.fade));
               },
               child: const Padding(
                 padding: EdgeInsets.only(right: 16),

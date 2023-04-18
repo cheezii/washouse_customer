@@ -24,6 +24,7 @@ import 'package:washouse_customer/utils/time_utils.dart';
 import '../../components/route/route_generator.dart';
 import '../../utils/keyboard_util.dart';
 import '../chat/chat_detail_screen.dart';
+import 'center_feedback_screen.dart';
 import 'component/details/box_info.dart';
 import 'component/details/menu_item_card.dart';
 
@@ -571,7 +572,13 @@ class _CenterDetailScreenState extends State<CenterDetailScreen> {
                       const Spacer(),
                       isHasRating
                           ? TextButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    PageTransition(
+                                        child: const CenterFeedbackScreen(),
+                                        type: PageTransitionType.fade));
+                              },
                               child: const Text(
                                 'Xem đánh giá',
                                 style: TextStyle(fontSize: 15),
