@@ -15,6 +15,8 @@ class Order_Infomation {
   double? deliveryPrice;
   String? preferredDropoffTime;
   String? preferredDeliverTime;
+  String? cancelReasonByStaff;
+  String? cancelReasonByCustomer;
   String? status;
   List<OrderedDetails>? orderedDetails;
   List<OrderTracking>? orderTrackings;
@@ -36,6 +38,8 @@ class Order_Infomation {
       this.deliveryPrice,
       this.preferredDropoffTime,
       this.preferredDeliverTime,
+      this.cancelReasonByStaff,
+      this.cancelReasonByCustomer,
       this.status,
       this.orderedDetails,
       this.orderTrackings,
@@ -57,6 +61,8 @@ class Order_Infomation {
     deliveryPrice = json['deliveryPrice'];
     preferredDropoffTime = json['preferredDropoffTime'];
     preferredDeliverTime = json['preferredDeliverTime'];
+    cancelReasonByStaff = json['cancelReasonByStaff'];
+    cancelReasonByCustomer = json['cancelReasonByCustomer'];
     status = json['status'];
     if (json['orderedDetails'] != null) {
       orderedDetails = <OrderedDetails>[];
@@ -95,6 +101,8 @@ class Order_Infomation {
     data['deliveryPrice'] = this.deliveryPrice;
     data['preferredDropoffTime'] = this.preferredDropoffTime;
     data['preferredDeliverTime'] = this.preferredDeliverTime;
+    data['cancelReasonByStaff'] = this.cancelReasonByStaff;
+    data['cancelReasonByCustomer'] = this.cancelReasonByCustomer;
     data['status'] = this.status;
     if (this.orderedDetails != null) {
       data['orderedDetails'] = this.orderedDetails!.map((v) => v.toJson()).toList();

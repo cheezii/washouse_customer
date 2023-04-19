@@ -20,6 +20,7 @@ class _DetailServiceState extends State<DetailService> {
   Widget build(BuildContext context) {
     Order_Infomation orderInfo = widget.order_information;
     List<CartItem> cartItems = Provider.of<CartProvider>(context).cartItems;
+    print(orderInfo.customerAddress);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(

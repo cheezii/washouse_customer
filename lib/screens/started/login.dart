@@ -10,6 +10,7 @@ import 'package:washouse_customer/resource/models/customer.dart';
 import 'package:washouse_customer/resource/models/response_models/LoginResponseModel.dart';
 import 'package:washouse_customer/resource/models/token.dart';
 import 'package:washouse_customer/screens/home/base_screen.dart';
+import 'package:washouse_customer/screens/home/home_screen.dart';
 import 'package:washouse_customer/screens/started/signup.dart';
 
 import '../../resource/controller/base_controller.dart';
@@ -132,21 +133,16 @@ class _LoginState extends State<Login> {
                     onPressed: () async {
                       //_errorMessage = null;
                       _responseMessage = '';
-                      if (phoneController.text.isEmpty &&
-                          passwordController.text.isEmpty) {
-                        _errorMessage =
-                            "Số điện thoại và mật khẩu không được để trống";
-                      } else if (phoneController.text.isEmpty &&
-                          !passwordController.text.isEmpty) {
+                      if (phoneController.text.isEmpty && passwordController.text.isEmpty) {
+                        _errorMessage = "Số điện thoại và mật khẩu không được để trống";
+                      } else if (phoneController.text.isEmpty && !passwordController.text.isEmpty) {
                         _errorMessage = "Số điện thoại không được để trống";
                       }
-                      if (!phoneController.text.isEmpty &&
-                          passwordController.text.isEmpty) {
+                      if (!phoneController.text.isEmpty && passwordController.text.isEmpty) {
                         _errorMessage = "Mật khẩu không được để trống";
                       }
 
-                      if (_formPhoneNumberKey.currentState!.validate() &&
-                          _formPwdKey.currentState!.validate()) {
+                      if (_formPhoneNumberKey.currentState!.validate() && _formPwdKey.currentState!.validate()) {
                         _formPwdKey.currentState!.save();
                         _formPhoneNumberKey.currentState!.save();
                         //call api change pwd
@@ -157,56 +153,32 @@ class _LoginState extends State<Login> {
                                 child: CircularProgressIndicator(),
                               );
                             });
-                        LoginResponseModel? responseModel =
-                            await accountController.login(
-                                phoneController.text, passwordController.text);
+                        LoginResponseModel? responseModel = await accountController.login(phoneController.text, passwordController.text);
                         if (responseModel != null) {
                           if (responseModel.statusCode == 17) {
-                            _responseMessage =
-                                "Admin không thể đăng nhập trên mobile";
+                            _responseMessage = "Admin không thể đăng nhập trên mobile";
                           } else if (responseModel.statusCode == 10) {
-                            _responseMessage =
-                                "Sai số điện thoại hoặc mật khẩu";
+                            _responseMessage = "Sai số điện thoại hoặc mật khẩu";
                           } else {
-                            CurrentUser currentUserModel =
-                                await accountController.getCurrentUser();
+                            CurrentUser currentUserModel = await accountController.getCurrentUser();
                             if (currentUserModel != null) {
-                              baseController.saveStringtoSharedPreference(
-                                  "CURRENT_USER_NAME", currentUserModel.name);
-                              baseController.saveStringtoSharedPreference(
-                                  "CURRENT_USER_EMAIL", currentUserModel.email);
-                              baseController.saveStringtoSharedPreference(
-                                  "CURRENT_USER_AVATAR",
-                                  currentUserModel.avatar);
-                              baseController.saveStringtoSharedPreference(
-                                  "CURRENT_USER_PHONE", currentUserModel.phone);
-                              baseController.saveInttoSharedPreference(
-                                  "CURRENT_USER_ID",
-                                  currentUserModel.accountId!);
+                              baseController.saveStringtoSharedPreference("CURRENT_USER_NAME", currentUserModel.name);
+                              baseController.saveStringtoSharedPreference("CURRENT_USER_EMAIL", currentUserModel.email);
+                              baseController.saveStringtoSharedPreference("CURRENT_USER_AVATAR", currentUserModel.avatar);
+                              baseController.saveStringtoSharedPreference("CURRENT_USER_PHONE", currentUserModel.phone);
+                              baseController.saveInttoSharedPreference("CURRENT_USER_ID", currentUserModel.accountId!);
                               if (currentUserModel.locationId != null) {
-                                baseController.saveInttoSharedPreference(
-                                    "CURRENT_USER_LOCATION_ID",
-                                    currentUserModel.locationId!);
+                                baseController.saveInttoSharedPreference("CURRENT_USER_LOCATION_ID", currentUserModel.locationId!);
                               }
-                              baseController.saveStringtoSharedPreference(
-                                  "CURRENT_USER_PASSWORD",
-                                  passwordController.text);
+                              baseController.saveStringtoSharedPreference("CURRENT_USER_PASSWORD", passwordController.text);
                             }
-                            Customer? currentCustomer =
-                                await accountController.getCustomerInfomation(
-                                    currentUserModel.accountId!);
+                            Customer? currentCustomer = await accountController.getCustomerInfomation(currentUserModel.accountId!);
                             if (currentCustomer != null) {
-                              baseController.saveInttoSharedPreference(
-                                  "CURRENT_CUSTOMER_ID",
-                                  currentUserModel.accountId!);
+                              baseController.saveInttoSharedPreference("CURRENT_CUSTOMER_ID", currentUserModel.accountId!);
                             }
                             Navigator.of(context).pop();
                             // ignore: use_build_context_synchronously
-                            Navigator.push(
-                                context,
-                                PageTransition(
-                                    child: const BaseScreen(),
-                                    type: PageTransitionType.fade));
+                            Navigator.push(context, PageTransition(child: const BaseScreen(), type: PageTransitionType.fade));
 
                             print(_responseMessage);
                           }
@@ -224,9 +196,7 @@ class _LoginState extends State<Login> {
                           context: context,
                           builder: (context) {
                             return AlertDialog(
-                              title: Align(
-                                  alignment: Alignment.center,
-                                  child: Text('Lỗi!!')),
+                              title: Align(alignment: Alignment.center, child: Text('Lỗi!!')),
                               content: Text('$_responseMessage'),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(15),
@@ -235,15 +205,11 @@ class _LoginState extends State<Login> {
                                 ElevatedButton(
                                   child: Text(
                                     'Đã hiểu',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w700,
-                                        color: kPrimaryColor),
+                                    style: TextStyle(fontWeight: FontWeight.w700, color: kPrimaryColor),
                                   ),
                                   style: ElevatedButton.styleFrom(
                                       elevation: 0,
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(30)),
+                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
                                       backgroundColor: kBackgroundColor),
                                   onPressed: () {
                                     // Perform some action
@@ -304,9 +270,7 @@ class _LoginState extends State<Login> {
                       // );
                     },
                     style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.0)),
-                        backgroundColor: kPrimaryColor),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)), backgroundColor: kPrimaryColor),
                     child: const Text(
                       'Đăng nhập',
                       style: TextStyle(fontSize: 18.0),
@@ -334,8 +298,7 @@ class _LoginState extends State<Login> {
                   children: const [
                     Expanded(child: Divider()),
                     Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: kDefaultPadding / 2),
+                      padding: EdgeInsets.symmetric(horizontal: kDefaultPadding / 2),
                       child: Text('HOẶC'),
                     ),
                     Expanded(child: Divider()),

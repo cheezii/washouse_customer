@@ -159,7 +159,7 @@ class _FillAddressScreenState extends State<FillAddressScreen> {
                     }
                     ;
                     setState(() {
-                      _isChecked = value!;
+                      _isChecked = value;
                     });
                   },
                   materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,

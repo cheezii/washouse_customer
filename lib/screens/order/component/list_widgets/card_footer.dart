@@ -25,7 +25,7 @@ class CardFooter extends StatelessWidget {
         status == 'Hoàn tất'
             ? GestureDetector(
                 onTap: () {
-                  Navigator.push(context, PageTransition(child: const FeedbackOrderScreen(), type: PageTransitionType.fade));
+                  Navigator.push(context, PageTransition(child: FeedbackOrderScreen(orderItem: orderItem), type: PageTransitionType.fade));
                 },
                 child: Container(
                   alignment: Alignment.bottomRight,

@@ -78,6 +78,9 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    String CancelledReason = '';
+    TextEditingController _textEditingController = TextEditingController();
+    bool isCancelledReasonEmpty = true;
     String status = '';
     Color statusColor = Colors.white;
     // if (orderList[0].status.compareTo('Đã hủy') == 0) {
@@ -99,6 +102,9 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     //   statusColor = completeColor;
     //   status = 'Hoàn tất';
     // }
+    //print(widget.orderId);
+    //print(widget.status);
+
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -474,7 +480,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                       style: TextStyle(fontSize: 16),
                                     ),
                                     Text(
-                                      '${PriceUtils().convertFormatPrice((info.deliveryPrice!).round())} đ',
+                                      (info.deliveryPrice == null) ? '0 đ' : '${PriceUtils().convertFormatPrice((info.deliveryPrice!).round())} đ',
                                       // '${PriceUtils().convertFormatPrice((order_infomation.deliveryPrice!).round())} đ',
                                       style: TextStyle(fontSize: 16, color: textColor, fontWeight: FontWeight.bold),
                                     )
@@ -546,12 +552,43 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                       builder: (BuildContext context) {
                         return AlertDialog(
                           title: const Text('Thông báo'),
-                          content: Text(
-                              'Bạn có chắn chắn muốn hủy đơn hàng ${widget.orderId}? Vui lòng đợi trong giây lát để cửa hàng xác nhận đơn hàng của bạn nhé!'),
+                          content: Column(
+                            children: [
+                              Text(
+                                  'Bạn có chắn chắn muốn hủy đơn hàng ${widget.orderId}? Vui lòng đợi trong giây lát để cửa hàng xác nhận đơn hàng của bạn nhé!'),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              const Text('Lý do hủy'),
+                              const SizedBox(
+                                height: 5,
+                              ),
+                              TextFormField(
+                                maxLines: 6,
+                                maxLength: 500,
+                                controller: _textEditingController,
+                                decoration: InputDecoration(
+                                  hintText: 'Nhập lý do hủy',
+                                  contentPadding: const EdgeInsets.only(top: 8, left: 8, right: 8, bottom: 8),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: Colors.grey.shade600,
+                                    ),
+                                  ),
+                                ),
+                                onChanged: (value) {
+                                  setState(() {
+                                    CancelledReason = value;
+                                    isCancelledReasonEmpty = false;
+                                  });
+                                },
+                              ),
+                            ],
+                          ),
                           actions: [
                             TextButton(
                               onPressed: () async {
-                                String result = await trackingController.cancelledOrder(widget.orderId);
+                                String result = await trackingController.cancelledOrder(widget.orderId, CancelledReason);
                                 if (result.compareTo("success") == 0) {
                                   Navigator.of(context).pop();
                                   showDialog(

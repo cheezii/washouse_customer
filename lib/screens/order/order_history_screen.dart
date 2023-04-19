@@ -18,46 +18,44 @@ class OrderHistoryScreen extends StatefulWidget {
 }
 
 class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
-  late OrderController orderController;
-  List<Order_Item> orderCompletedItems = [];
-  List<Order_Item> orderCancelledItems = [];
-  bool isLoading = false;
+  //late OrderController orderController;
+  //List<Order_Item> orderCompletedItems = [];
+  //List<Order_Item> orderCancelledItems = [];
+  //bool isLoading = false;
 
   @override
   void initState() {
     super.initState();
-    orderController = OrderController(context);
+    //orderController = OrderController(context);
     // centerArgs = widget.orderId;
-    getorderHistoryItems();
+    //getorderHistoryItems();
   }
 
-  void getorderHistoryItems() async {
-    // Show loading indicator
-    setState(() {
-      isLoading = true;
-    });
+  // void getorderHistoryItems() async {
+  //   // Show loading indicator
+  //   setState(() {
+  //     isLoading = true;
+  //   });
 
-    try {
-      // Wait for getOrderInformation to complete
-      List<Order_Item> completedResult = await orderController.getOrderList(
-          1, 100, null, null, null, "completed", null);
-      List<Order_Item> cancelledResult = await orderController.getOrderList(
-          1, 100, null, null, null, "cancelled", null);
+  //   try {
+  //     // Wait for getOrderInformation to complete
+  //     List<Order_Item> completedResult = await orderController.getOrderList(1, 100, null, null, null, "completed", null);
+  //     List<Order_Item> cancelledResult = await orderController.getOrderList(1, 100, null, null, null, "cancelled", null);
 
-      setState(() {
-        // Update state with loaded data
-        orderCompletedItems = completedResult;
-        orderCancelledItems = cancelledResult;
-        isLoading = false;
-      });
-    } catch (e) {
-      // Handle error
-      setState(() {
-        isLoading = false;
-      });
-      print('Error loading data: $e');
-    }
-  }
+  //     setState(() {
+  //       // Update state with loaded data
+  //       orderCompletedItems = completedResult;
+  //       orderCancelledItems = cancelledResult;
+  //       isLoading = false;
+  //     });
+  //   } catch (e) {
+  //     // Handle error
+  //     setState(() {
+  //       isLoading = false;
+  //     });
+  //     print('Error loading data: $e');
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -79,16 +77,11 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
             ),
           ),
           centerTitle: true,
-          title: const Text('Lịch sử giao dịch',
-              style: TextStyle(color: textColor, fontSize: 27)),
+          title: const Text('Lịch sử giao dịch', style: TextStyle(color: textColor, fontSize: 27)),
           actions: [
             GestureDetector(
               onTap: () {
-                Navigator.push(
-                    context,
-                    PageTransition(
-                        child: const SearchOrderScreen(),
-                        type: PageTransitionType.fade));
+                Navigator.push(context, PageTransition(child: const SearchOrderScreen(), type: PageTransitionType.fade));
               },
               child: const Padding(
                 padding: EdgeInsets.only(right: 16),
@@ -108,8 +101,8 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
         ),
         body: TabBarView(
           children: [
-            OrderCompleteScreen(orderCompletedItems),
-            OrderCancelScreen(orderCancelledItems),
+            OrderCompleteScreen(),
+            OrderCancelScreen(),
           ],
         ),
       ),

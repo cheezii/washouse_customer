@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:washouse_customer/components/constants/color_constants.dart';
 import 'package:washouse_customer/components/constants/text_constants.dart';
-import 'package:washouse_customer/resource/models/response_models/order_item_list.dart';
 import 'package:washouse_customer/screens/order/component/confirmed_screen.dart';
 
-import '../../resource/controller/order_controller.dart';
 import 'component/pending_screen.dart';
 import 'component/processing_screen.dart';
 import 'component/ready_screen.dart';
@@ -22,48 +20,48 @@ class OrderScreen extends StatefulWidget {
 }
 
 class _OrderScreenState extends State<OrderScreen> {
-  late OrderController orderController;
-  List<Order_Item> orderItems = [];
-  bool isLoading = false;
+  //late OrderController orderController;
+  //List<Order_Item> orderItems = [];
+  //bool isLoading = false;
 
   @override
   void initState() {
     super.initState();
-    orderController = OrderController(context);
+    //orderController = OrderController(context);
     // centerArgs = widget.orderId;
-    getOrderItems();
+    //getOrderItems();
   }
 
-  void getOrderItems() async {
-    // Show loading indicator
-    setState(() {
-      isLoading = true;
-    });
+  // void getOrderItems() async {
+  //   // Show loading indicator
+  //   setState(() {
+  //     isLoading = true;
+  //   });
 
-    try {
-      // Wait for getOrderInformation to complete
-      List<Order_Item> result = await orderController.getOrderList(1, 100, null, null, null, null, null);
-      setState(() {
-        // Update state with loaded data
-        orderItems = result;
-        isLoading = false;
-      });
-    } catch (e) {
-      // Handle error
-      setState(() {
-        isLoading = false;
-      });
-      print('Error loading data: $e');
-    }
-  }
+  //   try {
+  //     // Wait for getOrderInformation to complete
+  //     List<Order_Item> result = await orderController.getOrderList(1, 100, null, null, null, "pending", null);
+  //     setState(() {
+  //       // Update state with loaded data
+  //       orderItems = result;
+  //       isLoading = false;
+  //     });
+  //   } catch (e) {
+  //     // Handle error
+  //     setState(() {
+  //       isLoading = false;
+  //     });
+  //     print('Error loading data: $e');
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
-    var orderListPending = orderItems.where((element) => element.status!.toLowerCase().compareTo('pending') == 0).toList();
-    var orderListConfirmed = orderItems.where((element) => element.status!.toLowerCase().compareTo('confirmed') == 0).toList();
-    var orderListProcessing = orderItems.where((element) => element.status!.toLowerCase().compareTo('processing') == 0).toList();
-    print('processing-${orderListProcessing.length}');
-    var orderListReady = orderItems.where((element) => element.status!.toLowerCase().compareTo('ready') == 0).toList();
+    //var orderListPending = orderItems.where((element) => element.status!.toLowerCase().compareTo('pending') == 0).toList();
+    //var orderListConfirmed = orderItems.where((element) => element.status!.toLowerCase().compareTo('confirmed') == 0).toList();
+    //var orderListProcessing = orderItems.where((element) => element.status!.toLowerCase().compareTo('processing') == 0).toList();
+    //print('processing-${orderListProcessing.length}');
+    //var orderListReady = orderItems.where((element) => element.status!.toLowerCase().compareTo('ready') == 0).toList();
     return DefaultTabController(
       initialIndex: 0,
       length: 4,
@@ -108,11 +106,11 @@ class _OrderScreenState extends State<OrderScreen> {
               ],
             ),
           ),
-          body: TabBarView(children: [
-            OrderPedingScreen(orderListPending),
-            OrderConfirmedScreen(orderListConfirmed),
-            OrderProcessingScreen(orderListProcessing),
-            OrderReadyScreen(orderListReady),
+          body: const TabBarView(children: [
+            OrderPedingScreen(),
+            OrderConfirmedScreen(),
+            OrderProcessingScreen(),
+            OrderReadyScreen(),
           ])),
     );
   }

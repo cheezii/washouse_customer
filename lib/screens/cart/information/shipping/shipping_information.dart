@@ -188,7 +188,7 @@ class _FillShippingInformationState extends State<FillShippingInformation> {
                               String? chooseDate;
                               if (newValue!.compareTo("Hôm nay") == 0) {
                                 chooseDate = DateFormat('dd-MM-yyyy').format(DateTime.now());
-                              } else if (newValue!.compareTo("Ngày mai") == 0) {
+                              } else if (newValue.compareTo("Ngày mai") == 0) {
                                 chooseDate = DateFormat('dd-MM-yyyy').format(DateTime.now().add(Duration(days: 1)));
                               }
                               baseController.saveStringtoSharedPreference("preferredDropoffTime_Date", chooseDate!);
