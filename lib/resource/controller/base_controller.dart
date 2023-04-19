@@ -95,13 +95,28 @@ class BaseController {
     if (response.statusCode == 401 || response.statusCode == 403) {
       // If the access token is expired, use the refresh token to get a new one
       String refreshToken = await getRefreshToken();
+      // Construct the request payload as a Map
+      Map<String, dynamic> payload = {
+        'accessToken': accessToken,
+        'refreshToken': refreshToken,
+      };
+
+// Convert the payload to JSON
+      String payloadJson = jsonEncode(payload);
+
+// Make the POST request with the payload as JSON
       http.Response tokenResponse = await http.post(
         Uri.parse('$baseUrl/accounts/token'),
-        body: {
-          'accessToken': accessToken,
-          'refreshToken': refreshToken,
-        },
+        headers: {'Content-Type': 'application/json'},
+        body: payloadJson,
       );
+      // http.Response tokenResponse = await http.post(
+      //   Uri.parse('$baseUrl/accounts/token'),
+      //   body: {
+      //     'accessToken': accessToken,
+      //     'refreshToken': refreshToken,
+      //   },
+      // );
       if (tokenResponse.statusCode == 200) {
         // Save the new access and refresh tokens
         Map<String, dynamic> tokenJson = json.decode(tokenResponse.body);
@@ -110,7 +125,7 @@ class BaseController {
         await saveAccessToken(newAccessToken);
         await saveRefreshToken(newRefreshToken);
         // Make the original request again with the new access token
-        return makeAuthenticatedRequest(url, {});
+        return makeAuthenticatedRequest(url, queryParams);
       } else {
         // Handle error getting new tokens
         throw Exception('Error refreshing tokens: ${tokenResponse.statusCode}');
@@ -135,12 +150,27 @@ class BaseController {
     if (response.statusCode == 401) {
       // If the access token is expired, use the refresh token to get a new one
       String refreshToken = await getRefreshToken();
+      // http.Response tokenResponse = await http.post(
+      //   Uri.parse('$baseUrl/accounts/token'),
+      //   body: {
+      //     'accessToken': accessToken,
+      //     'refreshToken': refreshToken,
+      //   },
+      // );
+      // Construct the request payload as a Map
+      Map<String, dynamic> payload = {
+        'accessToken': accessToken,
+        'refreshToken': refreshToken,
+      };
+
+// Convert the payload to JSON
+      String payloadJson = jsonEncode(payload);
+
+// Make the POST request with the payload as JSON
       http.Response tokenResponse = await http.post(
         Uri.parse('$baseUrl/accounts/token'),
-        body: {
-          'accessToken': accessToken,
-          'refreshToken': refreshToken,
-        },
+        headers: {'Content-Type': 'application/json'},
+        body: payloadJson,
       );
       if (tokenResponse.statusCode == 200) {
         // Save the new access and refresh tokens
@@ -176,13 +206,30 @@ class BaseController {
     if (response.statusCode == 401) {
       // If the access token is expired, use the refresh token to get a new one
       String refreshToken = await getRefreshToken();
+      // http.Response tokenResponse = await http.post(
+      //   Uri.parse('$baseUrl/accounts/token'),
+      //   body: {
+      //     'accessToken': accessToken,
+      //     'refreshToken': refreshToken,
+      //   },
+      // );
+
+      // Construct the request payload as a Map
+      Map<String, dynamic> payload = {
+        'accessToken': accessToken,
+        'refreshToken': refreshToken,
+      };
+
+// Convert the payload to JSON
+      String payloadJson = jsonEncode(payload);
+
+// Make the POST request with the payload as JSON
       http.Response tokenResponse = await http.post(
         Uri.parse('$baseUrl/accounts/token'),
-        body: {
-          'accessToken': accessToken,
-          'refreshToken': refreshToken,
-        },
+        headers: {'Content-Type': 'application/json'},
+        body: payloadJson,
       );
+
       if (tokenResponse.statusCode == 200) {
         // Save the new access and refresh tokens
         Map<String, dynamic> tokenJson = json.decode(tokenResponse.body);
@@ -223,13 +270,30 @@ class BaseController {
     if (response.statusCode == 401) {
       // If the access token is expired, use the refresh token to get a new one
       String refreshToken = await getRefreshToken();
+      // http.Response tokenResponse = await http.post(
+      //   Uri.parse('$baseUrl/accounts/token'),
+      //   body: {
+      //     'accessToken': accessToken,
+      //     'refreshToken': refreshToken,
+      //   },
+      // );
+
+      // Construct the request payload as a Map
+      Map<String, dynamic> payload = {
+        'accessToken': accessToken,
+        'refreshToken': refreshToken,
+      };
+
+// Convert the payload to JSON
+      String payloadJson = jsonEncode(payload);
+
+// Make the POST request with the payload as JSON
       http.Response tokenResponse = await http.post(
         Uri.parse('$baseUrl/accounts/token'),
-        body: {
-          'accessToken': accessToken,
-          'refreshToken': refreshToken,
-        },
+        headers: {'Content-Type': 'application/json'},
+        body: payloadJson,
       );
+
       if (tokenResponse.statusCode == 200) {
         // Save the new access and refresh tokens
         Map<String, dynamic> tokenJson = json.decode(tokenResponse.body);

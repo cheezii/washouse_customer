@@ -11,6 +11,7 @@ import 'package:flutter/src/widgets/basic.dart' as basic;
 import 'package:washouse_customer/resource/models/order.dart';
 import 'package:washouse_customer/resource/models/response_models/order_detail_information.dart';
 import 'package:washouse_customer/resource/models/shipping.dart';
+import 'package:washouse_customer/screens/order/cancel_detail_screen.dart';
 import 'package:washouse_customer/screens/order/component/details_widget/detail_heading.dart';
 import 'package:washouse_customer/utils/order_util.dart';
 
@@ -604,10 +605,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                               Navigator.push(
                                                   context,
                                                   PageTransition(
-                                                      child: OrderDetailScreen(
-                                                        orderId: widget.orderId,
-                                                        status: 'Đã huỷ',
-                                                      ),
+                                                      child: CancelDetailScreen(orderId: widget.orderId),
                                                       type: PageTransitionType.rightToLeftWithFade));
                                             },
                                             child: Text('OK'),
