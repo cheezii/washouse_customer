@@ -38,7 +38,7 @@ class FeedbackWidget extends StatelessWidget {
             margin: const EdgeInsets.only(right: 16.0),
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: NetworkImage(avatar),
+                image: AssetImage(avatar),
                 fit: BoxFit.cover,
               ),
               borderRadius: BorderRadius.circular(44.0),

@@ -1,22 +1,74 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
+import 'package:washouse_customer/resource/controller/base_controller.dart';
+import 'package:washouse_customer/resource/controller/feedback_controller.dart';
 
 import '../../components/constants/color_constants.dart';
+import '../../resource/controller/account_controller.dart';
+import '../../resource/models/center.dart';
+import '../../resource/models/feedback.dart';
 import '../feedback/component/feedback_widget.dart';
 
 class CenterFeedbackScreen extends StatefulWidget {
-  const CenterFeedbackScreen({super.key});
+  final LaundryCenter centerArg;
+  const CenterFeedbackScreen({super.key, required this.centerArg});
 
   @override
   State<CenterFeedbackScreen> createState() => _CenterFeedbackScreenState();
 }
 
 class _CenterFeedbackScreenState extends State<CenterFeedbackScreen> {
-  List<double> ratings = [0, 0.2, 0.4, 0.8, 0.7];
+  AccountController accountController = AccountController();
+  BaseController baseController = BaseController();
+  FeedbackController feedbackController = FeedbackController();
+  List<FeedbackModel> _list = [];
+  bool isLoading = false;
+  void getMyFeedback() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      print(widget.centerArg.id!);
+      //List<FeedbackModel>? list = await feedbackController.getCenterFeedback(widget.centerArg.id!);
+      var list = await feedbackController.getCenterFeedback(widget.centerArg.id!);
+      print(list);
+      if (list != null) {
+        setState(() {
+          _list = list;
+          isLoading = false;
+        });
+      }
+    } catch (e) {
+      // Handle error
+      setState(() {
+        isLoading = false;
+      });
+      print('Error loading feedbacks: $e');
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getMyFeedback();
+  }
+
+  bool isHaveFeedBack = false;
+  List<double> ratings = [0, 0.1, 0.1, 0.2, 0.6];
   bool isMore = false;
   @override
   Widget build(BuildContext context) {
+    List<int> CountRating = [0, 0, 0, 0, 0];
+    for (var element in _list) {
+      int rating = element.rating!;
+      if (rating == 0) rating = 1;
+      CountRating[rating - 1] = CountRating[rating - 1] + 1;
+    }
+    for (var i = 0; i < 5; i++) {
+      ratings[i] = CountRating[i] / (_list.length);
+    }
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -32,8 +84,7 @@ class _CenterFeedbackScreenState extends State<CenterFeedbackScreen> {
           ),
         ),
         centerTitle: true,
-        title: Text('Đánh giá trung tâm',
-            style: TextStyle(color: textColor, fontSize: 27)),
+        title: Text('Đánh giá trung tâm', style: TextStyle(color: textColor, fontSize: 27)),
       ),
       body: Column(
         children: [
@@ -49,7 +100,7 @@ class _CenterFeedbackScreenState extends State<CenterFeedbackScreen> {
                       TextSpan(
                         children: [
                           TextSpan(
-                            text: 4.toString(),
+                            text: widget.centerArg.rating!.toString(),
                             style: const TextStyle(
                               fontSize: 42,
                               fontWeight: FontWeight.w700,
@@ -67,7 +118,7 @@ class _CenterFeedbackScreenState extends State<CenterFeedbackScreen> {
                     ),
                     const SizedBox(height: 5),
                     RatingBarIndicator(
-                      rating: 4,
+                      rating: widget.centerArg.rating!.toDouble(),
                       itemBuilder: (context, index) => const Icon(
                         Icons.star,
                         color: kPrimaryColor,
@@ -78,7 +129,7 @@ class _CenterFeedbackScreenState extends State<CenterFeedbackScreen> {
                     ),
                     const SizedBox(height: 10.0),
                     Text(
-                      'Số lượt đánh giá',
+                      '${widget.centerArg.numOfRating!.toString()} lượt đánh giá',
                       style: const TextStyle(
                         fontSize: 18,
                         color: textColor,
@@ -123,13 +174,13 @@ class _CenterFeedbackScreenState extends State<CenterFeedbackScreen> {
           Expanded(
             child: ListView.separated(
               padding: const EdgeInsets.only(bottom: 8.0, top: 8.0),
-              itemCount: 2,
+              itemCount: _list.length,
               itemBuilder: ((context, index) {
                 return FeedbackWidget(
-                  avatar: 'ảnh',
-                  name: 'Đoàn Kim Trọng',
-                  date: '27-01-2023',
-                  content: 'Đánh giá',
+                  avatar: 'user',
+                  name: _list[index].createdBy!.substring(0, 6) + '********',
+                  date: _list[index].createdDate!.substring(0, 10),
+                  content: _list[index].content!,
                   rating: 4,
                   press: () => setState(() {
                     isMore = !isMore;
