@@ -1,25 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:washouse_customer/components/constants/color_constants.dart';
 import 'package:washouse_customer/components/constants/text_constants.dart';
+import 'package:washouse_customer/resource/models/response_models/order_item_list.dart';
+import 'package:washouse_customer/screens/order/component/no_order.dart';
 
-import '../../../resource/controller/order_controller.dart';
-import '../../../resource/models/order.dart';
-import '../../../resource/models/response_models/order_item_list.dart';
-import 'no_order.dart';
-import 'list_widgets/order_card.dart';
+import '../../../../resource/controller/order_controller.dart';
+import '../../../../resource/models/order.dart';
+import '../list_widgets/order_card.dart';
 
-class OrderCompleteScreen extends StatefulWidget {
-  const OrderCompleteScreen({
+class OrderReadyScreen extends StatefulWidget {
+  const OrderReadyScreen({
     Key? key,
   }) : super(key: key);
 
   @override
-  State<OrderCompleteScreen> createState() => _OrderCompleteScreenState();
+  State<OrderReadyScreen> createState() => _OrderReadyScreenState();
 }
 
-class _OrderCompleteScreenState extends State<OrderCompleteScreen> {
+class _OrderReadyScreenState extends State<OrderReadyScreen> {
   late OrderController orderController;
-  List<Order_Item> orderListCompleted = [];
+  List<Order_Item> orderListReady = [];
   bool isLoading = false;
 
   @override
@@ -37,10 +38,11 @@ class _OrderCompleteScreenState extends State<OrderCompleteScreen> {
 
     try {
       // Wait for getOrderInformation to complete
-      List<Order_Item> result = await orderController.getOrderList(1, 100, null, null, null, "completed", null);
+      List<Order_Item> result = await orderController.getOrderList(
+          1, 100, null, null, null, "ready", null);
       setState(() {
         // Update state with loaded data
-        orderListCompleted = result;
+        orderListReady = result;
         isLoading = false;
       });
     } catch (e) {
@@ -55,17 +57,20 @@ class _OrderCompleteScreenState extends State<OrderCompleteScreen> {
   @override
   Widget build(BuildContext context) {
     // int counter = 0;
-
+    // List<Order> shippingList = [];
     // for (var item in orderList) {
-    //   if (item.status.compareTo('Hoàn tất') == 0) {
+    //   if (item.status.compareTo('Sẵn sàng') == 0) {
     //     counter++;
-    //     orderListCompleted.add(item);
+    //     shippingList.add(item);
     //   }
     // }
     if (isLoading) {
-      return CircularProgressIndicator();
+      return Center(
+        child: LoadingAnimationWidget.prograssiveDots(
+            color: kPrimaryColor, size: 50),
+      );
     } else {
-      if (orderListCompleted.isEmpty) {
+      if (orderListReady.isEmpty) {
         return const NoOrderScreen();
       } else {
         return SingleChildScrollView(
@@ -74,18 +79,10 @@ class _OrderCompleteScreenState extends State<OrderCompleteScreen> {
             child: ListView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
-              itemCount: orderListCompleted.length,
+              itemCount: orderListReady.length,
               itemBuilder: ((context, index) {
                 return OrderedCard(
-                  orderItem: orderListCompleted[index],
-                  statusColor: completeColor,
-                  statusString: completed,
-                  status: 'Hoàn tất',
-                  // isComplete: true,
-                  // isPending: false,
-                  // isCancel: false,
-                  // isProcessing: false,
-                  // isShipping: false,
+                  orderItem: orderListReady[index],
                 );
               }),
             ),

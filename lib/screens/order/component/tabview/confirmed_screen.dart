@@ -1,25 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:washouse_customer/components/constants/color_constants.dart';
 import 'package:washouse_customer/components/constants/text_constants.dart';
 import 'package:washouse_customer/resource/models/response_models/order_item_list.dart';
 import 'package:washouse_customer/screens/order/component/no_order.dart';
 
-import '../../../resource/controller/order_controller.dart';
-import '../../../resource/models/order.dart';
-import 'list_widgets/order_card.dart';
+import '../../../../resource/controller/order_controller.dart';
+import '../../../../resource/models/order.dart';
+import '../list_widgets/order_card.dart';
 
-class OrderReadyScreen extends StatefulWidget {
-  const OrderReadyScreen({
+class OrderConfirmedScreen extends StatefulWidget {
+  const OrderConfirmedScreen({
     Key? key,
   }) : super(key: key);
 
   @override
-  State<OrderReadyScreen> createState() => _OrderReadyScreenState();
+  State<OrderConfirmedScreen> createState() => _OrderConfirmedScreenState();
 }
 
-class _OrderReadyScreenState extends State<OrderReadyScreen> {
+class _OrderConfirmedScreenState extends State<OrderConfirmedScreen> {
   late OrderController orderController;
-  List<Order_Item> orderListReady = [];
+  List<Order_Item> orderListConfirmed = [];
   bool isLoading = false;
 
   @override
@@ -37,10 +38,11 @@ class _OrderReadyScreenState extends State<OrderReadyScreen> {
 
     try {
       // Wait for getOrderInformation to complete
-      List<Order_Item> result = await orderController.getOrderList(1, 100, null, null, null, "ready", null);
+      List<Order_Item> result = await orderController.getOrderList(
+          1, 100, null, null, null, "confirmed", null);
       setState(() {
         // Update state with loaded data
-        orderListReady = result;
+        orderListConfirmed = result;
         isLoading = false;
       });
     } catch (e) {
@@ -55,17 +57,20 @@ class _OrderReadyScreenState extends State<OrderReadyScreen> {
   @override
   Widget build(BuildContext context) {
     // int counter = 0;
-    // List<Order> shippingList = [];
+    // List<Order> confirmingList = [];
     // for (var item in orderList) {
-    //   if (item.status.compareTo('Sẵn sàng') == 0) {
+    //   if (item.status.compareTo('Xác nhận') == 0) {
     //     counter++;
-    //     shippingList.add(item);
+    //     confirmingList.add(item);
     //   }
     // }
     if (isLoading) {
-      return CircularProgressIndicator();
+      return Center(
+        child: LoadingAnimationWidget.prograssiveDots(
+            color: kPrimaryColor, size: 50),
+      );
     } else {
-      if (orderListReady.isEmpty) {
+      if (orderListConfirmed.isEmpty) {
         return const NoOrderScreen();
       } else {
         return SingleChildScrollView(
@@ -74,19 +79,9 @@ class _OrderReadyScreenState extends State<OrderReadyScreen> {
             child: ListView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
-              itemCount: orderListReady.length,
+              itemCount: orderListConfirmed.length,
               itemBuilder: ((context, index) {
-                return OrderedCard(
-                  orderItem: orderListReady[index],
-                  statusColor: readyColor,
-                  statusString: ready,
-                  status: 'Sẵn sàng',
-                  // isComplete: false,
-                  // isPending: false,
-                  // isCancel: false,
-                  // isProcessing: false,
-                  // isShipping: true,
-                );
+                return OrderedCard(orderItem: orderListConfirmed[index]);
               }),
             ),
           ),

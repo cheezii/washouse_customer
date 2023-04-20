@@ -30,7 +30,10 @@ class _SearchCenterScreenState extends State<SearchCenterScreen> {
 
   void getSuggest(String value) {
     setState(() {
-      suggetsList = centerList.where((element) => element.title!.toLowerCase().contains(value.toLowerCase())).toList();
+      suggetsList = centerList
+          .where((element) =>
+              element.title!.toLowerCase().contains(value.toLowerCase()))
+          .toList();
     });
   }
 
@@ -66,7 +69,11 @@ class _SearchCenterScreenState extends State<SearchCenterScreen> {
             enabledBorder: InputBorder.none,
           ),
           onSubmitted: (value) {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => ListCenterScreen(pageName: value, isNearby: false, isSearch: true)));
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => ListCenterScreen(
+                        pageName: value, isNearby: false, isSearch: true)));
           },
         ),
         actions: [

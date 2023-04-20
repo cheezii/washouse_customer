@@ -7,11 +7,9 @@ import '../../../../resource/models/order.dart';
 import '../../../../utils/price_util.dart';
 
 class CardBody extends StatelessWidget {
-  final String status;
   Order_Item orderItem;
   CardBody({
     Key? key,
-    required this.status,
     required this.orderItem,
   }) : super(key: key);
 
@@ -49,7 +47,10 @@ class CardBody extends StatelessWidget {
                 width: 200,
                 child: Text(
                   orderItem.orderedServices!.first.serviceName!,
-                  style: const TextStyle(fontSize: 17, color: Colors.black, fontWeight: FontWeight.w500),
+                  style: const TextStyle(
+                      fontSize: 17,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w500),
                   maxLines: 2,
                 ),
               ),
@@ -57,17 +58,18 @@ class CardBody extends StatelessWidget {
               Row(
                 children: [
                   Text(
-                    orderItem.orderedServices!.first.unit == 'Kg' ? 'KL: x${orderItem.orderedServices!.first.measurement} kg' : 'SL: x${orderItem.orderedServices!.first.measurement}',
+                    orderItem.orderedServices!.first.unit == 'Kg'
+                        ? 'KL: x${orderItem.orderedServices!.first.measurement} kg'
+                        : 'SL: x${orderItem.orderedServices!.first.measurement!.round()} ${orderItem.orderedServices!.first.unit!.toLowerCase()}',
                     style: const TextStyle(color: textColor, fontSize: 16),
                   ),
                   const Text('  |  '),
                   Text(
                     '${PriceUtils().convertFormatPrice((orderItem.orderedServices!.first.price!).round())} đ',
                     style: const TextStyle(
-                      fontSize: 16,
-                      color: kPrimaryColor,
-                      fontWeight: FontWeight.w500
-                    ),
+                        fontSize: 16,
+                        color: kPrimaryColor,
+                        fontWeight: FontWeight.w500),
                   )
                 ],
               ),

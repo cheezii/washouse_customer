@@ -1,25 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:washouse_customer/components/constants/color_constants.dart';
 import 'package:washouse_customer/components/constants/text_constants.dart';
 import 'package:washouse_customer/resource/models/response_models/order_item_list.dart';
 import 'package:washouse_customer/screens/order/component/no_order.dart';
 
-import '../../../resource/controller/order_controller.dart';
-import '../../../resource/models/order.dart';
-import 'list_widgets/order_card.dart';
+import '../../../../resource/controller/order_controller.dart';
+import '../../../../resource/models/order.dart';
+import '../list_widgets/order_card.dart';
 
-class OrderConfirmedScreen extends StatefulWidget {
-  const OrderConfirmedScreen({
+class OrderReceivedScreen extends StatefulWidget {
+  const OrderReceivedScreen({
     Key? key,
   }) : super(key: key);
 
   @override
-  State<OrderConfirmedScreen> createState() => _OrderConfirmedScreenState();
+  State<OrderReceivedScreen> createState() => _OrderReceivedScreenState();
 }
 
-class _OrderConfirmedScreenState extends State<OrderConfirmedScreen> {
+class _OrderReceivedScreenState extends State<OrderReceivedScreen> {
   late OrderController orderController;
-  List<Order_Item> orderListConfirmed = [];
+  List<Order_Item> orderListReceived = [];
   bool isLoading = false;
 
   @override
@@ -37,10 +38,11 @@ class _OrderConfirmedScreenState extends State<OrderConfirmedScreen> {
 
     try {
       // Wait for getOrderInformation to complete
-      List<Order_Item> result = await orderController.getOrderList(1, 100, null, null, null, "confirmed", null);
+      List<Order_Item> result = await orderController.getOrderList(
+          1, 100, null, null, null, "received", null);
       setState(() {
         // Update state with loaded data
-        orderListConfirmed = result;
+        orderListReceived = result;
         isLoading = false;
       });
     } catch (e) {
@@ -63,9 +65,12 @@ class _OrderConfirmedScreenState extends State<OrderConfirmedScreen> {
     //   }
     // }
     if (isLoading) {
-      return CircularProgressIndicator();
+      return Center(
+        child: LoadingAnimationWidget.prograssiveDots(
+            color: kPrimaryColor, size: 50),
+      );
     } else {
-      if (orderListConfirmed.isEmpty) {
+      if (orderListReceived.isEmpty) {
         return const NoOrderScreen();
       } else {
         return SingleChildScrollView(
@@ -74,19 +79,9 @@ class _OrderConfirmedScreenState extends State<OrderConfirmedScreen> {
             child: ListView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
-              itemCount: orderListConfirmed.length,
+              itemCount: orderListReceived.length,
               itemBuilder: ((context, index) {
-                return OrderedCard(
-                  orderItem: orderListConfirmed[index],
-                  statusColor: confirmedColor,
-                  statusString: confirmed,
-                  status: 'Xác nhận',
-                  // isComplete: false,
-                  // isPending: false,
-                  // isCancel: false,
-                  // isProcessing: false,
-                  // isShipping: false,
-                );
+                return OrderedCard(orderItem: orderListReceived[index]);
               }),
             ),
           ),

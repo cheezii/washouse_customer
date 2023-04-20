@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:washouse_customer/components/constants/color_constants.dart';
 import 'package:washouse_customer/components/constants/text_constants.dart';
 
-import '../../../resource/controller/order_controller.dart';
-import '../../../resource/models/order.dart';
-import '../../../resource/models/response_models/order_item_list.dart';
-import 'list_widgets/order_card.dart';
-import 'no_order.dart';
+import '../../../../resource/controller/order_controller.dart';
+import '../../../../resource/models/order.dart';
+import '../../../../resource/models/response_models/order_item_list.dart';
+import '../list_widgets/order_card.dart';
+import '../no_order.dart';
 
 class OrderCancelScreen extends StatefulWidget {
   const OrderCancelScreen({
@@ -37,7 +38,8 @@ class _OrderCancelScreenState extends State<OrderCancelScreen> {
 
     try {
       // Wait for getOrderInformation to complete
-      List<Order_Item> result = await orderController.getOrderList(1, 100, null, null, null, "cancelled", null);
+      List<Order_Item> result = await orderController.getOrderList(
+          1, 100, null, null, null, "cancelled", null);
       setState(() {
         // Update state with loaded data
         orderListCancelled = result;
@@ -66,7 +68,10 @@ class _OrderCancelScreenState extends State<OrderCancelScreen> {
       return CircularProgressIndicator();
     } else {
       if (orderListCancelled.isEmpty) {
-        return const NoOrderScreen();
+        return Center(
+          child: LoadingAnimationWidget.prograssiveDots(
+              color: kPrimaryColor, size: 50),
+        );
       } else {
         return SingleChildScrollView(
           child: Padding(
@@ -76,17 +81,7 @@ class _OrderCancelScreenState extends State<OrderCancelScreen> {
               physics: const NeverScrollableScrollPhysics(),
               itemCount: orderListCancelled.length,
               itemBuilder: ((context, index) {
-                return OrderedCard(
-                  orderItem: orderListCancelled[index],
-                  statusColor: cancelColor,
-                  statusString: canceled,
-                  status: 'Đã hủy',
-                  // isComplete: false,
-                  // isPending: false,
-                  // isCancel: true,
-                  // isProcessing: false,
-                  // isShipping: false,
-                );
+                return OrderedCard(orderItem: orderListCancelled[index]);
               }),
             ),
           ),

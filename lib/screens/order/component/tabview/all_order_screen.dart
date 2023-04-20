@@ -1,25 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:washouse_customer/components/constants/color_constants.dart';
 import 'package:washouse_customer/components/constants/text_constants.dart';
-import 'package:washouse_customer/resource/models/order.dart';
 import 'package:washouse_customer/resource/models/response_models/order_item_list.dart';
 import 'package:washouse_customer/screens/order/component/no_order.dart';
 
-import '../../../resource/controller/order_controller.dart';
-import 'list_widgets/order_card.dart';
+import '../../../../resource/controller/order_controller.dart';
+import '../../../../resource/models/order.dart';
+import '../list_widgets/order_card.dart';
 
-class OrderProcessingScreen extends StatefulWidget {
-  const OrderProcessingScreen({
+class AllOrderScreen extends StatefulWidget {
+  const AllOrderScreen({
     Key? key,
   }) : super(key: key);
 
   @override
-  State<OrderProcessingScreen> createState() => _OrderProcessingScreenState();
+  State<AllOrderScreen> createState() => _AllOrderScreenState();
 }
 
-class _OrderProcessingScreenState extends State<OrderProcessingScreen> {
+class _AllOrderScreenState extends State<AllOrderScreen> {
   late OrderController orderController;
-  List<Order_Item> orderListProcessing = [];
+  List<Order_Item> orderList = [];
   bool isLoading = false;
 
   @override
@@ -37,10 +38,11 @@ class _OrderProcessingScreenState extends State<OrderProcessingScreen> {
 
     try {
       // Wait for getOrderInformation to complete
-      List<Order_Item> result = await orderController.getOrderList(1, 100, null, null, null, "processing", null);
+      List<Order_Item> result = await orderController.getOrderList(
+          1, 100, null, null, null, null, null);
       setState(() {
         // Update state with loaded data
-        orderListProcessing = result;
+        orderList = result;
         isLoading = false;
       });
     } catch (e) {
@@ -55,17 +57,20 @@ class _OrderProcessingScreenState extends State<OrderProcessingScreen> {
   @override
   Widget build(BuildContext context) {
     // int counter = 0;
-    // List<Order> processingList = [];
-    // for (var item in processingList) {
-    //   if (item.status.compareTo('Xử lý') == 0) {
+    // List<Order> shippingList = [];
+    // for (var item in orderList) {
+    //   if (item.status.compareTo('Sẵn sàng') == 0) {
     //     counter++;
-    //     processingList.add(item);
+    //     shippingList.add(item);
     //   }
     // }
     if (isLoading) {
-      return CircularProgressIndicator();
+      return Center(
+        child: LoadingAnimationWidget.prograssiveDots(
+            color: kPrimaryColor, size: 50),
+      );
     } else {
-      if (orderListProcessing.isEmpty) {
+      if (orderList.isEmpty) {
         return const NoOrderScreen();
       } else {
         return SingleChildScrollView(
@@ -74,19 +79,9 @@ class _OrderProcessingScreenState extends State<OrderProcessingScreen> {
             child: ListView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
-              itemCount: orderListProcessing.length,
+              itemCount: orderList.length,
               itemBuilder: ((context, index) {
-                return OrderedCard(
-                  orderItem: orderListProcessing[index],
-                  statusColor: processingColor,
-                  statusString: processing,
-                  status: 'Xử lý',
-                  // isComplete: false,
-                  // isPending: false,
-                  // isCancel: false,
-                  // isProcessing: true,
-                  // isShipping: false,
-                );
+                return OrderedCard(orderItem: orderList[index]);
               }),
             ),
           ),

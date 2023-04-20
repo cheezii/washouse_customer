@@ -56,7 +56,8 @@ class _CancelDetailScreenState extends State<CancelDetailScreen> {
 
     try {
       // Wait for getOrderInformation to complete
-      Order_Infomation result = await orderController.getOrderInformation(widget.orderId);
+      Order_Infomation result =
+          await orderController.getOrderInformation(widget.orderId);
       setState(() {
         // Update state with loaded data
         order_infomation = result;
@@ -118,12 +119,17 @@ class _CancelDetailScreenState extends State<CancelDetailScreen> {
           ),
           title: const Align(
             alignment: Alignment.center,
-            child: Text('Chi tiết đơn hủy', style: TextStyle(color: textColor, fontSize: 27)),
+            child: Text('Chi tiết đơn hủy',
+                style: TextStyle(color: textColor, fontSize: 27)),
           ),
           actions: [
             GestureDetector(
               onTap: () {
-                Navigator.push(context, PageTransition(child: const SearchOrderScreen(), type: PageTransitionType.fade));
+                Navigator.push(
+                    context,
+                    PageTransition(
+                        child: const SearchOrderScreen(),
+                        type: PageTransitionType.fade));
               },
               child: const Padding(
                 padding: EdgeInsets.only(right: 16),
@@ -148,7 +154,7 @@ class _CancelDetailScreenState extends State<CancelDetailScreen> {
                       Text(
                         'Đã hủy đơn hàng',
                         style: TextStyle(
-                          color: cancelColor,
+                          color: cancelledColor,
                           fontSize: 20,
                           fontWeight: FontWeight.w600,
                         ),
@@ -158,13 +164,14 @@ class _CancelDetailScreenState extends State<CancelDetailScreen> {
                         (order_infomation.orderTrackings != null)
                             ? '${order_infomation.orderTrackings!.firstWhere((element) => (element.status!.trim().toLowerCase().compareTo("cancelled") == 0)).createdDate}'
                             : '',
-                        style: TextStyle(fontSize: 16, color: Colors.grey.shade600),
+                        style: TextStyle(
+                            fontSize: 16, color: Colors.grey.shade600),
                       ),
                     ],
                   ),
                   Icon(
                     Icons.check_circle_outline_sharp,
-                    color: cancelColor,
+                    color: cancelledColor,
                     size: 35,
                   )
                 ],
@@ -186,42 +193,37 @@ class _CancelDetailScreenState extends State<CancelDetailScreen> {
                       ? '${order_infomation.orderTrackings!.firstWhere((element) => (element.status!.trim().toLowerCase().compareTo("cancelled") == 0)).createdDate}'
                       : '',
                 ),
-                //CancelDetailFooter(from: 'Lý do', to: '${order_infomation.cancelReasonByStaff}'), //làm sao để ô này hiển thị lớn hơn
                 Padding(
-                  padding: const EdgeInsets.only(left: 16, right: 16, bottom: 10),
+                  padding:
+                      const EdgeInsets.only(left: 16, right: 16, bottom: 10),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
                         'Lý do',
-                        style: TextStyle(color: Colors.grey.shade500, fontSize: 15),
+                        style: TextStyle(
+                            color: Colors.grey.shade500, fontSize: 15),
                       ),
                       Container(
-                        alignment: Alignment.topRight, // Align container to top right
-                        width: 300,
-                        // decoration: BoxDecoration(
-                        //   border: Border.all(
-                        //     color: Colors.grey.shade500, // Set border color
-                        //     width: 1.0, // Set border width
-                        //   ),
-                        // ),
-                        padding: EdgeInsets.all(0.0), // Add padding inside container
+                        alignment: Alignment.topRight,
+                        width: MediaQuery.of(context).size.width / 2,
+                        padding: const EdgeInsets.all(0.0),
                         child: Flexible(
-                          fit: FlexFit.loose, // Allow text to break to new line
+                          fit: FlexFit.loose,
                           child: Text(
                             truncatedText,
                             maxLines: 20,
                             overflow: TextOverflow.ellipsis,
-                            textAlign: TextAlign.right, // Align text to the right
-                            style: TextStyle(fontSize: 15.0), // Set desired font size
+                            textAlign: TextAlign.right,
+                            style: TextStyle(fontSize: 15.0),
                           ),
                         ),
                       ),
                     ],
                   ),
                 ),
-
-                CancelDetailFooter(from: 'Phương thức thanh toán', to: paymentMethodString),
+                CancelDetailFooter(
+                    from: 'Phương thức thanh toán', to: paymentMethodString),
               ],
             ),
           ],

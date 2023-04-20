@@ -8,10 +8,15 @@ class FeedbackToServiceScreen extends StatefulWidget {
   final List<FeedbackModel> list;
   final String name;
   final String avatar;
-  const FeedbackToServiceScreen({super.key, required this.list, required this.name, required this.avatar});
+  const FeedbackToServiceScreen(
+      {super.key,
+      required this.list,
+      required this.name,
+      required this.avatar});
 
   @override
-  State<FeedbackToServiceScreen> createState() => _FeedbackToServiceScreenState();
+  State<FeedbackToServiceScreen> createState() =>
+      _FeedbackToServiceScreenState();
 }
 
 class _FeedbackToServiceScreenState extends State<FeedbackToServiceScreen> {
