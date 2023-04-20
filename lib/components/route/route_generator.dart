@@ -4,6 +4,7 @@ import 'package:washouse_customer/screens/center/center_details_screen.dart';
 import 'package:washouse_customer/screens/center/service/service_detail_screen.dart';
 import 'package:washouse_customer/screens/order/cancel_detail_screen.dart';
 import 'package:washouse_customer/screens/order/generate_qr_screen.dart';
+import 'package:washouse_customer/screens/post/post_details_screen.dart';
 import 'package:washouse_customer/screens/reset_password/send_otp.dart';
 
 import '../../screens/notification/list_notification_screen.dart';
@@ -20,7 +21,9 @@ class RouteGenerator {
         return MaterialPageRoute(
           builder: (context) {
             final arrguments = settings.arguments as ScreenArguments;
-            return ServiceDetailScreen(centerData: arrguments.screen1, serviceData: arrguments.screen2);
+            return ServiceDetailScreen(
+                centerData: arrguments.screen1,
+                serviceData: arrguments.screen2);
             // return ServiceDetailScreen(serviceData: args);
           },
         );
@@ -40,6 +43,10 @@ class RouteGenerator {
       case '/generateQR':
         return MaterialPageRoute(
           builder: (context) => GenerateQRCodeScreen(orderID: args),
+        );
+      case '/postDetails':
+        return MaterialPageRoute(
+          builder: (context) => PostDetailScreen(postId: args),
         );
       default:
         return _errorRoute();
