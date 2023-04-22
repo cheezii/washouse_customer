@@ -30,10 +30,20 @@ class CardFooter extends StatelessWidget {
                   decoration: BoxDecoration(
                     border: Border.all(color: kPrimaryColor),
                     borderRadius: BorderRadius.circular(20),
+                    color: kPrimaryColor,
                   ),
                   child: const Padding(
+<<<<<<< Updated upstream
                     padding: EdgeInsets.only(top: 9, bottom: 9, right: 20, left: 20),
                     child: Text('Viết đánh giá'),
+=======
+                    padding:
+                        EdgeInsets.only(top: 9, bottom: 9, right: 20, left: 20),
+                    child: Text(
+                      'Viết đánh giá',
+                      style: TextStyle(color: Colors.white),
+                    ),
+>>>>>>> Stashed changes
                   ),
                 ),
               )

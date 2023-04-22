@@ -9,6 +9,7 @@ import '../../../../components/constants/color_constants.dart';
 import '../../../../resource/provider/cart_provider.dart';
 import '../../../../resource/models/cart_item.dart';
 import '../../../order/generate_qr_screen.dart';
+import '../../order_success_screen.dart';
 import '../cart/add_voucher.dart';
 
 class OrderCard extends StatelessWidget {
@@ -25,7 +26,8 @@ class OrderCard extends StatelessWidget {
       height: 174,
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: const BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30)),
+        borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(30), topRight: Radius.circular(30)),
         boxShadow: [
           BoxShadow(
             offset: const Offset(0, -15),
@@ -38,7 +40,11 @@ class OrderCard extends StatelessWidget {
         children: [
           GestureDetector(
             onTap: () {
-              Navigator.push(context, PageTransition(child: const AddVoucherScreen(), type: PageTransitionType.rightToLeftWithFade));
+              Navigator.push(
+                  context,
+                  PageTransition(
+                      child: const AddVoucherScreen(),
+                      type: PageTransitionType.rightToLeftWithFade));
             },
             child: Row(
               children: [
@@ -63,12 +69,15 @@ class OrderCard extends StatelessWidget {
                 // ),
                 Consumer<CartProvider>(builder: (context, value, child) {
                   return Text(
-                    (value.promoCode! != '') ? value.promoCode! : 'Chọn mã khuyến mãi',
+                    (value.promoCode! != '')
+                        ? value.promoCode!
+                        : 'Chọn mã khuyến mãi',
                     style: const TextStyle(color: textNoteColor),
                   );
                 }),
                 const SizedBox(width: 10),
-                const Icon(Icons.arrow_forward_ios, size: 12, color: textNoteColor),
+                const Icon(Icons.arrow_forward_ios,
+                    size: 12, color: textNoteColor),
               ],
             ),
           ),
@@ -177,7 +186,10 @@ class OrderCard extends StatelessWidget {
                               //? '${PriceUtils().convertFormatPrice(value.getTotalPrice().round())} đ'
                               ? '${PriceUtils().convertFormatPrice((value.cartItems.fold(0.0, (sum, item) => sum + item.price!) * (1 - value.discount) + value.deliveryPrice).round())} đ'
                               : '0 đ',
-                          style: const TextStyle(fontSize: 20, color: kPrimaryColor, fontWeight: FontWeight.bold),
+                          style: const TextStyle(
+                              fontSize: 20,
+                              color: kPrimaryColor,
+                              fontWeight: FontWeight.bold),
                         ),
                       )
                     ],
@@ -187,21 +199,26 @@ class OrderCard extends StatelessWidget {
                     height: 40,
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)), backgroundColor: kPrimaryColor),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0)),
+                          backgroundColor: kPrimaryColor),
                       onPressed: () async {
                         showDialog(
                             context: context,
                             builder: (context) {
-                              return Center(
+                              return const Center(
                                 child: CircularProgressIndicator(),
                               );
                             });
                         String? orderId = await orderController.createOrder();
-                        print(orderId);
                         if (orderId != null && orderId.length == 16) {
                           Navigator.of(context).pop();
                           Navigator.push(
-                              context, PageTransition(child: GenerateQRCodeScreen(orderID: orderId), type: PageTransitionType.rightToLeftWithFade));
+                              context,
+                              PageTransition(
+                                  child: OrderSuccessScreen(),
+                                  type:
+                                      PageTransitionType.rightToLeftWithFade));
                         } else {
                           Navigator.of(context).pop();
                           showDialog(
@@ -209,7 +226,8 @@ class OrderCard extends StatelessWidget {
                             builder: (BuildContext context) {
                               return AlertDialog(
                                 title: Text('Thông báo'),
-                                content: Text('Có lỗi xảy ra trong quá trình đặt hàng'),
+                                content: Text(
+                                    'Có lỗi xảy ra trong quá trình đặt hàng'),
                                 actions: <Widget>[
                                   ElevatedButton(
                                     child: Text('Đóng'),
