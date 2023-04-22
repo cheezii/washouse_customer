@@ -25,12 +25,13 @@ class _OrderReceivedScreenState extends State<OrderReceivedScreen> {
   late OrderController orderController;
   List<Order_Item> orderListReceived = [];
   bool isLoading = false;
+  String? filterString;
 
   @override
   void initState() {
     super.initState();
     orderController = OrderController(context);
-    getOrderItems();
+    filterString = OrderUtils().getTextOfFilterOrderType(widget.filter);
   }
 
   void getOrderItems() async {
@@ -42,7 +43,8 @@ class _OrderReceivedScreenState extends State<OrderReceivedScreen> {
     try {
       var filterString = OrderUtils().getTextOfFilterOrderType(widget.filter);
       // Wait for getOrderInformation to complete
-      List<Order_Item> result = await orderController.getOrderList(1, 100, null, null, null, "received", filterString);
+      List<Order_Item> result = await orderController.getOrderList(
+          1, 100, null, null, null, "received", filterString);
       setState(() {
         // Update state with loaded data
         orderListReceived = result;
@@ -59,36 +61,57 @@ class _OrderReceivedScreenState extends State<OrderReceivedScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // int counter = 0;
-    // List<Order> confirmingList = [];
-    // for (var item in orderList) {
-    //   if (item.status.compareTo('Xác nhận') == 0) {
-    //     counter++;
-    //     confirmingList.add(item);
+    // if (isLoading) {
+    //   return Center(
+    //     child: LoadingAnimationWidget.prograssiveDots(color: kPrimaryColor, size: 50),
+    //   );
+    // } else {
+    //   if (orderListReceived.isEmpty) {
+    //     return const NoOrderScreen();
+    //   } else {
+    //     return SingleChildScrollView(
+    //       child: Padding(
+    //         padding: const EdgeInsets.all(16),
+    //         child: ListView.builder(
+    //           shrinkWrap: true,
+    //           physics: const NeverScrollableScrollPhysics(),
+    //           itemCount: orderListReceived.length,
+    //           itemBuilder: ((context, index) {
+    //             return OrderedCard(orderItem: orderListReceived[index]);
+    //           }),
+    //         ),
+    //       ),
+    //     );
     //   }
     // }
-    if (isLoading) {
-      return Center(
-        child: LoadingAnimationWidget.prograssiveDots(color: kPrimaryColor, size: 50),
-      );
-    } else {
-      if (orderListReceived.isEmpty) {
-        return const NoOrderScreen();
-      } else {
-        return SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: ListView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: orderListReceived.length,
-              itemBuilder: ((context, index) {
-                return OrderedCard(orderItem: orderListReceived[index]);
-              }),
+    return FutureBuilder(
+      future: orderController.getOrderList(
+          1, 100, null, null, null, 'received', filterString),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(
+            child: LoadingAnimationWidget.prograssiveDots(
+                color: kPrimaryColor, size: 50),
+          );
+        } else if (snapshot.hasData) {
+          orderListReceived = snapshot.data!;
+          return SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: orderListReceived.length,
+                itemBuilder: ((context, index) {
+                  return OrderedCard(orderItem: orderListReceived[index]);
+                }),
+              ),
             ),
-          ),
-        );
-      }
-    }
+          );
+        } else {
+          return const NoOrderScreen();
+        }
+      },
+    );
   }
 }
