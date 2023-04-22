@@ -20,14 +20,10 @@ class CardFooter extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        orderItem.status!.toLowerCase() == 'completed'
+        (orderItem.status!.trim().toLowerCase() == 'completed' && orderItem.isFeedback == false)
             ? GestureDetector(
                 onTap: () {
-                  Navigator.push(
-                      context,
-                      PageTransition(
-                          child: FeedbackOrderScreen(orderItem: orderItem),
-                          type: PageTransitionType.fade));
+                  Navigator.push(context, PageTransition(child: FeedbackOrderScreen(orderItem: orderItem), type: PageTransitionType.fade));
                 },
                 child: Container(
                   alignment: Alignment.bottomRight,
@@ -36,20 +32,37 @@ class CardFooter extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: const Padding(
-                    padding:
-                        EdgeInsets.only(top: 9, bottom: 9, right: 20, left: 20),
+                    padding: EdgeInsets.only(top: 9, bottom: 9, right: 20, left: 20),
                     child: Text('Viết đánh giá'),
                   ),
                 ),
               )
             : Container(),
-        orderItem.status!.toLowerCase() == 'cancelled'
+        (orderItem.status!.trim().toLowerCase() == 'completed' && orderItem.isFeedback == true)
+            ? GestureDetector(
+                onTap: () {
+                  Navigator.push(context, PageTransition(child: FeedbackOrderScreen(orderItem: orderItem), type: PageTransitionType.fade));
+                },
+                child: Container(
+                  alignment: Alignment.bottomRight,
+                  decoration: BoxDecoration(
+                    border: Border.all(color: kPrimaryColor),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: const Padding(
+                    padding: EdgeInsets.only(top: 9, bottom: 9, right: 20, left: 20),
+                    child: Text('Xem đánh giá'),
+                  ),
+                ),
+              )
+            : Container(),
+        orderItem.status!.trim().toLowerCase() == 'cancelled'
             ? Text(
                 'Đã huỷ',
                 style: TextStyle(color: cancelledColor),
               )
             : Container(),
-        orderItem.status!.toLowerCase() == 'ready'
+        (orderItem.status!.trim().toLowerCase() == 'ready' && orderItem.isPayment == false)
             ? GestureDetector(
                 onTap: () {
                   Navigator.push(
@@ -57,6 +70,7 @@ class CardFooter extends StatelessWidget {
                       PageTransition(
                           child: OrderDetailScreen(
                             orderId: orderItem.orderId!,
+                            isPayment: orderItem.isPayment!,
                             status: orderItem.status!.toLowerCase(),
                           ),
                           type: PageTransitionType.rightToLeftWithFade));
@@ -68,8 +82,7 @@ class CardFooter extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: const Padding(
-                    padding:
-                        EdgeInsets.only(top: 9, bottom: 9, right: 20, left: 20),
+                    padding: EdgeInsets.only(top: 9, bottom: 9, right: 20, left: 20),
                     child: Text(
                       'Thanh toán bằng ví',
                       style: TextStyle(color: textColor),
@@ -78,7 +91,7 @@ class CardFooter extends StatelessWidget {
                 ),
               )
             : Container(),
-        orderItem.status!.toLowerCase() == 'pending'
+        (orderItem.status!.trim().toLowerCase() == 'ready' && orderItem.isPayment == true)
             ? GestureDetector(
                 onTap: () {
                   Navigator.push(
@@ -86,6 +99,36 @@ class CardFooter extends StatelessWidget {
                       PageTransition(
                           child: OrderDetailScreen(
                             orderId: orderItem.orderId!,
+                            isPayment: orderItem.isPayment!,
+                            status: orderItem.status!.toLowerCase(),
+                          ),
+                          type: PageTransitionType.rightToLeftWithFade));
+                },
+                child: Container(
+                  alignment: Alignment.bottomRight,
+                  decoration: BoxDecoration(
+                    border: Border.all(color: kPrimaryColor),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: const Padding(
+                    padding: EdgeInsets.only(top: 9, bottom: 9, right: 20, left: 20),
+                    child: Text(
+                      'Đã thanh toán',
+                      style: TextStyle(color: textColor),
+                    ),
+                  ),
+                ),
+              )
+            : Container(),
+        (orderItem.status!.trim().toLowerCase() == 'pending' || orderItem.status!.trim().toLowerCase() == 'confirmed')
+            ? GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      PageTransition(
+                          child: OrderDetailScreen(
+                            orderId: orderItem.orderId!,
+                            isPayment: orderItem.isFeedback!,
                             status: orderItem.status!.toLowerCase(),
                           ),
                           type: PageTransitionType.rightToLeftWithFade));
@@ -97,8 +140,7 @@ class CardFooter extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.only(
-                        top: 9, bottom: 9, right: 20, left: 20),
+                    padding: const EdgeInsets.only(top: 9, bottom: 9, right: 20, left: 20),
                     child: Text(
                       'Hủy đơn',
                       style: TextStyle(color: cancelledColor),
@@ -108,7 +150,7 @@ class CardFooter extends StatelessWidget {
               )
             : Container(),
         const Spacer(),
-        orderItem.status!.toLowerCase() == 'cancelled'
+        orderItem.status!.trim().toLowerCase() == 'cancelled'
             ? GestureDetector(
                 // onTap: () {
                 //   Navigator.push(context, PageTransition(child: CancelDetailScreen(orderId: orderItem.orderId!), type: PageTransitionType.rightToLeftWithFade));
@@ -125,8 +167,7 @@ class CardFooter extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.only(
-                        top: 9, bottom: 9, right: 20, left: 20),
+                    padding: const EdgeInsets.only(top: 9, bottom: 9, right: 20, left: 20),
                     child: Text(
                       'Chi tiết đơn hủy',
                       style: TextStyle(color: cancelledColor),
@@ -141,6 +182,7 @@ class CardFooter extends StatelessWidget {
                       PageTransition(
                           child: OrderDetailScreen(
                             orderId: orderItem.orderId!,
+                            isPayment: orderItem.isFeedback!,
                             status: orderItem.status!.toLowerCase(),
                           ),
                           type: PageTransitionType.rightToLeftWithFade));
@@ -152,8 +194,7 @@ class CardFooter extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: const Padding(
-                    padding:
-                        EdgeInsets.only(top: 9, bottom: 9, right: 20, left: 20),
+                    padding: EdgeInsets.only(top: 9, bottom: 9, right: 20, left: 20),
                     child: Text('Xem chi tiết'),
                   ),
                 ),

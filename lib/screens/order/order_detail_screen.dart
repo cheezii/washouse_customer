@@ -24,10 +24,12 @@ import 'tracking_order_screen.dart';
 
 class OrderDetailScreen extends StatefulWidget {
   final String orderId;
+  final bool isPayment;
   final String status;
   const OrderDetailScreen({
     Key? key,
     required this.orderId,
+    required this.isPayment,
     required this.status,
   }) : super(key: key);
 
@@ -72,12 +74,12 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print(widget.isPayment);
     String CancelledReason = '';
     TextEditingController _textEditingController = TextEditingController();
     bool isCancelledReasonEmpty = true;
     String status = '';
     Color statusColor = Colors.white;
-
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -93,13 +95,11 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
           ),
         ),
         centerTitle: true,
-        title: const Text('Chi tiết đơn hàng',
-            style: TextStyle(color: textColor, fontSize: 27)),
+        title: const Text('Chi tiết đơn hàng', style: TextStyle(color: textColor, fontSize: 27)),
         actions: [
           IconButton(
               onPressed: () {
-                Navigator.pushNamed(context, '/generateQR',
-                    arguments: widget.orderId);
+                Navigator.pushNamed(context, '/generateQR', arguments: widget.orderId);
               },
               icon: const Icon(
                 Icons.qr_code_2_rounded,
@@ -132,19 +132,15 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                               Text(
                                 //'Đơn hàng: ${order_infomation.id}',
                                 'Đơn hàng: ${info.id}',
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.w600, fontSize: 20),
+                                style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 20),
                               ),
                               //DetailHeading(statusColor: statusColor, status: status)
                             ],
                           ),
                           const SizedBox(height: 6),
                           Text(
-                            info.orderTrackings != null
-                                ? 'Thời gian đặt hàng: ${info.orderTrackings!.first.createdDate}'
-                                : '',
-                            style: TextStyle(
-                                fontSize: 16, color: Colors.grey.shade700),
+                            info.orderTrackings != null ? 'Thời gian đặt hàng: ${info.orderTrackings!.first.createdDate}' : '',
+                            style: TextStyle(fontSize: 16, color: Colors.grey.shade700),
                           ),
                         ],
                       ),
@@ -160,19 +156,15 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                             children: [
                               const Text(
                                 'Theo dõi đơn hàng',
-                                style: TextStyle(
-                                    fontSize: 20, fontWeight: FontWeight.w500),
+                                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
                               ),
                               IconButton(
                                 onPressed: () {
                                   Navigator.push(
                                       context,
                                       PageTransition(
-                                          child: TrackingOrderScreen(
-                                              status: widget.status,
-                                              order_infomation: info),
-                                          type: PageTransitionType
-                                              .rightToLeftWithFade));
+                                          child: TrackingOrderScreen(status: widget.status, order_infomation: info),
+                                          type: PageTransitionType.rightToLeftWithFade));
                                 },
                                 icon: const Icon(
                                   Icons.arrow_forward_ios_rounded,
@@ -196,9 +188,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                             ),
                             builder: TimelineTileBuilder.connected(
                               connectionDirection: ConnectionDirection.before,
-                              itemExtentBuilder: (_, __) =>
-                                  MediaQuery.of(context).size.width /
-                                  _processes.length,
+                              itemExtentBuilder: (_, __) => MediaQuery.of(context).size.width / _processes.length,
                               contentsBuilder: (context, index) {
                                 return Padding(
                                   padding: const EdgeInsets.only(top: 15.0),
@@ -220,8 +210,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                     padding: EdgeInsets.all(8.0),
                                     child: CircularProgressIndicator(
                                       strokeWidth: 3.0,
-                                      valueColor:
-                                          AlwaysStoppedAnimation(Colors.white),
+                                      valueColor: AlwaysStoppedAnimation(Colors.white),
                                     ),
                                   );
                                 } else if (index < _processIndex) {
@@ -267,8 +256,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                         size: Size(15.0, 15.0),
                                         painter: _BezierPainter(
                                           color: color,
-                                          drawEnd:
-                                              index < _processes.length - 1,
+                                          drawEnd: index < _processes.length - 1,
                                         ),
                                       ),
                                       OutlinedDotIndicator(
@@ -286,15 +274,9 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                     final color = getColor(index);
                                     List<Color> gradientColors;
                                     if (type == ConnectorType.start) {
-                                      gradientColors = [
-                                        Color.lerp(prevColor, color, 0.5)!,
-                                        color
-                                      ];
+                                      gradientColors = [Color.lerp(prevColor, color, 0.5)!, color];
                                     } else {
-                                      gradientColors = [
-                                        prevColor,
-                                        Color.lerp(prevColor, color, 0.5)!
-                                      ];
+                                      gradientColors = [prevColor, Color.lerp(prevColor, color, 0.5)!];
                                     }
                                     return DecoratedLineConnector(
                                       decoration: BoxDecoration(
@@ -326,29 +308,25 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                         children: [
                           const Text(
                             'Địa chỉ người nhận',
-                            style: TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.w500),
+                            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
                           ),
                           const SizedBox(height: 6),
                           Text(
                             info.customerName!,
                             // order_infomation.customerName!,
-                            style:
-                                const TextStyle(fontSize: 16, color: textColor),
+                            style: const TextStyle(fontSize: 16, color: textColor),
                           ),
                           const SizedBox(height: 6),
                           Text(
                             info.customerMobile!,
                             // order_infomation.customerMobile!,
-                            style: TextStyle(
-                                color: Colors.grey.shade600, fontSize: 16),
+                            style: TextStyle(color: Colors.grey.shade600, fontSize: 16),
                           ),
                           const SizedBox(height: 6),
                           Text(
                             info.customerAddress!,
                             // order_infomation.customerAddress!,
-                            style: TextStyle(
-                                color: Colors.grey.shade600, fontSize: 16),
+                            style: TextStyle(color: Colors.grey.shade600, fontSize: 16),
                             overflow: TextOverflow.clip,
                           ),
                         ],
@@ -367,10 +345,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                         children: [
                           const Text(
                             'Phương thức vận chuyển',
-                            style: TextStyle(
-                                color: textColor,
-                                fontSize: 20,
-                                fontWeight: FontWeight.w600),
+                            style: TextStyle(color: textColor, fontSize: 20, fontWeight: FontWeight.w600),
                           ),
                           const SizedBox(height: 6),
                           Padding(
@@ -379,13 +354,11 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                               children: [
                                 SizedBox(
                                   width: 35,
-                                  child: Image.asset(
-                                      'assets/images/shipping/ship-di.png'),
+                                  child: Image.asset('assets/images/shipping/ship-di.png'),
                                 ),
                                 const SizedBox(width: 8),
                                 Text(
-                                  OrderUtils.getTextOfDeliveryType(
-                                      info.deliveryType!),
+                                  OrderUtils.getTextOfDeliveryType(info.deliveryType!),
                                   // OrderUtils.getTextOfDeliveryType(order_infomation.deliveryType!),
                                   style: TextStyle(fontSize: 16),
                                 ),
@@ -403,10 +376,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                         children: [
                           const Text(
                             'Phương thức thanh toán',
-                            style: TextStyle(
-                                color: textColor,
-                                fontSize: 20,
-                                fontWeight: FontWeight.w600),
+                            style: TextStyle(color: textColor, fontSize: 20, fontWeight: FontWeight.w600),
                           ),
                           const SizedBox(height: 6),
                           Padding(
@@ -415,13 +385,11 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                               children: [
                                 SizedBox(
                                   width: 35,
-                                  child: Image.asset(
-                                      'assets/images/shipping/cash-on-delivery.png'),
+                                  child: Image.asset('assets/images/shipping/cash-on-delivery.png'),
                                 ),
                                 const SizedBox(width: 8),
                                 Text(
-                                  OrderUtils.getTextOfPaymentMethod(
-                                      info.orderPayment!.paymentMethod!),
+                                  OrderUtils.getTextOfPaymentMethod(info.orderPayment!.paymentMethod!),
                                   // OrderUtils.getTextOfPaymentMethod(order_infomation.orderPayment!.paymentMethod!),
                                   style: TextStyle(fontSize: 16),
                                 ),
@@ -439,10 +407,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                         children: [
                           const Text(
                             'Chi tiết thanh toán',
-                            style: TextStyle(
-                                color: textColor,
-                                fontSize: 18,
-                                fontWeight: FontWeight.w700),
+                            style: TextStyle(color: textColor, fontSize: 18, fontWeight: FontWeight.w700),
                           ),
                           const SizedBox(height: 10),
                           Padding(
@@ -450,8 +415,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                             child: Column(
                               children: [
                                 Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     const Text(
                                       'Tạm tính:',
@@ -460,17 +424,13 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                     Text(
                                       '${PriceUtils().convertFormatPrice((info.totalOrderValue!).round())} đ',
                                       // '${PriceUtils().convertFormatPrice((order_infomation.totalOrderValue!).round())} đ',
-                                      style: TextStyle(
-                                          fontSize: 16,
-                                          color: textColor,
-                                          fontWeight: FontWeight.bold),
+                                      style: TextStyle(fontSize: 16, color: textColor, fontWeight: FontWeight.bold),
                                     )
                                   ],
                                 ),
                                 const SizedBox(height: 15),
                                 Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     const Text(
                                       'Mã giảm giá:',
@@ -482,31 +442,22 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                           ? '- ${PriceUtils().convertFormatPrice((info.totalOrderValue! * (info.orderPayment!.discount!)).round())} đ'
                                           // ? '- ${PriceUtils().convertFormatPrice((order_infomation.totalOrderValue! * (order_infomation.orderPayment!.discount!)).round())} đ'
                                           : '0 đ',
-                                      style: TextStyle(
-                                          fontSize: 16,
-                                          color: textColor,
-                                          fontWeight: FontWeight.bold),
+                                      style: TextStyle(fontSize: 16, color: textColor, fontWeight: FontWeight.bold),
                                     )
                                   ],
                                 ),
                                 const SizedBox(height: 15),
                                 Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     const Text(
                                       'Phí ship:',
                                       style: TextStyle(fontSize: 16),
                                     ),
                                     Text(
-                                      (info.deliveryPrice == null)
-                                          ? '0 đ'
-                                          : '${PriceUtils().convertFormatPrice((info.deliveryPrice!).round())} đ',
+                                      (info.deliveryPrice == null) ? '0 đ' : '${PriceUtils().convertFormatPrice((info.deliveryPrice!).round())} đ',
                                       // '${PriceUtils().convertFormatPrice((order_infomation.deliveryPrice!).round())} đ',
-                                      style: TextStyle(
-                                          fontSize: 16,
-                                          color: textColor,
-                                          fontWeight: FontWeight.bold),
+                                      style: TextStyle(fontSize: 16, color: textColor, fontWeight: FontWeight.bold),
                                     )
                                   ],
                                 ),
@@ -516,8 +467,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                   thickness: 2,
                                 ),
                                 Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     const Text(
                                       'Tổng cộng:',
@@ -526,10 +476,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                     Text(
                                       '${PriceUtils().convertFormatPrice((info.orderPayment!.paymentTotal!).round())} đ',
                                       // '${PriceUtils().convertFormatPrice((order_infomation.orderPayment!.paymentTotal!).round())} đ',
-                                      style: TextStyle(
-                                          fontSize: 17,
-                                          color: kPrimaryColor,
-                                          fontWeight: FontWeight.bold),
+                                      style: TextStyle(fontSize: 17, color: kPrimaryColor, fontWeight: FontWeight.bold),
                                     )
                                   ],
                                 ),
@@ -553,15 +500,13 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
             }
             return Container();
           }))),
-      bottomNavigationBar: widget.status == 'Đang chờ'
+      bottomNavigationBar: (widget.status.trim().toLowerCase() == 'pending' || widget.status.trim().toLowerCase() == 'confirmed')
           ? Container(
               padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
               height: 70,
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(30),
-                    topRight: Radius.circular(30)),
+                borderRadius: const BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30)),
                 boxShadow: [
                   BoxShadow(
                     offset: const Offset(0, -15),
@@ -575,9 +520,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                 height: 40,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30)),
-                      backgroundColor: cancelledColor),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)), backgroundColor: cancelledColor),
                   onPressed: () async {
                     showDialog(
                       context: context,
@@ -601,8 +544,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                 controller: _textEditingController,
                                 decoration: InputDecoration(
                                   hintText: 'Nhập lý do hủy',
-                                  contentPadding: const EdgeInsets.only(
-                                      top: 8, left: 8, right: 8, bottom: 8),
+                                  contentPadding: const EdgeInsets.only(top: 8, left: 8, right: 8, bottom: 8),
                                   enabledBorder: OutlineInputBorder(
                                     borderSide: BorderSide(
                                       color: Colors.grey.shade600,
@@ -621,13 +563,9 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                           actions: [
                             ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(30)),
-                                  backgroundColor: cancelledColor),
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)), backgroundColor: cancelledColor),
                               onPressed: () async {
-                                String result =
-                                    await trackingController.cancelledOrder(
-                                        widget.orderId, CancelledReason);
+                                String result = await trackingController.cancelledOrder(widget.orderId, CancelledReason);
                                 if (result.compareTo("success") == 0) {
                                   Navigator.of(context).pop();
                                   showDialog(
@@ -635,8 +573,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                     builder: (BuildContext context) {
                                       return AlertDialog(
                                         title: const Text('Thông báo'),
-                                        content: Text(
-                                            'Đơn hàng đã được hủy thành công!'),
+                                        content: Text('Đơn hàng đã được hủy thành công!'),
                                         actions: [
                                           TextButton(
                                             onPressed: () {
@@ -644,11 +581,8 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                               Navigator.push(
                                                   context,
                                                   PageTransition(
-                                                      child: CancelDetailScreen(
-                                                          orderId:
-                                                              widget.orderId),
-                                                      type: PageTransitionType
-                                                          .rightToLeftWithFade));
+                                                      child: CancelDetailScreen(orderId: widget.orderId),
+                                                      type: PageTransitionType.rightToLeftWithFade));
                                             },
                                             child: Text('OK'),
                                           ),
@@ -663,8 +597,8 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                     builder: (BuildContext context) {
                                       return AlertDialog(
                                         title: const Text('Thông báo'),
-                                        content: Text(
-                                            'Có lỗi xảy ra trong quá trình xử lý hoặc đơn hàng của bạn không thể hủy! Bạn vui lòng thử lại sau'),
+                                        content:
+                                            Text('Có lỗi xảy ra trong quá trình xử lý hoặc đơn hàng của bạn không thể hủy! Bạn vui lòng thử lại sau'),
                                         actions: [
                                           TextButton(
                                             onPressed: () {
@@ -682,9 +616,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                             ),
                             ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(30)),
-                                  backgroundColor: kPrimaryColor),
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)), backgroundColor: kPrimaryColor),
                               onPressed: () {
                                 Navigator.of(context).pop();
                               },
@@ -702,16 +634,13 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                 ),
               ),
             )
-          : widget.status == 'Sẵn sàng'
+          : (widget.status.trim().toLowerCase() == 'ready')
               ? Container(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+                  padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
                   height: 70,
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: const BorderRadius.only(
-                        topLeft: Radius.circular(30),
-                        topRight: Radius.circular(30)),
+                    borderRadius: const BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30)),
                     boxShadow: [
                       BoxShadow(
                         offset: const Offset(0, -15),
@@ -723,95 +652,97 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                   child: SizedBox(
                     width: 190,
                     height: 40,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0)),
-                          backgroundColor: kPrimaryColor),
-                      onPressed: () async {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: const Text('Thông báo'),
-                              content: Text(
-                                  'Bạn có chắn chắn muốn thanh toán đơn hàng ${widget.orderId} qua ví?'),
-                              actions: [
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: Text('Hủy bỏ'),
-                                ),
-                                TextButton(
-                                  onPressed: () async {
-                                    String result = await orderController
-                                        .paymentOrder(widget.orderId);
-                                    if (result.compareTo("success") == 0) {
-                                      Navigator.of(context).pop();
-                                      showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return AlertDialog(
-                                            title: const Text('Thông báo'),
-                                            content: Text(
-                                                'Đơn hàng của bạn đã được thanh toán thành công!'),
-                                            actions: [
-                                              TextButton(
-                                                onPressed: () {
-                                                  Navigator.of(context).pop();
-                                                  Navigator.push(
-                                                      context,
-                                                      PageTransition(
-                                                          child:
-                                                              OrderDetailScreen(
-                                                            orderId:
-                                                                widget.orderId,
-                                                            status: 'Sẵn sàng',
-                                                          ),
-                                                          type: PageTransitionType
-                                                              .rightToLeftWithFade));
-                                                },
-                                                child: Text('OK'),
-                                              ),
-                                            ],
-                                          );
+                    child: (widget.isPayment == true)
+                        ? ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)), backgroundColor: kPrimaryColor),
+                            onPressed: null,
+                            child: const Text(
+                              'Đã thanh toán',
+                              style: TextStyle(fontSize: 17),
+                            ),
+                          )
+                        : ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)), backgroundColor: kPrimaryColor),
+                            onPressed: () async {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: const Text('Thông báo'),
+                                    content: Text('Bạn có chắn chắn muốn thanh toán đơn hàng ${widget.orderId} qua ví?'),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
                                         },
-                                      );
-                                    } else {
-                                      Navigator.of(context).pop();
-                                      showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return AlertDialog(
-                                            title: const Text('Thông báo'),
-                                            content: Text(
-                                                'Có lỗi xảy ra trong quá trình xử lý thanh toán! Bạn vui lòng thử lại sau. $result'),
-                                            actions: [
-                                              TextButton(
-                                                onPressed: () {
-                                                  Navigator.of(context).pop();
-                                                },
-                                                child: Text('OK'),
-                                              ),
-                                            ],
-                                          );
+                                        child: Text('Hủy bỏ'),
+                                      ),
+                                      TextButton(
+                                        onPressed: () async {
+                                          String result = await orderController.paymentOrder(widget.orderId);
+                                          if (result.compareTo("success") == 0) {
+                                            Navigator.of(context).pop();
+                                            showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return AlertDialog(
+                                                  title: const Text('Thông báo'),
+                                                  content: Text('Đơn hàng của bạn đã được thanh toán thành công!'),
+                                                  actions: [
+                                                    TextButton(
+                                                      onPressed: () {
+                                                        Navigator.of(context).pop();
+                                                        Navigator.push(
+                                                            context,
+                                                            PageTransition(
+                                                                child: OrderDetailScreen(
+                                                                  orderId: widget.orderId,
+                                                                  isPayment: true,
+                                                                  status: 'ready',
+                                                                ),
+                                                                type: PageTransitionType.rightToLeftWithFade));
+                                                      },
+                                                      child: Text('OK'),
+                                                    ),
+                                                  ],
+                                                );
+                                              },
+                                            );
+                                          } else {
+                                            Navigator.of(context).pop();
+                                            showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return AlertDialog(
+                                                  title: const Text('Thông báo'),
+                                                  content: Text('Có lỗi xảy ra trong quá trình xử lý thanh toán! Bạn vui lòng thử lại sau. $result'),
+                                                  actions: [
+                                                    TextButton(
+                                                      onPressed: () {
+                                                        Navigator.of(context).pop();
+                                                      },
+                                                      child: Text('OK'),
+                                                    ),
+                                                  ],
+                                                );
+                                              },
+                                            );
+                                          }
                                         },
-                                      );
-                                    }
-                                  },
-                                  child: Text('Xác nhận thanh toán'),
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      },
-                      child: const Text(
-                        'Thanh toán',
-                        style: TextStyle(fontSize: 17),
-                      ),
-                    ),
+                                        child: Text('Xác nhận thanh toán'),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            },
+                            child: const Text(
+                              'Thanh toán',
+                              style: TextStyle(fontSize: 17),
+                            ),
+                          ),
                   ),
                 )
               : SizedBox(width: 0, height: 0),
@@ -867,8 +798,7 @@ class _BezierPainter extends CustomPainter {
       offset2 = _offset(radius, -angle);
       path = Path()
         ..moveTo(offset1.dx, offset1.dy)
-        ..quadraticBezierTo(0.0, size.height / 2, -radius,
-            radius) // TODO connector start & gradient
+        ..quadraticBezierTo(0.0, size.height / 2, -radius, radius) // TODO connector start & gradient
         ..quadraticBezierTo(0.0, size.height / 2, offset2.dx, offset2.dy)
         ..close();
 
@@ -881,8 +811,7 @@ class _BezierPainter extends CustomPainter {
 
       path = Path()
         ..moveTo(offset1.dx, offset1.dy)
-        ..quadraticBezierTo(size.width, size.height / 2, size.width + radius,
-            radius) // TODO connector end & gradient
+        ..quadraticBezierTo(size.width, size.height / 2, size.width + radius, radius) // TODO connector end & gradient
         ..quadraticBezierTo(size.width, size.height / 2, offset2.dx, offset2.dy)
         ..close();
 
@@ -892,9 +821,7 @@ class _BezierPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(_BezierPainter oldDelegate) {
-    return oldDelegate.color != color ||
-        oldDelegate.drawStart != drawStart ||
-        oldDelegate.drawEnd != drawEnd;
+    return oldDelegate.color != color || oldDelegate.drawStart != drawStart || oldDelegate.drawEnd != drawEnd;
   }
 }
 

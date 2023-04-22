@@ -175,6 +175,7 @@ class _FeedbackOrderScreen extends State<FeedbackOrderScreen> {
                                       PageTransition(
                                           child: OrderDetailScreen(
                                             orderId: widget.orderItem.orderId!,
+                                            isPayment: widget.orderItem.isFeedback!,
                                             status: widget.orderItem.status!,
                                           ),
                                           type: PageTransitionType.fade));

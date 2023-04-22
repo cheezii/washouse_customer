@@ -8,6 +8,8 @@ class Order_Item {
   String? status;
   int? centerId;
   String? centerName;
+  bool? isFeedback;
+  bool? isPayment;
   List<OrderedServices>? orderedServices;
 
   Order_Item(
@@ -20,6 +22,8 @@ class Order_Item {
       this.status,
       this.centerId,
       this.centerName,
+      this.isFeedback,
+      this.isPayment,
       this.orderedServices});
 
   Order_Item.fromJson(Map<String, dynamic> json) {
@@ -32,6 +36,8 @@ class Order_Item {
     status = json['status'];
     centerId = json['centerId'];
     centerName = json['centerName'];
+    isFeedback = json['isFeedback'];
+    isPayment = json['isPayment'];
     if (json['orderedServices'] != null) {
       orderedServices = <OrderedServices>[];
       json['orderedServices'].forEach((v) {
@@ -51,6 +57,8 @@ class Order_Item {
     data['status'] = this.status;
     data['centerId'] = this.centerId;
     data['centerName'] = this.centerName;
+    data['isFeedback'] = this.isFeedback;
+    data['isPayment'] = this.isPayment;
     if (this.orderedServices != null) {
       data['orderedServices'] = this.orderedServices!.map((v) => v.toJson()).toList();
     }
