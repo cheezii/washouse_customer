@@ -27,4 +27,18 @@ class OrderUtils {
     }
     return paymentMethodString;
   }
+
+  String? getTextOfFilterOrderType(String? type) {
+    String? returnString = null;
+    if (type == null) {
+      returnString = 'orderbyme';
+    } else if (type.trim().toLowerCase() == 'đặt bởi tôi') {
+      returnString = 'orderbyme';
+    } else if (type.trim().toLowerCase() == 'đặt hộ tôi') {
+      returnString = 'orderbyanother';
+    } else {
+      returnString = null;
+    }
+    return returnString;
+  }
 }

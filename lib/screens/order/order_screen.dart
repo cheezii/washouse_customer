@@ -21,51 +21,20 @@ class OrderScreen extends StatefulWidget {
   State<OrderScreen> createState() => _OrderScreenState();
 }
 
-class _OrderScreenState extends State<OrderScreen> {
+class _OrderScreenState extends State<OrderScreen> with TickerProviderStateMixin {
   Color filterColor = textColor;
-  String? filterOrder;
-  //late OrderController orderController;
-  //List<Order_Item> orderItems = [];
-  //bool isLoading = false;
+  late String filterOrder;
+  TabController? _tabController;
 
   @override
   void initState() {
     super.initState();
-    //orderController = OrderController(context);
-    // centerArgs = widget.orderId;
-    //getOrderItems();
+    filterOrder = 'Tất cả';
+    _tabController = TabController(initialIndex: 0, length: 6, vsync: this);
   }
-
-  // void getOrderItems() async {
-  //   // Show loading indicator
-  //   setState(() {
-  //     isLoading = true;
-  //   });
-
-  //   try {
-  //     // Wait for getOrderInformation to complete
-  //     List<Order_Item> result = await orderController.getOrderList(1, 100, null, null, null, "pending", null);
-  //     setState(() {
-  //       // Update state with loaded data
-  //       orderItems = result;
-  //       isLoading = false;
-  //     });
-  //   } catch (e) {
-  //     // Handle error
-  //     setState(() {
-  //       isLoading = false;
-  //     });
-  //     print('Error loading data: $e');
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
-    //var orderListPending = orderItems.where((element) => element.status!.toLowerCase().compareTo('pending') == 0).toList();
-    //var orderListConfirmed = orderItems.where((element) => element.status!.toLowerCase().compareTo('confirmed') == 0).toList();
-    //var orderListProcessing = orderItems.where((element) => element.status!.toLowerCase().compareTo('processing') == 0).toList();
-    //print('processing-${orderListProcessing.length}');
-    //var orderListReady = orderItems.where((element) => element.status!.toLowerCase().compareTo('ready') == 0).toList();
     return DefaultTabController(
       initialIndex: 0,
       length: 6,
@@ -74,11 +43,7 @@ class _OrderScreenState extends State<OrderScreen> {
             elevation: 0,
             automaticallyImplyLeading: false,
             backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-            title: const Text('Đơn hàng',
-                style: TextStyle(
-                    color: textColor,
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold)),
+            title: const Text('Đơn hàng', style: TextStyle(color: textColor, fontSize: 30, fontWeight: FontWeight.bold)),
             actions: [
               IconButton(
                   onPressed: () {
@@ -87,11 +52,7 @@ class _OrderScreenState extends State<OrderScreen> {
                   icon: Icon(Icons.filter_alt_outlined, color: filterColor)),
               GestureDetector(
                 onTap: () {
-                  Navigator.push(
-                      context,
-                      PageTransition(
-                          child: const SearchOrderScreen(),
-                          type: PageTransitionType.fade));
+                  Navigator.push(context, PageTransition(child: const SearchOrderScreen(), type: PageTransitionType.fade));
                 },
                 child: const Padding(
                   padding: EdgeInsets.only(right: 16),
@@ -104,11 +65,7 @@ class _OrderScreenState extends State<OrderScreen> {
               ),
               TextButton(
                 onPressed: () {
-                  Navigator.push(
-                      context,
-                      PageTransition(
-                          child: const OrderHistoryScreen(),
-                          type: PageTransitionType.rightToLeftWithFade));
+                  Navigator.push(context, PageTransition(child: const OrderHistoryScreen(), type: PageTransitionType.rightToLeftWithFade));
                 },
                 child: const Text(
                   'Lịch sử',
@@ -116,9 +73,10 @@ class _OrderScreenState extends State<OrderScreen> {
                 ),
               )
             ],
-            bottom: const TabBar(
+            bottom: TabBar(
               unselectedLabelColor: textColor,
-              labelColor: textColor,
+              controller: _tabController,
+              labelColor: Colors.blue,
               isScrollable: true,
               tabs: [
                 Tab(text: 'Tất cả'),
@@ -130,15 +88,24 @@ class _OrderScreenState extends State<OrderScreen> {
               ],
             ),
           ),
-          body: const TabBarView(children: [
-            AllOrderScreen(),
-            OrderPendingScreen(),
-            OrderConfirmedScreen(),
-            OrderReceivedScreen(),
-            OrderProcessingScreen(),
-            OrderReadyScreen(),
+          body: TabBarView(controller: _tabController, children: [
+            AllOrderScreen(filter: filterOrder),
+            OrderPendingScreen(filter: filterOrder),
+            OrderConfirmedScreen(filter: filterOrder),
+            OrderReceivedScreen(filter: filterOrder),
+            OrderProcessingScreen(filter: filterOrder),
+            OrderReadyScreen(filter: filterOrder),
           ])),
     );
+  }
+
+  // Update the filterOrder value and call animateTo() on the TabController
+  void updateFilterOrder(String value) {
+    setState(() {
+      filterOrder = value;
+      print(filterOrder);
+    });
+    _tabController?.animateTo(_tabController!.index); // Reload current tab view
   }
 
   Future<dynamic> showFilterModelBottomSheet(BuildContext context) {
@@ -163,8 +130,7 @@ class _OrderScreenState extends State<OrderScreen> {
                       const Text(
                         'Lọc theo',
                         textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.w600),
+                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
                       ),
                     ],
                   ),
@@ -177,11 +143,9 @@ class _OrderScreenState extends State<OrderScreen> {
                       groupValue: filterOrder,
                       onChanged: (value) {
                         Navigator.pop(context);
+                        updateFilterOrder(value!);
                         setState(() {
-                          filterOrder = value;
-                        });
-                        this.setState(() {
-                          filterColor = kPrimaryColor;
+                          filterOrder = value!;
                         });
                       },
                     ),
@@ -193,8 +157,9 @@ class _OrderScreenState extends State<OrderScreen> {
                       groupValue: filterOrder,
                       onChanged: (value) {
                         Navigator.pop(context);
+                        updateFilterOrder(value!);
                         setState(() {
-                          filterOrder = value;
+                          filterOrder = value!;
                         });
                         this.setState(() {
                           filterColor = kPrimaryColor;
@@ -209,8 +174,9 @@ class _OrderScreenState extends State<OrderScreen> {
                       groupValue: filterOrder,
                       onChanged: (value) {
                         Navigator.pop(context);
+                        updateFilterOrder(value!);
                         setState(() {
-                          filterOrder = value;
+                          filterOrder = value!;
                         });
                         this.setState(() {
                           filterColor = kPrimaryColor;
@@ -225,7 +191,7 @@ class _OrderScreenState extends State<OrderScreen> {
                     child: ElevatedButton(
                       onPressed: () {
                         setState(() {
-                          filterOrder = null;
+                          filterOrder = 'Tất cả';
                           Navigator.pop(context);
                         });
                         this.setState(() {
@@ -233,12 +199,8 @@ class _OrderScreenState extends State<OrderScreen> {
                         });
                       },
                       style: ElevatedButton.styleFrom(
-                          elevation: 0,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30)),
-                          backgroundColor: kPrimaryColor),
-                      child:
-                          const Text('Làm mới', style: TextStyle(fontSize: 17)),
+                          elevation: 0, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)), backgroundColor: kPrimaryColor),
+                      child: const Text('Làm mới', style: TextStyle(fontSize: 17)),
                     ),
                   ),
                 ],

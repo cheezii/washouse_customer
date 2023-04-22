@@ -7,10 +7,13 @@ import 'package:washouse_customer/resource/models/response_models/order_item_lis
 import 'package:washouse_customer/screens/order/component/no_order.dart';
 
 import '../../../../resource/controller/order_controller.dart';
+import '../../../../utils/order_util.dart';
 import '../list_widgets/order_card.dart';
 
 class OrderProcessingScreen extends StatefulWidget {
+  final String? filter;
   const OrderProcessingScreen({
+    required this.filter,
     Key? key,
   }) : super(key: key);
 
@@ -37,9 +40,9 @@ class _OrderProcessingScreenState extends State<OrderProcessingScreen> {
     });
 
     try {
+      var filterString = OrderUtils().getTextOfFilterOrderType(widget.filter);
       // Wait for getOrderInformation to complete
-      List<Order_Item> result = await orderController.getOrderList(
-          1, 100, null, null, null, "processing", null);
+      List<Order_Item> result = await orderController.getOrderList(1, 100, null, null, null, "processing", filterString);
       setState(() {
         // Update state with loaded data
         orderListProcessing = result;
@@ -66,8 +69,7 @@ class _OrderProcessingScreenState extends State<OrderProcessingScreen> {
     // }
     if (isLoading) {
       return Center(
-        child: LoadingAnimationWidget.prograssiveDots(
-            color: kPrimaryColor, size: 50),
+        child: LoadingAnimationWidget.prograssiveDots(color: kPrimaryColor, size: 50),
       );
     } else {
       if (orderListProcessing.isEmpty) {

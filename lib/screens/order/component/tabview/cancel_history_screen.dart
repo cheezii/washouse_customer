@@ -6,11 +6,14 @@ import 'package:washouse_customer/components/constants/text_constants.dart';
 import '../../../../resource/controller/order_controller.dart';
 import '../../../../resource/models/order.dart';
 import '../../../../resource/models/response_models/order_item_list.dart';
+import '../../../../utils/order_util.dart';
 import '../list_widgets/order_card.dart';
 import '../no_order.dart';
 
 class OrderCancelScreen extends StatefulWidget {
+  final String? filter;
   const OrderCancelScreen({
+    required this.filter,
     Key? key,
   }) : super(key: key);
 
@@ -37,9 +40,9 @@ class _OrderCancelScreenState extends State<OrderCancelScreen> {
     });
 
     try {
+      var filterString = OrderUtils().getTextOfFilterOrderType(widget.filter);
       // Wait for getOrderInformation to complete
-      List<Order_Item> result = await orderController.getOrderList(
-          1, 100, null, null, null, "cancelled", null);
+      List<Order_Item> result = await orderController.getOrderList(1, 100, null, null, null, "cancelled", filterString);
       setState(() {
         // Update state with loaded data
         orderListCancelled = result;
@@ -56,21 +59,12 @@ class _OrderCancelScreenState extends State<OrderCancelScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // int counter = 0;
-    // List<Order> cancelList = [];
-    // for (var item in orderList) {
-    //   if (item.status.compareTo('Đã hủy') == 0) {
-    //     counter++;
-    //     cancelList.add(item);
-    //   }
-    // }
     if (isLoading) {
       return CircularProgressIndicator();
     } else {
       if (orderListCancelled.isEmpty) {
         return Center(
-          child: LoadingAnimationWidget.prograssiveDots(
-              color: kPrimaryColor, size: 50),
+          child: LoadingAnimationWidget.prograssiveDots(color: kPrimaryColor, size: 50),
         );
       } else {
         return SingleChildScrollView(

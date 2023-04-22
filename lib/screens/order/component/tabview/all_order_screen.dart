@@ -4,13 +4,16 @@ import 'package:washouse_customer/components/constants/color_constants.dart';
 import 'package:washouse_customer/components/constants/text_constants.dart';
 import 'package:washouse_customer/resource/models/response_models/order_item_list.dart';
 import 'package:washouse_customer/screens/order/component/no_order.dart';
+import 'package:washouse_customer/utils/order_util.dart';
 
 import '../../../../resource/controller/order_controller.dart';
 import '../../../../resource/models/order.dart';
 import '../list_widgets/order_card.dart';
 
 class AllOrderScreen extends StatefulWidget {
+  final String? filter;
   const AllOrderScreen({
+    required this.filter,
     Key? key,
   }) : super(key: key);
 
@@ -37,9 +40,9 @@ class _AllOrderScreenState extends State<AllOrderScreen> {
     });
 
     try {
+      var filterString = OrderUtils().getTextOfFilterOrderType(widget.filter);
       // Wait for getOrderInformation to complete
-      List<Order_Item> result = await orderController.getOrderList(
-          1, 100, null, null, null, null, null);
+      List<Order_Item> result = await orderController.getOrderList(1, 100, null, null, null, null, filterString);
       setState(() {
         // Update state with loaded data
         orderList = result;
@@ -66,8 +69,7 @@ class _AllOrderScreenState extends State<AllOrderScreen> {
     // }
     if (isLoading) {
       return Center(
-        child: LoadingAnimationWidget.prograssiveDots(
-            color: kPrimaryColor, size: 50),
+        child: LoadingAnimationWidget.prograssiveDots(color: kPrimaryColor, size: 50),
       );
     } else {
       if (orderList.isEmpty) {

@@ -7,10 +7,13 @@ import 'package:washouse_customer/screens/order/component/no_order.dart';
 
 import '../../../../resource/controller/order_controller.dart';
 import '../../../../resource/models/order.dart';
+import '../../../../utils/order_util.dart';
 import '../list_widgets/order_card.dart';
 
 class OrderConfirmedScreen extends StatefulWidget {
+  final String? filter;
   const OrderConfirmedScreen({
+    required this.filter,
     Key? key,
   }) : super(key: key);
 
@@ -37,9 +40,9 @@ class _OrderConfirmedScreenState extends State<OrderConfirmedScreen> {
     });
 
     try {
+      var filterString = OrderUtils().getTextOfFilterOrderType(widget.filter);
       // Wait for getOrderInformation to complete
-      List<Order_Item> result = await orderController.getOrderList(
-          1, 100, null, null, null, "confirmed", null);
+      List<Order_Item> result = await orderController.getOrderList(1, 100, null, null, null, "confirmed", filterString);
       setState(() {
         // Update state with loaded data
         orderListConfirmed = result;
@@ -66,8 +69,7 @@ class _OrderConfirmedScreenState extends State<OrderConfirmedScreen> {
     // }
     if (isLoading) {
       return Center(
-        child: LoadingAnimationWidget.prograssiveDots(
-            color: kPrimaryColor, size: 50),
+        child: LoadingAnimationWidget.prograssiveDots(color: kPrimaryColor, size: 50),
       );
     } else {
       if (orderListConfirmed.isEmpty) {

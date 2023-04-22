@@ -6,11 +6,14 @@ import 'package:washouse_customer/components/constants/text_constants.dart';
 import '../../../../resource/controller/order_controller.dart';
 import '../../../../resource/models/order.dart';
 import '../../../../resource/models/response_models/order_item_list.dart';
+import '../../../../utils/order_util.dart';
 import '../no_order.dart';
 import '../list_widgets/order_card.dart';
 
 class OrderCompleteScreen extends StatefulWidget {
+  final String? filter;
   const OrderCompleteScreen({
+    required this.filter,
     Key? key,
   }) : super(key: key);
 
@@ -37,9 +40,9 @@ class _OrderCompleteScreenState extends State<OrderCompleteScreen> {
     });
 
     try {
+      var filterString = OrderUtils().getTextOfFilterOrderType(widget.filter);
       // Wait for getOrderInformation to complete
-      List<Order_Item> result = await orderController.getOrderList(
-          1, 100, null, null, null, "completed", null);
+      List<Order_Item> result = await orderController.getOrderList(1, 100, null, null, null, "completed", filterString);
       setState(() {
         // Update state with loaded data
         orderListCompleted = result;
@@ -56,18 +59,9 @@ class _OrderCompleteScreenState extends State<OrderCompleteScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // int counter = 0;
-
-    // for (var item in orderList) {
-    //   if (item.status.compareTo('Hoàn tất') == 0) {
-    //     counter++;
-    //     orderListCompleted.add(item);
-    //   }
-    // }
     if (isLoading) {
       return Center(
-        child: LoadingAnimationWidget.prograssiveDots(
-            color: kPrimaryColor, size: 50),
+        child: LoadingAnimationWidget.prograssiveDots(color: kPrimaryColor, size: 50),
       );
     } else {
       if (orderListCompleted.isEmpty) {

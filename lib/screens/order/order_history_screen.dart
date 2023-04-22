@@ -17,47 +17,17 @@ class OrderHistoryScreen extends StatefulWidget {
   State<OrderHistoryScreen> createState() => _OrderHistoryScreenState();
 }
 
-class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
+class _OrderHistoryScreenState extends State<OrderHistoryScreen> with TickerProviderStateMixin {
   Color filterColor = textColor;
-  String? filterOrder;
-  //late OrderController orderController;
-  //List<Order_Item> orderCompletedItems = [];
-  //List<Order_Item> orderCancelledItems = [];
-  //bool isLoading = false;
+  late String filterOrder;
+  TabController? _tabController;
 
   @override
   void initState() {
     super.initState();
-    //orderController = OrderController(context);
-    // centerArgs = widget.orderId;
-    //getorderHistoryItems();
+    filterOrder = 'Tất cả';
+    _tabController = TabController(initialIndex: 0, length: 2, vsync: this);
   }
-
-  // void getorderHistoryItems() async {
-  //   // Show loading indicator
-  //   setState(() {
-  //     isLoading = true;
-  //   });
-
-  //   try {
-  //     // Wait for getOrderInformation to complete
-  //     List<Order_Item> completedResult = await orderController.getOrderList(1, 100, null, null, null, "completed", null);
-  //     List<Order_Item> cancelledResult = await orderController.getOrderList(1, 100, null, null, null, "cancelled", null);
-
-  //     setState(() {
-  //       // Update state with loaded data
-  //       orderCompletedItems = completedResult;
-  //       orderCancelledItems = cancelledResult;
-  //       isLoading = false;
-  //     });
-  //   } catch (e) {
-  //     // Handle error
-  //     setState(() {
-  //       isLoading = false;
-  //     });
-  //     print('Error loading data: $e');
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -79,8 +49,7 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
             ),
           ),
           centerTitle: true,
-          title: const Text('Lịch sử giao dịch',
-              style: TextStyle(color: textColor, fontSize: 27)),
+          title: const Text('Lịch sử giao dịch', style: TextStyle(color: textColor, fontSize: 27)),
           actions: [
             IconButton(
                 onPressed: () {
@@ -92,11 +61,7 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
                 )),
             GestureDetector(
               onTap: () {
-                Navigator.push(
-                    context,
-                    PageTransition(
-                        child: const SearchOrderScreen(),
-                        type: PageTransitionType.fade));
+                Navigator.push(context, PageTransition(child: const SearchOrderScreen(), type: PageTransitionType.fade));
               },
               child: const Padding(
                 padding: EdgeInsets.only(right: 16),
@@ -108,16 +73,18 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
               ),
             ),
           ],
-          bottom: const TabBar(
+          bottom: TabBar(
+            controller: _tabController,
             unselectedLabelColor: textColor,
             labelColor: textColor,
             tabs: [Tab(text: 'Đã hoàn thành'), Tab(text: 'Đã hủy')],
           ),
         ),
         body: TabBarView(
+          controller: _tabController,
           children: [
-            OrderCompleteScreen(),
-            OrderCancelScreen(),
+            OrderCompleteScreen(filter: filterOrder),
+            OrderCancelScreen(filter: filterOrder),
           ],
         ),
       ),
@@ -146,8 +113,7 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
                       const Text(
                         'Lọc theo',
                         textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.w600),
+                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
                       ),
                     ],
                   ),
@@ -161,10 +127,8 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
                       onChanged: (value) {
                         Navigator.pop(context);
                         setState(() {
-                          filterOrder = value;
-                        });
-                        this.setState(() {
-                          filterColor = kPrimaryColor;
+                          print(value);
+                          filterOrder = value!;
                         });
                       },
                     ),
@@ -177,7 +141,8 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
                       onChanged: (value) {
                         Navigator.pop(context);
                         setState(() {
-                          filterOrder = value;
+                          print(value);
+                          filterOrder = value!;
                         });
                         this.setState(() {
                           filterColor = kPrimaryColor;
@@ -193,7 +158,7 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
                       onChanged: (value) {
                         Navigator.pop(context);
                         setState(() {
-                          filterOrder = value;
+                          filterOrder = value!;
                         });
                         this.setState(() {
                           filterColor = kPrimaryColor;
@@ -208,7 +173,8 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
                     child: ElevatedButton(
                       onPressed: () {
                         setState(() {
-                          filterOrder = null;
+                          print("Làm mới");
+                          filterOrder = 'Tất cả';
                           Navigator.pop(context);
                         });
                         this.setState(() {
@@ -216,12 +182,8 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
                         });
                       },
                       style: ElevatedButton.styleFrom(
-                          elevation: 0,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30)),
-                          backgroundColor: kPrimaryColor),
-                      child:
-                          const Text('Làm mới', style: TextStyle(fontSize: 17)),
+                          elevation: 0, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)), backgroundColor: kPrimaryColor),
+                      child: const Text('Làm mới', style: TextStyle(fontSize: 17)),
                     ),
                   ),
                 ],
