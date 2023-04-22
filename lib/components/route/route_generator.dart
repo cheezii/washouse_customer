@@ -21,9 +21,7 @@ class RouteGenerator {
         return MaterialPageRoute(
           builder: (context) {
             final arrguments = settings.arguments as ScreenArguments;
-            return ServiceDetailScreen(
-                centerData: arrguments.screen1,
-                serviceData: arrguments.screen2);
+            return ServiceDetailScreen(centerData: arrguments.screen1, serviceData: arrguments.screen2);
             // return ServiceDetailScreen(serviceData: args);
           },
         );
@@ -44,10 +42,10 @@ class RouteGenerator {
         return MaterialPageRoute(
           builder: (context) => GenerateQRCodeScreen(orderID: args),
         );
-      case '/postDetails':
-        return MaterialPageRoute(
-          builder: (context) => PostDetailScreen(postId: args),
-        );
+      // case '/postDetails':
+      //   return MaterialPageRoute(
+      //     builder: (context) => PostDetailScreen(postId: args),
+      //   );
       default:
         return _errorRoute();
     }

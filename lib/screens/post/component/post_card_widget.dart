@@ -39,25 +39,21 @@ class PostCardWidget extends StatelessWidget {
                     topLeft: Radius.circular(10),
                     topRight: Radius.circular(10),
                   ),
-                  image: DecorationImage(
-                      fit: BoxFit.cover, image: AssetImage(image)),
+                  image: DecorationImage(fit: BoxFit.cover, image: NetworkImage(image)),
                 ),
               ),
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                 child: Text(
                   title,
-                  style: const TextStyle(
-                      fontWeight: FontWeight.w600, fontSize: 18),
+                  style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
               const SizedBox(height: 5),
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                 child: Text(
                   content,
                   style: const TextStyle(fontSize: 15, color: textNoteColor),
