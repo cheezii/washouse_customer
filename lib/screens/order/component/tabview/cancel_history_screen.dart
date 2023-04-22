@@ -60,12 +60,12 @@ class _OrderCancelScreenState extends State<OrderCancelScreen> {
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
-      return CircularProgressIndicator();
+      return Center(
+        child: LoadingAnimationWidget.prograssiveDots(color: kPrimaryColor, size: 50),
+      );
     } else {
       if (orderListCancelled.isEmpty) {
-        return Center(
-          child: LoadingAnimationWidget.prograssiveDots(color: kPrimaryColor, size: 50),
-        );
+        return const NoOrderScreen();
       } else {
         return SingleChildScrollView(
           child: Padding(

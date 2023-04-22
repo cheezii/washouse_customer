@@ -45,7 +45,7 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> with TickerProv
             icon: const Icon(
               Icons.arrow_back_ios_new_rounded,
               color: textColor,
-              size: 24,
+              size: 22,
             ),
           ),
           centerTitle: true,
