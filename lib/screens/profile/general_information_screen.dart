@@ -26,8 +26,7 @@ class GeneralInformation extends StatelessWidget {
           ),
         ),
         centerTitle: true,
-        title: const Text('Thông tin chung',
-            style: TextStyle(color: textColor, fontSize: 24)),
+        title: const Text('Thông tin chung', style: TextStyle(color: textColor, fontSize: 24)),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -37,55 +36,43 @@ class GeneralInformation extends StatelessWidget {
             children: const [
               Text(
                 'VÌ SAO NÊN CHỌN SỬ DỤNG DỊCH VỤ TRÊN WASHOUSE?',
-                style: TextStyle(
-                    color: textBoldColor,
-                    fontSize: 23,
-                    fontWeight: FontWeight.w500),
+                style: TextStyle(color: textBoldColor, fontSize: 23, fontWeight: FontWeight.w500),
               ),
               GeneralInformationWidget(
                   isLeft: true,
                   image: 'assets/images/search.png',
                   title: 'Dễ dàng tìm kiếm',
-                  content:
-                      'Dễ dàng và nhanh chóng tìm kiếm được dịch vụ phù hợp với nhu cầu của bạn với nhiều tùy chọn lọc.'),
+                  content: 'Dễ dàng và nhanh chóng tìm kiếm được dịch vụ phù hợp với nhu cầu của bạn với nhiều tùy chọn lọc.'),
               GeneralInformationWidget(
                   isLeft: false,
                   image: 'assets/images/tag.png',
                   title: 'Giá cả hợp lý, rõ ràng',
-                  content:
-                      'Chúng tôi mang đến nhiều loại dịch vụ với giá cả cạnh tranh và hợp lý.' +
-                          '\n\nGiá dịch vụ được hiển thị rõ ràng trên đơn hàng. Bạn sẽ không phải trả thêm bất kỳ khoản chi phí nào.'),
+                  content: 'Chúng tôi mang đến nhiều loại dịch vụ với giá cả cạnh tranh và hợp lý.' +
+                      '\n\nGiá dịch vụ được hiển thị rõ ràng trên đơn hàng. Bạn sẽ không phải trả thêm bất kỳ khoản chi phí nào.'),
               GeneralInformationWidget(
                   isLeft: true,
                   image: 'assets/images/shopping-bag.png',
                   title: 'Thao tác tiện lợi',
-                  content:
-                      'Giao diện thân thiện, thao tác dễ dàng cho phép bạn đặt hàng và thanh toán trực tuyến một cách dễ dàng và nhanh chóng.'),
+                  content: 'Giao diện thân thiện, thao tác dễ dàng cho phép bạn đặt hàng và thanh toán trực tuyến một cách dễ dàng và nhanh chóng.'),
               GeneralInformationWidget(
                   isLeft: false,
                   image: 'assets/images/updated.png',
                   title: 'Cập nhật thường xuyên',
-                  content:
-                      'Trạng thái đơn hàng được cập nhật thường xuyên, giúp bạn có thể theo dõi đơn hàng của mình.'),
+                  content: 'Trạng thái đơn hàng được cập nhật thường xuyên, giúp bạn có thể theo dõi đơn hàng của mình.'),
               GeneralInformationWidget(
                   isLeft: true,
                   image: 'assets/images/coupon.png',
                   title: 'Ưu đãi',
-                  content:
-                      'Cung cấp vouchers giảm giá, các chương trình giảm giá hấp dẫn giúp tiết kiệm chi phí sử dụng dịch vụ.'),
+                  content: 'Cung cấp vouchers giảm giá, các chương trình giảm giá hấp dẫn giúp tiết kiệm chi phí sử dụng dịch vụ.'),
               SizedBox(height: 20),
               Text(
                 'QUY TRÌNH SỬ DỤNG DỊCH VỤ',
-                style: TextStyle(
-                    color: textBoldColor,
-                    fontSize: 23,
-                    fontWeight: FontWeight.w500),
+                style: TextStyle(color: textBoldColor, fontSize: 23, fontWeight: FontWeight.w500),
               ),
               StepFlowWidget(
                 image: 'assets/images/service_flow/step1.png',
                 step: 'Bước 1: Chọn trung tâm',
-                content:
-                    'Lựa chọn trung tâm giặt ủi phù hợp với nhu cầu của bạn nhất.',
+                content: 'Lựa chọn trung tâm giặt ủi phù hợp với nhu cầu của bạn nhất.',
               ),
               StepFlowWidget(
                 image: 'assets/images/service_flow/step2.png',
@@ -103,8 +90,7 @@ class GeneralInformation extends StatelessWidget {
               StepFlowWidget(
                 image: 'assets/images/service_flow/step4.png',
                 step: 'Bước 4: Đánh giá và xếp hạng',
-                content:
-                    'Bạn có thể đánh giá chất lượng dịch vụ thông qua ứng dụng Washouse hoặc thông qua Website Washouse.',
+                content: 'Bạn có thể đánh giá chất lượng dịch vụ thông qua ứng dụng Washouse hoặc thông qua Website Washouse.',
               ),
             ],
           ),

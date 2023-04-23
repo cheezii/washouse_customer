@@ -7,12 +7,7 @@ class GeneralInformationWidget extends StatelessWidget {
   final String image;
   final String title;
   final String content;
-  const GeneralInformationWidget(
-      {super.key,
-      required this.isLeft,
-      required this.image,
-      required this.title,
-      required this.content});
+  const GeneralInformationWidget({super.key, required this.isLeft, required this.image, required this.title, required this.content});
 
   @override
   Widget build(BuildContext context) {
@@ -29,16 +24,13 @@ class GeneralInformationWidget extends StatelessWidget {
                 ),
                 const SizedBox(width: 10),
                 SizedBox(
-                  width: 260,
+                  width: 250,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         title,
-                        style: const TextStyle(
-                            color: textColor,
-                            fontSize: 19,
-                            fontWeight: FontWeight.w500),
+                        style: const TextStyle(color: textColor, fontSize: 19, fontWeight: FontWeight.w500),
                       ),
                       const SizedBox(height: 8),
                       Text(
@@ -47,6 +39,7 @@ class GeneralInformationWidget extends StatelessWidget {
                           color: textColor,
                           fontSize: 16,
                         ),
+                        textAlign: TextAlign.justify,
                       ),
                     ],
                   ),
@@ -56,16 +49,13 @@ class GeneralInformationWidget extends StatelessWidget {
           : Row(
               children: [
                 SizedBox(
-                  width: 260,
+                  width: 250,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Text(
                         title,
-                        style: const TextStyle(
-                            color: textColor,
-                            fontSize: 19,
-                            fontWeight: FontWeight.w500),
+                        style: const TextStyle(color: textColor, fontSize: 19, fontWeight: FontWeight.w500),
                       ),
                       const SizedBox(height: 8),
                       Text(
@@ -74,6 +64,7 @@ class GeneralInformationWidget extends StatelessWidget {
                           color: textColor,
                           fontSize: 16,
                         ),
+                        textAlign: TextAlign.justify,
                       ),
                     ],
                   ),

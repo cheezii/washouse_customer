@@ -6,11 +6,7 @@ class StepFlowWidget extends StatelessWidget {
   final String step;
   final String image;
   final String content;
-  const StepFlowWidget(
-      {super.key,
-      required this.step,
-      required this.image,
-      required this.content});
+  const StepFlowWidget({super.key, required this.step, required this.image, required this.content});
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +32,7 @@ class StepFlowWidget extends StatelessWidget {
               color: textColor,
               fontSize: 16,
             ),
+            textAlign: TextAlign.justify,
           )
         ],
       ),
