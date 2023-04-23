@@ -163,7 +163,7 @@ class _ListNotificationScreenState extends State<ListNotificationScreen> {
         child: FutureBuilder<NotificationResponse>(
           future: getNotifications(),
           builder: (context, snapshot) {
-            if (snapshot.hasData) {
+            if (snapshot.hasData && snapshot.data!.notifications != null) {
               notifications = snapshot.data!.notifications!;
               return ListView.builder(
                 itemCount: notifications.length,
