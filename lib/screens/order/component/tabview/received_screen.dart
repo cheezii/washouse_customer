@@ -43,8 +43,7 @@ class _OrderReceivedScreenState extends State<OrderReceivedScreen> {
     try {
       var filterString = OrderUtils().getTextOfFilterOrderType(widget.filter);
       // Wait for getOrderInformation to complete
-      List<Order_Item> result = await orderController.getOrderList(
-          1, 100, null, null, null, "received", filterString);
+      List<Order_Item> result = await orderController.getOrderList(1, 100, null, null, null, "received", filterString);
       setState(() {
         // Update state with loaded data
         orderListReceived = result;
@@ -84,16 +83,17 @@ class _OrderReceivedScreenState extends State<OrderReceivedScreen> {
     //     );
     //   }
     // }
+    setState(() {
+      filterString = OrderUtils().getTextOfFilterOrderType(widget.filter);
+    });
     return FutureBuilder(
-      future: orderController.getOrderList(
-          1, 100, null, null, null, 'received', filterString),
+      future: orderController.getOrderList(1, 100, null, null, null, 'received', filterString),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(
-            child: LoadingAnimationWidget.prograssiveDots(
-                color: kPrimaryColor, size: 50),
+            child: LoadingAnimationWidget.prograssiveDots(color: kPrimaryColor, size: 50),
           );
-        } else if (snapshot.hasData) {
+        } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
           orderListReceived = snapshot.data!;
           return SingleChildScrollView(
             child: Padding(

@@ -6,6 +6,7 @@ import '../../resource/controller/order_controller.dart';
 import '../../resource/models/response_models/order_detail_information.dart';
 import 'component/details_widget/detail_service.dart';
 import 'search_order_screen.dart';
+import 'package:flutter/src/widgets/basic.dart' as basic;
 
 class CancelDetailScreen extends StatefulWidget {
   final orderId;
@@ -56,8 +57,7 @@ class _CancelDetailScreenState extends State<CancelDetailScreen> {
 
     try {
       // Wait for getOrderInformation to complete
-      Order_Infomation result =
-          await orderController.getOrderInformation(widget.orderId);
+      Order_Infomation result = await orderController.getOrderInformation(widget.orderId);
       setState(() {
         // Update state with loaded data
         order_infomation = result;
@@ -81,7 +81,9 @@ class _CancelDetailScreenState extends State<CancelDetailScreen> {
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
-      return CircularProgressIndicator();
+      return const basic.Center(
+        child: CircularProgressIndicator(),
+      );
     } else {
       String cancelledBy = "";
       String cancelledReason = "";
@@ -119,17 +121,12 @@ class _CancelDetailScreenState extends State<CancelDetailScreen> {
           ),
           title: const Align(
             alignment: Alignment.center,
-            child: Text('Chi tiết đơn hủy',
-                style: TextStyle(color: textColor, fontSize: 27)),
+            child: Text('Chi tiết đơn hủy', style: TextStyle(color: textColor, fontSize: 27)),
           ),
           actions: [
             GestureDetector(
               onTap: () {
-                Navigator.push(
-                    context,
-                    PageTransition(
-                        child: const SearchOrderScreen(),
-                        type: PageTransitionType.fade));
+                Navigator.push(context, PageTransition(child: const SearchOrderScreen(), type: PageTransitionType.fade));
               },
               child: const Padding(
                 padding: EdgeInsets.only(right: 16),
@@ -164,8 +161,7 @@ class _CancelDetailScreenState extends State<CancelDetailScreen> {
                         (order_infomation.orderTrackings != null)
                             ? '${order_infomation.orderTrackings!.firstWhere((element) => (element.status!.trim().toLowerCase().compareTo("cancelled") == 0)).createdDate}'
                             : '',
-                        style: TextStyle(
-                            fontSize: 16, color: Colors.grey.shade600),
+                        style: TextStyle(fontSize: 16, color: Colors.grey.shade600),
                       ),
                     ],
                   ),
@@ -194,15 +190,13 @@ class _CancelDetailScreenState extends State<CancelDetailScreen> {
                       : '',
                 ),
                 Padding(
-                  padding:
-                      const EdgeInsets.only(left: 16, right: 16, bottom: 10),
+                  padding: const EdgeInsets.only(left: 16, right: 16, bottom: 10),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
                         'Lý do',
-                        style: TextStyle(
-                            color: Colors.grey.shade500, fontSize: 15),
+                        style: TextStyle(color: Colors.grey.shade500, fontSize: 15),
                       ),
                       Container(
                         alignment: Alignment.topRight,
@@ -222,8 +216,7 @@ class _CancelDetailScreenState extends State<CancelDetailScreen> {
                     ],
                   ),
                 ),
-                CancelDetailFooter(
-                    from: 'Phương thức thanh toán', to: paymentMethodString),
+                CancelDetailFooter(from: 'Phương thức thanh toán', to: paymentMethodString),
               ],
             ),
           ],

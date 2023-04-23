@@ -31,7 +31,7 @@ class _AllOrderScreenState extends State<AllOrderScreen> {
   void initState() {
     super.initState();
     orderController = OrderController(context);
-    filterString = OrderUtils().getTextOfFilterOrderType(widget.filter);
+
     //getOrderItems();
   }
 
@@ -62,6 +62,9 @@ class _AllOrderScreenState extends State<AllOrderScreen> {
 
   @override
   Widget build(BuildContext context) {
+    setState(() {
+      filterString = OrderUtils().getTextOfFilterOrderType(widget.filter);
+    });
     // int counter = 0;
     // List<Order> shippingList = [];
     // for (var item in orderList) {
@@ -71,15 +74,13 @@ class _AllOrderScreenState extends State<AllOrderScreen> {
     //   }
     // }
     return FutureBuilder(
-      future: orderController.getOrderList(
-          1, 100, null, null, null, null, filterString),
+      future: orderController.getOrderList(1, 100, null, null, null, null, filterString),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(
-            child: LoadingAnimationWidget.prograssiveDots(
-                color: kPrimaryColor, size: 50),
+            child: LoadingAnimationWidget.prograssiveDots(color: kPrimaryColor, size: 50),
           );
-        } else if (snapshot.hasData) {
+        } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
           orderList = snapshot.data!;
           return SingleChildScrollView(
             child: Padding(

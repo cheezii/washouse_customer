@@ -127,8 +127,10 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> with TickerProv
                       onChanged: (value) {
                         Navigator.pop(context);
                         setState(() {
-                          print(value);
                           filterOrder = value!;
+                        });
+                        this.setState(() {
+                          filterColor = textColor;
                         });
                       },
                     ),

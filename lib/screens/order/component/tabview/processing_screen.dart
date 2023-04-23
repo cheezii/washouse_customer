@@ -43,8 +43,7 @@ class _OrderProcessingScreenState extends State<OrderProcessingScreen> {
     try {
       var filterString = OrderUtils().getTextOfFilterOrderType(widget.filter);
       // Wait for getOrderInformation to complete
-      List<Order_Item> result = await orderController.getOrderList(
-          1, 100, null, null, null, "processing", filterString);
+      List<Order_Item> result = await orderController.getOrderList(1, 100, null, null, null, "processing", filterString);
       setState(() {
         // Update state with loaded data
         orderListProcessing = result;
@@ -92,16 +91,17 @@ class _OrderProcessingScreenState extends State<OrderProcessingScreen> {
     //     );
     //   }
     // }
+    setState(() {
+      filterString = OrderUtils().getTextOfFilterOrderType(widget.filter);
+    });
     return FutureBuilder(
-      future: orderController.getOrderList(
-          1, 100, null, null, null, 'processing', filterString),
+      future: orderController.getOrderList(1, 100, null, null, null, 'processing', filterString),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(
-            child: LoadingAnimationWidget.prograssiveDots(
-                color: kPrimaryColor, size: 50),
+            child: LoadingAnimationWidget.prograssiveDots(color: kPrimaryColor, size: 50),
           );
-        } else if (snapshot.hasData) {
+        } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
           orderListProcessing = snapshot.data!;
           return SingleChildScrollView(
             child: Padding(

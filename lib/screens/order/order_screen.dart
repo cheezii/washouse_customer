@@ -147,6 +147,9 @@ class _OrderScreenState extends State<OrderScreen> with TickerProviderStateMixin
                         setState(() {
                           filterOrder = value!;
                         });
+                        this.setState(() {
+                          filterColor = textColor;
+                        });
                       },
                     ),
                   ),
