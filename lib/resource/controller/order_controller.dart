@@ -106,7 +106,7 @@ class OrderController {
     if (response.statusCode == 200) {
       // Request was successful, parse the response body
       dynamic responseData = json.decode(response.body);
-      Provider.of<CartProvider>(context, listen: false).removeCart();
+      await Provider.of<CartProvider>(context, listen: false).removeCart();
       baseController.printAllSharedPreferences();
       // Do something with the response data
       print(responseData);
