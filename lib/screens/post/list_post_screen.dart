@@ -83,7 +83,7 @@ class _ListPostScreenState extends State<ListPostScreen> {
               itemBuilder: ((context, index) {
                 return PostCardWidget(
                   title: postList[index].title!,
-                  content: postList[index].content!,
+                  content: postList[index].description!,
                   image: postList[index].thumbnail!,
                   press: () => Navigator.push(
                       context,

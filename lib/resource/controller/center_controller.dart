@@ -93,9 +93,21 @@ class CenterController {
   }
 
   Future<List<LaundryCenter>> getCenterNearby() async {
-    Position position = await Geolocator.getCurrentPosition();
-    double lat = position.latitude;
-    double long = position.longitude;
+    //Position position = await Geolocator.getCurrentPosition();
+    double lat = 10.8415927;
+    double long = 106.7912079;
+    try {
+      Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+        timeLimit: Duration(seconds: 10),
+      );
+      lat = position.latitude;
+      long = position.longitude;
+      // Use the position here
+    } catch (e) {
+      // Handle the timeout exception here
+      print('Timed out while getting location: $e');
+    }
     Response response = await get(Uri.parse('$baseUrl/centers?Sort=location&CurrentUserLatitude=$lat&CurrentUserLongitude=$long'));
     try {
       if (response.statusCode == 200) {

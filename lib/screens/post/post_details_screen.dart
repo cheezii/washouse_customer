@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 
+import 'package:flutter_html/flutter_html.dart';
 import '../../components/constants/color_constants.dart';
 import '../../resource/models/post.dart';
 
@@ -47,10 +48,11 @@ class PostDetailScreen extends StatelessWidget {
               const SizedBox(height: 15),
               Image.network('${post.thumbnail}'),
               const SizedBox(height: 15),
-              Text(
-                '${post.content}',
-                style: const TextStyle(fontSize: 18, color: textColor),
-              ),
+              Html(data: post.content),
+              // Text(
+              //   '${post.content}',
+              //   style: const TextStyle(fontSize: 18, color: textColor),
+              // ),
             ],
           ),
         ),

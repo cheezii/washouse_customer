@@ -5,17 +5,19 @@ class Post {
   int? id;
   String? title;
   String? content;
+  String? description;
   String? thumbnail;
   String? type;
   String? status;
   String? createdDate;
   String? updatedDate;
 
-  Post({this.id, this.title, this.content, this.thumbnail, this.type, this.status, this.createdDate, this.updatedDate});
+  Post({this.id, this.title, this.content, this.description, this.thumbnail, this.type, this.status, this.createdDate, this.updatedDate});
 
   Post.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     title = json['title'];
+    description = json['description'];
     content = json['content'];
     thumbnail = json['thumbnail'];
     type = json['type'];
@@ -28,6 +30,7 @@ class Post {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
     data['title'] = this.title;
+    data['description'] = this.description;
     data['content'] = this.content;
     data['thumbnail'] = this.thumbnail;
     data['type'] = this.type;
