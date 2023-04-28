@@ -5,7 +5,6 @@ import 'package:page_transition/page_transition.dart';
 import 'package:dio/dio.dart';
 import 'package:skeletons/skeletons.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-
 import 'package:washouse_customer/components/constants/color_constants.dart';
 import 'package:washouse_customer/resource/controller/center_controller.dart';
 import 'package:washouse_customer/resource/controller/location_controller.dart';
@@ -390,11 +389,18 @@ class _HomescreenState extends State<Homescreen> {
                                           ),
                                           const SizedBox(height: 5),
                                           Text(
-                                            postList[index].content!,
+                                            postList[index].description!,
                                             style: const TextStyle(fontSize: 15, color: textNoteColor),
                                             overflow: TextOverflow.ellipsis,
                                             maxLines: 2,
                                           ),
+                                          // OverflowBox(
+                                          //   maxWidth: 20,
+                                          //   child: Html(
+                                          //     data: postList[index].description!,
+                                          //     defaultTextStyle: const TextStyle(fontSize: 15, color: textNoteColor),
+                                          //   ),
+                                          // ),
                                         ],
                                       ),
                                     ),
