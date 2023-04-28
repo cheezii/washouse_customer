@@ -145,7 +145,7 @@ class _OrderScreenState extends State<OrderScreen> with TickerProviderStateMixin
                         Navigator.pop(context);
                         updateFilterOrder(value!);
                         setState(() {
-                          filterOrder = value!;
+                          filterOrder = value;
                         });
                         this.setState(() {
                           filterColor = textColor;
@@ -162,7 +162,7 @@ class _OrderScreenState extends State<OrderScreen> with TickerProviderStateMixin
                         Navigator.pop(context);
                         updateFilterOrder(value!);
                         setState(() {
-                          filterOrder = value!;
+                          filterOrder = value;
                         });
                         this.setState(() {
                           filterColor = kPrimaryColor;
@@ -179,7 +179,7 @@ class _OrderScreenState extends State<OrderScreen> with TickerProviderStateMixin
                         Navigator.pop(context);
                         updateFilterOrder(value!);
                         setState(() {
-                          filterOrder = value!;
+                          filterOrder = value;
                         });
                         this.setState(() {
                           filterColor = kPrimaryColor;
