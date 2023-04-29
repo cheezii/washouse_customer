@@ -162,9 +162,10 @@ class CenterController {
     //   print('error: getCenterDetail: $e');
     // }
     // return center;
+    print(centerId);
     Response response = await get(Uri.parse('$baseUrl/centers/$centerId'));
     LaundryCenter center = LaundryCenter();
-    print(response.statusCode);
+    print(response.body);
     try {
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body)['data'];
