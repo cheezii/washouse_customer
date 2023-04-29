@@ -27,6 +27,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   BaseController baseController = BaseController();
   TextEditingController noteController = TextEditingController();
   int? payment;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -143,7 +144,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                             ),
                             const SizedBox(width: 8),
                             const Text(
-                              'Thanh toán bằng VNPay',
+                              'Thanh toán bằng Ví Washouse',
                               style: TextStyle(fontSize: 16),
                             ),
                           ],

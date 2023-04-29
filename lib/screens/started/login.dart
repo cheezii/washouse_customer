@@ -174,7 +174,8 @@ class _LoginState extends State<Login> {
                             }
                             Customer? currentCustomer = await accountController.getCustomerInfomation(currentUserModel.accountId!);
                             if (currentCustomer != null) {
-                              baseController.saveInttoSharedPreference("CURRENT_CUSTOMER_ID", currentUserModel.accountId!);
+                              baseController.saveInttoSharedPreference("CURRENT_CUSTOMER_ID", currentCustomer.id!);
+                              baseController.saveInttoSharedPreference("CURRENT_WALLET_ID", currentCustomer.walletId);
                             }
                             Navigator.of(context).pop();
                             // ignore: use_build_context_synchronously

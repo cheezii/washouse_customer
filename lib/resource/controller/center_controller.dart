@@ -11,6 +11,7 @@ import 'package:washouse_customer/resource/models/response_models/center_respons
 import 'package:washouse_customer/resource/models/service.dart';
 
 import '../../components/constants/text_constants.dart';
+import '../models/center_operating_time.dart';
 
 BaseController baseController = BaseController();
 
@@ -192,5 +193,22 @@ class CenterController {
       print('get service error: $e');
     }
     return centerName;
+  }
+
+  Future<CenterOperatingTime> getCenterOperatingTime(int centerId) async {
+    Response response = await get(Uri.parse('$baseUrl/centers/$centerId/operating-times'));
+    CenterOperatingTime centerOperatingTime = CenterOperatingTime();
+    print(response.statusCode);
+    try {
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body)['data'];
+        centerOperatingTime = CenterOperatingTime.fromJson(data);
+      } else {
+        throw Exception('Error fetching user data: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('get service error: $e');
+    }
+    return centerOperatingTime;
   }
 }
