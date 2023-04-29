@@ -27,9 +27,20 @@ class CenterController {
   // }
 
   Future<List<LaundryCenter>> getCenterList(FilterCenterRequest filter) async {
-    Position position = await Geolocator.getCurrentPosition();
-    filter.currentUserLatitude = position.latitude;
-    filter.currentUserLongitude = position.longitude;
+    filter.currentUserLatitude = 10.8415927;
+    filter.currentUserLongitude = 106.7912079;
+    try {
+      Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+        timeLimit: Duration(seconds: 10),
+      );
+      filter.currentUserLatitude = position.latitude;
+      filter.currentUserLongitude = position.longitude;
+      // Use the position here
+    } catch (e) {
+      // Handle the timeout exception here
+      print('Timed out while getting location: $e');
+    }
     filter.page = 1;
     filter.pageSize = 1000;
     filter.hasDelivery ??= false;

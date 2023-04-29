@@ -88,8 +88,7 @@ class _CenterDetailScreenState extends State<CenterDetailScreen> {
     LaundryCenter center = widget.centerData;
     int centerId = center.id!;
 
-    var promotions =
-        await promotionController.getPromotionListOfCenter(centerId);
+    var promotions = await promotionController.getPromotionListOfCenter(centerId);
     print(promotions);
     if (promotions.isNotEmpty) {
       setState(() {
@@ -101,9 +100,7 @@ class _CenterDetailScreenState extends State<CenterDetailScreen> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    int listLength = centerDetails.centerServices != null
-        ? centerDetails.centerServices!.length
-        : 0;
+    int listLength = centerDetails.centerServices != null ? centerDetails.centerServices!.length : 0;
 
     return Scaffold(
       body: Stack(
@@ -129,8 +126,7 @@ class _CenterDetailScreenState extends State<CenterDetailScreen> {
                     padding: EdgeInsets.only(left: 16),
                     child: CircleAvatar(
                       backgroundColor: Colors.white,
-                      child: Icon(Icons.arrow_back_ios_new_rounded,
-                          color: Colors.black),
+                      child: Icon(Icons.arrow_back_ios_new_rounded, color: Colors.black),
                     ),
                   ),
                 ),
@@ -177,19 +173,15 @@ class _CenterDetailScreenState extends State<CenterDetailScreen> {
               SliverList(
                 delegate: SliverChildBuilderDelegate(
                   (context, categoryIndex) {
-                    List<Service> items =
-                        centerDetails.centerServices![categoryIndex].services!;
+                    List<Service> items = centerDetails.centerServices![categoryIndex].services!;
                     return Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 10),
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            centerDetails.centerServices![categoryIndex]
-                                .serviceCategoryName!,
-                            style: const TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.w500),
+                            centerDetails.centerServices![categoryIndex].serviceCategoryName!,
+                            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
                           ),
                           Column(
                             children: List.generate(
@@ -198,9 +190,7 @@ class _CenterDetailScreenState extends State<CenterDetailScreen> {
                                 padding: const EdgeInsets.all(5),
                                 child: MenuItemCard(
                                   title: items[index].serviceName!,
-                                  image: items[index].image == null
-                                      ? "none"
-                                      : items[index].image!,
+                                  image: items[index].image == null ? "none" : items[index].image!,
                                   description: items[index].description!,
                                   unit: items[index].unit,
                                   priceType: items[index].priceType!,
@@ -208,12 +198,10 @@ class _CenterDetailScreenState extends State<CenterDetailScreen> {
                                   price: items[index].priceType!
                                       ? '${items[index].prices!.last.price}-${items[index].prices!.first.price}'
                                       : items[index].price!.toString(),
-                                  press: () => Navigator.pushNamed(
-                                      context, '/serviceDetails',
+                                  press: () => Navigator.pushNamed(context, '/serviceDetails',
                                       //   arguments: items[index],
                                       // )
-                                      arguments: ScreenArguments(
-                                          centerArgs, items[index])),
+                                      arguments: ScreenArguments(centerArgs, items[index])),
                                 ),
                               ),
                             ),
@@ -258,8 +246,7 @@ class _CenterDetailScreenState extends State<CenterDetailScreen> {
             Utilities.closeKeyboard(context);
           }
 
-          int currentUserId =
-              await baseController.getInttoSharedPreference("CURRENT_USER_ID");
+          int currentUserId = await baseController.getInttoSharedPreference("CURRENT_USER_ID");
           LaundryCenter center = widget.centerData;
           String groupChatId = "";
 
@@ -272,9 +259,7 @@ class _CenterDetailScreenState extends State<CenterDetailScreen> {
           var fromMsg = await firebaseStore
               .collection(FirestoreConstants.pathMessageCollection)
               .withConverter(
-                  fromFirestore: ((snapshot, _) =>
-                      MessageData.fromDocument(snapshot)),
-                  toFirestore: (MessageData msg, options) => msg.toJson())
+                  fromFirestore: ((snapshot, _) => MessageData.fromDocument(snapshot)), toFirestore: (MessageData msg, options) => msg.toJson())
               .where('idFrom', isEqualTo: currentUserId.toString())
               .where('idTo', isEqualTo: center.id.toString())
               .get();
@@ -282,17 +267,13 @@ class _CenterDetailScreenState extends State<CenterDetailScreen> {
           var toMsg = await firebaseStore
               .collection(FirestoreConstants.pathMessageCollection)
               .withConverter(
-                  fromFirestore: ((snapshot, _) =>
-                      MessageData.fromDocument(snapshot)),
-                  toFirestore: (MessageData msg, options) => msg.toJson())
+                  fromFirestore: ((snapshot, _) => MessageData.fromDocument(snapshot)), toFirestore: (MessageData msg, options) => msg.toJson())
               .where('idFrom', isEqualTo: center.id.toString())
               .where('idTo', isEqualTo: currentUserId.toString())
               .get();
 
-          String currentUserName = await baseController
-              .getStringtoSharedPreference("CURRENT_USER_NAME");
-          String currentUserAvatar = await baseController
-              .getStringtoSharedPreference("CURRENT_USER_AVATAR");
+          String currentUserName = await baseController.getStringtoSharedPreference("CURRENT_USER_NAME");
+          String currentUserAvatar = await baseController.getStringtoSharedPreference("CURRENT_USER_AVATAR");
 
           if (fromMsg.docs.isEmpty && toMsg.docs.isEmpty) {
             var msgData = MessageData(
@@ -311,9 +292,7 @@ class _CenterDetailScreenState extends State<CenterDetailScreen> {
                 .collection(FirestoreConstants.pathMessageCollection)
                 .doc(groupChatId)
                 .withConverter(
-                    fromFirestore: ((snapshot, _) =>
-                        MessageData.fromDocument(snapshot)),
-                    toFirestore: (MessageData msg, options) => msg.toJson())
+                    fromFirestore: ((snapshot, _) => MessageData.fromDocument(snapshot)), toFirestore: (MessageData msg, options) => msg.toJson())
                 .update(msgData.toJson())
                 .then((value) {
               Navigator.push(
@@ -429,19 +408,16 @@ class _CenterDetailScreenState extends State<CenterDetailScreen> {
                               borderRadius: BorderRadius.circular(15),
                             ),
                             builder: ((context) {
-                              List<CenterDeliveryPrice> deliveryPriceList =
-                                  centerDetails.centerDeliveryPrices!;
+                              List<CenterDeliveryPrice> deliveryPriceList = centerDetails.centerDeliveryPrices!;
                               return Container(
                                 height: 500,
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 10, horizontal: 10),
+                                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                                 child: Column(
                                   children: [
                                     Row(
                                       children: [
                                         IconButton(
-                                            icon:
-                                                const Icon(Icons.close_rounded),
+                                            icon: const Icon(Icons.close_rounded),
                                             onPressed: () {
                                               Navigator.pop(context);
                                             }),
@@ -449,48 +425,38 @@ class _CenterDetailScreenState extends State<CenterDetailScreen> {
                                         const Text(
                                           'Bảng giá vận chuyển',
                                           textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.w600),
+                                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
                                         ),
                                       ],
                                     ),
-                                    Divider(
-                                        thickness: 1,
-                                        color: Colors.grey.shade300),
+                                    Divider(thickness: 1, color: Colors.grey.shade300),
                                     const SizedBox(height: 10),
                                     DataTable(
                                       columns: const <DataColumn>[
                                         DataColumn(
                                           label: Text(
                                             'Khoảng cách\ntối đa',
-                                            style: TextStyle(
-                                                fontStyle: FontStyle.italic),
+                                            style: TextStyle(fontStyle: FontStyle.italic),
                                           ),
                                         ),
                                         DataColumn(
                                           label: Text(
                                             'Khối lượng\ntối đa',
-                                            style: TextStyle(
-                                                fontStyle: FontStyle.italic),
+                                            style: TextStyle(fontStyle: FontStyle.italic),
                                           ),
                                         ),
                                         DataColumn(
                                           label: Text(
                                             'Giá',
-                                            style: TextStyle(
-                                                fontStyle: FontStyle.italic),
+                                            style: TextStyle(fontStyle: FontStyle.italic),
                                           ),
                                         ),
                                       ],
                                       rows: deliveryPriceList
                                           .map<DataRow>((e) => DataRow(cells: [
-                                                DataCell(Text(
-                                                    '${e.maxDistance.toString()} km')),
-                                                DataCell(Text(
-                                                    '${e.maxWeight.toString()} kg')),
-                                                DataCell(Text(
-                                                    '${PriceUtils().convertFormatPrice(e.price.round())} đ')),
+                                                DataCell(Text('${e.maxDistance.toString()} km')),
+                                                DataCell(Text('${e.maxWeight.toString()} kg')),
+                                                DataCell(Text('${PriceUtils().convertFormatPrice(e.price.round())} đ')),
                                               ]))
                                           .toList(),
                                     ),
@@ -512,15 +478,12 @@ class _CenterDetailScreenState extends State<CenterDetailScreen> {
                   size: size,
                   icon: 'assets/images/service/coupon.png',
                   title: 'Thông tin khuyến mãi',
-                  pressText: centerDetails.numOfPromotionAvailable == null
-                      ? ''
-                      : '${centerDetails.numOfPromotionAvailable} khuyến mãi',
+                  pressText: centerDetails.numOfPromotionAvailable == null ? '' : '${centerDetails.numOfPromotionAvailable} khuyến mãi',
                   press: () {
                     showModalBottomSheet(
                         context: context,
                         isScrollControlled: true,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20.0)),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
                         builder: (context) => SizedBox(
                               height: 500,
                               child: Column(
@@ -536,60 +499,41 @@ class _CenterDetailScreenState extends State<CenterDetailScreen> {
                                       const Text(
                                         'Mã giảm giá',
                                         textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.w600),
+                                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
                                       ),
                                     ],
                                   ),
-                                  Divider(
-                                      thickness: 1,
-                                      color: Colors.grey.shade300),
+                                  Divider(thickness: 1, color: Colors.grey.shade300),
                                   const SizedBox(height: 10),
                                   isHavePromotion
                                       ? Expanded(
                                           child: ListView.builder(
                                             itemBuilder: ((context, index) {
                                               return Padding(
-                                                padding:
-                                                    const EdgeInsets.all(10),
+                                                padding: const EdgeInsets.all(10),
                                                 child: PromotionWidget(
-                                                  description:
-                                                      displayPromotionList[
-                                                              index]
-                                                          .description!,
-                                                  expiredDate:
-                                                      displayPromotionList[
-                                                              index]
-                                                          .expireDate,
-                                                  code: displayPromotionList[
-                                                          index]
-                                                      .code,
+                                                  description: displayPromotionList[index].description!,
+                                                  expiredDate: displayPromotionList[index].expireDate,
+                                                  code: displayPromotionList[index].code,
                                                   press: () {},
                                                 ),
                                               );
                                             }),
-                                            itemCount:
-                                                displayPromotionList.length,
+                                            itemCount: displayPromotionList.length,
                                           ),
                                         )
                                       : Column(
                                           children: [
                                             Container(
-                                              padding: const EdgeInsets.only(
-                                                  top: 50),
+                                              padding: const EdgeInsets.only(top: 50),
                                               height: 150,
                                               width: 150,
-                                              child: Image.asset(
-                                                  'assets/images/service/coupon.png'),
+                                              child: Image.asset('assets/images/service/coupon.png'),
                                             ),
                                             const SizedBox(height: 20),
                                             Text(
                                               'Không có mã giảm giá nào',
-                                              style: TextStyle(
-                                                  fontSize: 18,
-                                                  color: Colors.grey.shade500,
-                                                  fontWeight: FontWeight.w400),
+                                              style: TextStyle(fontSize: 18, color: Colors.grey.shade500, fontWeight: FontWeight.w400),
                                             )
                                           ],
                                         )
@@ -604,8 +548,7 @@ class _CenterDetailScreenState extends State<CenterDetailScreen> {
                   width: size.width,
                   decoration: BoxDecoration(
                     border: Border(
-                      bottom:
-                          BorderSide(width: 1.0, color: Colors.grey.shade300),
+                      bottom: BorderSide(width: 1.0, color: Colors.grey.shade300),
                     ),
                   ),
                   child: Row(
@@ -623,39 +566,26 @@ class _CenterDetailScreenState extends State<CenterDetailScreen> {
                           ? Row(
                               children: [
                                 Text('${centerArgs.rating}',
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w600,
-                                        color: Colors.grey.shade800)),
+                                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.grey.shade800)),
                                 const SizedBox(width: 5),
                                 const Icon(Icons.circle_rounded, size: 3),
                                 const SizedBox(width: 5),
                                 Text(
                                   '${centerArgs.numOfRating} lượt đánh giá',
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w600,
-                                      color: Colors.grey.shade800),
+                                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.grey.shade800),
                                 )
                               ],
                             )
                           : Text(
                               'Chưa có đánh giá nào',
-                              style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.grey.shade800),
+                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.grey.shade800),
                             ),
                       const Spacer(),
                       isHasRating
                           ? TextButton(
                               onPressed: () {
                                 Navigator.push(
-                                    context,
-                                    PageTransition(
-                                        child: CenterFeedbackScreen(
-                                            centerArg: centerArgs),
-                                        type: PageTransitionType.fade));
+                                    context, PageTransition(child: CenterFeedbackScreen(centerArg: centerArgs), type: PageTransitionType.fade));
                               },
                               child: const Text(
                                 'Xem đánh giá',
@@ -677,8 +607,7 @@ class _CenterDetailScreenState extends State<CenterDetailScreen> {
   Future<dynamic> showDeliveryModalBottomSheet() {
     return showModalBottomSheet(
         context: context,
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
         builder: ((context) {
           return Container(
             height: 500,
@@ -696,8 +625,7 @@ class _CenterDetailScreenState extends State<CenterDetailScreen> {
                     const Text(
                       'Dịch vụ vận chuyển',
                       textAlign: TextAlign.center,
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
                     ),
                   ],
                 ),
@@ -754,18 +682,9 @@ class _CenterDetailScreenState extends State<CenterDetailScreen> {
   Future<dynamic> showInfoModalBottomSheet(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
-    var centerOperatingHoursList =
-        centerArgs.centerOperatingHours as List<CenterOperatingHours>;
+    var centerOperatingHoursList = centerArgs.centerOperatingHours as List<CenterOperatingHours>;
 
-    Map<int, String> weekdayName = {
-      1: "Thứ hai",
-      2: "Thứ ba",
-      3: "Thứ tư",
-      4: "Thứ năm",
-      5: "Thứ sáu",
-      6: "Thứ bảy",
-      0: "Chủ nhật"
-    };
+    Map<int, String> weekdayName = {1: "Thứ hai", 2: "Thứ ba", 3: "Thứ tư", 4: "Thứ năm", 5: "Thứ sáu", 6: "Thứ bảy", 0: "Chủ nhật"};
 
     // print('hello from modal: ${weekdayName[centerOperatingHoursList[1].day]}');
 
@@ -790,8 +709,7 @@ class _CenterDetailScreenState extends State<CenterDetailScreen> {
                     const Text(
                       'Thông tin cửa hàng',
                       textAlign: TextAlign.center,
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
                     ),
                   ],
                 ),
@@ -804,8 +722,7 @@ class _CenterDetailScreenState extends State<CenterDetailScreen> {
                     children: [
                       const Text(
                         'Địa chỉ',
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
+                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 10),
                       Expanded(
@@ -828,44 +745,28 @@ class _CenterDetailScreenState extends State<CenterDetailScreen> {
                   child: ListView.builder(
                       itemCount: centerOperatingHoursList.length,
                       itemBuilder: ((context, index) {
-                        CenterOperatingHours centerOperatingHours =
-                            centerOperatingHoursList[index];
+                        CenterOperatingHours centerOperatingHours = centerOperatingHoursList[index];
                         String? openTime = centerOperatingHours.openTime;
                         String? closedTime = centerOperatingHours.closeTime;
-                        bool isBreakDay = TimeUtils()
-                            .checkBreakDay(openTime ?? "", closedTime ?? "");
-                        bool isNow = TimeUtils()
-                            .checkNowWeekDay(centerOperatingHours.day ?? -1);
+                        bool isBreakDay = TimeUtils().checkBreakDay(openTime ?? "", closedTime ?? "");
+                        bool isNow = TimeUtils().checkNowWeekDay(centerOperatingHours.day ?? -1);
 
                         return Row(
                           children: [
                             Container(
                               width: 170,
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 5, horizontal: 16),
+                              padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 16),
                               child: Text(
                                 weekdayName[centerOperatingHours.day]!,
-                                style: TextStyle(
-                                    color: isNow
-                                        ? Colors.black
-                                        : Colors.grey.shade600,
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 16),
+                                style: TextStyle(color: isNow ? Colors.black : Colors.grey.shade600, fontWeight: FontWeight.w500, fontSize: 16),
                               ),
                             ),
                             isBreakDay
                                 ? Text(
                                     'Đóng cửa',
-                                    style: TextStyle(
-                                        color: closeColor,
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: isNow ? 16 : 14),
+                                    style: TextStyle(color: closeColor, fontWeight: FontWeight.w600, fontSize: isNow ? 16 : 14),
                                   )
-                                : displayTime(
-                                    centerOperatingHours.openTime!,
-                                    centerOperatingHours.closeTime!,
-                                    isNow,
-                                    true),
+                                : displayTime(centerOperatingHours.openTime!, centerOperatingHours.closeTime!, isNow, true),
                           ],
                         );
                       })),
@@ -912,8 +813,7 @@ class _CenterDetailScreenState extends State<CenterDetailScreen> {
     centerOperatingHours = centerArgs.centerOperatingHours![weekdayNow];
     String? openTime = centerArgs.centerOperatingHours![weekdayNow].openTime;
     String? closedTime = centerArgs.centerOperatingHours![weekdayNow].closeTime;
-    bool isBreakDay =
-        TimeUtils().checkBreakDay(openTime ?? "", closedTime ?? "");
+    bool isBreakDay = TimeUtils().checkBreakDay(openTime ?? "", closedTime ?? "");
 
     if (!isBreakDay) {
       if (!TimeUtils().checkCenterStatus(openTime!, closedTime!)) {
@@ -960,9 +860,7 @@ class _CenterDetailScreenState extends State<CenterDetailScreen> {
                     children: [
                       Text(
                         '${centerArgs.distance!} km',
-                        style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            color: Colors.grey.shade600),
+                        style: TextStyle(fontWeight: FontWeight.w600, color: Colors.grey.shade600),
                       ),
                       const SizedBox(width: 5),
                       const Icon(Icons.circle_rounded, size: 3),
@@ -981,14 +879,11 @@ class _CenterDetailScreenState extends State<CenterDetailScreen> {
                       ? Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: const [
-                            Icon(Icons.circle_rounded,
-                                size: 5, color: closeColor),
+                            Icon(Icons.circle_rounded, size: 5, color: closeColor),
                             SizedBox(width: 5),
                             Text(
                               'Đóng cửa',
-                              style: TextStyle(
-                                  color: closeColor,
-                                  fontWeight: FontWeight.w600),
+                              style: TextStyle(color: closeColor, fontWeight: FontWeight.w600),
                             ),
                           ],
                         )
@@ -996,14 +891,11 @@ class _CenterDetailScreenState extends State<CenterDetailScreen> {
                           ? Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                const Icon(Icons.circle_rounded,
-                                    size: 5, color: almostCloseColor),
+                                const Icon(Icons.circle_rounded, size: 5, color: almostCloseColor),
                                 const SizedBox(width: 5),
                                 const Text(
                                   'Sắp đóng cửa',
-                                  style: TextStyle(
-                                      color: almostCloseColor,
-                                      fontWeight: FontWeight.w600),
+                                  style: TextStyle(color: almostCloseColor, fontWeight: FontWeight.w600),
                                 ),
                                 const SizedBox(width: 5),
                                 const Icon(Icons.circle_rounded, size: 3),
@@ -1025,8 +917,7 @@ class _CenterDetailScreenState extends State<CenterDetailScreen> {
                                           color: Colors.grey.shade500,
                                         ),
                                         const SizedBox(width: 5),
-                                        displayTime(openTime!, closedTime!,
-                                            false, false)
+                                        displayTime(openTime!, closedTime!, false, false)
                                       ],
                                     ),
                                     const Spacer(),
@@ -1040,9 +931,7 @@ class _CenterDetailScreenState extends State<CenterDetailScreen> {
                                         const SizedBox(width: 5),
                                         Text(
                                           centerArgs.phone!,
-                                          style: TextStyle(
-                                              color: Colors.grey.shade600,
-                                              fontSize: 16),
+                                          style: TextStyle(color: Colors.grey.shade600, fontSize: 16),
                                         )
                                       ],
                                     )
@@ -1051,20 +940,16 @@ class _CenterDetailScreenState extends State<CenterDetailScreen> {
                               : Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    const Icon(Icons.circle_rounded,
-                                        size: 5, color: closeColor),
+                                    const Icon(Icons.circle_rounded, size: 5, color: closeColor),
                                     const SizedBox(width: 5),
                                     const Text(
                                       'Đóng cửa',
-                                      style: TextStyle(
-                                          color: closeColor,
-                                          fontWeight: FontWeight.w600),
+                                      style: TextStyle(color: closeColor, fontWeight: FontWeight.w600),
                                     ),
                                     const SizedBox(width: 5),
                                     const Icon(Icons.circle_rounded, size: 3),
                                     const SizedBox(width: 5),
-                                    Text(
-                                        'Mở cửa vào ${TimeUtils().getDisplayName(openTime!)}'),
+                                    Text('Mở cửa vào ${TimeUtils().getDisplayName(openTime!)}'),
                                   ],
                                 )
                 ],
@@ -1076,29 +961,22 @@ class _CenterDetailScreenState extends State<CenterDetailScreen> {
     );
   }
 
-  Row displayTime(
-      String openTime, String closeTime, bool isNow, bool isShowInfo) {
+  Row displayTime(String openTime, String closeTime, bool isNow, bool isShowInfo) {
     return Row(children: [
       Text(
         TimeUtils().getDisplayName(openTime),
-        style: TextStyle(
-            color: isNow ? Colors.black : Colors.grey.shade600,
-            fontWeight: isShowInfo ? FontWeight.w500 : FontWeight.normal,
-            fontSize: 16),
+        style:
+            TextStyle(color: isNow ? Colors.black : Colors.grey.shade600, fontWeight: isShowInfo ? FontWeight.w500 : FontWeight.normal, fontSize: 16),
       ),
       Text(
         ' - ',
-        style: TextStyle(
-            color: isNow ? Colors.black : Colors.grey.shade600,
-            fontWeight: isShowInfo ? FontWeight.w500 : FontWeight.normal,
-            fontSize: 16),
+        style:
+            TextStyle(color: isNow ? Colors.black : Colors.grey.shade600, fontWeight: isShowInfo ? FontWeight.w500 : FontWeight.normal, fontSize: 16),
       ),
       Text(
         TimeUtils().getDisplayName(closeTime),
-        style: TextStyle(
-            color: isNow ? Colors.black : Colors.grey.shade600,
-            fontWeight: isShowInfo ? FontWeight.w500 : FontWeight.normal,
-            fontSize: 16),
+        style:
+            TextStyle(color: isNow ? Colors.black : Colors.grey.shade600, fontWeight: isShowInfo ? FontWeight.w500 : FontWeight.normal, fontSize: 16),
       ),
     ]);
   }

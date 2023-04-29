@@ -21,7 +21,7 @@ class BoxInfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 25),
+      padding: const EdgeInsets.symmetric(horizontal: 20),
       height: 50,
       width: size.width,
       decoration: BoxDecoration(

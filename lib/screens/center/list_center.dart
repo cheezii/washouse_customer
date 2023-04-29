@@ -83,10 +83,7 @@ class _ListCenterScreenState extends State<ListCenterScreen> {
 
   void suggestionList(String value) {
     setState(() {
-      suggesCenter = allCenter
-          .where((element) =>
-              element.title!.toLowerCase().contains(value.toLowerCase()))
-          .toList();
+      suggesCenter = allCenter.where((element) => element.title!.toLowerCase().contains(value.toLowerCase())).toList();
     });
   }
 
@@ -166,11 +163,7 @@ class _ListCenterScreenState extends State<ListCenterScreen> {
           onPressed: () {
             widget.isNearby
                 ? Navigator.pop(context)
-                : Navigator.push(
-                    context,
-                    PageTransition(
-                        child: const BaseScreen(),
-                        type: PageTransitionType.leftToRightWithFade));
+                : Navigator.push(context, PageTransition(child: const BaseScreen(), type: PageTransitionType.leftToRightWithFade));
           },
           icon: const Icon(
             Icons.arrow_back_rounded,
@@ -189,25 +182,16 @@ class _ListCenterScreenState extends State<ListCenterScreen> {
                 ),
                 onSubmitted: (value) {
                   Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => ListCenterScreen(
-                              pageName: value,
-                              isNearby: false,
-                              isSearch: true)));
+                      context, MaterialPageRoute(builder: (context) => ListCenterScreen(pageName: value, isNearby: false, isSearch: true)));
                 },
               )
-            : Text(widget.pageName!,
-                style: const TextStyle(color: textColor, fontSize: 23)),
+            : Text(widget.pageName!, style: const TextStyle(color: textColor, fontSize: 23)),
         actions: [
           widget.isSearch
               ? IconButton(
                   onPressed: () {
                     if (searchController.text.isEmpty) {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const BaseScreen()));
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => const BaseScreen()));
                     } else {
                       searchController.text = '';
                     }
@@ -220,13 +204,9 @@ class _ListCenterScreenState extends State<ListCenterScreen> {
                 )
               : IconButton(
                   onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const SearchCenterScreen()));
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => const SearchCenterScreen()));
                   },
-                  icon: const Icon(Icons.search_rounded,
-                      color: textColor, size: 30),
+                  icon: const Icon(Icons.search_rounded, color: textColor, size: 30),
                 ),
         ],
       ),
@@ -278,9 +258,7 @@ class _ListCenterScreenState extends State<ListCenterScreen> {
                       const SizedBox(width: 15),
                       Text(
                         'Lọc theo:',
-                        style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            color: Colors.grey.shade600),
+                        style: TextStyle(fontWeight: FontWeight.w600, color: Colors.grey.shade600),
                       ),
                       const SizedBox(width: 15),
                       GestureDetector(
@@ -388,8 +366,7 @@ class _ListCenterScreenState extends State<ListCenterScreen> {
                       const SizedBox(width: 15),
                       GestureDetector(
                         onTap: () {
-                          if (boxOnlinePaymentColor.value ==
-                              selectedColor.value) {
+                          if (boxOnlinePaymentColor.value == selectedColor.value) {
                             setState(() {
                               boxOnlinePaymentColor = Colors.white;
                               _filter.hasOnlinePayment = false;
@@ -447,12 +424,8 @@ class _ListCenterScreenState extends State<ListCenterScreen> {
                       shrinkWrap: true,
                       itemCount: centerList.length,
                       itemBuilder: ((context, index) {
-                        var centerCategoriesName = centerList[index]
-                            .centerServices!
-                            .toList()
-                            .map((service) => service.serviceCategoryName);
-                        bool hasRating =
-                            centerList[index].rating != null ? true : false;
+                        var centerCategoriesName = centerList[index].centerServices!.toList().map((service) => service.serviceCategoryName);
+                        bool hasRating = centerList[index].rating != null ? true : false;
                         return Padding(
                           padding: const EdgeInsets.symmetric(vertical: 10),
                           child: CenterContainer(
@@ -462,8 +435,8 @@ class _ListCenterScreenState extends State<ListCenterScreen> {
                             distance: centerList[index].distance!,
                             // rating: hasRating ? centerList[index].rating! : null,
                             // hasRating: hasRating,
-                            rating: 4.1,
-                            hasRating: true,
+                            rating: centerList[index].rating,
+                            hasRating: (centerList[index].rating != null),
                             isOpening: centerList[index].isOpening!,
                             centerCategoriesName: centerCategoriesName,
                             press: () => Navigator.pushNamed(
@@ -482,8 +455,7 @@ class _ListCenterScreenState extends State<ListCenterScreen> {
                         SizedBox(height: 20),
                         Text(
                           'Oops',
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold),
+                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                         ),
                         SizedBox(height: 7),
                         Text(
@@ -563,8 +535,7 @@ class _ListCenterScreenState extends State<ListCenterScreen> {
                     SizedBox(height: 17),
                     Text(
                       ' - ',
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
                     ),
                   ],
                 ),
@@ -611,8 +582,7 @@ class _ListCenterScreenState extends State<ListCenterScreen> {
                   height: 45,
                   child: ElevatedButton(
                     onPressed: () {
-                      if (minBudgetController.text.isNotEmpty ||
-                          maxBudgetController.text.isNotEmpty) {
+                      if (minBudgetController.text.isNotEmpty || maxBudgetController.text.isNotEmpty) {
                         minBudgetController.clear();
                         maxBudgetController.clear();
                         _filter.budgetRange = null;
@@ -628,11 +598,9 @@ class _ListCenterScreenState extends State<ListCenterScreen> {
                     style: ElevatedButton.styleFrom(
                         side: const BorderSide(color: kPrimaryColor),
                         elevation: 0,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30)),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
                         backgroundColor: Colors.white),
-                    child: const Text('Hủy',
-                        style: TextStyle(fontSize: 17, color: kPrimaryColor)),
+                    child: const Text('Hủy', style: TextStyle(fontSize: 17, color: kPrimaryColor)),
                   ),
                 ),
                 SizedBox(
@@ -668,8 +636,7 @@ class _ListCenterScreenState extends State<ListCenterScreen> {
                               actions: <Widget>[
                                 TextButton(
                                   style: TextButton.styleFrom(
-                                    textStyle:
-                                        Theme.of(context).textTheme.labelLarge,
+                                    textStyle: Theme.of(context).textTheme.labelLarge,
                                   ),
                                   child: const Text('Tôi hiểu rồi'),
                                   onPressed: () {
@@ -682,18 +649,14 @@ class _ListCenterScreenState extends State<ListCenterScreen> {
                         );
                       } else {
                         setState(() {
-                          budgetRange =
-                              '${minBudgetController.text} - ${maxBudgetController.text}';
+                          budgetRange = '${minBudgetController.text} - ${maxBudgetController.text}';
                           boxRangeColor = selectedColor;
                         });
                         Navigator.pop(context);
                       }
                     },
                     style: ElevatedButton.styleFrom(
-                        elevation: 0,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30)),
-                        backgroundColor: kPrimaryColor),
+                        elevation: 0, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)), backgroundColor: kPrimaryColor),
                     child: const Text('Đồng ý', style: TextStyle(fontSize: 17)),
                   ),
                 ),
@@ -705,8 +668,7 @@ class _ListCenterScreenState extends State<ListCenterScreen> {
     );
   }
 
-  Future<dynamic> showFilterCateModalBottomSheet(
-      BuildContext context, Size size) {
+  Future<dynamic> showFilterCateModalBottomSheet(BuildContext context, Size size) {
     return showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -742,10 +704,7 @@ class _ListCenterScreenState extends State<ListCenterScreen> {
                     centerTitle: true,
                     title: Text(
                       'Loại dịch vụ',
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 20,
-                          fontWeight: FontWeight.w600),
+                      style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.w600),
                     ),
                   ),
                 ),
@@ -760,11 +719,8 @@ class _ListCenterScreenState extends State<ListCenterScreen> {
                                 setState(() {
                                   Navigator.pop(context);
                                   cateListChoose.add(cateList[index]);
-                                  filterCate =
-                                      'Loại dịch vụ (${cateListChoose.length})';
-                                  _filter.categoryServices = cateListChoose
-                                      .map((cate) => cate.id.toString())
-                                      .join(',');
+                                  filterCate = 'Loại dịch vụ (${cateListChoose.length})';
+                                  _filter.categoryServices = cateListChoose.map((cate) => cate.id.toString()).join(',');
                                 });
                                 this.setState(() {
                                   boxCateColor = selectedColor;
@@ -774,11 +730,8 @@ class _ListCenterScreenState extends State<ListCenterScreen> {
                                   Navigator.pop(context);
                                   cateListChoose.remove(cateList[index]);
                                   this.setState(() {
-                                    filterCate =
-                                        'Loại dịch vụ (${cateListChoose.length})';
-                                    _filter.categoryServices = cateListChoose
-                                        .map((cate) => cate.id.toString())
-                                        .join(',');
+                                    filterCate = 'Loại dịch vụ (${cateListChoose.length})';
+                                    _filter.categoryServices = cateListChoose.map((cate) => cate.id.toString()).join(',');
 
                                     print(_filter.categoryServices);
                                     if (cateListChoose.length == 0) {
@@ -862,12 +815,8 @@ class _ListCenterScreenState extends State<ListCenterScreen> {
                       });
                     },
                     style: ElevatedButton.styleFrom(
-                        elevation: 0,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30)),
-                        backgroundColor: kPrimaryColor),
-                    child:
-                        const Text('Làm mới', style: TextStyle(fontSize: 17)),
+                        elevation: 0, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)), backgroundColor: kPrimaryColor),
+                    child: const Text('Làm mới', style: TextStyle(fontSize: 17)),
                   ),
                 ),
               ),
@@ -900,8 +849,7 @@ class _ListCenterScreenState extends State<ListCenterScreen> {
                       const Text(
                         'Sắp xếp theo',
                         textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.w600),
+                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
                       ),
                     ],
                   ),
@@ -960,12 +908,8 @@ class _ListCenterScreenState extends State<ListCenterScreen> {
                         });
                       },
                       style: ElevatedButton.styleFrom(
-                          elevation: 0,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30)),
-                          backgroundColor: kPrimaryColor),
-                      child:
-                          const Text('Làm mới', style: TextStyle(fontSize: 17)),
+                          elevation: 0, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)), backgroundColor: kPrimaryColor),
+                      child: const Text('Làm mới', style: TextStyle(fontSize: 17)),
                     ),
                   ),
                 ],
