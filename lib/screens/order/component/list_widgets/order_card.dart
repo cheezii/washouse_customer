@@ -16,7 +16,7 @@ class OrderedCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 230,
+      height: 245,
       width: double.infinity,
       child: Card(
         shape: RoundedRectangleBorder(

@@ -25,7 +25,7 @@ class _FeedbackToServiceScreenState extends State<FeedbackToServiceScreen> {
   @override
   Widget build(BuildContext context) {
     if (widget.list.isEmpty) {
-      return const NoFeedbackScreen(type: 'trung tâm');
+      return const NoFeedbackScreen(type: 'dịch vụ');
     } else {
       return ListView.separated(
         padding: const EdgeInsets.only(bottom: 8.0, top: 8.0),

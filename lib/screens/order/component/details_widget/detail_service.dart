@@ -20,7 +20,7 @@ class _DetailServiceState extends State<DetailService> {
   Widget build(BuildContext context) {
     Order_Infomation orderInfo = widget.order_information;
     List<CartItem> cartItems = Provider.of<CartProvider>(context).cartItems;
-    print(orderInfo.customerAddress);
+    String status = orderInfo.status!;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
@@ -35,7 +35,8 @@ class _DetailServiceState extends State<DetailService> {
               const SizedBox(width: 6),
               Text(
                 orderInfo.center!.centerName!,
-                style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 20),
+                style:
+                    const TextStyle(fontWeight: FontWeight.w500, fontSize: 20),
               )
             ],
           ),
@@ -45,12 +46,12 @@ class _DetailServiceState extends State<DetailService> {
             child: ListView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
-              //itemCount: demoCarts.length,
               itemCount: orderInfo.orderedDetails!.length,
               itemBuilder: (context, index) {
                 return DetailItemCard(
                   //cart: demoCarts[index],
                   cart: orderInfo.orderedDetails![index],
+                  isProcessing: status == 'processing' ? true : false,
                 );
               },
             ),

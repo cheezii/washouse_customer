@@ -6,22 +6,26 @@ import 'package:washouse_customer/screens/profile/components/no_feedback.dart';
 
 import '../../resource/models/feedback.dart';
 
-class FeedbackToCenterScreen extends StatefulWidget {
+class FeedbackToOrderScreen extends StatefulWidget {
   final List<FeedbackModel> list;
   final String name;
   final String avatar;
-  const FeedbackToCenterScreen({super.key, required this.list, required this.name, required this.avatar});
+  const FeedbackToOrderScreen(
+      {super.key,
+      required this.list,
+      required this.name,
+      required this.avatar});
 
   @override
-  State<FeedbackToCenterScreen> createState() => _FeedbackToCenterScreenState();
+  State<FeedbackToOrderScreen> createState() => _FeedbackToOrderScreenState();
 }
 
-class _FeedbackToCenterScreenState extends State<FeedbackToCenterScreen> {
+class _FeedbackToOrderScreenState extends State<FeedbackToOrderScreen> {
   bool isMore = false;
   @override
   Widget build(BuildContext context) {
     if (widget.list.isEmpty) {
-      return const NoFeedbackScreen(type: 'trung tâm');
+      return const NoFeedbackScreen(type: 'đơn hàng');
     } else {
       return ListView.separated(
         padding: const EdgeInsets.only(bottom: 8.0, top: 8.0),
