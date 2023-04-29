@@ -153,7 +153,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         const SizedBox(height: 10),
                         ProfileWidget(
                           icon: Icons.wallet_rounded,
-                          title: 'Ví của tôi',
+                          title: 'Ví Washouse',
                           txtColor: textColor,
                           iconColor: textColor,
                           press: () {

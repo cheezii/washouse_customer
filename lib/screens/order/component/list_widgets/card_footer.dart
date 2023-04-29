@@ -20,72 +20,94 @@ class CardFooter extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        (orderItem.status!.trim().toLowerCase() == 'completed' &&
-                orderItem.isFeedback == false)
-            ? GestureDetector(
-                onTap: () {
+        (orderItem.status!.trim().toLowerCase() == 'completed')
+            //&& orderItem.isFeedback == false)
+            ?
+            // GestureDetector(
+            //     onTap: () {
+            //       Navigator.push(
+            //           context,
+            //           PageTransition(
+            //               child: FeedbackOrderScreen(orderItem: orderItem),
+            //               type: PageTransitionType.fade));
+            //     },
+            //     child: Container(
+            //       alignment: Alignment.bottomRight,
+            //       decoration: BoxDecoration(
+            //         border: Border.all(color: kPrimaryColor),
+            //         borderRadius: BorderRadius.circular(20),
+            //         color: kPrimaryColor,
+            //       ),
+            //       child: const Padding(
+            //         padding:
+            //             EdgeInsets.only(top: 9, bottom: 9, right: 20, left: 20),
+            //         child: Text(
+            //           'Viết đánh giá',
+            //           style: TextStyle(color: Colors.white),
+            //         ),
+            //       ),
+            //     ),
+            //   )
+            ElevatedButton(
+                onPressed: () {
                   Navigator.push(
                       context,
                       PageTransition(
                           child: FeedbackOrderScreen(orderItem: orderItem),
                           type: PageTransitionType.fade));
                 },
-                child: Container(
-                  alignment: Alignment.bottomRight,
-                  decoration: BoxDecoration(
-                    border: Border.all(color: kPrimaryColor),
-                    borderRadius: BorderRadius.circular(20),
-                    color: kPrimaryColor,
-                  ),
-                  child: const Padding(
-                    padding:
-                        EdgeInsets.only(top: 9, bottom: 9, right: 20, left: 20),
-                    child: Text(
-                      'Viết đánh giá',
-                      style: TextStyle(color: Colors.white),
+                style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsetsDirectional.symmetric(
+                        horizontal: 20, vertical: 9),
+                    //foregroundColor: kPrimaryColor.withOpacity(.7),
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                      side: const BorderSide(color: kPrimaryColor, width: 1),
                     ),
-                  ),
+                    backgroundColor: kPrimaryColor),
+                child: Text(
+                  orderItem.isFeedback == false
+                      ? 'Viết đánh giá'
+                      : 'Xem đánh giá',
+                  style: const TextStyle(color: Colors.white),
                 ),
-              )
-            : Container(),
-        (orderItem.status!.trim().toLowerCase() == 'completed' &&
-                orderItem.isFeedback == true)
-            ? GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      PageTransition(
-                          child: FeedbackOrderScreen(orderItem: orderItem),
-                          type: PageTransitionType.fade));
-                },
-                child: Container(
-                  alignment: Alignment.bottomRight,
-                  decoration: BoxDecoration(
-                    border: Border.all(color: kPrimaryColor),
-                    borderRadius: BorderRadius.circular(20),
-                    color: kPrimaryColor,
-                  ),
-                  child: const Padding(
-                    padding:
-                        EdgeInsets.only(top: 9, bottom: 9, right: 20, left: 20),
-                    child: Text(
-                      'Xem đánh giá',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                ),
-              )
-            : Container(),
-        orderItem.status!.trim().toLowerCase() == 'cancelled'
-            ? Text(
-                'Đã huỷ',
-                style: TextStyle(color: cancelledColor),
               )
             : Container(),
         (orderItem.status!.trim().toLowerCase() == 'ready' &&
                 orderItem.isPayment == false)
-            ? GestureDetector(
-                onTap: () {
+            ?
+            // GestureDetector(
+            //     onTap: () {
+            //       Navigator.push(
+            //           context,
+            //           PageTransition(
+            //               child: OrderDetailScreen(
+            //                 orderId: orderItem.orderId!,
+            //                 isPayment: orderItem.isPayment!,
+            //                 status: orderItem.status!.toLowerCase(),
+            //               ),
+            //               type: PageTransitionType.rightToLeftWithFade));
+            //     },
+            //     child: Container(
+            //       alignment: Alignment.bottomRight,
+            //       decoration: BoxDecoration(
+            //         border: Border.all(color: kPrimaryColor),
+            //         borderRadius: BorderRadius.circular(20),
+            //         color: kPrimaryColor,
+            //       ),
+            //       child: const Padding(
+            //         padding:
+            //             EdgeInsets.only(top: 9, bottom: 9, right: 20, left: 20),
+            //         child: Text(
+            //           'Thanh toán bằng ví',
+            //           style: TextStyle(color: Colors.white),
+            //         ),
+            //       ),
+            //     ),
+            //   )
+            ElevatedButton(
+                onPressed: () {
                   Navigator.push(
                       context,
                       PageTransition(
@@ -96,27 +118,89 @@ class CardFooter extends StatelessWidget {
                           ),
                           type: PageTransitionType.rightToLeftWithFade));
                 },
-                child: Container(
-                  alignment: Alignment.bottomRight,
-                  decoration: BoxDecoration(
-                    border: Border.all(color: kPrimaryColor),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: const Padding(
-                    padding:
-                        EdgeInsets.only(top: 9, bottom: 9, right: 20, left: 20),
-                    child: Text(
-                      'Thanh toán bằng ví',
-                      style: TextStyle(color: textColor),
+                style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsetsDirectional.symmetric(
+                        horizontal: 20, vertical: 9),
+                    //foregroundColor: kPrimaryColor.withOpacity(.7),
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                      side: BorderSide(color: kPrimaryColor, width: 1),
                     ),
-                  ),
+                    backgroundColor: kPrimaryColor),
+                child: const Text(
+                  'Thanh toán bằng ví',
+                  style: TextStyle(color: Colors.white),
                 ),
               )
             : Container(),
         (orderItem.status!.trim().toLowerCase() == 'ready' &&
                 orderItem.isPayment == true)
-            ? GestureDetector(
-                onTap: () {
+            ?
+            // GestureDetector(
+            //     onTap: () {
+            //       Navigator.push(
+            //           context,
+            //           PageTransition(
+            //               child: OrderDetailScreen(
+            //                 orderId: orderItem.orderId!,
+            //                 isPayment: orderItem.isPayment!,
+            //                 status: orderItem.status!.toLowerCase(),
+            //               ),
+            //               type: PageTransitionType.rightToLeftWithFade));
+            //     },
+            //     child: Container(
+            //       alignment: Alignment.bottomRight,
+            //       decoration: BoxDecoration(
+            //         border: Border.all(color: kPrimaryColor),
+            //         borderRadius: BorderRadius.circular(20),
+            //       ),
+            //       child: const Padding(
+            //         padding:
+            //             EdgeInsets.only(top: 9, bottom: 9, right: 20, left: 20),
+            //         child:
+            const Text(
+                'Đã thanh toán',
+                style: TextStyle(color: textColor),
+              )
+            //   ),
+            // ),
+            //)
+            : Container(),
+        (orderItem.status!.trim().toLowerCase() == 'pending' ||
+                orderItem.status!.trim().toLowerCase() == 'confirmed')
+            ?
+            // GestureDetector(
+            //     onTap: () {
+            //       Navigator.push(
+            //           context,
+            //           PageTransition(
+            //               child: OrderDetailScreen(
+            //                 orderId: orderItem.orderId!,
+            //                 isPayment: orderItem.isFeedback!,
+            //                 status: orderItem.status!.toLowerCase(),
+            //               ),
+            //               type: PageTransitionType.rightToLeftWithFade));
+            //     },
+            //     child: Container(
+            //       alignment: Alignment.bottomRight,
+            //       decoration: BoxDecoration(
+            //         border: Border.all(color: cancelledColor),
+            //         borderRadius: BorderRadius.circular(20),
+            //         color: cancelledColor,
+            //       ),
+            //       child: const Padding(
+            //         padding:
+            //             EdgeInsets.only(top: 9, bottom: 9, right: 20, left: 20),
+            //         child: Text(
+            //           'Hủy đơn',
+            //           style: TextStyle(color: Colors.white),
+            //         ),
+            //       ),
+            //     ),
+            //   )
+            ElevatedButton(
+                onPressed: () {
                   Navigator.push(
                       context,
                       PageTransition(
@@ -127,83 +211,103 @@ class CardFooter extends StatelessWidget {
                           ),
                           type: PageTransitionType.rightToLeftWithFade));
                 },
-                child: Container(
-                  alignment: Alignment.bottomRight,
-                  decoration: BoxDecoration(
-                    border: Border.all(color: kPrimaryColor),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: const Padding(
-                    padding:
-                        EdgeInsets.only(top: 9, bottom: 9, right: 20, left: 20),
-                    child: Text(
-                      'Đã thanh toán',
-                      style: TextStyle(color: textColor),
+                style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsetsDirectional.symmetric(
+                        horizontal: 20, vertical: 9),
+                    //foregroundColor: cancelledColor.withOpacity(.5),
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                      side: BorderSide(color: cancelledColor, width: 1),
                     ),
-                  ),
-                ),
-              )
-            : Container(),
-        (orderItem.status!.trim().toLowerCase() == 'pending' ||
-                orderItem.status!.trim().toLowerCase() == 'confirmed')
-            ? GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      PageTransition(
-                          child: OrderDetailScreen(
-                            orderId: orderItem.orderId!,
-                            isPayment: orderItem.isFeedback!,
-                            status: orderItem.status!.toLowerCase(),
-                          ),
-                          type: PageTransitionType.rightToLeftWithFade));
-                },
-                child: Container(
-                  alignment: Alignment.bottomRight,
-                  decoration: BoxDecoration(
-                    border: Border.all(color: cancelledColor),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                        top: 9, bottom: 9, right: 20, left: 20),
-                    child: Text(
-                      'Hủy đơn',
-                      style: TextStyle(color: cancelledColor),
-                    ),
-                  ),
+                    backgroundColor: cancelledColor),
+                child: const Text(
+                  'Hủy đơn',
+                  style: TextStyle(color: Colors.white),
                 ),
               )
             : Container(),
         const Spacer(),
         orderItem.status!.trim().toLowerCase() == 'cancelled'
-            ? GestureDetector(
-                // onTap: () {
-                //   Navigator.push(context, PageTransition(child: CancelDetailScreen(orderId: orderItem.orderId!), type: PageTransitionType.rightToLeftWithFade));
-                // },
-                onTap: () => Navigator.pushNamed(
+            ?
+            // GestureDetector(
+            //     // onTap: () {
+            //     //   Navigator.push(context, PageTransition(child: CancelDetailScreen(orderId: orderItem.orderId!), type: PageTransitionType.rightToLeftWithFade));
+            //     // },
+            //     onTap: () => Navigator.pushNamed(
+            //       context,
+            //       '/cancelDetailScreen',
+            //       arguments: orderItem.orderId!,
+            //     ),
+            //     child: Container(
+            //       alignment: Alignment.bottomRight,
+            //       decoration: BoxDecoration(
+            //         border: Border.all(color: cancelledColor),
+            //         borderRadius: BorderRadius.circular(20),
+            //       ),
+            //       child: Padding(
+            //         padding: const EdgeInsets.only(
+            //             top: 9, bottom: 9, right: 20, left: 20),
+            //         child: Text(
+            //           'Chi tiết đơn hủy',
+            //           style: TextStyle(color: cancelledColor),
+            //         ),
+            //       ),
+            //     ),
+            //   )
+            ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                      side: BorderSide(color: cancelledColor, width: 1),
+                    ),
+                    backgroundColor: Colors.white),
+                onPressed: () => Navigator.pushNamed(
                   context,
                   '/cancelDetailScreen',
                   arguments: orderItem.orderId!,
                 ),
-                child: Container(
-                  alignment: Alignment.bottomRight,
-                  decoration: BoxDecoration(
-                    border: Border.all(color: cancelledColor),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                        top: 9, bottom: 9, right: 20, left: 20),
-                    child: Text(
-                      'Chi tiết đơn hủy',
-                      style: TextStyle(color: cancelledColor),
-                    ),
-                  ),
+                child: Text(
+                  'Chi tiết đơn hủy',
+                  style: TextStyle(color: cancelledColor),
                 ),
               )
-            : GestureDetector(
-                onTap: () {
+            :
+            // GestureDetector(
+            //     onTap: () {
+            //       Navigator.push(
+            //           context,
+            //           PageTransition(
+            //               child: OrderDetailScreen(
+            //                 orderId: orderItem.orderId!,
+            //                 isPayment: orderItem.isFeedback!,
+            //                 status: orderItem.status!.toLowerCase(),
+            //               ),
+            //               type: PageTransitionType.rightToLeftWithFade));
+            //     },
+            //     child: Container(
+            //       alignment: Alignment.bottomRight,
+            //       decoration: BoxDecoration(
+            //         border: Border.all(color: kPrimaryColor),
+            //         borderRadius: BorderRadius.circular(20),
+            //       ),
+            //       child: const Padding(
+            //         padding:
+            //             EdgeInsets.only(top: 9, bottom: 9, right: 20, left: 20),
+            //         child: Text('Xem chi tiết'),
+            //       ),
+            //     ),
+            //   ),
+            ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                      side: const BorderSide(color: kPrimaryColor, width: 1),
+                    ),
+                    backgroundColor: Colors.white),
+                onPressed: () {
                   Navigator.push(
                       context,
                       PageTransition(
@@ -214,17 +318,9 @@ class CardFooter extends StatelessWidget {
                           ),
                           type: PageTransitionType.rightToLeftWithFade));
                 },
-                child: Container(
-                  alignment: Alignment.bottomRight,
-                  decoration: BoxDecoration(
-                    border: Border.all(color: kPrimaryColor),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: const Padding(
-                    padding:
-                        EdgeInsets.only(top: 9, bottom: 9, right: 20, left: 20),
-                    child: Text('Xem chi tiết'),
-                  ),
+                child: const Text(
+                  'Xem chi tiết',
+                  style: TextStyle(color: kPrimaryColor),
                 ),
               ),
       ],

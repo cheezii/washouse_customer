@@ -10,33 +10,20 @@ import '../../../../resource/models/cart_item.dart';
 
 class DetailItemCard extends StatelessWidget {
   final OrderedDetails cart;
+  final bool isProcessing;
   const DetailItemCard({
     super.key,
     required this.cart,
+    required this.isProcessing,
   });
 
   @override
   Widget build(BuildContext context) {
     //List<CartItem> cartItems = Provider.of<CartProvider>(context).cartItems;
     return Padding(
-      padding: const EdgeInsets.only(bottom: 5),
+      padding: const EdgeInsets.only(bottom: 8),
       child: Row(
         children: [
-          // SizedBox(
-          //   width: 80,
-          //   child: AspectRatio(
-          //     aspectRatio: 0.88,
-          //     child: Container(
-          //       padding: const EdgeInsets.all(10),
-          //       decoration: BoxDecoration(
-          //         color: const Color(0xfff5f6f9),
-          //         borderRadius: BorderRadius.circular(15),
-          //       ),
-          //       //child: Image.asset(cart.service.image!),
-          //       child: cart.image != null ? Image.network(cart.image!) : Image.asset('assets/images/service/washnfold.png'),
-          //     ),
-          //   ),
-          // ),
           ClipRRect(
             borderRadius: BorderRadius.circular(10),
             child: Image.network(
@@ -65,46 +52,97 @@ class DetailItemCard extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 20),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(
-                  width: 200,
-                  child: Text(
-                    //cart.service.name!,
-                    cart.serviceName!,
-                    style: const TextStyle(
-                        fontSize: 17,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold),
-                    maxLines: 2,
+          isProcessing
+              ? Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        width: 200,
+                        child: Text(
+                          //cart.service.name!,
+                          cart.serviceName!,
+                          style: const TextStyle(
+                              fontSize: 17,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold),
+                          maxLines: 2,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Row(
+                        children: [
+                          Text(
+                            cart.unit!.compareTo('Kg') == 0
+                                ? 'KL: x${cart.measurement} kg'
+                                : 'SL: x${cart.measurement!.round()} ${cart.unit!.toLowerCase()}',
+                            style:
+                                const TextStyle(color: textColor, fontSize: 16),
+                          ),
+                          const Spacer(),
+                          const Text(
+                            'Trạng thái',
+                            style: TextStyle(
+                                color: kPrimaryColor,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500),
+                          )
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        //'${PriceUtils().convertFormatPrice(cart.service.price!.round() * cart.measurement)} đ',
+                        '${PriceUtils().convertFormatPrice(cart.price!.round())} đ',
+                        style: const TextStyle(
+                          color: kPrimaryColor,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 15,
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              : Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        width: 200,
+                        child: Text(
+                          //cart.service.name!,
+                          cart.serviceName!,
+                          style: const TextStyle(
+                              fontSize: 17,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold),
+                          maxLines: 2,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Row(
+                        children: [
+                          Text(
+                            cart.unit!.compareTo('Kg') == 0
+                                ? 'KL: x${cart.measurement} kg'
+                                : 'SL: x${cart.measurement!.round()} ${cart.unit!.toLowerCase()}',
+                            style:
+                                const TextStyle(color: textColor, fontSize: 16),
+                          ),
+                          const Spacer(),
+                          Text(
+                            //'${PriceUtils().convertFormatPrice(cart.service.price!.round() * cart.measurement)} đ',
+                            '${PriceUtils().convertFormatPrice(cart.price!.round())} đ',
+                            style: const TextStyle(
+                              color: kPrimaryColor,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15,
+                            ),
+                          )
+                        ],
+                      ),
+                    ],
                   ),
                 ),
-                const SizedBox(height: 8),
-                Row(
-                  children: [
-                    Text(
-                      cart.unit!.compareTo('Kg') == 0
-                          ? 'KL: x${cart.measurement} kg'
-                          : 'SL: x${cart.measurement!.round()} ${cart.unit!.toLowerCase()}',
-                      style: const TextStyle(color: textColor, fontSize: 16),
-                    ),
-                    const Spacer(),
-                    Text(
-                      //'${PriceUtils().convertFormatPrice(cart.service.price!.round() * cart.measurement)} đ',
-                      '${PriceUtils().convertFormatPrice(cart.price!.round())} đ',
-                      style: const TextStyle(
-                        color: kPrimaryColor,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 15,
-                      ),
-                    )
-                  ],
-                ),
-              ],
-            ),
-          ),
         ],
       ),
     );

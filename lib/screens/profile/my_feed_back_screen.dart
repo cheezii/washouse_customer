@@ -1,6 +1,9 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:washouse_customer/resource/controller/account_controller.dart';
-import 'package:washouse_customer/screens/profile/feedback_center_screen.dart';
+import 'package:washouse_customer/screens/profile/feedback_order_screen.dart';
 import 'package:washouse_customer/screens/profile/feedback_service_screen.dart';
 
 import '../../components/constants/color_constants.dart';
@@ -47,8 +50,10 @@ class _MyFeedbackScreenState extends State<MyFeedbackScreen> {
       isLoading = true;
     });
     try {
-      final name = await baseController.getStringtoSharedPreference("CURRENT_USER_NAME");
-      final avatar = await baseController.getStringtoSharedPreference("CURRENT_USER_AVATAR");
+      final name =
+          await baseController.getStringtoSharedPreference("CURRENT_USER_NAME");
+      final avatar = await baseController
+          .getStringtoSharedPreference("CURRENT_USER_AVATAR");
       setState(() {
         _currentUserName = name != "" ? name : "Undentified Name";
         _currentUserAvartar = avatar != ""
@@ -77,13 +82,43 @@ class _MyFeedbackScreenState extends State<MyFeedbackScreen> {
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
-      return CircularProgressIndicator();
+      return Stack(
+        fit: StackFit.expand,
+        children: [
+          Positioned.fill(
+            child: BackdropFilter(
+              filter: ImageFilter.blur(
+                sigmaX: 10.0,
+                sigmaY: 10.0,
+              ),
+              child: Container(
+                color: Colors.black.withOpacity(0.2),
+              ),
+            ),
+          ),
+          Positioned(
+            child: Center(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                width: 100,
+                height: 100,
+                child: LoadingAnimationWidget.threeRotatingDots(
+                    color: kPrimaryColor, size: 50),
+              ),
+            ),
+          )
+        ],
+      );
     } else {
       var _listOrder = _list;
       var _listService = _list;
       if (_list != null) {
         _listOrder = _list.where((element) => element.orderId != null).toList();
-        _listService = _list.where((element) => element.serviceId != null).toList();
+        _listService =
+            _list.where((element) => element.serviceId != null).toList();
       }
       return DefaultTabController(
         initialIndex: 0,
@@ -103,7 +138,8 @@ class _MyFeedbackScreenState extends State<MyFeedbackScreen> {
               ),
             ),
             centerTitle: true,
-            title: const Text('Đánh giá của tôi', style: TextStyle(color: textColor, fontSize: 25)),
+            title: const Text('Đánh giá của tôi',
+                style: TextStyle(color: textColor, fontSize: 25)),
             bottom: const TabBar(
               unselectedLabelColor: textColor,
               labelColor: textColor,
@@ -112,8 +148,14 @@ class _MyFeedbackScreenState extends State<MyFeedbackScreen> {
           ),
           body: TabBarView(
             children: [
-              FeedbackToCenterScreen(list: _listOrder, name: _currentUserName, avatar: _currentUserAvartar!),
-              FeedbackToServiceScreen(list: _listService, name: _currentUserName, avatar: _currentUserAvartar!),
+              FeedbackToOrderScreen(
+                  list: _listOrder,
+                  name: _currentUserName,
+                  avatar: _currentUserAvartar!),
+              FeedbackToServiceScreen(
+                  list: _listService,
+                  name: _currentUserName,
+                  avatar: _currentUserAvartar!),
             ],
           ),
         ),

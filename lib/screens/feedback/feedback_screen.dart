@@ -20,6 +20,7 @@ class FeedbackOrderScreen extends StatefulWidget {
 class _FeedbackOrderScreen extends State<FeedbackOrderScreen> {
   FeedbackController feedbackController = FeedbackController();
   int _rating = 0;
+  int _serviceRating = 0;
   String content = "";
   TextEditingController _textEditingController = TextEditingController();
   @override
@@ -38,23 +39,9 @@ class _FeedbackOrderScreen extends State<FeedbackOrderScreen> {
             size: 24,
           ),
         ),
-        title: const Align(
-          alignment: Alignment.center,
-          child: Text('Đánh giá đơn hàng', style: TextStyle(color: textColor, fontSize: 27)),
-        ),
-        actions: [
-          GestureDetector(
-            onTap: () {},
-            child: const Padding(
-              padding: EdgeInsets.only(right: 16),
-              child: Icon(
-                Icons.filter_alt_rounded,
-                color: kBackgroundColor,
-                size: 30,
-              ),
-            ),
-          ),
-        ],
+        centerTitle: true,
+        title: const Text('Đánh giá đơn hàng',
+            style: TextStyle(color: textColor, fontSize: 27)),
       ),
       body: Padding(
         padding: const EdgeInsets.only(top: 10, left: 16, right: 16),
@@ -83,10 +70,12 @@ class _FeedbackOrderScreen extends State<FeedbackOrderScreen> {
               itemSize: 30,
               itemPadding: const EdgeInsets.symmetric(horizontal: 4),
               initialRating: 0,
-              allowHalfRating: false, // Set this to false to allow integer ratings only
+              allowHalfRating:
+                  false, // Set this to false to allow integer ratings only
               onRatingUpdate: (rating) {
                 setState(() {
-                  _rating = rating.round(); // Round the rating to the nearest integer
+                  _rating =
+                      rating.round(); // Round the rating to the nearest integer
                 });
               },
             ),
@@ -105,7 +94,8 @@ class _FeedbackOrderScreen extends State<FeedbackOrderScreen> {
                   controller: _textEditingController,
                   decoration: InputDecoration(
                     hintText: 'Nhập nội dung đánh giá',
-                    contentPadding: const EdgeInsets.only(top: 8, left: 8, right: 8, bottom: 8),
+                    contentPadding: const EdgeInsets.only(
+                        top: 8, left: 8, right: 8, bottom: 8),
                     enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(
                         color: Colors.grey.shade600,
@@ -128,7 +118,8 @@ class _FeedbackOrderScreen extends State<FeedbackOrderScreen> {
         height: 70,
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: const BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30)),
+          borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(30), topRight: Radius.circular(30)),
           boxShadow: [
             BoxShadow(
               offset: const Offset(0, -15),
@@ -141,29 +132,38 @@ class _FeedbackOrderScreen extends State<FeedbackOrderScreen> {
           width: 190,
           height: 40,
           child: ElevatedButton(
-            style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)), backgroundColor: kPrimaryColor),
+            style: ElevatedButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0)),
+                backgroundColor: kPrimaryColor),
             onPressed: (_rating == 0 || content.trim() == "")
                 ? null
                 : () async {
                     String message =
-                        await feedbackController.createFeedbackOrder(widget.orderItem.orderId!, widget.orderItem.centerId!, content, _rating);
+                        await feedbackController.createFeedbackOrder(
+                            widget.orderItem.orderId!,
+                            widget.orderItem.centerId!,
+                            content,
+                            _rating);
                     if (message == "success") {
                       // ignore: use_build_context_synchronously
                       showDialog(
                         context: context,
                         builder: (BuildContext context) {
                           return AlertDialog(
-                            title: const Text('Bạn đã đánh giá đơn hàng thành công'),
+                            title: const Text(
+                                'Bạn đã đánh giá đơn hàng thành công'),
                             content: Column(
+                              mainAxisSize: MainAxisSize.min,
                               children: [
-                                SizedBox(height: 10),
-                                Icon(
-                                  Icons.check_circle_outline,
-                                  size: 48,
-                                  color: Colors.green,
+                                SizedBox(
+                                  height: 100,
+                                  width: 100,
+                                  child:
+                                      Image.asset('assets/images/firework.png'),
                                 ),
-                                SizedBox(height: 10),
-                                Text('Cảm ơn bạn đã đánh giá đơn hàng'),
+                                const SizedBox(height: 10),
+                                const Text('Cảm ơn bạn đã đánh giá đơn hàng.'),
                               ],
                             ),
                             actions: [
@@ -175,7 +175,8 @@ class _FeedbackOrderScreen extends State<FeedbackOrderScreen> {
                                       PageTransition(
                                           child: OrderDetailScreen(
                                             orderId: widget.orderItem.orderId!,
-                                            isPayment: widget.orderItem.isFeedback!,
+                                            isPayment:
+                                                widget.orderItem.isFeedback!,
                                             status: widget.orderItem.status!,
                                           ),
                                           type: PageTransitionType.fade));
