@@ -8,14 +8,17 @@ import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:washouse_customer/resource/controller/base_controller.dart';
+import 'package:washouse_customer/resource/controller/center_controller.dart';
 import 'package:washouse_customer/resource/controller/order_controller.dart';
 
 import 'package:washouse_customer/screens/cart/information/shipping/fill_shipping_address.dart';
 
 import '../../../../components/constants/color_constants.dart';
 import '../../../../components/constants/text_constants.dart';
+import '../../../../resource/models/center_operating_time.dart';
 import '../../../../resource/provider/cart_provider.dart';
 import '../../../../resource/models/cart_item.dart';
+import '../../../../utils/custom_timer_picker_util.dart';
 import '../../checkout_screen.dart';
 
 class FillShippingInformation extends StatefulWidget {
@@ -35,6 +38,7 @@ class _FillShippingInformationState extends State<FillShippingInformation> {
   final _dropDownSendWardKey = GlobalKey<FormBuilderFieldState>();
   final _dropDownReceiveWardKey = GlobalKey<FormBuilderFieldState>();
   BaseController baseController = BaseController();
+  CenterController centerController = CenterController();
   TextEditingController sendAdressController = TextEditingController();
   TextEditingController receiveAdressController = TextEditingController();
   GlobalKey<FormState> _formSendAddressKey = GlobalKey<FormState>();
@@ -50,6 +54,12 @@ class _FillShippingInformationState extends State<FillShippingInformation> {
   String? sendWard;
   String? receiveDistrict;
   String? receiveWard;
+  int? h, m;
+  TimeOfDay? minToday;
+  TimeOfDay? maxToday;
+  TimeOfDay? minTomorrow;
+  TimeOfDay? maxTomorrow;
+  int? _centerId;
 
   List districtList = [];
   List wardList = [];
@@ -65,6 +75,32 @@ class _FillShippingInformationState extends State<FillShippingInformation> {
       });
     } else {
       throw Exception("Lỗi khi load Json");
+    }
+  }
+
+  Future getCenterOperatingTime() async {
+    CenterOperatingTime centerOperatingTime;
+    var centerId = await baseController.getInttoSharedPreference("centerId");
+    print('centerId $centerId');
+    var _centerOperatingTime = await centerController.getCenterOperatingTime(centerId);
+    if (_centerOperatingTime.operatingTimes != null) {
+      DateTime now = DateTime.now();
+      int dayOfWeek = now.weekday;
+
+// Set Sunday as 0 and Saturday as 6
+      //dayOfWeek = (dayOfWeek + 6) % 7;
+      var today = _centerOperatingTime.operatingTimes!.firstWhere((element) => element.day! == dayOfWeek);
+      var tomorrow = _centerOperatingTime.operatingTimes!.firstWhere((element) => element.day! == ((dayOfWeek + 1) % 7));
+      setState(() {
+        _centerId = centerId;
+        if (today.closeTime != null) {
+          maxToday = TimeOfDay(hour: int.parse(today.closeTime!.substring(0, 2)), minute: int.parse(today.closeTime!.substring(3, 5)));
+        }
+        if (tomorrow.openTime != null) {
+          minTomorrow = TimeOfDay(hour: int.parse(tomorrow.openTime!.substring(0, 2)), minute: int.parse(tomorrow.openTime!.substring(3, 5)));
+        }
+        print(minTomorrow);
+      });
     }
   }
 
@@ -84,6 +120,7 @@ class _FillShippingInformationState extends State<FillShippingInformation> {
   @override
   void initState() {
     getDistrictList();
+    getCenterOperatingTime();
     super.initState();
   }
 
@@ -196,52 +233,110 @@ class _FillShippingInformationState extends State<FillShippingInformation> {
                             },
                           ),
                         ),
-                        SizedBox(
-                          width: 120,
-                          height: 40,
-                          child: ElevatedButton(
-                            onPressed: () async {
-                              TimeOfDay? orderTime = await showTimePicker(context: context, initialTime: TimeOfDay.now());
-                              if (orderTime != null) {
-                                setState(() {
-                                  sendOrderTime = '${orderTime.hour}:${orderTime.minute}';
-                                });
-                                String hourSave = orderTime.hour.toString().padLeft(2, '0');
-                                String minuteSave = orderTime.minute.toString().padLeft(2, '0');
-                                String secondSave = '00';
-                                String sendOrderTimeSave = '$hourSave:$minuteSave:$secondSave';
-                                baseController.saveStringtoSharedPreference("preferredDropoffTime_Time", sendOrderTimeSave);
-                                print(await baseController.getStringtoSharedPreference("preferredDropoffTime_Time"));
-                              }
-                            },
-                            style: ElevatedButton.styleFrom(
-                              padding: const EdgeInsetsDirectional.symmetric(horizontal: 19, vertical: 10),
-                              foregroundColor: kPrimaryColor.withOpacity(.7),
-                              elevation: 0,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                side: const BorderSide(color: textColor, width: 1),
-                              ),
-                              backgroundColor: kBackgroundColor,
-                            ),
-                            child: Row(
-                              children: [
-                                Text(
-                                  sendOrderTime,
-                                  style: TextStyle(
-                                    color: Colors.grey.shade600,
-                                  ),
+                        // SizedBox(
+                        //   width: 120,
+                        //   height: 40,
+                        //   child: ElevatedButton(
+                        //     onPressed: () async {
+                        //       TimeOfDay? orderTime = await showTimePicker(context: context, initialTime: TimeOfDay.now());
+                        //       if (orderTime != null) {
+                        //         setState(() {
+                        //           sendOrderTime = '${orderTime.hour}:${orderTime.minute}';
+                        //         });
+                        //         String hourSave = orderTime.hour.toString().padLeft(2, '0');
+                        //         String minuteSave = orderTime.minute.toString().padLeft(2, '0');
+                        //         String secondSave = '00';
+                        //         String sendOrderTimeSave = '$hourSave:$minuteSave:$secondSave';
+                        //         baseController.saveStringtoSharedPreference("preferredDropoffTime_Time", sendOrderTimeSave);
+                        //         print(await baseController.getStringtoSharedPreference("preferredDropoffTime_Time"));
+                        //       }
+                        //     },
+                        //     style: ElevatedButton.styleFrom(
+                        //       padding: const EdgeInsetsDirectional.symmetric(horizontal: 19, vertical: 10),
+                        //       foregroundColor: kPrimaryColor.withOpacity(.7),
+                        //       elevation: 0,
+                        //       shape: RoundedRectangleBorder(
+                        //         borderRadius: BorderRadius.circular(10),
+                        //         side: const BorderSide(color: textColor, width: 1),
+                        //       ),
+                        //       backgroundColor: kBackgroundColor,
+                        //     ),
+                        //     child: Row(
+                        //       children: [
+                        //         Text(
+                        //           sendOrderTime,
+                        //           style: TextStyle(
+                        //             color: Colors.grey.shade600,
+                        //           ),
+                        //         ),
+                        //         const Spacer(),
+                        //         Icon(
+                        //           Icons.watch_later_outlined,
+                        //           size: 20,
+                        //           color: Colors.grey.shade600,
+                        //         )
+                        //       ],
+                        //     ),
+                        //   ),
+                        // ),
+                        sendOrderDate != null
+                            ? Center(
+                                child: Column(
+                                  children: [
+                                    sendOrderDate!.compareTo("Hôm nay") == 0
+                                        ?
+
+                                        /// wrap with sizedBOx
+                                        SizedBox(
+                                            height: 200,
+                                            child: CustomTimerPicker(
+                                              intiTimeOfDay: TimeOfDay.now(),
+                                              maxTimeOfDay: maxToday,
+                                              onChanged: (selectedHour, selectedMinute) async {
+                                                setState(() {
+                                                  h = selectedHour;
+                                                  m = selectedMinute;
+                                                });
+                                                debugPrint("H: $selectedHour minute: $selectedMinute");
+                                                String hourSave = h.toString().padLeft(2, '0');
+                                                String minuteSave = m.toString().padLeft(2, '0');
+                                                String secondSave = '00';
+                                                String sendOrderTimeSave = '$hourSave:$minuteSave:$secondSave';
+                                                baseController.saveStringtoSharedPreference("preferredDropoffTime_Time", sendOrderTimeSave);
+                                                print(await baseController.getStringtoSharedPreference("preferredDropoffTime_Time"));
+                                              },
+                                            ),
+                                          )
+                                        : SizedBox(
+                                            height: 200,
+                                            child: CustomTimerPicker(
+                                              intiTimeOfDay: minTomorrow, // Giờ bắt đầu ngày mai
+                                              maxTimeOfDay: TimeOfDay.now().replacing(
+                                                hour: TimeOfDay.now().hour + 24 >= 24 ? TimeOfDay.now().hour + 24 - 24 : TimeOfDay.now().hour + 24,
+                                                minute: TimeOfDay.now().minute,
+                                              ), // Giờ này 24 tiếng sau.
+                                              onChanged: (selectedHour, selectedMinute) async {
+                                                setState(() {
+                                                  h = selectedHour;
+                                                  m = selectedMinute;
+                                                });
+                                                debugPrint("H: $selectedHour minute: $selectedMinute");
+
+                                                String hourSave = h.toString().padLeft(2, '0');
+                                                String minuteSave = m.toString().padLeft(2, '0');
+                                                String secondSave = '00';
+                                                String sendOrderTimeSave = '$hourSave:$minuteSave:$secondSave';
+                                                baseController.saveStringtoSharedPreference("preferredDropoffTime_Time", sendOrderTimeSave);
+                                                print(await baseController.getStringtoSharedPreference("preferredDropoffTime_Time"));
+                                              },
+                                            ),
+                                          ),
+                                  ],
                                 ),
-                                const Spacer(),
-                                Icon(
-                                  Icons.watch_later_outlined,
-                                  size: 20,
-                                  color: Colors.grey.shade600,
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
+                              )
+                            : SizedBox(
+                                height: 0,
+                              ),
                       ],
                     )
                   : Container(),

@@ -186,6 +186,11 @@ class _FillAddressScreenState extends State<FillAddressScreen> {
                       hintText: 'Nhập họ và tên của bạn',
                       controller: nameController,
                     ),
+                    onChanged: () {
+                      setState(() {
+                        _isChecked = false;
+                      });
+                    },
                   ),
                   const SizedBox(height: 20),
                   const Text(
@@ -233,6 +238,11 @@ class _FillAddressScreenState extends State<FillAddressScreen> {
                         fontSize: 16,
                       ),
                     ),
+                    onChanged: () {
+                      setState(() {
+                        _isChecked = false;
+                      });
+                    },
                   ),
                   const SizedBox(height: 20),
                   const Text(
@@ -250,6 +260,11 @@ class _FillAddressScreenState extends State<FillAddressScreen> {
                       hintText: 'Nhập số nhà, tên đường...',
                       controller: adressController,
                     ),
+                    onChanged: () {
+                      setState(() {
+                        _isChecked = false;
+                      });
+                    },
                   ),
                   const SizedBox(height: 25),
                   const Text(
