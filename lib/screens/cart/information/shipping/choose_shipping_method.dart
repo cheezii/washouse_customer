@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:washouse_customer/resource/models/cart.dart';
+import 'package:provider/provider.dart';
+import 'package:washouse_customer/resource/controller/base_controller.dart';
+import 'package:washouse_customer/resource/models/cart_item.dart';
+import 'package:washouse_customer/screens/cart/checkout_screen.dart';
+import 'package:washouse_customer/screens/cart/information/shipping/shipping_information.dart';
 
 import '../../../../components/constants/color_constants.dart';
+import '../../../../resource/provider/cart_provider.dart';
 import '../../cart_screen.dart';
 
 class ChooseShippingMethod extends StatefulWidget {
@@ -12,15 +17,17 @@ class ChooseShippingMethod extends StatefulWidget {
 }
 
 class _ChooseShippingMethodState extends State<ChooseShippingMethod> {
+  int? shippingMethod;
+  BaseController baseController = BaseController();
   @override
   Widget build(BuildContext context) {
-    //1 = không chọn, 2 = một chiều đi, 3 = một chiều về, 4 = 2 chiều
-    int typeIndex = 1;
+    var provider = Provider.of<CartProvider>(context);
+    List<CartItem> cartItems = Provider.of<CartProvider>(context).cartItems;
+    //0 = không chọn, 1 = một chiều đi, 2 = một chiều về, 3 = 2 chiều
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        backgroundColor:
-            kPrimaryColor, //Theme.of(context).scaffoldBackgroundColor
+        backgroundColor: kPrimaryColor, //Theme.of(context).scaffoldBackgroundColor
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);
@@ -33,8 +40,7 @@ class _ChooseShippingMethodState extends State<ChooseShippingMethod> {
         ),
         title: const Align(
           alignment: Alignment.center,
-          child: Text('Phương thức vận chuyển',
-              style: TextStyle(color: Colors.white, fontSize: 24)),
+          child: Text('Phương thức vận chuyển', style: TextStyle(color: Colors.white, fontSize: 22)),
         ),
         actions: const [
           Padding(
@@ -46,110 +52,136 @@ class _ChooseShippingMethodState extends State<ChooseShippingMethod> {
           ),
         ],
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          const SizedBox(height: 16),
-          RadioListTile(
-            title: Row(
+      body: Padding(
+        padding: const EdgeInsets.only(left: 16, right: 8),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                SizedBox(
-                  width: 35,
-                  child: Image.asset('assets/images/shipping/ship-di.png'),
+                Row(
+                  children: [
+                    SizedBox(
+                      width: 35,
+                      child: Image.asset('assets/images/shipping/ship-di.png'),
+                    ),
+                    const SizedBox(width: 10),
+                    const Text(
+                      'Không sử dụng dịch vụ vận chuyển',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                  ],
                 ),
-                const SizedBox(width: 8),
-                const Text(
-                  'Không sử dụng dịch vụ vận chuyển',
-                  style: TextStyle(fontSize: 16),
+                Radio(
+                  value: 0,
+                  groupValue: shippingMethod,
+                  onChanged: (newVal) {
+                    setState(() {
+                      shippingMethod = newVal;
+                      baseController.saveInttoSharedPreference("deliveryType", newVal);
+                    });
+                  },
                 ),
               ],
             ),
-            value: 1,
-            groupValue: typeIndex,
-            onChanged: ((value) {
-              setState(() {
-                typeIndex = int.parse(value.toString());
-              });
-            }),
-          ),
-          const SizedBox(height: 8),
-          RadioListTile(
-            title: Row(
+            const SizedBox(height: 8),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                SizedBox(
-                  width: 35,
-                  child: Image.asset('assets/images/shipping/dua-den.png'),
+                Row(
+                  children: [
+                    SizedBox(
+                      width: 35,
+                      child: Image.asset('assets/images/shipping/dua-den.png'),
+                    ),
+                    const SizedBox(width: 10),
+                    const Text(
+                      'Vận chuyển 1 chiều đi',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                  ],
                 ),
-                const SizedBox(width: 8),
-                const Text(
-                  'Vận chuyển một chiều đi',
-                  style: TextStyle(fontSize: 16),
+                Radio(
+                  value: 1,
+                  groupValue: shippingMethod,
+                  onChanged: (newVal) {
+                    setState(() {
+                      shippingMethod = newVal;
+                      baseController.saveInttoSharedPreference("deliveryType", newVal);
+                    });
+                  },
                 ),
               ],
             ),
-            value: 2,
-            groupValue: typeIndex,
-            onChanged: ((value) {
-              setState(() {
-                typeIndex = int.parse(value.toString());
-              });
-            }),
-          ),
-          const SizedBox(height: 8),
-          RadioListTile(
-            title: Row(
+            const SizedBox(height: 8),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                SizedBox(
-                  width: 35,
-                  child: Image.asset('assets/images/shipping/giao-den.png'),
+                Row(
+                  children: [
+                    SizedBox(
+                      width: 35,
+                      child: Image.asset('assets/images/shipping/giao-den.png'),
+                    ),
+                    const SizedBox(width: 16),
+                    const Text(
+                      'Vận chuyển 1 chiều về',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                  ],
                 ),
-                const SizedBox(width: 8),
-                const Text(
-                  'Vận chuyển một chiều về',
-                  style: TextStyle(fontSize: 16),
+                Radio(
+                  value: 2,
+                  groupValue: shippingMethod,
+                  onChanged: (newVal) {
+                    setState(() {
+                      shippingMethod = newVal;
+                      baseController.saveInttoSharedPreference("deliveryType", newVal);
+                    });
+                  },
                 ),
               ],
             ),
-            value: 3,
-            groupValue: typeIndex,
-            onChanged: ((value) {
-              setState(() {
-                typeIndex = int.parse(value.toString());
-              });
-            }),
-          ),
-          const SizedBox(height: 8),
-          RadioListTile(
-            title: Row(
+            const SizedBox(height: 8),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                SizedBox(
-                  width: 35,
-                  child: Image.asset('assets/images/shipping/shipper.png'),
+                Row(
+                  children: [
+                    SizedBox(
+                      width: 35,
+                      child: Image.asset('assets/images/shipping/shipper.png'),
+                    ),
+                    const SizedBox(width: 16),
+                    const Text(
+                      'Vận chuyển 2 chiều',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                  ],
                 ),
-                const SizedBox(width: 8),
-                const Text(
-                  'Vận chuyển hai chiều',
-                  style: TextStyle(fontSize: 16),
+                Radio(
+                  value: 3,
+                  groupValue: shippingMethod,
+                  onChanged: (newVal) {
+                    setState(() {
+                      shippingMethod = newVal;
+                      baseController.saveInttoSharedPreference("deliveryType", newVal);
+                    });
+                  },
                 ),
               ],
-            ),
-            value: 4,
-            groupValue: typeIndex,
-            onChanged: ((value) {
-              setState(() {
-                typeIndex = int.parse(value.toString());
-              });
-            }),
-          ),
-        ],
+            )
+          ],
+        ),
       ),
       bottomNavigationBar: Container(
         padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
         height: 70,
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(30), topRight: Radius.circular(30)),
+          borderRadius: const BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30)),
           boxShadow: [
             BoxShadow(
               offset: const Offset(0, -15),
@@ -162,13 +194,50 @@ class _ChooseShippingMethodState extends State<ChooseShippingMethod> {
           width: 190,
           height: 40,
           child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0)),
-                backgroundColor: kPrimaryColor),
+            style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)), backgroundColor: kPrimaryColor),
             onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const CartScreen()));
+              if (shippingMethod == 0) {
+                baseController.saveDoubletoSharedPreference("deliveryPrice", 0);
+                provider.updateDeliveryPrice();
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CheckoutScreen(cart: cartItems[0]),
+                  ),
+                );
+              } else {
+                if (shippingMethod == 1) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const FillShippingInformation(
+                        isSend: true,
+                        isReceive: false,
+                      ),
+                    ),
+                  );
+                } else if (shippingMethod == 2) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const FillShippingInformation(
+                        isSend: false,
+                        isReceive: true,
+                      ),
+                    ),
+                  );
+                } else if (shippingMethod == 3) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const FillShippingInformation(
+                        isSend: true,
+                        isReceive: true,
+                      ),
+                    ),
+                  );
+                }
+              }
             },
             child: const Text(
               'Xác nhận',

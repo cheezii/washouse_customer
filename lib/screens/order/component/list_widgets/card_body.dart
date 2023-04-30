@@ -1,24 +1,26 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
+import 'package:washouse_customer/resource/models/response_models/order_item_list.dart';
 
 import '../../../../components/constants/color_constants.dart';
 import '../../../../resource/models/order.dart';
+import '../../../../utils/price_util.dart';
 
 class CardBody extends StatelessWidget {
-  final int status;
-  const CardBody({
+  Order_Item orderItem;
+  CardBody({
     Key? key,
-    required this.status,
+    required this.orderItem,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    List<Order> list = [];
-    for (var item in orderList) {
-      if (item.status == status) {
-        list.add(item);
-      }
-    }
+    // List<Order> list = [];
+    // for (var item in orderList) {
+    //   if (item.status.compareTo(status) == 0) {
+    //     list.add(item);
+    //   }
+    // }
     return Row(
       children: [
         SizedBox(
@@ -31,7 +33,8 @@ class CardBody extends StatelessWidget {
                 color: const Color(0xfff5f6f9),
                 borderRadius: BorderRadius.circular(15),
               ),
-              child: Image.asset('assets/images/category/tie.png'),
+              child: Image.asset('assets/images/category/shirt.png'),
+              //child: Image.network(orderItem.orderedServices!.first.image!),
             ),
           ),
         ),
@@ -43,7 +46,7 @@ class CardBody extends StatelessWidget {
               SizedBox(
                 width: 200,
                 child: Text(
-                  list[0].serviceName,
+                  orderItem.orderedServices!.first.serviceName!,
                   style: const TextStyle(
                       fontSize: 17,
                       color: Colors.black,
@@ -55,15 +58,18 @@ class CardBody extends StatelessWidget {
               Row(
                 children: [
                   Text(
-                    'SL: x${list[0].quantity}',
+                    orderItem.orderedServices!.first.unit == 'Kg'
+                        ? 'KL: x${orderItem.orderedServices!.first.measurement} kg'
+                        : 'SL: x${orderItem.orderedServices!.first.measurement!.round()} ${orderItem.orderedServices!.first.unit!.toLowerCase()}',
                     style: const TextStyle(color: textColor, fontSize: 16),
                   ),
                   const Text('  |  '),
-                  const Text(
-                    '80000 đ',
-                    style: TextStyle(
-                      fontSize: 16,
-                    ),
+                  Text(
+                    '${PriceUtils().convertFormatPrice((orderItem.orderedServices!.first.price!).round())} đ',
+                    style: const TextStyle(
+                        fontSize: 16,
+                        color: kPrimaryColor,
+                        fontWeight: FontWeight.w500),
                   )
                 ],
               ),

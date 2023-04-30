@@ -4,46 +4,27 @@ import 'package:washouse_customer/components/constants/size.dart';
 import '../../../components/constants/color_constants.dart';
 
 class TitleWithMoreBtn extends StatelessWidget {
-  const TitleWithMoreBtn({
-    super.key,
-    required this.title,
-    required this.press,
-  });
+  const TitleWithMoreBtn({super.key, required this.title, required this.press, s});
   final String title;
-  final Function press;
+  final GestureTapCallback press;
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(
-        top: kDefaultPadding / 2,
-        left: kDefaultPadding,
-        right: kDefaultPadding,
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            title,
-            style: const TextStyle(
-              fontSize: 30.0,
-              fontWeight: FontWeight.bold,
-              color: textBoldColor,
-            ),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          title,
+          style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w700),
+        ),
+        IconButton(
+          onPressed: press,
+          icon: const Icon(
+            Icons.arrow_forward_ios_rounded,
+            size: 20,
           ),
-          TextButton(
-            onPressed: () {},
-            child: const Text(
-              'XEM TẤT CẢ',
-              style: TextStyle(
-                fontSize: 16.0,
-                fontWeight: FontWeight.bold,
-                color: kPrimaryColor,
-              ),
-            ),
-          )
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

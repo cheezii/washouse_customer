@@ -1,50 +1,215 @@
 import 'dart:convert';
-
-import 'package:geolocator/geolocator.dart';
+import 'dart:async';
+import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:washouse_customer/resource/models/current_user.dart';
+import 'package:washouse_customer/resource/controller/base_controller.dart';
 import 'package:washouse_customer/resource/models/center.dart';
+import 'package:washouse_customer/resource/models/request_models/filter_center_model.dart';
+import 'package:washouse_customer/resource/models/response_models/center_response_model.dart';
+import 'package:washouse_customer/resource/models/service.dart';
 
 import '../../components/constants/text_constants.dart';
+import '../models/center_operating_time.dart';
+
+BaseController baseController = BaseController();
 
 class CenterController {
-  Future<List<LaundryCenter>> getCenterList() async {
-    Response response = await get(Uri.parse('$baseUrl/centers'));
-    if (response.statusCode == 200) {
-      var data = jsonDecode(response.body)['data']['items'] as List;
-      List<LaundryCenter> centerList =
-          data.map((e) => LaundryCenter.fromJson(e)).toList();
-      return centerList;
-    } else {
-      throw Exception("Lỗi khi load Json");
+  List<LaundryCenter> centerList = [];
+  List<Service> serviceList = [];
+  //     } else {
+  //       throw Exception("Lỗi khi load Json");
+  //     }
+  //   } catch (e) {
+  //     print('error: $e');
+  //   }
+  //   return centerList;
+  // }
+
+  Future<List<LaundryCenter>> getCenterList(FilterCenterRequest filter) async {
+    filter.currentUserLatitude = 10.8415927;
+    filter.currentUserLongitude = 106.7912079;
+    try {
+      Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+        timeLimit: Duration(seconds: 10),
+      );
+      filter.currentUserLatitude = position.latitude;
+      filter.currentUserLongitude = position.longitude;
+      // Use the position here
+    } catch (e) {
+      // Handle the timeout exception here
+      print('Timed out while getting location: $e');
     }
+    filter.page = 1;
+    filter.pageSize = 1000;
+    filter.hasDelivery ??= false;
+    filter.hasOnlinePayment ??= false;
+    final queryParameters = {
+      'page': filter.page?.toString(),
+      'pageSize': filter.pageSize?.toString(),
+      'sort': filter.sort,
+      'budgetRange': filter.budgetRange,
+      'categoryServices': filter.categoryServices,
+      'additions': filter.additions,
+      'searchString': filter.searchString,
+      'hasDelivery': filter.hasDelivery?.toString(),
+      'hasOnlinePayment': filter.hasOnlinePayment?.toString(),
+      'currentUserLatitude': filter.currentUserLatitude?.toString(),
+      'currentUserLongitude': filter.currentUserLongitude?.toString(),
+    };
+    print(queryParameters.toString());
+    try {
+      final url = "$baseUrl/centers";
+      final response = await baseController.makeAuthenticatedRequest(url, queryParameters);
+      //print(url);
+      //print(queryParameters);
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body)['data']['items'] as List;
+        // Handle successful response
+        centerList = data.map((e) => LaundryCenter.fromJson(e)).toList();
+        // Do something with the user data...
+      } else {
+        // Handle error response
+        throw Exception('Error fetching user data: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('error: getCenters-$e');
+    }
+    return centerList;
   }
 
-  Future<List<LaundryCenter>> getCenterListSearch(String query) async {
-    Response response =
-        await get(Uri.parse('$baseUrl/centers?SearchString=$query'));
-    if (response.statusCode == 200) {
-      var data = jsonDecode(response.body)['data']['items'] as List;
-      List<LaundryCenter> centerList =
-          data.map((e) => LaundryCenter.fromJson(e)).toList();
-      return centerList;
-    } else {
-      throw Exception("Lỗi khi load Json");
-    }
-  }
-
-  Future<List<LaundryCenter>> getCenterNearby() async {
+  Future<String?> getResponseMessage(String? searchString, String? sortSring, String? min, String? max, String? categoryService) async {
     Position position = await Geolocator.getCurrentPosition();
     double lat = position.latitude;
     double long = position.longitude;
     Response response = await get(Uri.parse(
-        '$baseUrl/centers?CurrentUserLatitude=$lat&CurrentUserLongitude=$long'));
-    if (response.statusCode == 200) {
-      var data = jsonDecode(response.body)['data']['items'] as List;
-      List<LaundryCenter> centerList =
-          data.map((e) => LaundryCenter.fromJson(e)).toList();
-      return centerList;
-    } else {
-      throw Exception("Lỗi khi load Json");
+        '$baseUrl/centers?Sort=$sortSring&BudgetRange=$min-$max&CategoryServices=$categoryService&SearchString=$searchString&CurrentUserLatitude=$lat&CurrentUserLongitude=$long'));
+    //print(response.body);
+    var body = jsonDecode(response.body);
+    CenterResponseModel responseModel = CenterResponseModel.fromJson(body);
+    print(responseModel.message);
+    try {
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body)['data']['items'] as List;
+        //print(data);
+        centerList = data.map((e) => LaundryCenter.fromJson(e)).toList();
+      } else {
+        throw Exception("${responseModel.message}");
+      }
+    } catch (e) {
+      print('error: $e');
     }
+    return responseModel.message;
+  }
+
+  Future<List<LaundryCenter>> getCenterNearby() async {
+    //Position position = await Geolocator.getCurrentPosition();
+    double lat = 10.8415927;
+    double long = 106.7912079;
+    try {
+      Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+        timeLimit: Duration(seconds: 10),
+      );
+      lat = position.latitude;
+      long = position.longitude;
+      // Use the position here
+    } catch (e) {
+      // Handle the timeout exception here
+      print('Timed out while getting location: $e');
+    }
+    Response response = await get(Uri.parse('$baseUrl/centers?Sort=location&CurrentUserLatitude=$lat&CurrentUserLongitude=$long'));
+    try {
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body)['data']['items'] as List;
+        centerList = data.map((e) => LaundryCenter.fromJson(e)).toList();
+      } else {
+        throw Exception("Lỗi khi load Json");
+      }
+    } catch (e) {
+      print('error: $e');
+    }
+    return centerList;
+  }
+
+  Future<LaundryCenter> getCenterById(int centerId) async {
+    // Position position = await Geolocator.getCurrentPosition();
+    // final queryParameters = {
+    //   "currentUserLatitude": position.latitude,
+    //   "currentUserLongitude": position.longitude
+    // };
+    // LaundryCenter center = LaundryCenter();
+
+    // try {
+    //   final url = "$baseUrl/centers/$centerId";
+
+    //   print(queryParameters);
+    //   Response response =
+    //       await baseController.makeAuthenticatedRequest(url, queryParameters);
+    //   print(response.statusCode);
+    //   if (response.statusCode == 200) {
+    //     var data = jsonDecode(response.body)['data'];
+    //     // Handle successful response
+    //     center = LaundryCenter.fromJson(data);
+    //     // Do something with the user data...
+    //   } else {
+    //     // Handle error response
+    //     throw Exception('Error fetching user data: ${response.statusCode}');
+    //   }
+    // } catch (e) {
+    //   print('error: getCenterDetail: $e');
+    // }
+    // return center;
+    print(centerId);
+    Response response = await get(Uri.parse('$baseUrl/centers/$centerId'));
+    LaundryCenter center = LaundryCenter();
+    print(response.body);
+    try {
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body)['data'];
+        center = LaundryCenter.fromJson(data);
+      } else {
+        throw Exception('Error fetching user data: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('get service error: $e');
+    }
+    return center;
+  }
+
+  Future<String?> getCenterNameById(int centerId) async {
+    Response response = await get(Uri.parse('$baseUrl/centers/$centerId'));
+    String? centerName;
+
+    try {
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body)['data']['title'];
+        //centerName = data.toString();
+      } else {
+        throw Exception("Lỗi khi load Json");
+      }
+    } catch (e) {
+      print('get service error: $e');
+    }
+    return centerName;
+  }
+
+  Future<CenterOperatingTime> getCenterOperatingTime(int centerId) async {
+    Response response = await get(Uri.parse('$baseUrl/centers/$centerId/operating-times'));
+    CenterOperatingTime centerOperatingTime = CenterOperatingTime();
+    print(response.statusCode);
+    try {
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body)['data'];
+        centerOperatingTime = CenterOperatingTime.fromJson(data);
+      } else {
+        throw Exception('Error fetching user data: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('get service error: $e');
+    }
+    return centerOperatingTime;
   }
 }

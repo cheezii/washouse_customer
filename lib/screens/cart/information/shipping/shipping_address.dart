@@ -25,8 +25,7 @@ class ShippingAddress extends StatelessWidget {
               const SizedBox(width: 6),
               Text(
                 shipping.fullName + '  |  ' + shipping.shippedPhone,
-                style:
-                    const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
               ),
             ],
           ),
@@ -43,10 +42,7 @@ class ShippingAddress extends StatelessWidget {
               ),
               GestureDetector(
                 onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const FillAddressScreen()));
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => const FillAddressScreen()));
                 },
                 child: Icon(
                   Icons.arrow_forward_ios_rounded,

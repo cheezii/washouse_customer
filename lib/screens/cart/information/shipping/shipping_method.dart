@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../../../components/constants/color_constants.dart';
+import '../../../../resource/provider/cart_provider.dart';
 import 'choose_shipping_method.dart';
 
 class ShippingMethod extends StatelessWidget {
@@ -12,10 +14,7 @@ class ShippingMethod extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: ((context) => const ChooseShippingMethod())));
+        Navigator.push(context, MaterialPageRoute(builder: ((context) => const ChooseShippingMethod())));
       },
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -27,10 +26,7 @@ class ShippingMethod extends StatelessWidget {
               children: [
                 const Text(
                   'Phương thức vận chuyển',
-                  style: TextStyle(
-                      color: textColor,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w700),
+                  style: TextStyle(color: textColor, fontSize: 18, fontWeight: FontWeight.w700),
                 ),
                 const SizedBox(height: 16),
                 Padding(
@@ -39,14 +35,29 @@ class ShippingMethod extends StatelessWidget {
                     children: [
                       SizedBox(
                         width: 35,
-                        child:
-                            Image.asset('assets/images/shipping/ship-di.png'),
+                        child: Image.asset('assets/images/shipping/ship-di.png'),
                       ),
                       const SizedBox(width: 8),
-                      const Text(
-                        'Không sử dụng dịch vụ vận chuyển',
-                        style: TextStyle(fontSize: 16),
-                      ),
+                      Consumer<CartProvider>(
+                        builder: (context, value, child) {
+                          String textReturn;
+                          if (value.deliveryType == 0) {
+                            textReturn = 'Không sử dụng dịch vụ vận chuyển';
+                          } else if (value.deliveryType == 1) {
+                            textReturn = 'Vận chuyển từ bạn tới cửa hàng';
+                          } else if (value.deliveryType == 2) {
+                            textReturn = 'Vận chuyển từ cửa hàng đến bạn';
+                          } else if (value.deliveryType == 3) {
+                            textReturn = 'Vận chuyển hai chiều';
+                          } else {
+                            textReturn = 'Không sử dụng dịch vụ vận chuyển';
+                          }
+                          return Text(
+                            textReturn,
+                            style: const TextStyle(fontSize: 16),
+                          );
+                        },
+                      )
                     ],
                   ),
                 ),

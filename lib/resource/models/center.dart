@@ -1,4 +1,7 @@
 //ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'center_delivery_price.dart';
+import 'service.dart';
+
 class LaundryCenter {
   int? id;
   String? thumbnail;
@@ -7,14 +10,18 @@ class LaundryCenter {
   String? description;
   List<CenterServices>? centerServices;
   num? rating;
-  int? numOfRating;
+  num? numOfRating;
   String? phone;
   String? centerAddress;
-  int? distance;
+  num? distance;
   num? minPrice;
   num? maxPrice;
   bool? monthOff;
   bool? hasDelivery;
+  bool? hasOnlinePayment;
+  bool? isOpening;
+  int? numOfPromotionAvailable;
+  List<CenterDeliveryPrice>? centerDeliveryPrices;
   CenterLocation? centerLocation;
   List<CenterOperatingHours>? centerOperatingHours;
 
@@ -34,6 +41,10 @@ class LaundryCenter {
       this.maxPrice,
       this.monthOff,
       this.hasDelivery,
+      this.hasOnlinePayment,
+      this.isOpening,
+      this.numOfPromotionAvailable,
+      this.centerDeliveryPrices,
       this.centerLocation,
       this.centerOperatingHours});
 
@@ -58,9 +69,16 @@ class LaundryCenter {
     maxPrice = json['maxPrice'];
     monthOff = json['monthOff'];
     hasDelivery = json['hasDelivery'];
-    centerLocation = json['centerLocation'] != null
-        ? new CenterLocation.fromJson(json['centerLocation'])
-        : null;
+    hasOnlinePayment = json['hasOnlinePayment'];
+    isOpening = json['isOpening'];
+    numOfPromotionAvailable = json['numOfPromotionAvailable'];
+    if (json['centerDeliveryPrices'] != null) {
+      centerDeliveryPrices = <CenterDeliveryPrice>[];
+      json['centerDeliveryPrices'].forEach((v) {
+        centerDeliveryPrices?.add(new CenterDeliveryPrice.fromJson(v));
+      });
+    }
+    centerLocation = json['centerLocation'] != null ? new CenterLocation.fromJson(json['centerLocation']) : null;
     if (json['centerOperatingHours'] != null) {
       centerOperatingHours = <CenterOperatingHours>[];
       json['centerOperatingHours'].forEach((v) {
@@ -73,15 +91,23 @@ class LaundryCenter {
 class CenterServices {
   int? serviceCategoryID;
   String? serviceCategoryName;
-  Null? services;
+  List<Service>? services;
 
-  CenterServices(
-      {this.serviceCategoryID, this.serviceCategoryName, this.services});
+  CenterServices({
+    this.serviceCategoryID,
+    this.serviceCategoryName,
+    this.services,
+  });
 
   CenterServices.fromJson(Map<String, dynamic> json) {
     serviceCategoryID = json['serviceCategoryID'];
     serviceCategoryName = json['serviceCategoryName'];
-    services = json['services'];
+    if (json['services'] != null) {
+      services = <Service>[];
+      json['services'].forEach((v) {
+        services!.add(new Service.fromJson(v));
+      });
+    }
   }
 }
 

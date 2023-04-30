@@ -1,18 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-
+import 'package:washouse_customer/resource/controller/feedback_controller.dart';
+import 'package:page_transition/page_transition.dart';
+import 'package:washouse_customer/screens/order/order_detail_screen.dart';
 import '../../components/constants/color_constants.dart';
+import '../../resource/models/response_models/order_item_list.dart';
 
 class FeedbackOrderScreen extends StatefulWidget {
-  const FeedbackOrderScreen({super.key});
+  Order_Item orderItem;
+  FeedbackOrderScreen({
+    Key? key,
+    required this.orderItem,
+  }) : super(key: key);
 
   @override
   State<FeedbackOrderScreen> createState() => _FeedbackOrderScreen();
 }
 
 class _FeedbackOrderScreen extends State<FeedbackOrderScreen> {
-  late double _rating;
-
+  FeedbackController feedbackController = FeedbackController();
+  int _rating = 0;
+  int _serviceRating = 0;
+  String content = "";
+  TextEditingController _textEditingController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,29 +39,24 @@ class _FeedbackOrderScreen extends State<FeedbackOrderScreen> {
             size: 24,
           ),
         ),
-        title: const Align(
-          alignment: Alignment.center,
-          child: Text('Đánh giá đơn hàng',
-              style: TextStyle(color: textColor, fontSize: 27)),
-        ),
-        actions: [
-          GestureDetector(
-            onTap: () {},
-            child: const Padding(
-              padding: EdgeInsets.only(right: 16),
-              child: Icon(
-                Icons.filter_alt_rounded,
-                color: kBackgroundColor,
-                size: 30,
-              ),
-            ),
-          ),
-        ],
+        centerTitle: true,
+        title: const Text('Đánh giá đơn hàng',
+            style: TextStyle(color: textColor, fontSize: 27)),
       ),
       body: Padding(
         padding: const EdgeInsets.only(top: 10, left: 16, right: 16),
         child: Column(
           children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Đánh giá đơn hàng #${widget.orderItem.orderId}',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
             RatingBar.builder(
               itemBuilder: (context, _) => const Icon(
                 Icons.star_rounded,
@@ -65,36 +70,14 @@ class _FeedbackOrderScreen extends State<FeedbackOrderScreen> {
               itemSize: 30,
               itemPadding: const EdgeInsets.symmetric(horizontal: 4),
               initialRating: 0,
-              allowHalfRating: true,
+              allowHalfRating:
+                  false, // Set this to false to allow integer ratings only
               onRatingUpdate: (rating) {
                 setState(() {
-                  _rating = rating;
+                  _rating =
+                      rating.round(); // Round the rating to the nearest integer
                 });
-                ;
               },
-            ),
-            const SizedBox(height: 20),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'Tiêu đề',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
-                ),
-                const SizedBox(height: 10),
-                TextFormField(
-                  maxLength: 50,
-                  decoration: InputDecoration(
-                    hintText: 'Nhập tiêu đề',
-                    contentPadding: const EdgeInsets.all(8),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Colors.grey.shade600,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
             ),
             const SizedBox(height: 20),
             Column(
@@ -108,6 +91,7 @@ class _FeedbackOrderScreen extends State<FeedbackOrderScreen> {
                 TextFormField(
                   maxLines: 6,
                   maxLength: 500,
+                  controller: _textEditingController,
                   decoration: InputDecoration(
                     hintText: 'Nhập nội dung đánh giá',
                     contentPadding: const EdgeInsets.only(
@@ -118,6 +102,11 @@ class _FeedbackOrderScreen extends State<FeedbackOrderScreen> {
                       ),
                     ),
                   ),
+                  onChanged: (value) {
+                    setState(() {
+                      content = value;
+                    });
+                  },
                 ),
               ],
             )
@@ -147,7 +136,59 @@ class _FeedbackOrderScreen extends State<FeedbackOrderScreen> {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10.0)),
                 backgroundColor: kPrimaryColor),
-            onPressed: () {},
+            onPressed: (_rating == 0 || content.trim() == "")
+                ? null
+                : () async {
+                    String message =
+                        await feedbackController.createFeedbackOrder(
+                            widget.orderItem.orderId!,
+                            widget.orderItem.centerId!,
+                            content,
+                            _rating);
+                    if (message == "success") {
+                      // ignore: use_build_context_synchronously
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const Text(
+                                'Bạn đã đánh giá đơn hàng thành công'),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                SizedBox(
+                                  height: 100,
+                                  width: 100,
+                                  child:
+                                      Image.asset('assets/images/firework.png'),
+                                ),
+                                const SizedBox(height: 10),
+                                const Text('Cảm ơn bạn đã đánh giá đơn hàng.'),
+                              ],
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                  Navigator.push(
+                                      context,
+                                      PageTransition(
+                                          child: OrderDetailScreen(
+                                            orderId: widget.orderItem.orderId!,
+                                            isPayment:
+                                                widget.orderItem.isFeedback!,
+                                            status: widget.orderItem.status!,
+                                          ),
+                                          type: PageTransitionType.fade));
+                                },
+                                child: Text('Quay lại'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    }
+                  },
             child: const Text(
               'Gửi đánh giá',
               style: TextStyle(fontSize: 17),

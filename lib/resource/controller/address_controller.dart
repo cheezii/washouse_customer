@@ -29,4 +29,16 @@ class AddressController {
     }
     return wardList;
   }
+
+  Future getLocationById(int id) async {
+    dynamic location;
+    Response response = await get(Uri.parse('$baseUrl/locations/$id'));
+    if (response.statusCode == 200) {
+      var data = json.decode(response.body);
+      location = data['data'];
+    } else {
+      throw Exception("Lỗi khi load Json");
+    }
+    return location;
+  }
 }

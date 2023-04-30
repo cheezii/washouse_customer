@@ -1,14 +1,21 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:washouse_customer/screens/order/order_screen.dart';
 
 import '../../components/constants/color_constants.dart';
 
 class GenerateQRCodeScreen extends StatelessWidget {
-  const GenerateQRCodeScreen({super.key});
+  final orderID;
+  const GenerateQRCodeScreen({
+    Key? key,
+    required this.orderID,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    String qrData = 'lib/screens/home/home_screen.dart';
+    var qrData = orderID as String;
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
@@ -17,6 +24,7 @@ class GenerateQRCodeScreen extends StatelessWidget {
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);
+            Navigator.push(context, PageTransition(child: OrderScreen(), type: PageTransitionType.rightToLeftWithFade));
           },
           icon: const Icon(
             Icons.arrow_back_ios_new_rounded,
@@ -26,8 +34,7 @@ class GenerateQRCodeScreen extends StatelessWidget {
         ),
         title: const Align(
           alignment: Alignment.center,
-          child: Text('QR đơn hàng',
-              style: TextStyle(color: textColor, fontSize: 27)),
+          child: Text('QR đơn hàng', style: TextStyle(color: textColor, fontSize: 27)),
         ),
         actions: [
           GestureDetector(
@@ -54,10 +61,7 @@ class GenerateQRCodeScreen extends StatelessWidget {
             const SizedBox(height: 10),
             const Text(
               'Bạn đã đặt hàng thành công!',
-              style: TextStyle(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 22,
-                  color: kPrimaryColor),
+              style: TextStyle(fontWeight: FontWeight.w600, fontSize: 22, color: kPrimaryColor),
             ),
             const SizedBox(height: 10),
             const Text(

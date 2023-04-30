@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:washouse_customer/components/constants/color_constants.dart';
 import 'package:washouse_customer/components/constants/size.dart';
+import 'package:washouse_customer/resource/controller/base_controller.dart';
 import 'package:washouse_customer/screens/started/login.dart';
 
 import '../../components/constants/text_constants.dart';
-import '../../resource/controller/address_controller.dart';
-import '../../resource/controller/center_controller.dart';
 
 class Onboarding extends StatefulWidget {
   const Onboarding({super.key});
@@ -14,15 +13,16 @@ class Onboarding extends StatefulWidget {
   State<Onboarding> createState() => _OnboardingState();
 }
 
+BaseController baseController = BaseController();
+
 class _OnboardingState extends State<Onboarding> {
   final PageController _pageController = PageController(initialPage: 0);
-  CenterController centerController = CenterController();
   int currentIndex = 0;
 
   @override
   void initState() {
-    //centerController.getCenterListSearch('Dr');
     super.initState();
+    baseController.saveBooltoSharedPreference('isAccess', true);
   }
 
   @override
@@ -43,8 +43,7 @@ class _OnboardingState extends State<Onboarding> {
         ),
         actions: [
           Padding(
-            padding: const EdgeInsets.only(
-                right: kDefaultPadding, top: kDefaultPadding),
+            padding: const EdgeInsets.only(right: kDefaultPadding, top: kDefaultPadding),
             child: InkWell(
               onTap: () {
                 Navigator.pushReplacement(
@@ -55,7 +54,7 @@ class _OnboardingState extends State<Onboarding> {
                 ); //vào trang login
               },
               child: const Text(
-                'Skip',
+                'Bỏ qua',
                 style: TextStyle(
                   color: Colors.grey,
                   fontSize: 16.0,
@@ -115,9 +114,7 @@ class _OnboardingState extends State<Onboarding> {
                     if (currentIndex < 2) {
                       currentIndex++;
                       if (currentIndex < 3) {
-                        _pageController.nextPage(
-                            duration: const Duration(microseconds: 300),
-                            curve: Curves.easeIn);
+                        _pageController.nextPage(duration: const Duration(microseconds: 300), curve: Curves.easeIn);
                       }
                     } else {
                       Navigator.pushReplacement(
