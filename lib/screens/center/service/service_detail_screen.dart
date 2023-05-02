@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:provider/provider.dart';
 
@@ -18,6 +19,8 @@ import '../../../utils/price_util.dart';
 import 'package:washouse_customer/resource/provider/cart_provider.dart';
 import 'package:washouse_customer/resource/models/cart_item.dart';
 import 'package:washouse_customer/resource/models/center.dart';
+
+import '../../cart/cart_screen.dart';
 
 class ServiceDetailScreen extends StatefulWidget {
   final centerData;
@@ -100,12 +103,9 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
     int PriceMax = 0;
 
     bool checkAdded = false;
-    double minPrice =
-        serviceArgs.priceType! ? serviceArgs.minPrice!.toDouble() : 0;
+    double minPrice = serviceArgs.priceType! ? serviceArgs.minPrice!.toDouble() : 0;
 
-    double _maxMeasurementValue = serviceArgs.priceType!
-        ? serviceArgs.prices!.last.maxValue!.toDouble()
-        : 0;
+    double _maxMeasurementValue = serviceArgs.priceType! ? serviceArgs.prices!.last.maxValue!.toDouble() : 0;
     //List<double> _values = [];
 
     if (serviceArgs.rating == null) {
@@ -158,8 +158,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                 padding: EdgeInsets.only(left: 16),
                 child: CircleAvatar(
                   backgroundColor: Colors.white,
-                  child: Icon(Icons.arrow_back_ios_new_rounded,
-                      color: Colors.black),
+                  child: Icon(Icons.arrow_back_ios_new_rounded, color: Colors.black),
                 ),
               ),
             ),
@@ -180,8 +179,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                     width: size.width * 0.6,
                     child: Text(
                       serviceArgs.serviceName!,
-                      style: const TextStyle(
-                          fontWeight: FontWeight.w600, fontSize: 24),
+                      style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 24),
                       maxLines: 2,
                     ),
                   ),
@@ -203,10 +201,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                         ),
                       ),
                       Text('Đơn vị tính: ${serviceArgs.unit}',
-                          style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.grey.shade800)),
+                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.grey.shade800)),
                     ],
                   )
                 ],
@@ -231,16 +226,11 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                           children: [
                             Text(
                               'Giá dịch vụ tối thiểu : ${PriceUtils().convertFormatPrice(serviceArgs.minPrice!.toInt())} đ',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w600, fontSize: 18),
+                              style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
                             ),
                             const Text(
                               '*Nếu giá tiền của dịch vụ bạn đặt tính theo bảng giá dưới mức giá tối thiểu, giá tiền của dịch vụ sẽ là giá tối thiểu',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 14,
-                                  color: Colors.red,
-                                  fontStyle: FontStyle.italic),
+                              style: TextStyle(fontWeight: FontWeight.w400, fontSize: 14, color: Colors.red, fontStyle: FontStyle.italic),
                             ),
                           ],
                         )
@@ -262,13 +252,9 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                       children: [
                         const TextSpan(
                           text: 'Thời gian dự tính:   ',
-                          style: TextStyle(
-                              fontWeight: FontWeight.w600, fontSize: 18),
+                          style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
                         ),
-                        TextSpan(
-                            text:
-                                serviceArgs.timeEstimate!.toString() + " phút",
-                            style: TextStyle(fontSize: 17)),
+                        TextSpan(text: serviceArgs.timeEstimate!.toString() + " phút", style: TextStyle(fontSize: 17)),
                       ],
                     ),
                   ),
@@ -280,8 +266,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                               const SizedBox(height: 20),
                               const Text(
                                 'Bảng giá',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w600, fontSize: 18),
+                                style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
                               ),
                               SizedBox(
                                 width: size.width,
@@ -290,25 +275,20 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                                     DataColumn(
                                       label: Text(
                                         'Tối đa',
-                                        style: TextStyle(
-                                            fontStyle: FontStyle.italic),
+                                        style: TextStyle(fontStyle: FontStyle.italic),
                                       ),
                                     ),
                                     DataColumn(
                                       label: Text(
                                         'Giá thành',
-                                        style: TextStyle(
-                                            fontStyle: FontStyle.italic),
+                                        style: TextStyle(fontStyle: FontStyle.italic),
                                       ),
                                     ),
                                   ],
                                   rows: priceList
                                       .map<DataRow>((e) => DataRow(cells: [
-                                            DataCell(Text(
-                                                e.maxValue.toString() +
-                                                    ' ${serviceArgs.unit}')),
-                                            DataCell(Text(
-                                                '${PriceUtils().convertFormatPrice(e.price?.round() as num)} đ/${serviceArgs.unit}')),
+                                            DataCell(Text(e.maxValue.toString() + ' ${serviceArgs.unit}')),
+                                            DataCell(Text('${PriceUtils().convertFormatPrice(e.price?.round() as num)} đ/${serviceArgs.unit}')),
                                           ]))
                                       .toList(),
                                 ),
@@ -397,15 +377,12 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                                         style: TextStyle(fontSize: 18.0),
                                       ),
                                       const SizedBox(width: 4.0),
-                                      const Icon(Icons.star,
-                                          color: kPrimaryColor),
+                                      const Icon(Icons.star, color: kPrimaryColor),
                                       const SizedBox(width: 8.0),
                                       LinearPercentIndicator(
                                         lineHeight: 6.0,
                                         // linearStrokeCap: LinearStrokeCap.roundAll,
-                                        width:
-                                            MediaQuery.of(context).size.width /
-                                                2.8,
+                                        width: MediaQuery.of(context).size.width / 2.8,
                                         animation: true,
                                         animationDuration: 2500,
                                         percent: ratings[index],
@@ -422,13 +399,11 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                           alignment: Alignment.center,
                           child: Column(
                             children: const [
-                              Icon(Icons.star_rounded,
-                                  color: kPrimaryColor, size: 60),
+                              Icon(Icons.star_rounded, color: kPrimaryColor, size: 60),
                               SizedBox(height: 10),
                               Text(
                                 'Chưa có đánh giá nào',
-                                style: TextStyle(
-                                    fontSize: 22, fontWeight: FontWeight.w500),
+                                style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
                               )
                             ],
                           ),
@@ -449,8 +424,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
             ),
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+              borderRadius: const BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
               boxShadow: [
                 BoxShadow(
                   offset: const Offset(0, -15),
@@ -541,8 +515,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                                   setState(() {
                                     if (kilogram > 1) {
                                       kilogram--;
-                                      kilogramController.text =
-                                          kilogram.toString();
+                                      kilogramController.text = kilogram.toString();
                                     } else {
                                       kilogram = 1;
                                     }
@@ -561,8 +534,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                                     color: Colors.grey.shade300,
                                     borderRadius: BorderRadius.circular(4),
                                   ),
-                                  child: const Icon(Icons.remove,
-                                      color: Colors.white, size: 15),
+                                  child: const Icon(Icons.remove, color: Colors.white, size: 15),
                                 ),
                               ),
                               Container(
@@ -581,17 +553,13 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                                           readOnly: false,
                                           controller: kilogramController,
                                           textAlign: TextAlign.center,
-                                          keyboardType:
-                                              TextInputType.numberWithOptions(
-                                                  decimal: true),
+                                          keyboardType: TextInputType.numberWithOptions(decimal: true),
                                           inputFormatters: [
-                                            FilteringTextInputFormatter.allow(
-                                                RegExp(r'^\d+\.?\d{0,1}')),
+                                            FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,1}')),
                                           ],
                                           onChanged: (value) {
                                             setState(() {
-                                              kilogram = double.parse(
-                                                  value.toString());
+                                              kilogram = double.parse(value.toString());
                                             });
                                           },
                                           decoration: const InputDecoration(
@@ -612,22 +580,15 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                               GestureDetector(
                                 onTap: () {
                                   setState(() {
-                                    if (kilogram <=
-                                            (_maxMeasurementValue - 1) &&
-                                        checkPriceType) {
+                                    if (kilogram <= (_maxMeasurementValue - 1) && checkPriceType) {
                                       kilogram += 1.0;
-                                      kilogramController.text =
-                                          kilogram.toString();
-                                    } else if (kilogram <=
-                                            (_maxMeasurementValue) &&
-                                        checkPriceType) {
+                                      kilogramController.text = kilogram.toString();
+                                    } else if (kilogram <= (_maxMeasurementValue) && checkPriceType) {
                                       kilogram = _maxMeasurementValue;
-                                      kilogramController.text =
-                                          kilogram.toString();
+                                      kilogramController.text = kilogram.toString();
                                     } else {
                                       kilogram += 1.0;
-                                      kilogramController.text =
-                                          kilogram.toString();
+                                      kilogramController.text = kilogram.toString();
                                     }
                                     for (var itemPrice in serviceArgs.prices!) {
                                       if (kilogram <= itemPrice.maxValue!) {
@@ -644,8 +605,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                                     color: kPrimaryColor,
                                     borderRadius: BorderRadius.circular(4),
                                   ),
-                                  child: const Icon(Icons.add,
-                                      color: Colors.white, size: 15),
+                                  child: const Icon(Icons.add, color: Colors.white, size: 15),
                                 ),
                               ),
                               const SizedBox(width: 15),
@@ -659,8 +619,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                                   setState(() {
                                     if (quantity > 1) {
                                       quantity--;
-                                      quantityController.text =
-                                          quantity.toString();
+                                      quantityController.text = quantity.toString();
                                     } else {
                                       quantity = 1;
                                     }
@@ -673,8 +632,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                                     color: Colors.grey.shade300,
                                     borderRadius: BorderRadius.circular(4),
                                   ),
-                                  child: const Icon(Icons.remove,
-                                      color: Colors.white, size: 15),
+                                  child: const Icon(Icons.remove, color: Colors.white, size: 15),
                                 ),
                               ),
                               Container(
@@ -706,22 +664,15 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                               GestureDetector(
                                 onTap: () {
                                   setState(() {
-                                    if (quantity <=
-                                            (_maxMeasurementValue - 1) &&
-                                        checkPriceType) {
+                                    if (quantity <= (_maxMeasurementValue - 1) && checkPriceType) {
                                       quantity++;
-                                      quantityController.text =
-                                          quantity.toString();
-                                    } else if (quantity <=
-                                            (_maxMeasurementValue) &&
-                                        checkPriceType) {
+                                      quantityController.text = quantity.toString();
+                                    } else if (quantity <= (_maxMeasurementValue) && checkPriceType) {
                                       quantity = _maxMeasurementValue.toInt();
-                                      quantityController.text =
-                                          quantity.toString();
+                                      quantityController.text = quantity.toString();
                                     } else {
                                       quantity++;
-                                      quantityController.text =
-                                          quantity.toString();
+                                      quantityController.text = quantity.toString();
                                     }
                                   });
                                 },
@@ -732,8 +683,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                                     color: kPrimaryColor,
                                     borderRadius: BorderRadius.circular(4),
                                   ),
-                                  child: const Icon(Icons.add,
-                                      color: Colors.white, size: 15),
+                                  child: const Icon(Icons.add, color: Colors.white, size: 15),
                                 ),
                               ),
                               const SizedBox(width: 15),
@@ -744,9 +694,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                       height: 50,
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.0)),
-                            backgroundColor: kPrimaryColor),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)), backgroundColor: kPrimaryColor),
                         onPressed: () async {
                           double measurementInput;
                           //debugPrint('Selected value: $selectedDropdownValue');
@@ -755,9 +703,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                           //         ? serviceArgs.prices!.first.maxValue!.toDouble()
                           //         : selectedDropdownValue!)
                           //     : measurementInput = quantity.toDouble();
-                          checkUnitType
-                              ? measurementInput = kilogram.toDouble()
-                              : measurementInput = quantity.toDouble();
+                          checkUnitType ? measurementInput = kilogram.toDouble() : measurementInput = quantity.toDouble();
 
                           debugPrint('Selected: $measurementInput');
                           //Kiểm tra unit Price nằm trong khoảng nào
@@ -766,26 +712,20 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                           if (serviceArgs.priceType!) {
                             bool check = false;
                             for (var itemPrice in serviceArgs.prices!) {
-                              if (measurementInput <= itemPrice.maxValue! &&
-                                  !check) {
+                              if (measurementInput <= itemPrice.maxValue! && !check) {
                                 currentPrice = itemPrice.price!.toDouble();
                               }
                               if (currentPrice > 0) {
                                 check = true;
                               }
                             }
-                            if (serviceArgs.minPrice != null &&
-                                currentPrice * measurementInput <
-                                    serviceArgs.minPrice!) {
-                              totalCurrentPrice =
-                                  serviceArgs.minPrice!.toDouble();
+                            if (serviceArgs.minPrice != null && currentPrice * measurementInput < serviceArgs.minPrice!) {
+                              totalCurrentPrice = serviceArgs.minPrice!.toDouble();
                             } else {
-                              totalCurrentPrice =
-                                  currentPrice * measurementInput;
+                              totalCurrentPrice = currentPrice * measurementInput;
                             }
                           } else {
-                            totalCurrentPrice = serviceArgs.price! *
-                                measurementInput.toDouble();
+                            totalCurrentPrice = serviceArgs.price! * measurementInput.toDouble();
                             currentPrice = serviceArgs.price!.toDouble();
                           }
                           //print(totalCurrentPrice);
@@ -801,12 +741,9 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                               price: totalCurrentPrice,
                               unitPrice: currentPrice,
                               customerNote: noteController.text,
-                              weight: serviceArgs.rate! *
-                                  measurementInput.toDouble(),
+                              weight: serviceArgs.rate! * measurementInput.toDouble(),
                               unit: serviceArgs.unit,
-                              minPrice: serviceArgs.minPrice == null
-                                  ? null
-                                  : serviceArgs.minPrice!.toDouble(),
+                              minPrice: serviceArgs.minPrice == null ? null : serviceArgs.minPrice!.toDouble(),
                               prices: serviceArgs.prices);
 
                           if (provider.cartItems.isEmpty) {
@@ -814,24 +751,20 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                             provider.addItemToCart(cartItem); //add to cart
                             provider.updateCenter(cartItem.centerId);
                             checkAdded = true;
-                          } else if (provider.centerId != null &&
-                              provider.centerId != 0 &&
-                              provider.centerId != cartItem.centerId) {
+                          } else if (provider.centerId != null && provider.centerId != 0 && provider.centerId != cartItem.centerId) {
                             checkAdded = false;
                             showDialog(
                               context: context,
                               builder: (BuildContext context) {
                                 return AlertDialog(
                                   title: const Text('Thông báo'),
-                                  content: Text(
-                                      'Bạn đang có giỏ hàng của cửa hàng khác tồn tại! Đặt với cửa hàng mới hoặc vẫn giữ giỏ hàng cũ?'),
+                                  content: Text('Bạn đang có giỏ hàng của cửa hàng khác tồn tại! Đặt với cửa hàng mới hoặc vẫn giữ giỏ hàng cũ?'),
                                   actions: [
                                     TextButton(
                                       onPressed: () {
                                         provider.removeCart();
                                         provider.addItemToCart(cartItem);
-                                        provider
-                                            .updateCenter(cartItem.centerId);
+                                        provider.updateCenter(cartItem.centerId);
                                         Navigator.of(context).pop();
                                       },
                                       child: Text('Đặt mới'),
@@ -853,9 +786,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                             checkAdded = true;
                             //provider.centerId =
                           }
-                          bool checkMax = (provider.cartItems.length != 0 &&
-                              provider.cartItems.last.measurement ==
-                                  _maxMeasurementValue);
+                          bool checkMax = (provider.cartItems.length != 0 && provider.cartItems.last.measurement == _maxMeasurementValue);
                           //await baseController.saveStringtoSharedPreference("customerNote", noteController.text);
                           // ignore: use_build_context_synchronously
                           checkAdded
@@ -871,26 +802,16 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                                       content: checkMax
                                           ? Text(
                                               'Dịch vụ đã được thêm vào giỏ với lượng tối đa cho phép. ($_maxMeasurementValue ${serviceArgs.unit})')
-                                          : const Text(
-                                              'Dịch vụ đã được thêm vào giỏ.'),
+                                          : const Text('Dịch vụ đã được thêm vào giỏ.'),
                                       actions: <Widget>[
                                         ElevatedButton(
                                           style: ElevatedButton.styleFrom(
-                                              padding:
-                                                  const EdgeInsetsDirectional
-                                                          .symmetric(
-                                                      horizontal: 19,
-                                                      vertical: 10),
-                                              foregroundColor:
-                                                  kPrimaryColor.withOpacity(.7),
+                                              padding: const EdgeInsetsDirectional.symmetric(horizontal: 19, vertical: 10),
+                                              foregroundColor: kPrimaryColor.withOpacity(.7),
                                               elevation: 0,
                                               shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(20),
-                                                side: BorderSide(
-                                                    color: kPrimaryColor
-                                                        .withOpacity(.5),
-                                                    width: 1),
+                                                borderRadius: BorderRadius.circular(20),
+                                                side: BorderSide(color: kPrimaryColor.withOpacity(.5), width: 1),
                                               ),
                                               backgroundColor: kPrimaryColor),
                                           onPressed: () {
@@ -898,6 +819,28 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                                           },
                                           child: const Text(
                                             'Đóng',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ),
+                                        ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                              padding: const EdgeInsetsDirectional.symmetric(horizontal: 19, vertical: 10),
+                                              foregroundColor: kPrimaryColor.withOpacity(.7),
+                                              elevation: 0,
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(20),
+                                                side: BorderSide(color: kPrimaryColor.withOpacity(.5), width: 1),
+                                              ),
+                                              backgroundColor: kPrimaryColor),
+                                          onPressed: () {
+                                            Navigator.push(context, PageTransition(child: CartScreen(), type: PageTransitionType.fade));
+                                          },
+                                          child: const Text(
+                                            'Đi tới giỏ hàng',
                                             style: TextStyle(
                                               color: Colors.white,
                                               fontSize: 15,
@@ -945,9 +888,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
               ],
             ),
           ),
-          Padding(
-              padding: EdgeInsets.only(
-                  bottom: MediaQuery.of(context).viewInsets.bottom))
+          Padding(padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom))
         ]),
       ),
     );

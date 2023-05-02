@@ -148,11 +148,12 @@ class AccountController {
   }
 
   Future<String> changePassword(String oldPassword, String newPassword) async {
-    int userId = await baseController.getInttoSharedPreference("CURRENT_USER_ID");
-    String url = '$baseUrl/accounts/$userId/change-password';
+    String url = '$baseUrl/accounts/me/change-password';
     Map<String, dynamic> queryParams = {};
     Map<String, dynamic> requestBody = {'oldPass': oldPassword, 'newPass': newPassword};
+
     http.Response response = await baseController.makeAuthenticatedPutRequest(url, queryParams, requestBody);
+
     if (response.statusCode == 200) {
       return "change password success";
     } else {
