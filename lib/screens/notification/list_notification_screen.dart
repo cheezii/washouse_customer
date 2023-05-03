@@ -42,7 +42,10 @@ class _ListNotificationScreenState extends State<ListNotificationScreen> {
   void initSignalR() async {
     hubConnection = HubConnectionBuilder().withUrl(serverUrl).build();
     //await hubConnection.invoke('SubscribeToNotifications');
-    hubConnection.on('UpdateOrderStatus', (notification) => onNotificationReceived(notification as NotificationItem));
+    hubConnection.on(
+        'UpdateOrderStatus',
+        (notification) =>
+            onNotificationReceived(notification as NotificationItem));
     print(1);
     await hubConnection.start();
   }
@@ -66,13 +69,15 @@ class _ListNotificationScreenState extends State<ListNotificationScreen> {
     NotificationResponse notificationResponse = NotificationResponse();
     try {
       String url = '$baseUrl/notifications/me-noti';
-      Response response = await baseController.makeAuthenticatedRequest(url, {});
+      Response response =
+          await baseController.makeAuthenticatedRequest(url, {});
 
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body)["data"];
         notificationResponse = NotificationResponse.fromJson(data);
       } else {
-        throw Exception('Error fetching getNotifications: ${response.statusCode}');
+        throw Exception(
+            'Error fetching getNotifications: ${response.statusCode}');
       }
     } catch (e) {
       print('error: getNotifications-$e');
@@ -124,7 +129,8 @@ class _ListNotificationScreenState extends State<ListNotificationScreen> {
           ),
         ),
         centerTitle: true,
-        title: const Text('Thông báo', style: TextStyle(color: Colors.white, fontSize: 27)),
+        title: const Text('Thông báo',
+            style: TextStyle(color: Colors.white, fontSize: 27)),
         actions: [
           IconButton(
             onPressed: () {},
@@ -182,8 +188,23 @@ class _ListNotificationScreenState extends State<ListNotificationScreen> {
               );
             } else if (snapshot.hasError) {
               return Text('${snapshot.error}');
+            } else {
+              return Column(
+                children: [
+                  const SizedBox(height: 150),
+                  SizedBox(
+                    height: 150,
+                    width: 150,
+                    child: Image.asset('assets/images/empty/empty-data.png'),
+                  ),
+                  const SizedBox(height: 15),
+                  const Text(
+                    'Chưa có thông báo nào.',
+                    style: TextStyle(fontSize: 18, color: textColor),
+                  )
+                ],
+              );
             }
-            return CircularProgressIndicator();
           },
         ),
       ),

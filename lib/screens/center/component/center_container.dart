@@ -1,4 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 
 import '../../../components/constants/color_constants.dart';
@@ -37,88 +39,191 @@ class _CenterContainerState extends State<CenterContainer> {
       onTap: widget.press,
       child: Column(
         children: [
-          Row(
+          Stack(
             children: [
-              SizedBox(
-                width: 100,
-                child: AspectRatio(
-                  aspectRatio: 1,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Image.network(widget.thumbnail!),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 15),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+              Positioned(
+                child: Row(
                   children: [
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
+                    Stack(
+                      children: [
+                        Positioned(
+                          child: SizedBox(
+                            width: 110,
+                            child: AspectRatio(
+                              aspectRatio: 1,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: Image.network(widget.thumbnail!),
+                              ),
+                            ),
+                          ),
+                        ),
+                        widget.hasRating
+                            ? Positioned(
+                                left: 25,
+                                top: 85,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: kBackgroundColor,
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                  height: 30,
+                                  width: 60,
+                                  child: Row(
+                                    children: [
+                                      const SizedBox(width: 5),
+                                      const Icon(Icons.star_rounded,
+                                          color: kPrimaryColor),
+                                      Text(
+                                        '${widget.rating}',
+                                        style: const TextStyle(
+                                            color: textColor, fontSize: 15),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              )
+                            : const SizedBox.shrink(),
+                      ],
+                    ),
+                    const SizedBox(width: 15),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
                             widget.name!,
-                            style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
+                            style: const TextStyle(
+                                fontWeight: FontWeight.w600, fontSize: 16),
+                            maxLines: 2,
                           ),
-                          const SizedBox(width: 5),
-                          widget.isOpening ? const Text('[Mở cửa]') : const Text('[Đóng cửa]'),
-                          const SizedBox(width: 5),
-                          widget.hasRating
-                              ? Row(
+                          const SizedBox(height: 3),
+                          SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              children: [
+                                Text('${widget.distance} km'),
+                                const SizedBox(width: 5),
+                                const Icon(Icons.circle_rounded, size: 5),
+                                const SizedBox(width: 5),
+                                Text('${widget.address}'),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 3),
+                          SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              children: widget.centerCategoriesName
+                                  .map((categoryName) {
+                                return Row(
                                   children: [
-                                    const Icon(Icons.circle_rounded, size: 5),
-                                    const SizedBox(width: 5),
-                                    const Icon(Icons.star_rounded, color: kPrimaryColor),
-                                    Text('${widget.rating}'),
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        border:
+                                            Border.all(color: kPrimaryColor),
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(6),
+                                        child: Text(categoryName!),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 5)
                                   ],
-                                )
-                              : Container(),
+                                );
+                              }).toList(),
+                            ),
+                          )
                         ],
-                      ),
-                    ),
-                    const SizedBox(height: 3),
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: [
-                          Text('${widget.distance} km'),
-                          const SizedBox(width: 5),
-                          const Icon(Icons.circle_rounded, size: 5),
-                          const SizedBox(width: 5),
-                          Text('${widget.address}'),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 3),
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: widget.centerCategoriesName.map((categoryName) {
-                          return Row(
-                            children: [
-                              Container(
-                                decoration: BoxDecoration(
-                                  border: Border.all(color: kPrimaryColor),
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                child: Padding(
-                                  padding: EdgeInsets.all(6),
-                                  child: Text(categoryName!),
-                                ),
-                              ),
-                              SizedBox(width: 5)
-                            ],
-                          );
-                        }).toList(),
                       ),
                     )
+                    // Expanded(
+                    //   child: Column(
+                    //     crossAxisAlignment: CrossAxisAlignment.start,
+                    //     children: [
+                    //       SingleChildScrollView(
+                    //         scrollDirection: Axis.horizontal,
+                    //         child: Row(
+                    //           children: [
+                    //             Text(
+                    //               widget.name!,
+                    //               style: const TextStyle(
+                    //                   fontWeight: FontWeight.w600, fontSize: 18),
+                    //             ),
+                    //             const SizedBox(width: 5),
+                    //             widget.isOpening
+                    //                 ? const Text('[Mở cửa]')
+                    //                 : const Text('[Đóng cửa]'),
+                    //             const SizedBox(width: 5),
+                    //             widget.hasRating
+                    //                 ? Row(
+                    //                     children: [
+                    //                       const Icon(Icons.circle_rounded, size: 5),
+                    //                       const SizedBox(width: 5),
+                    //                       const Icon(Icons.star_rounded,
+                    //                           color: kPrimaryColor),
+                    //                       Text('${widget.rating}'),
+                    //                     ],
+                    //                   )
+                    //                 : Container(),
+                    //           ],
+                    //         ),
+                    //       ),
+                    //       const SizedBox(height: 3),
+                    //       SingleChildScrollView(
+                    //         scrollDirection: Axis.horizontal,
+                    //         child: Row(
+                    //           children: [
+                    //             Text('${widget.distance} km'),
+                    //             const SizedBox(width: 5),
+                    //             const Icon(Icons.circle_rounded, size: 5),
+                    //             const SizedBox(width: 5),
+                    //             Text('${widget.address}'),
+                    //           ],
+                    //         ),
+                    //       ),
+                    //       const SizedBox(height: 3),
+                    //       SingleChildScrollView(
+                    //         scrollDirection: Axis.horizontal,
+                    //         child: Row(
+                    //           children:
+                    //               widget.centerCategoriesName.map((categoryName) {
+                    //             return Row(
+                    //               children: [
+                    //                 Container(
+                    //                   decoration: BoxDecoration(
+                    //                     border: Border.all(color: kPrimaryColor),
+                    //                     borderRadius: BorderRadius.circular(20),
+                    //                   ),
+                    //                   child: Padding(
+                    //                     padding: EdgeInsets.all(6),
+                    //                     child: Text(categoryName!),
+                    //                   ),
+                    //                 ),
+                    //                 SizedBox(width: 5)
+                    //               ],
+                    //             );
+                    //           }).toList(),
+                    //         ),
+                    //       )
+                    //     ],
+                    //   ),
+                    // )
                   ],
                 ),
+              ),
+              Positioned(
+                child: widget.isOpening
+                    ? const SizedBox.shrink()
+                    : Container(
+                        height: 110,
+                        width: MediaQuery.of(context).size.width,
+                        color: kBackgroundColor.withOpacity(0.6),
+                      ),
               )
             ],
           ),

@@ -14,6 +14,7 @@ import 'package:washouse_customer/screens/home/components/blog_skeleton.dart';
 import 'package:washouse_customer/screens/home/components/categories_skeleton.dart';
 import 'package:washouse_customer/screens/home/components/nearby_center_home_skeleton.dart';
 import 'package:washouse_customer/screens/post/list_post_screen.dart';
+import 'package:washouse_customer/screens/post/post_details_screen.dart';
 import '../../resource/controller/category_controller.dart';
 import '../../resource/controller/post_controller.dart';
 import '../../resource/models/category.dart';
@@ -48,20 +49,24 @@ class _HomescreenState extends State<Homescreen> {
 
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Location services are disabled. Please enable the services')));
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text(
+              'Location services are disabled. Please enable the services')));
       return false;
     }
     permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Location permissions are denied')));
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Location permissions are denied')));
         return false;
       }
     }
     if (permission == LocationPermission.deniedForever) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('Location permissions are permanently denied, we cannot request permissions.')));
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text(
+              'Location permissions are permanently denied, we cannot request permissions.')));
       return false;
     }
     return true;
@@ -137,19 +142,28 @@ class _HomescreenState extends State<Homescreen> {
                     TitleWithMoreBtn(
                         title: 'Các loại dịch vụ',
                         press: () {
-                          Navigator.push(context, PageTransition(child: const ListCategoryScreen(), type: PageTransitionType.rightToLeftWithFade));
+                          Navigator.push(
+                              context,
+                              PageTransition(
+                                  child: const ListCategoryScreen(),
+                                  type:
+                                      PageTransitionType.rightToLeftWithFade));
                         }),
                     FutureBuilder(
                       future: categoryController.getCategoriesList(),
                       builder: ((context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.waiting) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
                           return const CategoriesSkeleton();
                         } else if (snapshot.hasData) {
                           categoryList = snapshot.data!;
                           return GridView.builder(
                             shrinkWrap: true,
-                            itemCount: categoryList.length > 8 ? 8 : categoryList.length,
-                            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                            itemCount: categoryList.length > 8
+                                ? 8
+                                : categoryList.length,
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
                               crossAxisCount: 4,
                               childAspectRatio: 0.8,
                               crossAxisSpacing: 15,
@@ -164,8 +178,13 @@ class _HomescreenState extends State<Homescreen> {
                                   Navigator.push(
                                       context,
                                       PageTransition(
-                                          child: ListCenterScreen(CategoryServices: "$categoryId", pageName: "", isNearby: false, isSearch: false),
-                                          type: PageTransitionType.rightToLeftWithFade));
+                                          child: ListCenterScreen(
+                                              CategoryServices: "$categoryId",
+                                              pageName: "",
+                                              isNearby: false,
+                                              isSearch: false),
+                                          type: PageTransitionType
+                                              .rightToLeftWithFade));
                                 },
                               );
                             }),
@@ -210,21 +229,27 @@ class _HomescreenState extends State<Homescreen> {
                       child: FutureBuilder<List<LaundryCenter>>(
                         future: centerController.getCenterNearby(),
                         builder: (context, snapshot) {
-                          if (snapshot.connectionState == ConnectionState.waiting) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
                             return const NearbyCenterHomeSkeleton();
                           } else if (snapshot.hasData) {
                             List<LaundryCenter> centerList = snapshot.data!;
                             return SizedBox(
-                              height: size.height * .25,
+                              height: size.height * .26,
                               child: ListView.builder(
                                 shrinkWrap: true,
                                 scrollDirection: Axis.horizontal,
                                 itemCount: snapshot.data!.length,
                                 itemBuilder: ((context, index) {
-                                  String? fulladdress = centerList[index].centerAddress;
-                                  List<String?> address = fulladdress!.split(",");
+                                  String? fulladdress =
+                                      centerList[index].centerAddress;
+                                  List<String?> address =
+                                      fulladdress!.split(",");
                                   String? currentAddress = address[0];
-                                  bool hasRating = centerList[index].rating != null ? true : false;
+                                  bool hasRating =
+                                      centerList[index].rating != null
+                                          ? true
+                                          : false;
                                   return GestureDetector(
                                     onTap: () => Navigator.pushNamed(
                                       context,
@@ -233,45 +258,61 @@ class _HomescreenState extends State<Homescreen> {
                                     ),
                                     child: Container(
                                       width: 170,
-                                      margin: const EdgeInsets.symmetric(horizontal: 10),
+                                      margin: const EdgeInsets.symmetric(
+                                          horizontal: 10),
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(20),
                                       ),
                                       child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           AspectRatio(
                                             aspectRatio: 1.5,
                                             child: Container(
                                               decoration: BoxDecoration(
                                                 color: Colors.white,
-                                                borderRadius: BorderRadius.circular(20),
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
                                               ),
-                                              child: Image.network(centerList[index].thumbnail!),
+                                              child: Image.network(
+                                                  centerList[index].thumbnail!),
                                             ),
                                           ),
                                           const SizedBox(height: 4),
                                           Text(
                                             centerList[index].title!,
-                                            style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
+                                            style: const TextStyle(
+                                                fontWeight: FontWeight.w600,
+                                                fontSize: 18),
                                           ),
                                           const SizedBox(height: 2),
                                           Text(
                                             currentAddress!,
-                                            style: TextStyle(color: Colors.grey.shade600),
+                                            style: TextStyle(
+                                                color: Colors.grey.shade600),
                                           ),
                                           const SizedBox(height: 2),
                                           Row(
                                             children: [
-                                              Text('${centerList[index].distance} km'),
+                                              Text(
+                                                  '${centerList[index].distance} km'),
                                               const SizedBox(width: 5),
                                               hasRating
                                                   ? Row(
                                                       children: [
-                                                        const Icon(Icons.circle_rounded, size: 5),
-                                                        const SizedBox(width: 5),
-                                                        const Icon(Icons.star_rounded, color: kPrimaryColor),
-                                                        Text('${centerList[index].rating}')
+                                                        const Icon(
+                                                            Icons
+                                                                .circle_rounded,
+                                                            size: 5),
+                                                        const SizedBox(
+                                                            width: 5),
+                                                        const Icon(
+                                                            Icons.star_rounded,
+                                                            color:
+                                                                kPrimaryColor),
+                                                        Text(
+                                                            '${centerList[index].rating}')
                                                       ],
                                                     )
                                                   : Container(),
@@ -308,7 +349,11 @@ class _HomescreenState extends State<Homescreen> {
                     TitleWithMoreBtn(
                         title: 'Bài đăng',
                         press: () {
-                          Navigator.push(context, PageTransition(child: const ListPostScreen(), type: PageTransitionType.fade));
+                          Navigator.push(
+                              context,
+                              PageTransition(
+                                  child: const ListPostScreen(),
+                                  type: PageTransitionType.fade));
                         }),
                   ],
                 ),
@@ -326,86 +371,106 @@ class _HomescreenState extends State<Homescreen> {
                           scrollDirection: Axis.horizontal,
                           itemCount: postList.length,
                           itemBuilder: (context, index) {
-                            return SizedBox(
-                              height: 230,
-                              child: Stack(
-                                children: [
-                                  Positioned(
-                                    top: 35,
-                                    left: 15,
-                                    child: Material(
-                                      child: Container(
-                                        height: 150,
-                                        width: size.width * 0.88,
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius: BorderRadius.circular(5),
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: Colors.grey.withOpacity(0.3),
-                                              offset: const Offset(-10.0, 10.0),
-                                              blurRadius: 20.0,
-                                              spreadRadius: 4.0,
+                            return GestureDetector(
+                              onTap: () => Navigator.push(
+                                  context,
+                                  PageTransition(
+                                      child: PostDetailScreen(
+                                          post: postList[index]),
+                                      type: PageTransitionType.fade)),
+                              child: SizedBox(
+                                height: 230,
+                                child: Stack(
+                                  children: [
+                                    Positioned(
+                                      top: 35,
+                                      left: 15,
+                                      child: Material(
+                                        child: Container(
+                                          height: 150,
+                                          width: size.width * 0.88,
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius:
+                                                BorderRadius.circular(5),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Colors.grey
+                                                    .withOpacity(0.3),
+                                                offset:
+                                                    const Offset(-10.0, 10.0),
+                                                blurRadius: 20.0,
+                                                spreadRadius: 4.0,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Positioned(
+                                      top: 10,
+                                      left: 25,
+                                      child: Card(
+                                        elevation: 10,
+                                        shadowColor:
+                                            Colors.grey.withOpacity(0.5),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(15),
+                                        ),
+                                        child: Container(
+                                          height: 150,
+                                          width: 150,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            image: DecorationImage(
+                                              fit: BoxFit.cover,
+                                              image: NetworkImage(
+                                                  postList[index].thumbnail!),
                                             ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Positioned(
+                                      top: 60,
+                                      left: 187,
+                                      child: SizedBox(
+                                        height: 150,
+                                        width: 180,
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              postList[index].title!,
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.w600,
+                                                  fontSize: 18),
+                                            ),
+                                            const SizedBox(height: 5),
+                                            Text(
+                                              postList[index].description!,
+                                              style: const TextStyle(
+                                                  fontSize: 15,
+                                                  color: textNoteColor),
+                                              overflow: TextOverflow.ellipsis,
+                                              maxLines: 2,
+                                            ),
+                                            // OverflowBox(
+                                            //   maxWidth: 20,
+                                            //   child: Html(
+                                            //     data: postList[index].description!,
+                                            //     defaultTextStyle: const TextStyle(fontSize: 15, color: textNoteColor),
+                                            //   ),
+                                            // ),
                                           ],
                                         ),
                                       ),
-                                    ),
-                                  ),
-                                  Positioned(
-                                    top: 10,
-                                    left: 25,
-                                    child: Card(
-                                      elevation: 10,
-                                      shadowColor: Colors.grey.withOpacity(0.5),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(15),
-                                      ),
-                                      child: Container(
-                                        height: 150,
-                                        width: 150,
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(10),
-                                          image: DecorationImage(
-                                            fit: BoxFit.cover,
-                                            image: NetworkImage(postList[index].thumbnail!),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Positioned(
-                                    top: 60,
-                                    left: 187,
-                                    child: SizedBox(
-                                      height: 150,
-                                      width: 180,
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            postList[index].title!,
-                                            style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
-                                          ),
-                                          const SizedBox(height: 5),
-                                          Text(
-                                            postList[index].description!,
-                                            style: const TextStyle(fontSize: 15, color: textNoteColor),
-                                            overflow: TextOverflow.ellipsis,
-                                            maxLines: 2,
-                                          ),
-                                          // OverflowBox(
-                                          //   maxWidth: 20,
-                                          //   child: Html(
-                                          //     data: postList[index].description!,
-                                          //     defaultTextStyle: const TextStyle(fontSize: 15, color: textNoteColor),
-                                          //   ),
-                                          // ),
-                                        ],
-                                      ),
-                                    ),
-                                  )
-                                ],
+                                    )
+                                  ],
+                                ),
                               ),
                             );
                           },

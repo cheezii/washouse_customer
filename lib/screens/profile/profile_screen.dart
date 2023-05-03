@@ -175,7 +175,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             Navigator.push(
                                 context,
                                 PageTransition(
-                                    child: MyFeedbackScreen(),
+                                    child: const MyFeedbackScreen(),
                                     type: PageTransitionType
                                         .rightToLeftWithFade));
                           },

@@ -71,14 +71,16 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   Widget build(BuildContext context) {
     if (isLoading) {
       return Center(
-        child: LoadingAnimationWidget.prograssiveDots(color: kPrimaryColor, size: 50),
+        child: LoadingAnimationWidget.prograssiveDots(
+            color: kPrimaryColor, size: 50),
       );
     } else {
       return Scaffold(
         backgroundColor: kBackgroundColor,
         appBar: AppBar(
           elevation: 0,
-          backgroundColor: kPrimaryColor, //Theme.of(context).scaffoldBackgroundColor
+          backgroundColor:
+              kPrimaryColor, //Theme.of(context).scaffoldBackgroundColor
           leading: IconButton(
             onPressed: () {
               Navigator.pop(context);
@@ -90,7 +92,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           ),
           title: const Align(
             alignment: Alignment.center,
-            child: Text('Thanh toán', style: TextStyle(color: Colors.white, fontSize: 24)),
+            child: Text('Thanh toán',
+                style: TextStyle(color: Colors.white, fontSize: 24)),
           ),
           actions: const [
             Padding(
@@ -117,7 +120,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                       children: const [
                         Text(
                           'Phương thức thanh toán',
-                          style: TextStyle(color: textColor, fontSize: 18, fontWeight: FontWeight.w700),
+                          style: TextStyle(
+                              color: textColor,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w700),
                         ),
                       ],
                     ),
@@ -141,7 +147,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                             children: [
                               SizedBox(
                                 width: 35,
-                                child: Image.asset('assets/images/shipping/cash-on-delivery.png'),
+                                child: Image.asset(
+                                    'assets/images/shipping/cash-on-delivery.png'),
                               ),
                               const SizedBox(width: 8),
                               const Text(
@@ -157,7 +164,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                             onChanged: (newVal) {
                               setState(() {
                                 payment = newVal!;
-                                baseController.saveInttoSharedPreference("paymentMethod", 0);
+                                baseController.saveInttoSharedPreference(
+                                    "paymentMethod", 0);
                               });
                             },
                           ),
@@ -185,7 +193,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                   children: [
                                     SizedBox(
                                       width: 35,
-                                      child: Image.asset('assets/images/shipping/vnpay-icon.png'),
+                                      child: Image.asset(
+                                          'assets/images/shipping/vnpay-icon.png'),
                                     ),
                                     const SizedBox(width: 8),
                                     const Text(
@@ -201,7 +210,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                     setState(() {
                                       payment = newVal!;
                                       print(newVal);
-                                      baseController.saveInttoSharedPreference("paymentMethod", 1);
+                                      baseController.saveInttoSharedPreference(
+                                          "paymentMethod", 1);
                                     });
                                   },
                                 ),
@@ -227,7 +237,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                         children: [
                           const Text(
                             'Chi tiết thanh toán',
-                            style: TextStyle(color: textColor, fontSize: 18, fontWeight: FontWeight.w700),
+                            style: TextStyle(
+                                color: textColor,
+                                fontSize: 18,
+                                fontWeight: FontWeight.w700),
                           ),
                           const SizedBox(height: 10),
                           Padding(
@@ -235,50 +248,65 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                             child: Column(
                               children: [
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     const Text(
-                                      'Tạm tính:',
+                                      'Tổng dơn hàng:',
                                       style: TextStyle(fontSize: 16),
                                     ),
                                     Text(
                                       //'${PriceUtils().convertFormatPrice(value.getTotalPrice().round())} đ',
-                                      (value.cartItems != null && value.cartItems.isNotEmpty)
+                                      (value.cartItems != null &&
+                                              value.cartItems.isNotEmpty)
                                           ? '${PriceUtils().convertFormatPrice(value.cartItems.fold(0.0, (sum, item) => sum + item.price!).round())} đ'
                                           : '0 đ',
-                                      style: const TextStyle(fontSize: 16, color: textColor, fontWeight: FontWeight.bold),
+                                      style: const TextStyle(
+                                          fontSize: 16,
+                                          color: kPrimaryColor,
+                                          fontWeight: FontWeight.bold),
                                     )
                                   ],
                                 ),
                                 const SizedBox(height: 15),
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     const Text(
-                                      'Mã giảm giá:',
+                                      'Chiết khấu:',
                                       style: TextStyle(fontSize: 16),
                                     ),
                                     Text(
-                                      (value.discount != null && value.discount != 0)
+                                      (value.discount != null &&
+                                              value.discount != 0)
                                           ? '- ${PriceUtils().convertFormatPrice((value.cartItems.fold(0.0, (sum, item) => sum + item.price!) * (value.discount)).round())} đ'
                                           : '- 0 đ',
-                                      style: TextStyle(fontSize: 16, color: textColor, fontWeight: FontWeight.bold),
+                                      style: const TextStyle(
+                                          fontSize: 16,
+                                          color: kPrimaryColor,
+                                          fontWeight: FontWeight.bold),
                                     )
                                   ],
                                 ),
                                 const SizedBox(height: 15),
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     const Text(
-                                      'Phí ship:',
+                                      'Phí vận chuyển:',
                                       style: TextStyle(fontSize: 16),
                                     ),
                                     Text(
-                                      (value.deliveryPrice != null && value.deliveryPrice != 0)
+                                      (value.deliveryPrice != null &&
+                                              value.deliveryPrice != 0)
                                           ? '${PriceUtils().convertFormatPrice(value.deliveryPrice.round())} đ'
                                           : '0 đ',
-                                      style: const TextStyle(fontSize: 16, color: textColor, fontWeight: FontWeight.bold),
+                                      style: const TextStyle(
+                                          fontSize: 16,
+                                          color: kPrimaryColor,
+                                          fontWeight: FontWeight.bold),
                                     )
                                   ],
                                 ),
@@ -288,7 +316,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                   thickness: 2,
                                 ),
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     const Text(
                                       'Tổng cộng dự kiến:',
@@ -300,7 +329,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                           ? '${PriceUtils().convertFormatPrice((value.cartItems.fold(0.0, (sum, item) => sum + item.price!) * (1 - value.discount) + value.deliveryPrice).round())} đ'
                                           : '0 đ',
 
-                                      style: const TextStyle(fontSize: 17, color: kPrimaryColor, fontWeight: FontWeight.bold),
+                                      style: const TextStyle(
+                                          fontSize: 17,
+                                          color: kPrimaryColor,
+                                          fontWeight: FontWeight.bold),
                                     )
                                   ],
                                 ),
@@ -328,7 +360,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   setState(() {
                     noteController.text = value;
                   });
-                  await baseController.saveStringtoSharedPreference("customerMessage", value);
+                  await baseController.saveStringtoSharedPreference(
+                      "customerMessage", value);
                   print(value);
                 },
               ),

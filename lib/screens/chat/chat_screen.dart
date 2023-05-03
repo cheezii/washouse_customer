@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletons/skeletons.dart';
@@ -58,7 +59,7 @@ class _ChatScreenState extends State<ChatScreen> {
     btnClearController.close();
   }
 
-  Future<void> _loadData() async {
+  Future<List> _loadData() async {
     currentUserId =
         await baseController.getInttoSharedPreference("CURRENT_USER_ID");
 
@@ -80,14 +81,15 @@ class _ChatScreenState extends State<ChatScreen> {
         .where('idTo', isEqualTo: currentUserId.toString())
         .get();
 
-    setState(() {
-      if (fromMsg.docs.isNotEmpty) {
-        chatList.addAll(fromMsg.docs);
-      }
-      if (toMsg.docs.isNotEmpty) {
-        chatList.addAll(toMsg.docs);
-      }
-    });
+    //setState(() {
+    if (fromMsg.docs.isNotEmpty) {
+      chatList.addAll(fromMsg.docs);
+    }
+    if (toMsg.docs.isNotEmpty) {
+      chatList.addAll(toMsg.docs);
+    }
+    //});
+    return chatList;
   }
 
   void scrollListener() {
@@ -142,19 +144,78 @@ class _ChatScreenState extends State<ChatScreen> {
             ),
           ),
           buildSearchBar(),
-          Expanded(
-            child: Skeleton(
-              isLoading: isLoadingList,
-              skeleton: CircularProgressIndicator(),
-              child: ListView.builder(
-                itemCount: chatList.length,
-                itemBuilder: (context, index) {
-                  var item = chatList[index];
-                  return buildMsgListItem(item);
-                },
-              ),
-            ),
+          FutureBuilder(
+            future: _loadData(),
+            builder: ((context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(
+                  child: LoadingAnimationWidget.prograssiveDots(
+                      color: kPrimaryColor, size: 50),
+                );
+              } else if (snapshot.hasData) {
+                return Expanded(
+                  child: ListView.builder(
+                    itemCount: chatList.length,
+                    itemBuilder: (context, index) {
+                      var item = chatList[index];
+                      return buildMsgListItem(item);
+                    },
+                  ),
+                );
+              }
+              // else if (snapshot.hasError) {
+              //   return Column(
+              //     crossAxisAlignment: CrossAxisAlignment.center,
+              //     children: const [
+              //       SizedBox(height: 150),
+              //       Text(
+              //         'Oops',
+              //         style: TextStyle(
+              //             color: textBoldColor,
+              //             fontSize: 22,
+              //             fontWeight: FontWeight.bold),
+              //       ),
+              //       SizedBox(height: 10),
+              //       Text(
+              //         'Có lỗi xảy ra rồi!',
+              //         style: TextStyle(
+              //             color: textBoldColor,
+              //             fontSize: 18,
+              //             fontWeight: FontWeight.w400),
+              //       ),
+              //     ],
+              //   );
+              // }
+              return Column(
+                children: [
+                  const SizedBox(height: 150),
+                  SizedBox(
+                    height: 150,
+                    width: 150,
+                    child: Image.asset('assets/images/sticker/app_icon.png'),
+                  ),
+                  const SizedBox(height: 15),
+                  const Text(
+                    'Chưa có đoạn chat nào.',
+                    style: TextStyle(fontSize: 18, color: textColor),
+                  )
+                ],
+              );
+            }),
           ),
+          // Expanded(
+          //   child: Skeleton(
+          //     isLoading: isLoadingList,
+          //     skeleton: CircularProgressIndicator(),
+          //     child: ListView.builder(
+          //       itemCount: chatList.length,
+          //       itemBuilder: (context, index) {
+          //         var item = chatList[index];
+          //         return buildMsgListItem(item);
+          //       },
+          //     ),
+          //   ),
+          // ),
           // Expanded(
           //   child: StreamBuilder<QuerySnapshot>(
           //     stream: chatProvider.getStreamFireStore(

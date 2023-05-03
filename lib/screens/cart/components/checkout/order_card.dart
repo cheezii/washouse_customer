@@ -23,10 +23,11 @@ class OrderCard extends StatelessWidget {
     List<CartItem> cartItems = Provider.of<CartProvider>(context).cartItems;
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
-      height: 174,
+      height: 154,
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: const BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30)),
+        borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(30), topRight: Radius.circular(30)),
         boxShadow: [
           BoxShadow(
             offset: const Offset(0, -15),
@@ -39,7 +40,11 @@ class OrderCard extends StatelessWidget {
         children: [
           GestureDetector(
             onTap: () {
-              Navigator.push(context, PageTransition(child: const AddVoucherScreen(), type: PageTransitionType.rightToLeftWithFade));
+              Navigator.push(
+                  context,
+                  PageTransition(
+                      child: const AddVoucherScreen(),
+                      type: PageTransitionType.rightToLeftWithFade));
             },
             child: Row(
               children: [
@@ -64,12 +69,15 @@ class OrderCard extends StatelessWidget {
                 // ),
                 Consumer<CartProvider>(builder: (context, value, child) {
                   return Text(
-                    (value.promoCode! != '') ? value.promoCode! : 'Chọn mã khuyến mãi',
+                    (value.promoCode! != '')
+                        ? value.promoCode!
+                        : 'Chọn mã khuyến mãi',
                     style: const TextStyle(color: textNoteColor),
                   );
                 }),
                 const SizedBox(width: 10),
-                const Icon(Icons.arrow_forward_ios, size: 12, color: textNoteColor),
+                const Icon(Icons.arrow_forward_ios,
+                    size: 12, color: textNoteColor),
               ],
             ),
           ),
@@ -178,7 +186,10 @@ class OrderCard extends StatelessWidget {
                               //? '${PriceUtils().convertFormatPrice(value.getTotalPrice().round())} đ'
                               ? '${PriceUtils().convertFormatPrice((value.cartItems.fold(0.0, (sum, item) => sum + item.price!) * (1 - value.discount) + value.deliveryPrice).round())} đ'
                               : '0 đ',
-                          style: const TextStyle(fontSize: 20, color: kPrimaryColor, fontWeight: FontWeight.bold),
+                          style: const TextStyle(
+                              fontSize: 20,
+                              color: kPrimaryColor,
+                              fontWeight: FontWeight.bold),
                         ),
                       )
                     ],
@@ -188,7 +199,9 @@ class OrderCard extends StatelessWidget {
                     height: 40,
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)), backgroundColor: kPrimaryColor),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0)),
+                          backgroundColor: kPrimaryColor),
                       onPressed: () async {
                         showDialog(
                             context: context,
@@ -201,18 +214,46 @@ class OrderCard extends StatelessWidget {
                         if (orderId != null && orderId.length == 16) {
                           Navigator.of(context).pop();
                           Navigator.of(context).pop();
-                          Navigator.push(context, PageTransition(child: OrderSuccessScreen(), type: PageTransitionType.rightToLeftWithFade));
+                          Navigator.push(
+                              context,
+                              PageTransition(
+                                  child: OrderSuccessScreen(),
+                                  type:
+                                      PageTransitionType.rightToLeftWithFade));
                         } else {
                           Navigator.of(context).pop();
                           showDialog(
                             context: context,
                             builder: (BuildContext context) {
                               return AlertDialog(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
                                 title: Text('Thông báo'),
-                                content: Text('Có lỗi xảy ra trong quá trình đặt hàng'),
+                                content: Text(
+                                    'Có lỗi xảy ra trong quá trình đặt hàng'),
                                 actions: <Widget>[
                                   ElevatedButton(
-                                    child: Text('Đóng'),
+                                    style: ElevatedButton.styleFrom(
+                                        padding: const EdgeInsetsDirectional
+                                                .symmetric(
+                                            horizontal: 19, vertical: 10),
+                                        foregroundColor:
+                                            kPrimaryColor.withOpacity(.7),
+                                        elevation: 0,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                          side: BorderSide(
+                                              color:
+                                                  kPrimaryColor.withOpacity(.5),
+                                              width: 1),
+                                        ),
+                                        backgroundColor: kPrimaryColor),
+                                    child: Text(
+                                      'Đóng',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
                                     onPressed: () {
                                       Navigator.of(context).pop();
                                     },

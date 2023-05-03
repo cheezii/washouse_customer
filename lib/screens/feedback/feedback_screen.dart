@@ -60,7 +60,7 @@ class _FeedbackOrderScreen extends State<FeedbackOrderScreen> {
             RatingBar.builder(
               itemBuilder: (context, _) => const Icon(
                 Icons.star_rounded,
-                color: kPrimaryColor,
+                color: Colors.yellow,
               ),
               updateOnDrag: true,
               unratedColor: Colors.grey.shade300,
@@ -109,7 +109,60 @@ class _FeedbackOrderScreen extends State<FeedbackOrderScreen> {
                   },
                 ),
               ],
-            )
+            ),
+            const Text(
+              'Dịch vụ đã đặt',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+            ),
+            const SizedBox(height: 10),
+            ListView.separated(
+              padding: const EdgeInsets.only(bottom: 8.0, top: 8.0),
+              itemCount: 4,
+              shrinkWrap: true,
+              itemBuilder: ((context, index) {
+                return Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+                  child: Row(
+                    children: [
+                      Text(
+                        'tên dịch vụ',
+                        style: TextStyle(fontSize: 17),
+                      ),
+                      const Spacer(),
+                      RatingBar.builder(
+                        itemBuilder: (context, _) => const Icon(
+                          Icons.star_rounded,
+                          color: Colors.yellow,
+                        ),
+                        updateOnDrag: true,
+                        unratedColor: Colors.grey.shade300,
+                        minRating: 1,
+                        maxRating: 5,
+                        itemCount: 5,
+                        itemSize: 25,
+                        itemPadding: const EdgeInsets.symmetric(horizontal: 4),
+                        initialRating: 0,
+                        allowHalfRating:
+                            false, // Set this to false to allow integer ratings only
+                        onRatingUpdate: (rating) {
+                          setState(() {
+                            _serviceRating = rating
+                                .round(); // Round the rating to the nearest integer
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                );
+              }),
+              separatorBuilder: (context, index) {
+                return Divider(
+                  thickness: 1,
+                  color: Colors.grey.shade300,
+                );
+              },
+            ),
           ],
         ),
       ),
