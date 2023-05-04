@@ -29,7 +29,9 @@ class _SignUpState extends State<SignUp> {
   GlobalKey<FormState> _formPwdKey = GlobalKey<FormState>();
   GlobalKey<FormState> _formConPwdKey = GlobalKey<FormState>();
   GlobalKey<FormState> _formPhoneNumKey = GlobalKey<FormState>();
+  GlobalKey<FormState> _formEmailKey = GlobalKey<FormState>();
   final typePhoneNum = RegExp(r'(((\+|)84)|0)(3|5|7|8|9)+([0-9]{8})\b');
+  final RegExp emailRegex = RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
   String? _errorMessage;
   bool _isPassHidden = true;
   bool _isConPassHidden = true;
@@ -56,8 +58,7 @@ class _SignUpState extends State<SignUp> {
                   const SizedBox(height: kDefaultPadding),
                   const Text(
                     'Đăng ký',
-                    style:
-                        TextStyle(fontSize: 40.0, fontWeight: FontWeight.w700),
+                    style: TextStyle(fontSize: 40.0, fontWeight: FontWeight.w700),
                   ),
                   const SizedBox(height: kDefaultPadding),
                   Form(
@@ -93,6 +94,37 @@ class _SignUpState extends State<SignUp> {
                     ),
                   ),
                   Form(
+                    key: _formEmailKey,
+                    child: TextFormField(
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'Email không được để trống';
+                        }
+                        if (!emailRegex.hasMatch(value)) {
+                          return 'Vui lòng nhập đúng định dạng email';
+                        }
+                        return null;
+                      },
+                      onSaved: (newValue) {
+                        emailController.text = newValue!;
+                      },
+                      obscureText: false,
+                      style: const TextStyle(
+                        color: textColor,
+                      ),
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        prefixIcon: Icon(
+                          Icons.email_rounded,
+                          color: textColor.withOpacity(.5),
+                        ),
+                        labelText: 'Email',
+                      ),
+                      cursorColor: textColor.withOpacity(.8),
+                      controller: emailController,
+                    ),
+                  ),
+                  Form(
                     key: _formPwdKey,
                     child: TextFormField(
                       validator: (value) {
@@ -118,9 +150,7 @@ class _SignUpState extends State<SignUp> {
                           suffix: InkWell(
                             onTap: _togglePasswordView,
                             child: Icon(
-                              _isPassHidden
-                                  ? Icons.visibility
-                                  : Icons.visibility_off,
+                              _isPassHidden ? Icons.visibility : Icons.visibility_off,
                             ),
                           )),
                       cursorColor: textColor.withOpacity(.8),
@@ -156,9 +186,7 @@ class _SignUpState extends State<SignUp> {
                           suffix: InkWell(
                             onTap: _toggleConPasswordView,
                             child: Icon(
-                              _isConPassHidden
-                                  ? Icons.visibility
-                                  : Icons.visibility_off,
+                              _isConPassHidden ? Icons.visibility : Icons.visibility_off,
                             ),
                           )),
                       cursorColor: textColor.withOpacity(.8),
@@ -170,34 +198,39 @@ class _SignUpState extends State<SignUp> {
                     width: size.width,
                     height: 45,
                     child: ElevatedButton(
-                      onPressed: () {
+                      onPressed: () async {
                         if (_formPhoneNumKey.currentState!.validate() &&
+                            _formEmailKey.currentState!.validate() &&
                             _formPwdKey.currentState!.validate() &&
                             _formConPwdKey.currentState!.validate()) {
                           _formPhoneNumKey.currentState!.save();
+                          _formEmailKey.currentState!.save();
                           _formPwdKey.currentState!.save();
                           _formConPwdKey.currentState!.save();
+                          //check pass và email có trong hệ thống chưa
 
-                          accountController.register(
-                              //emailController.text,
-                              phoneController.text,
-                              passwordController.text,
-                              conpasswordController.text);
+                          // _errorMessage = await accountController.register(
+                          //     phoneController.text, emailController.text, passwordController.text, conpasswordController.text);
+                          _errorMessage = await accountController.sendPhoneOTP(phoneController.text);
+                          //_errorMessage = "success";
+                          print(_errorMessage);
                           if (_errorMessage?.compareTo("success") == 0) {
                             Navigator.push(
                                 context,
                                 PageTransition(
-                                    child: const OTPScreen(
+                                    child: OTPScreen(
                                       isSignUp: true,
+                                      phoneNumber: phoneController.text,
+                                      email: emailController.text,
+                                      password: passwordController.text,
+                                      confirmPassword: conpasswordController.text,
                                     ),
                                     type: PageTransitionType.fade));
                           }
                         }
                       },
                       style: ElevatedButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0)),
-                          backgroundColor: kPrimaryColor),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)), backgroundColor: kPrimaryColor),
                       child: const Text(
                         'Đăng ký',
                         style: TextStyle(fontSize: 18.0),
@@ -209,8 +242,7 @@ class _SignUpState extends State<SignUp> {
                     children: const [
                       Expanded(child: Divider()),
                       Padding(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: kDefaultPadding / 2),
+                        padding: EdgeInsets.symmetric(horizontal: kDefaultPadding / 2),
                         child: Text('HOẶC'),
                       ),
                       Expanded(child: Divider()),
@@ -240,8 +272,7 @@ class _SignUpState extends State<SignUp> {
                         border: Border.all(color: kPrimaryColor),
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 10),
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [

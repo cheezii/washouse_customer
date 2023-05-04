@@ -16,12 +16,12 @@ import '../../components/constants/text_constants.dart';
 BaseController baseController = BaseController();
 
 class AccountController {
-  Future register(String phone, pass, conpass) async {
-    //String? message;
+  Future<String?> register(String phone, email, pass, conpass) async {
+    String? message;
     try {
-      Map data = {"phone": phone, "email": "", "password": pass, "confirmPass": conpass};
-
+      Map data = {"phone": phone, "email": email, "password": pass, "confirmPass": conpass};
       String body = json.encode(data);
+      print(body.toString());
       var url = '$baseUrl/accounts/customers';
       var response = await post(
         Uri.parse(url),
@@ -31,7 +31,33 @@ class AccountController {
       var jsonResponse = jsonDecode(response.body);
       print(jsonResponse);
       if (response.statusCode == 200) {
-        //message = 'success';
+        message = 'success';
+        print(message);
+      } else {
+        throw Exception('Lỗi khi load json');
+      }
+    } catch (e) {
+      print('error: $e');
+    }
+    print(message);
+    return message;
+  }
+
+  Future<String?> sendPhoneOTP(String phone) async {
+    String? message;
+    try {
+      var url = '$baseUrl/verifys/send/otp?phoneNumber=$phone';
+      var response = await post(
+        Uri.parse(url),
+        headers: {
+          'accept': '*/*',
+        },
+        body: jsonEncode({}),
+      );
+      var jsonResponse = jsonDecode(response.body);
+      print(jsonResponse);
+      if (response.statusCode == 200) {
+        message = 'success';
         print("success");
       } else {
         throw Exception('Lỗi khi load json');
@@ -39,7 +65,7 @@ class AccountController {
     } catch (e) {
       print('error: $e');
     }
-    //return message;
+    return message;
   }
 
   Future<CurrentUser> getCurrentUser() async {
@@ -163,12 +189,13 @@ class AccountController {
   }
 
   Future<String> changeProfilePicture(String SavedFileName, int accountId) async {
-    String url = '$baseUrl/accounts/$accountId/profile-picture';
+    String url = '$baseUrl/accounts/profile-picture';
     Map<String, dynamic> queryParams = {'SavedFileName': SavedFileName};
     Map<String, dynamic> requestBody = {};
     print(SavedFileName);
     print(accountId);
     http.Response response = await baseController.makeAuthenticatedPutRequest(url, queryParams, requestBody);
+    print(response.body);
     if (response.statusCode == 200) {
       return "update profile picture success";
     } else {

@@ -93,7 +93,17 @@ class _ResetWithEmailState extends State<ResetWithEmail> {
                           _formEmailKey.currentState!.save();
                           bool isSend = await verifyController.getOTPByEmail(emailController.text);
                           if (isSend) {
-                            Navigator.push(context, PageTransition(child: const OTPScreen(isSignUp: false), type: PageTransitionType.fade));
+                            Navigator.push(
+                                context,
+                                PageTransition(
+                                    child: OTPScreen(
+                                      isSignUp: false,
+                                      phoneNumber: phoneController.text,
+                                      email: null,
+                                      password: null,
+                                      confirmPassword: null,
+                                    ),
+                                    type: PageTransitionType.fade));
                           } else {
                             showDialog(
                               context: context,
