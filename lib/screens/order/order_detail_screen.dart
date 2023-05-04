@@ -60,17 +60,18 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
   void initState() {
     super.initState();
     orderController = OrderController(context);
-    if (widget.status == 'pending') {
+    print('status ${widget.status}');
+    if (widget.status.trim().toLowerCase() == 'pending') {
       _processIndex = 0;
-    } else if (widget.status == 'confirmed') {
+    } else if (widget.status.trim().toLowerCase() == 'confirmed') {
       _processIndex = 1;
-    } else if (widget.status == 'received') {
+    } else if (widget.status.trim().toLowerCase() == 'received') {
       _processIndex = 2;
-    } else if (widget.status == 'processing') {
+    } else if (widget.status.trim().toLowerCase() == 'processing') {
       _processIndex = 3;
-    } else if (widget.status == 'ready') {
+    } else if (widget.status.trim().toLowerCase() == 'ready') {
       _processIndex = 4;
-    } else if (widget.status == 'completed') {
+    } else if (widget.status.trim().toLowerCase() == 'completed') {
       _processIndex = 5;
     }
   }

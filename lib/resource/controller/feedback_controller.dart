@@ -29,6 +29,28 @@ class FeedbackController {
     return message;
   }
 
+  Future<String> createFeedbackService(int serviceId, int centerId, String content, int rating) async {
+    String message = "";
+    try {
+      String url = '$baseUrl/feedbacks/services';
+      dynamic requestBody = {"serviceId": serviceId, "centerId": centerId, "content": content, "rating": rating};
+      Response response = await baseController.makeAuthenticatedPostRequest(url, {}, requestBody);
+      print(response.body);
+      if (response.statusCode == 200) {
+        // Handle successful response
+        var data = jsonDecode(response.body)["message"];
+        message = data;
+        // Do something with the user data...
+      } else {
+        // Handle error response
+        throw Exception('Error fetching createFeedbackService: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('error: createFeedbackService-$e');
+    }
+    return message;
+  }
+
   Future<List<FeedbackModel>?> getCenterFeedback(int centerId) async {
     List<FeedbackModel>? feedbacks = [];
     try {

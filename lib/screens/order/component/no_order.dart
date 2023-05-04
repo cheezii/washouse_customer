@@ -22,7 +22,7 @@ class NoOrderScreen extends StatelessWidget {
         ),
         const SizedBox(height: 15),
         const Text(
-          'Không có giao dịch nào',
+          'Không có đơn hàng nào',
           style: TextStyle(fontSize: 20, color: Colors.black),
         ),
       ],

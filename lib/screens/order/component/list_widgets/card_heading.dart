@@ -38,22 +38,27 @@ class CardHeading extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Row(
-          children: [
-            const Icon(
-              Icons.local_laundry_service_rounded,
-              color: kPrimaryColor,
-              size: 26,
-            ),
-            const SizedBox(width: 4),
-            Text(
-              orderItem.centerName!,
-              style: const TextStyle(
-                fontSize: 19,
-                fontWeight: FontWeight.w700,
+        Expanded(
+          child: Row(
+            children: [
+              const Icon(
+                Icons.local_laundry_service_rounded,
+                color: kPrimaryColor,
+                size: 26,
               ),
-            ),
-          ],
+              const SizedBox(width: 4),
+              Expanded(
+                child: Text(
+                  orderItem.centerName!,
+                  style: const TextStyle(
+                    fontSize: 19,
+                    fontWeight: FontWeight.w700,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
+          ),
         ),
         Container(
           decoration: BoxDecoration(

@@ -139,7 +139,7 @@ class _ListCenterScreenState extends State<ListCenterScreen> {
     Size size = MediaQuery.of(context).size;
     searchController.text = widget.pageName!;
     _filter.searchString = widget.pageName!;
-    //_filter.categoryServices = widget.CategoryServices;
+    _filter.categoryServices = widget.CategoryServices;
     if (widget.pageName! == "Tiệm giặt gần đây") {
       _filter.searchString = null;
       //_filter.sort = "location";

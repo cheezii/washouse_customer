@@ -30,8 +30,7 @@ class MyApp extends StatelessWidget {
   MyApp({required this.prefs});
 
   Future<String> getAccessToken() => BaseController().getAccessToken();
-  Future<bool> isAccess() =>
-      BaseController().getBooltoSharedPreference('isAccess');
+  Future<bool> isAccess() => BaseController().getBooltoSharedPreference('isAccess');
   @override
   Widget build(BuildContext context) {
     HttpOverrides.global = MyHttpOverrides();
@@ -64,9 +63,7 @@ class MyApp extends StatelessWidget {
                 case ConnectionState.active:
                 case ConnectionState.done:
                   if (snapshot.hasData) {
-                    return (snapshot.data == false)
-                        ? SafeArea(child: Onboarding())
-                        : Login();
+                    return (snapshot.data == false) ? SafeArea(child: Onboarding()) : Login();
                   }
                   return SafeArea(child: Onboarding()); // error view
                 default:
@@ -91,8 +88,6 @@ class MyApp extends StatelessWidget {
 class MyHttpOverrides extends HttpOverrides {
   @override
   HttpClient createHttpClient(SecurityContext? context) {
-    return super.createHttpClient(context)
-      ..badCertificateCallback =
-          (X509Certificate cert, String host, int port) => true;
+    return super.createHttpClient(context)..badCertificateCallback = (X509Certificate cert, String host, int port) => true;
   }
 }

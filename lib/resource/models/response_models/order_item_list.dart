@@ -67,6 +67,7 @@ class Order_Item {
 }
 
 class OrderedServices {
+  int? serviceId;
   String? serviceName;
   String? serviceCategory;
   double? measurement;
@@ -74,9 +75,10 @@ class OrderedServices {
   String? image;
   double? price;
 
-  OrderedServices({this.serviceName, this.serviceCategory, this.measurement, this.unit, this.image, this.price});
+  OrderedServices({this.serviceId, this.serviceName, this.serviceCategory, this.measurement, this.unit, this.image, this.price});
 
   OrderedServices.fromJson(Map<String, dynamic> json) {
+    serviceId = (json['serviceId'] as int?)?.toInt();
     serviceName = json['serviceName'] as String;
     serviceCategory = json['serviceCategory'] as String;
     measurement = (json['measurement'] as num?)?.toDouble();
@@ -88,6 +90,7 @@ class OrderedServices {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['serviceName'] = this.serviceName;
+    data['serviceId'] = this.serviceId;
     data['serviceCategory'] = this.serviceCategory;
     data['measurement'] = this.measurement;
     data['unit'] = this.unit;
