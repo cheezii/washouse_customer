@@ -83,6 +83,8 @@ class ChatProvider {
         .snapshots();
   }
 
+  void createChatRoom() {}
+
   void sendMessage(String content, int type, String groupChatId,
       String currentUserId, String peerId) {
     DocumentReference documentReference = firebaseFirestore
