@@ -7,14 +7,23 @@ import 'package:washouse_customer/components/constants/size.dart';
 import 'package:otp_text_field/otp_field.dart';
 import 'package:otp_text_field/style.dart';
 import 'package:washouse_customer/screens/home/base_screen.dart';
+import 'package:washouse_customer/screens/home/home_screen.dart';
 
 import '../../resource/controller/verify_controller.dart';
+import '../../resource/models/current_user.dart';
+import '../../resource/models/customer.dart';
+import '../../resource/models/response_models/LoginResponseModel.dart';
 import '../started/login.dart';
 import 'change_password.dart';
 
 class OTPScreen extends StatefulWidget {
   final bool isSignUp;
-  const OTPScreen({super.key, required this.isSignUp});
+  final String phoneNumber;
+  final String? email;
+  final String? password;
+  final String? confirmPassword;
+  const OTPScreen(
+      {super.key, required this.isSignUp, required this.phoneNumber, required this.email, required this.password, required this.confirmPassword});
 
   @override
   State<OTPScreen> createState() => _OTPScreenState();
@@ -28,7 +37,7 @@ class _OTPScreenState extends State<OTPScreen> {
   bool isCountdowning = true;
   bool isOneDigits = false;
   Timer? _timer;
-  int _start = 60;
+  int _start = 300;
 
   void startTimer() {
     const oneSec = Duration(seconds: 1);
@@ -129,12 +138,37 @@ class _OTPScreenState extends State<OTPScreen> {
                     fieldStyle: FieldStyle.underline,
                     onCompleted: (pin) async {
                       print("Pin: " + pin);
-
-                      bool isTrue = await verifyController.checkOTPByEmail(pin);
+                      bool isTrue = await verifyController.checkOTPByPhone(widget.phoneNumber, pin);
+                      //bool isTrue = await verifyController.checkOTPByEmail(pin);
                       if (isTrue) {
-                        widget.isSignUp
-                            ? Navigator.push(context, PageTransition(child: const Login(), type: PageTransitionType.fade)) //register thành công
-                            : Navigator.push(context, PageTransition(child: const ChangePwdScreen(), type: PageTransitionType.fade));
+                        if (widget.isSignUp) {
+                          String? message =
+                              await accountController.register(widget.phoneNumber, widget.email, widget.password, widget.confirmPassword);
+                          print("OK");
+                          print(message);
+                          if (message?.compareTo("success") == 0) {
+                            LoginResponseModel? responseModel = await accountController.login(widget.phoneNumber, widget.password!);
+                            if (responseModel != null) {
+                              CurrentUser currentUserModel = await accountController.getCurrentUser();
+                              if (currentUserModel != null) {
+                                baseController.saveStringtoSharedPreference("CURRENT_USER_NAME", currentUserModel.name);
+                                baseController.saveStringtoSharedPreference("CURRENT_USER_EMAIL", currentUserModel.email);
+                                baseController.saveStringtoSharedPreference("CURRENT_USER_PHONE", currentUserModel.phone);
+                                baseController.saveInttoSharedPreference("CURRENT_USER_ID", currentUserModel.accountId!);
+                                baseController.saveStringtoSharedPreference("CURRENT_USER_PASSWORD", widget.password!);
+                              }
+                              Customer? currentCustomer = await accountController.getCustomerInfomation(currentUserModel.accountId!);
+                              if (currentCustomer != null) {
+                                baseController.saveInttoSharedPreference("CURRENT_CUSTOMER_ID", currentCustomer.id!);
+                              }
+                              Navigator.of(context).pop();
+                              // ignore: use_build_context_synchronously
+                              Navigator.push(context, PageTransition(child: const BaseScreen(), type: PageTransitionType.fade));
+                            }
+                            //Navigator.push(context, PageTransition(child: const Homescreen(), type: PageTransitionType.fade));
+                          }
+                        } else if (!widget.isSignUp)
+                          Navigator.push(context, PageTransition(child: const ChangePwdScreen(), type: PageTransitionType.fade));
                       } else {
                         showDialog(
                           context: context,
@@ -155,7 +189,7 @@ class _OTPScreenState extends State<OTPScreen> {
                   const SizedBox(height: 40),
                   isCountdowning
                       ? Text(
-                          isOneDigits ? '00:0$_start' : '00:$_start',
+                          '${(_start ~/ 60).toString().padLeft(2, '0')}:${(_start % 60).toString().padLeft(2, '0')}',
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w500,
