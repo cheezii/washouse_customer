@@ -21,7 +21,22 @@ class FeedbackToOrderScreen extends StatefulWidget {
 }
 
 class _FeedbackToOrderScreenState extends State<FeedbackToOrderScreen> {
+  List<FeedbackModel> feedbackList = [];
   bool isMore = false;
+  bool isLoading = true;
+
+  void getList() {
+    feedbackList = widget.list;
+    if (feedbackList.isNotEmpty) {
+      isLoading = false;
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     if (widget.list.isEmpty) {

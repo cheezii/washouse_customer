@@ -51,30 +51,6 @@ class _SearchOrderScreenState extends State<SearchOrderScreen> {
     }
   }
 
-  // void getOrderItems() async {
-  //   // Show loading indicator
-  //   setState(() {
-  //     isLoading = true;
-  //   });
-
-  //   try {
-  //     // Wait for getOrderInformation to complete
-  //     List<Order_Item> result = await orderController.getOrderList(
-  //         1, 100, null, null, null, null, null);
-  //     setState(() {
-  //       // Update state with loaded data
-  //       orderList = result;
-  //       isLoading = false;
-  //     });
-  //   } catch (e) {
-  //     // Handle error
-  //     setState(() {
-  //       isLoading = false;
-  //     });
-  //     print('Error loading data: $e');
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

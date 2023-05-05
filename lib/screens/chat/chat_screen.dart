@@ -17,6 +17,7 @@ import 'package:washouse_customer/utils/time_utils.dart';
 
 import '../../components/constants/firestore_constants.dart';
 import '../../resource/models/chat_message.dart';
+import '../../resource/provider/notify_provider.dart';
 import '../../utils/debouncer.dart';
 import '../../utils/keyboard_util.dart';
 import '../notification/list_notification_screen.dart';
@@ -27,6 +28,8 @@ class ChatScreen extends StatefulWidget {
   @override
   State<ChatScreen> createState() => _ChatScreenState();
 }
+
+NotifyProvider notifyProvider = NotifyProvider();
 
 class _ChatScreenState extends State<ChatScreen> {
   List listSearch = [];
@@ -54,11 +57,14 @@ class _ChatScreenState extends State<ChatScreen> {
     super.initState();
     _loadData();
     listScrollController.addListener(scrollListener);
+    notifyProvider.addListener(() => mounted ? setState(() {}) : null);
+    notifyProvider.getNoti();
   }
 
   @override
   void dispose() {
     super.dispose();
+    notifyProvider.removeListener(() {});
     btnClearController.close();
   }
 
@@ -138,10 +144,37 @@ class _ChatScreenState extends State<ChatScreen> {
                               child: const ListNotificationScreen(),
                               type: PageTransitionType.rightToLeftWithFade));
                     },
-                    icon: const Icon(
-                      Icons.notifications,
-                      color: textColor,
-                      size: 30.0,
+                    icon: Stack(
+                      children: [
+                        const Icon(
+                          Icons.notifications,
+                          color: textColor,
+                          size: 30.0,
+                        ),
+                        if (notifyProvider.numOfNotifications > 0)
+                          Positioned(
+                            right: 0,
+                            child: Container(
+                              padding: const EdgeInsets.all(2),
+                              decoration: BoxDecoration(
+                                color: Colors.red,
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                              constraints: const BoxConstraints(
+                                minWidth: 16,
+                                minHeight: 16,
+                              ),
+                              child: Text(
+                                '${notifyProvider.numOfNotifications}',
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 10,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ),
+                      ],
                     ),
                   ),
                 ],

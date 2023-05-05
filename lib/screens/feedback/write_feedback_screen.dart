@@ -48,7 +48,8 @@ class _FeedbackOrderScreen extends State<FeedbackOrderScreen> {
           ),
         ),
         centerTitle: true,
-        title: const Text('Đánh giá đơn hàng', style: TextStyle(color: textColor, fontSize: 27)),
+        title: const Text('Đánh giá đơn hàng',
+            style: TextStyle(color: textColor, fontSize: 27)),
       ),
       body: Padding(
         padding: const EdgeInsets.only(top: 10, left: 16, right: 16),
@@ -77,10 +78,12 @@ class _FeedbackOrderScreen extends State<FeedbackOrderScreen> {
               itemSize: 30,
               itemPadding: const EdgeInsets.symmetric(horizontal: 4),
               initialRating: 0,
-              allowHalfRating: false, // Set this to false to allow integer ratings only
+              allowHalfRating:
+                  false, // Set this to false to allow integer ratings only
               onRatingUpdate: (rating) {
                 setState(() {
-                  _rating = rating.round(); // Round the rating to the nearest integer
+                  _rating =
+                      rating.round(); // Round the rating to the nearest integer
                 });
               },
             ),
@@ -99,8 +102,14 @@ class _FeedbackOrderScreen extends State<FeedbackOrderScreen> {
                   controller: _textEditingController,
                   decoration: InputDecoration(
                     hintText: 'Nhập nội dung đánh giá',
-                    contentPadding: const EdgeInsets.only(top: 8, left: 8, right: 8, bottom: 8),
+                    contentPadding: const EdgeInsets.only(
+                        top: 8, left: 8, right: 8, bottom: 8),
                     enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Colors.grey.shade600,
+                      ),
+                    ),
+                    focusedBorder: OutlineInputBorder(
                       borderSide: BorderSide(
                         color: Colors.grey.shade600,
                       ),
@@ -114,56 +123,66 @@ class _FeedbackOrderScreen extends State<FeedbackOrderScreen> {
                 ),
               ],
             ),
-            const Text(
-              'Dịch vụ đã đặt',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
-            ),
-            const SizedBox(height: 10),
-            ListView.separated(
-              padding: const EdgeInsets.only(bottom: 8.0, top: 8.0),
-              itemCount: widget.orderItem.orderedServices!.length,
-              shrinkWrap: true,
-              itemBuilder: ((context, index) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
-                  child: Row(
-                    children: [
-                      Text(
-                        '${widget.orderItem.orderedServices![index].serviceName}',
-                        style: const TextStyle(fontSize: 17),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Dịch vụ đã đặt',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+                ),
+                const SizedBox(height: 10),
+                ListView.separated(
+                  padding: const EdgeInsets.only(bottom: 8.0, top: 8.0),
+                  itemCount: widget.orderItem.orderedServices!.length,
+                  shrinkWrap: true,
+                  itemBuilder: ((context, index) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 6, vertical: 4),
+                      child: Row(
+                        children: [
+                          Text(
+                            '${widget.orderItem.orderedServices![index].serviceName}',
+                            style: const TextStyle(fontSize: 17),
+                          ),
+                          const Spacer(),
+                          RatingBar.builder(
+                            itemBuilder: (context, _) => const Icon(
+                              Icons.star_rounded,
+                              color: Colors.yellow,
+                            ),
+                            updateOnDrag: true,
+                            unratedColor: Colors.grey.shade300,
+                            minRating: 1,
+                            maxRating: 5,
+                            itemCount: 5,
+                            itemSize: 25,
+                            itemPadding:
+                                const EdgeInsets.symmetric(horizontal: 4),
+                            initialRating: 0,
+                            allowHalfRating:
+                                false, // Set this to false to allow integer ratings only
+                            onRatingUpdate: (rating) {
+                              setState(() {
+                                _serviceRatings[index][
+                                    widget.orderItem.orderedServices![index]
+                                        .serviceId!] = rating
+                                    .round(); // Round the rating to the nearest integer
+                              });
+                            },
+                          ),
+                        ],
                       ),
-                      const Spacer(),
-                      RatingBar.builder(
-                        itemBuilder: (context, _) => const Icon(
-                          Icons.star_rounded,
-                          color: Colors.yellow,
-                        ),
-                        updateOnDrag: true,
-                        unratedColor: Colors.grey.shade300,
-                        minRating: 1,
-                        maxRating: 5,
-                        itemCount: 5,
-                        itemSize: 25,
-                        itemPadding: const EdgeInsets.symmetric(horizontal: 4),
-                        initialRating: 0,
-                        allowHalfRating: false, // Set this to false to allow integer ratings only
-                        onRatingUpdate: (rating) {
-                          setState(() {
-                            _serviceRatings[index][widget.orderItem.orderedServices![index].serviceId!] =
-                                rating.round(); // Round the rating to the nearest integer
-                          });
-                        },
-                      ),
-                    ],
-                  ),
-                );
-              }),
-              separatorBuilder: (context, index) {
-                return Divider(
-                  thickness: 1,
-                  color: Colors.grey.shade300,
-                );
-              },
+                    );
+                  }),
+                  separatorBuilder: (context, index) {
+                    return Divider(
+                      thickness: 1,
+                      color: Colors.grey.shade300,
+                    );
+                  },
+                ),
+              ],
             ),
           ],
         ),
@@ -173,7 +192,8 @@ class _FeedbackOrderScreen extends State<FeedbackOrderScreen> {
         height: 70,
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: const BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30)),
+          borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(30), topRight: Radius.circular(30)),
           boxShadow: [
             BoxShadow(
               offset: const Offset(0, -15),
@@ -186,16 +206,29 @@ class _FeedbackOrderScreen extends State<FeedbackOrderScreen> {
           width: 190,
           height: 40,
           child: ElevatedButton(
-            style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)), backgroundColor: kPrimaryColor),
-            onPressed: (_rating == 0 || content.trim() == "" || _serviceRatings.any((element) => (element.values == 0)))
+            style: ElevatedButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20)),
+                backgroundColor: kPrimaryColor),
+            onPressed: (_rating == 0 ||
+                    content.trim() == "" ||
+                    _serviceRatings.any((element) => (element.values == 0)))
                 ? null
                 : () async {
                     String message =
-                        await feedbackController.createFeedbackOrder(widget.orderItem.orderId!, widget.orderItem.centerId!, content, _rating);
+                        await feedbackController.createFeedbackOrder(
+                            widget.orderItem.orderId!,
+                            widget.orderItem.centerId!,
+                            content,
+                            _rating);
                     String message_services = "success";
                     for (var element in widget.orderItem.orderedServices!) {
                       String message_service =
-                          await feedbackController.createFeedbackService(element.serviceId!, widget.orderItem.centerId!, content, _rating);
+                          await feedbackController.createFeedbackService(
+                              element.serviceId!,
+                              widget.orderItem.centerId!,
+                              content,
+                              _rating);
                       if (message_service != "success") {
                         message_services = "fail";
                         return;
@@ -208,14 +241,21 @@ class _FeedbackOrderScreen extends State<FeedbackOrderScreen> {
                         context: context,
                         builder: (BuildContext context) {
                           return AlertDialog(
-                            title: const Text('Bạn đã đánh giá đơn hàng thành công'),
+                            title: const Align(
+                              alignment: Alignment.center,
+                              child: Text('Đánh giá đơn hàng thành công'),
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15),
+                            ),
                             content: Column(
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 SizedBox(
                                   height: 100,
                                   width: 100,
-                                  child: Image.asset('assets/images/firework.png'),
+                                  child:
+                                      Image.asset('assets/images/firework.png'),
                                 ),
                                 const SizedBox(height: 10),
                                 const Text('Cảm ơn bạn đã đánh giá đơn hàng.'),
@@ -230,12 +270,16 @@ class _FeedbackOrderScreen extends State<FeedbackOrderScreen> {
                                       PageTransition(
                                           child: OrderDetailScreen(
                                             orderId: widget.orderItem.orderId!,
-                                            isPayment: widget.orderItem.isFeedback!,
+                                            isPayment:
+                                                widget.orderItem.isFeedback!,
                                             status: widget.orderItem.status!,
                                           ),
                                           type: PageTransitionType.fade));
                                 },
-                                child: Text('Quay lại'),
+                                child: const Text(
+                                  'Quay lại',
+                                  style: TextStyle(color: kPrimaryColor),
+                                ),
                               ),
                             ],
                           );

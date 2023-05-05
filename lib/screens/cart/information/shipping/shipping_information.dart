@@ -36,8 +36,10 @@ class FillShippingInformation extends StatefulWidget {
 }
 
 class _FillShippingInformationState extends State<FillShippingInformation> {
-  final _dropDownSendWardKey = GlobalKey<FormBuilderFieldState>();
-  final _dropDownReceiveWardKey = GlobalKey<FormBuilderFieldState>();
+  final GlobalKey<FormBuilderFieldState> _dropDownSendWardKey =
+      GlobalKey<FormBuilderFieldState>();
+  final GlobalKey<FormBuilderFieldState> _dropDownReceiveWardKey =
+      GlobalKey<FormBuilderFieldState>();
   BaseController baseController = BaseController();
   CenterController centerController = CenterController();
   TextEditingController sendAdressController = TextEditingController();
@@ -46,6 +48,8 @@ class _FillShippingInformationState extends State<FillShippingInformation> {
   GlobalKey<FormState> _formReceiveAddressKey = GlobalKey<FormState>();
   bool checkSendOrder = false;
   bool checkReceiveOrder = false;
+  bool isLoadingSendWard = true;
+  bool isLoadingReceiveWard = true;
 
   String? sendDistrict;
   String? sendWard;
@@ -58,17 +62,60 @@ class _FillShippingInformationState extends State<FillShippingInformation> {
   TimeOfDay? maxTomorrow;
   int? _centerId;
 
-  List districtList = [];
-  List wardList = [];
+  List sendDistrictList = [];
+  List sendWardList = [];
+  List receiveDistrictList = [];
+  List receiveWardList = [];
 
-  var isSelectedDistrict = false;
-
-  Future getDistrictList() async {
+  Future getSendDistrictList() async {
     Response response = await get(Uri.parse('$baseUrl/districts'));
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
       setState(() {
-        districtList = data['data'];
+        sendDistrictList = data['data'];
+        isLoadingSendWard = true;
+      });
+    } else {
+      throw Exception("Lỗi khi load Json");
+    }
+  }
+
+  Future getSendWardsList(String district) async {
+    int districtId = int.parse(district);
+    Response response =
+        await get(Uri.parse('$baseUrl/districts/$districtId/wards'));
+    if (response.statusCode == 200) {
+      var data = json.decode(response.body);
+      setState(() {
+        sendWardList = data['data'];
+        isLoadingSendWard = true;
+      });
+    } else {
+      throw Exception("Lỗi khi load Json");
+    }
+  }
+
+  Future getReceiveDistrictList() async {
+    Response response = await get(Uri.parse('$baseUrl/districts'));
+    if (response.statusCode == 200) {
+      var data = jsonDecode(response.body);
+      setState(() {
+        receiveDistrictList = data['data'];
+      });
+    } else {
+      throw Exception("Lỗi khi load Json");
+    }
+  }
+
+  Future getReceiveWardsList(String district) async {
+    int districtId = int.parse(district);
+    Response response =
+        await get(Uri.parse('$baseUrl/districts/$districtId/wards'));
+    if (response.statusCode == 200) {
+      var data = json.decode(response.body);
+      setState(() {
+        receiveWardList = data['data'];
+        isLoadingReceiveWard = true;
       });
     } else {
       throw Exception("Lỗi khi load Json");
@@ -108,24 +155,11 @@ class _FillShippingInformationState extends State<FillShippingInformation> {
     }
   }
 
-  Future getWardsList(String district) async {
-    int districtId = int.parse(district);
-    Response response =
-        await get(Uri.parse('$baseUrl/districts/$districtId/wards'));
-    if (response.statusCode == 200) {
-      var data = json.decode(response.body);
-      setState(() {
-        wardList = data['data'];
-      });
-    } else {
-      throw Exception("Lỗi khi load Json");
-    }
-  }
-
   @override
   void initState() {
-    getDistrictList();
     getCenterOperatingTime();
+    getSendDistrictList();
+    getReceiveDistrictList();
     super.initState();
   }
 
@@ -381,7 +415,7 @@ class _FillShippingInformationState extends State<FillShippingInformation> {
                                   height: 40,
                                   width: 150,
                                   child: DropdownButtonFormField(
-                                    items: districtList.map((item) {
+                                    items: sendDistrictList.map((item) {
                                       return DropdownMenuItem(
                                         value: item['districtId'].toString(),
                                         child: Text(item['districtName']),
@@ -404,7 +438,7 @@ class _FillShippingInformationState extends State<FillShippingInformation> {
                                     onChanged: (String? newValue) {
                                       setState(() {
                                         sendDistrict = newValue!;
-                                        getWardsList(newValue);
+                                        getSendWardsList(newValue);
                                         _dropDownSendWardKey.currentState!
                                             .reset();
                                         _dropDownSendWardKey.currentState!
@@ -433,7 +467,7 @@ class _FillShippingInformationState extends State<FillShippingInformation> {
                                   child: FormBuilderDropdown(
                                     key: _dropDownSendWardKey,
                                     name: 'Phường/xã',
-                                    items: wardList.map((item) {
+                                    items: sendWardList.map((item) {
                                       return DropdownMenuItem(
                                         value: item['wardId'].toString(),
                                         child: Text(item['wardName']),
@@ -542,7 +576,7 @@ class _FillShippingInformationState extends State<FillShippingInformation> {
                                   height: 40,
                                   width: 150,
                                   child: DropdownButtonFormField(
-                                    items: districtList.map((item) {
+                                    items: receiveDistrictList.map((item) {
                                       return DropdownMenuItem(
                                         value: item['districtId'].toString(),
                                         child: Text(item['districtName']),
@@ -565,7 +599,7 @@ class _FillShippingInformationState extends State<FillShippingInformation> {
                                     onChanged: (String? newValue) {
                                       setState(() {
                                         receiveDistrict = newValue!;
-                                        getWardsList(newValue);
+                                        getReceiveWardsList(newValue);
                                         _dropDownReceiveWardKey.currentState!
                                             .reset();
                                         _dropDownReceiveWardKey.currentState!
@@ -594,7 +628,7 @@ class _FillShippingInformationState extends State<FillShippingInformation> {
                                   child: FormBuilderDropdown(
                                     key: _dropDownReceiveWardKey,
                                     name: 'Phường/xã',
-                                    items: wardList.map((item) {
+                                    items: receiveWardList.map((item) {
                                       return DropdownMenuItem(
                                         value: item['wardId'].toString(),
                                         child: Text(item['wardName']),

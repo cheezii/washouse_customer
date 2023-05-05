@@ -9,6 +9,7 @@ import '../../components/constants/color_constants.dart';
 import '../../components/constants/text_constants.dart';
 import '../../resource/models/response_models/notification_item_response.dart';
 import '../../resource/models/response_models/notification.dart';
+import '../../resource/provider/notify_provider.dart';
 import 'component/notification_list.dart';
 import 'package:flutter/material.dart';
 import 'package:signalr_client/signalr_client.dart' as singlr;
@@ -21,6 +22,8 @@ class ListNotificationScreen extends StatefulWidget {
   @override
   State<ListNotificationScreen> createState() => _ListNotificationScreenState();
 }
+
+NotifyProvider notifyProvider = NotifyProvider();
 
 class _ListNotificationScreenState extends State<ListNotificationScreen> {
   NotificationController notificationController = NotificationController();
@@ -35,6 +38,15 @@ class _ListNotificationScreenState extends State<ListNotificationScreen> {
     // centerArgs = widget.orderId;
     //getNotifications();
     initSignalR();
+    notifyProvider.addListener(() => mounted ? setState(() {}) : null);
+    notifyProvider.getNoti();
+  }
+
+  @override
+  void dispose() {
+    hubConnection.stop();
+    notifyProvider.removeListener(() {});
+    super.dispose();
   }
 
   void initSignalR() async {
@@ -55,12 +67,6 @@ class _ListNotificationScreenState extends State<ListNotificationScreen> {
         countUnread = countUnread + 1;
       }
     });
-  }
-
-  @override
-  void dispose() {
-    hubConnection.stop();
-    super.dispose();
   }
 
   Future<NotificationResponse> getNotifications() async {
@@ -129,16 +135,16 @@ class _ListNotificationScreenState extends State<ListNotificationScreen> {
         centerTitle: true,
         title: const Text('Thông báo',
             style: TextStyle(color: Colors.white, fontSize: 27)),
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(
-              Icons.check_circle_outline_outlined,
-              color: Colors.white,
-              size: 24,
-            ),
-          ),
-        ],
+        // actions: [
+        //   IconButton(
+        //     onPressed: () {},
+        //     icon: const Icon(
+        //       Icons.check_circle_outline_outlined,
+        //       color: Colors.white,
+        //       size: 24,
+        //     ),
+        //   ),
+        // ],
       ),
       // body: Column(
       //   children: [
@@ -181,6 +187,7 @@ class _ListNotificationScreenState extends State<ListNotificationScreen> {
                   return Padding(
                     padding: const EdgeInsets.symmetric(vertical: 5),
                     child: NotificationList(
+                      id: notifications[index].id!,
                       title: notifications[index].title!,
                       content: notifications[index].content!,
                       image: 'assets/images/logo/washouse-favicon.png',

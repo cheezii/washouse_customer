@@ -31,13 +31,15 @@ class DetailItemCard extends StatelessWidget {
               cart.image!, // replace with your own image URL
               width: 80, // set your desired width here
               height: 80, // set your desired height here
-              fit: BoxFit.cover, // set the image fit to cover the entire container
+              fit: BoxFit
+                  .cover, // set the image fit to cover the entire container
               loadingBuilder: (context, child, loadingProgress) {
                 if (loadingProgress == null) return child;
                 return basic.Center(
                   child: CircularProgressIndicator(
                       value: loadingProgress.expectedTotalBytes != null
-                          ? loadingProgress.cumulativeBytesLoaded.toDouble() / loadingProgress.expectedTotalBytes!.toDouble()
+                          ? loadingProgress.cumulativeBytesLoaded.toDouble() /
+                              loadingProgress.expectedTotalBytes!.toDouble()
                           : null),
                 );
               }, // replace with your own loading widget
@@ -61,7 +63,10 @@ class DetailItemCard extends StatelessWidget {
                         child: Text(
                           //cart.service.name!,
                           cart.serviceName!,
-                          style: const TextStyle(fontSize: 17, color: Colors.black, fontWeight: FontWeight.bold),
+                          style: const TextStyle(
+                              fontSize: 17,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold),
                           maxLines: 2,
                         ),
                       ),
@@ -69,15 +74,19 @@ class DetailItemCard extends StatelessWidget {
                       Row(
                         children: [
                           Text(
-                            cart.unit!.compareTo('Kg') == 0
+                            cart.unit!.compareTo('kg') == 0
                                 ? 'KL: x${cart.measurement} kg'
                                 : 'SL: x${cart.measurement!.round()} ${cart.unit!.toLowerCase()}',
-                            style: const TextStyle(color: textColor, fontSize: 16),
+                            style:
+                                const TextStyle(color: textColor, fontSize: 16),
                           ),
                           const Spacer(),
                           Text(
                             '${(cart.status == null) ? 'Chưa có' : OrderUtils().mapVietnameseOrderDetailStatus(cart.status!)}',
-                            style: TextStyle(color: kPrimaryColor, fontSize: 16, fontWeight: FontWeight.w500),
+                            style: TextStyle(
+                                color: kPrimaryColor,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500),
                           )
                         ],
                       ),
@@ -103,7 +112,10 @@ class DetailItemCard extends StatelessWidget {
                         child: Text(
                           //cart.service.name!,
                           cart.serviceName!,
-                          style: const TextStyle(fontSize: 17, color: Colors.black, fontWeight: FontWeight.bold),
+                          style: const TextStyle(
+                              fontSize: 17,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold),
                           maxLines: 2,
                         ),
                       ),
@@ -111,10 +123,11 @@ class DetailItemCard extends StatelessWidget {
                       Row(
                         children: [
                           Text(
-                            cart.unit!.compareTo('Kg') == 0
+                            cart.unit!.compareTo('kg') == 0
                                 ? 'KL: x${cart.measurement} kg'
                                 : 'SL: x${cart.measurement!.round()} ${cart.unit!.toLowerCase()}',
-                            style: const TextStyle(color: textColor, fontSize: 16),
+                            style:
+                                const TextStyle(color: textColor, fontSize: 16),
                           ),
                           const Spacer(),
                           Text(

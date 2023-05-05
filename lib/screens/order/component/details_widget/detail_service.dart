@@ -33,16 +33,21 @@ class _DetailServiceState extends State<DetailService> {
                 size: 24,
               ),
               const SizedBox(width: 6),
-              Text(
-                orderInfo.center!.centerName!,
-                style:
-                    const TextStyle(fontWeight: FontWeight.w500, fontSize: 20),
+              SizedBox(
+                width: 330,
+                child: Text(
+                  orderInfo.center!.centerName!,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                      fontWeight: FontWeight.w500, fontSize: 20),
+                ),
               )
             ],
           ),
-          const SizedBox(height: 6),
+          const SizedBox(height: 8),
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
             child: ListView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),

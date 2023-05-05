@@ -8,6 +8,7 @@ import 'package:washouse_customer/screens/profile/my_feed_back_screen.dart';
 import 'package:washouse_customer/screens/profile/payment_screen.dart';
 import 'dart:async';
 import '../../resource/controller/base_controller.dart';
+import '../../resource/provider/notify_provider.dart';
 import '../cart/order_success_screen.dart';
 import '../notification/list_notification_screen.dart';
 import 'about_us_screen.dart';
@@ -22,16 +23,26 @@ class ProfileScreen extends StatefulWidget {
 }
 
 BaseController baseController = BaseController();
+NotifyProvider notifyProvider = NotifyProvider();
 
 class _ProfileScreenState extends State<ProfileScreen> {
   String _currentUserName = '';
   String _currentUserEmail = '';
   String? _currentUserAvartar;
+  int numOfNotifications = 0;
 
   @override
   void initState() {
     super.initState();
     _loadData();
+    notifyProvider.addListener(() => mounted ? setState(() {}) : null);
+    notifyProvider.getNoti();
+  }
+
+  @override
+  void dispose() {
+    notifyProvider.removeListener(() {});
+    super.dispose();
   }
 
   Future<void> _loadData() async {
@@ -81,10 +92,37 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 child: const ListNotificationScreen(),
                                 type: PageTransitionType.rightToLeftWithFade));
                       },
-                      icon: const Icon(
-                        Icons.notifications,
-                        color: textColor,
-                        size: 30.0,
+                      icon: Stack(
+                        children: [
+                          const Icon(
+                            Icons.notifications,
+                            color: textColor,
+                            size: 30.0,
+                          ),
+                          if (notifyProvider.numOfNotifications > 0)
+                            Positioned(
+                              right: 0,
+                              child: Container(
+                                padding: const EdgeInsets.all(2),
+                                decoration: BoxDecoration(
+                                  color: Colors.red,
+                                  borderRadius: BorderRadius.circular(6),
+                                ),
+                                constraints: const BoxConstraints(
+                                  minWidth: 16,
+                                  minHeight: 16,
+                                ),
+                                child: Text(
+                                  '${notifyProvider.numOfNotifications}',
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 10,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            ),
+                        ],
                       ),
                     ),
                   ],

@@ -2,9 +2,10 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:washouse_customer/resource/models/response_models/order_item_list.dart';
+import 'package:washouse_customer/screens/profile/my_feed_back_screen.dart';
 
 import '../../../../components/constants/color_constants.dart';
-import '../../../feedback/feedback_screen.dart';
+import '../../../feedback/write_feedback_screen.dart';
 import '../../cancel_detail_screen.dart';
 import '../../order_detail_screen.dart';
 
@@ -68,17 +69,22 @@ class CardFooter extends StatelessWidget {
                               const BorderSide(color: kPrimaryColor, width: 1),
                         ),
                         backgroundColor: kPrimaryColor),
-                    child: Text(
+                    child: const Text(
                       'Viết đánh giá',
-                      style: const TextStyle(color: Colors.white),
+                      style: TextStyle(color: Colors.white),
                     ),
                   )
                 : ElevatedButton(
                     onPressed: () {
+                      // Navigator.push(
+                      //     context,
+                      //     PageTransition(
+                      //         child: FeedbackOrderScreen(orderItem: orderItem),
+                      //         type: PageTransitionType.fade));
                       Navigator.push(
                           context,
                           PageTransition(
-                              child: FeedbackOrderScreen(orderItem: orderItem),
+                              child: MyFeedbackScreen(),
                               type: PageTransitionType.fade));
                     },
                     style: ElevatedButton.styleFrom(
@@ -246,7 +252,7 @@ class CardFooter extends StatelessWidget {
                     ),
                     backgroundColor: cancelledColor),
                 child: const Text(
-                  'Hủy đơn',
+                  'Hủy dịch vụ',
                   style: TextStyle(color: Colors.white),
                 ),
               )

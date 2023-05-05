@@ -9,6 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:washouse_customer/components/route/route_generator.dart';
 import 'package:washouse_customer/resource/controller/base_controller.dart';
 import 'package:washouse_customer/resource/provider/cart_provider.dart';
+import 'package:washouse_customer/resource/provider/notify_provider.dart';
 import 'package:washouse_customer/screens/started/onboarding.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'resource/provider/chat_provider.dart';
@@ -30,7 +31,8 @@ class MyApp extends StatelessWidget {
   MyApp({required this.prefs});
 
   Future<String> getAccessToken() => BaseController().getAccessToken();
-  Future<bool> isAccess() => BaseController().getBooltoSharedPreference('isAccess');
+  Future<bool> isAccess() =>
+      BaseController().getBooltoSharedPreference('isAccess');
   @override
   Widget build(BuildContext context) {
     HttpOverrides.global = MyHttpOverrides();
@@ -45,6 +47,9 @@ class MyApp extends StatelessWidget {
             firebaseFirestore: firebaseFirestore,
             firebaseStorage: firebaseStorage,
           ),
+        ),
+        ChangeNotifierProvider<NotifyProvider>(
+          create: (context) => NotifyProvider(),
         ),
       ],
       child: MaterialApp(
@@ -63,7 +68,9 @@ class MyApp extends StatelessWidget {
                 case ConnectionState.active:
                 case ConnectionState.done:
                   if (snapshot.hasData) {
-                    return (snapshot.data == false) ? SafeArea(child: Onboarding()) : Login();
+                    return (snapshot.data == false)
+                        ? SafeArea(child: Onboarding())
+                        : Login();
                   }
                   return SafeArea(child: Onboarding()); // error view
                 default:
@@ -88,6 +95,8 @@ class MyApp extends StatelessWidget {
 class MyHttpOverrides extends HttpOverrides {
   @override
   HttpClient createHttpClient(SecurityContext? context) {
-    return super.createHttpClient(context)..badCertificateCallback = (X509Certificate cert, String host, int port) => true;
+    return super.createHttpClient(context)
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
   }
 }
