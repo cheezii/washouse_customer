@@ -1,10 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:http/http.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:washouse_customer/resource/controller/notification_controller.dart';
 import 'package:http/http.dart' as http;
 import '../../components/constants/color_constants.dart';
@@ -13,7 +11,7 @@ import '../../resource/models/response_models/notification_item_response.dart';
 import '../../resource/models/response_models/notification.dart';
 import 'component/notification_list.dart';
 import 'package:flutter/material.dart';
-import 'package:signalr_client/signalr_client.dart';
+import 'package:signalr_client/signalr_client.dart' as singlr;
 
 class ListNotificationScreen extends StatefulWidget {
   const ListNotificationScreen({
@@ -29,7 +27,7 @@ class _ListNotificationScreenState extends State<ListNotificationScreen> {
   List<NotificationItem> notifications = [];
   int countUnread = 0;
   bool isLoading = false;
-  late HubConnection hubConnection;
+  late singlr.HubConnection hubConnection;
   String message = "";
   @override
   void initState() {
@@ -40,7 +38,7 @@ class _ListNotificationScreenState extends State<ListNotificationScreen> {
   }
 
   void initSignalR() async {
-    hubConnection = HubConnectionBuilder().withUrl(serverUrl).build();
+    hubConnection = singlr.HubConnectionBuilder().withUrl(serverUrl).build();
     //await hubConnection.invoke('SubscribeToNotifications');
     hubConnection.on(
         'UpdateOrderStatus',
@@ -169,7 +167,13 @@ class _ListNotificationScreenState extends State<ListNotificationScreen> {
         child: FutureBuilder<NotificationResponse>(
           future: getNotifications(),
           builder: (context, snapshot) {
-            if (snapshot.hasData && snapshot.data!.notifications != null) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(
+                child: LoadingAnimationWidget.prograssiveDots(
+                    color: kPrimaryColor, size: 50),
+              );
+            } else if (snapshot.hasData &&
+                snapshot.data!.notifications != null) {
               notifications = snapshot.data!.notifications!;
               return ListView.builder(
                 itemCount: notifications.length,
@@ -188,23 +192,22 @@ class _ListNotificationScreenState extends State<ListNotificationScreen> {
               );
             } else if (snapshot.hasError) {
               return Text('${snapshot.error}');
-            } else {
-              return Column(
-                children: [
-                  const SizedBox(height: 150),
-                  SizedBox(
-                    height: 150,
-                    width: 150,
-                    child: Image.asset('assets/images/empty/empty-data.png'),
-                  ),
-                  const SizedBox(height: 15),
-                  const Text(
-                    'Chưa có thông báo nào.',
-                    style: TextStyle(fontSize: 18, color: textColor),
-                  )
-                ],
-              );
             }
+            return Column(
+              children: [
+                const SizedBox(height: 150),
+                SizedBox(
+                  height: 150,
+                  width: 150,
+                  child: Image.asset('assets/images/empty/empty-data.png'),
+                ),
+                const SizedBox(height: 15),
+                const Text(
+                  'Chưa có thông báo nào.',
+                  style: TextStyle(fontSize: 18, color: textColor),
+                )
+              ],
+            );
           },
         ),
       ),

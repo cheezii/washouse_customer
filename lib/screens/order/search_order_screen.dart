@@ -119,7 +119,7 @@ class _SearchOrderScreenState extends State<SearchOrderScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: TextField(
                 controller: searchController,
-                onSubmitted: (value) => getListSearch(value),
+                onChanged: (value) => getListSearch(value),
                 textInputAction: TextInputAction.search,
                 textAlign: TextAlign.left,
                 decoration: InputDecoration(

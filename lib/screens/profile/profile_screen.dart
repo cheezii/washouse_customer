@@ -11,6 +11,7 @@ import '../../resource/controller/base_controller.dart';
 import '../cart/order_success_screen.dart';
 import '../notification/list_notification_screen.dart';
 import 'about_us_screen.dart';
+import 'chat_with_admin_screen.dart';
 import 'components/profile_widget.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -186,7 +187,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           title: 'Trung tâm hỗ trợ',
                           txtColor: textColor,
                           iconColor: textColor,
-                          press: () {},
+                          press: () {
+                            Navigator.push(
+                                context,
+                                PageTransition(
+                                    child: const ChatWithAdminScreen(),
+                                    type: PageTransitionType.fade));
+                          },
                         ),
                         const SizedBox(height: 10),
                         ProfileWidget(

@@ -29,7 +29,10 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-  List chatList = [];
+  List listSearch = [];
+  List<MessageData> chatList = [];
+  List<QueryDocumentSnapshot> listChat = [];
+  List<QueryDocumentSnapshot> mainList = [];
   final ScrollController listScrollController = ScrollController();
 
   int _limit = 20;
@@ -60,35 +63,38 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   Future<void> _loadData() async {
-    currentUserId =
-        await baseController.getInttoSharedPreference("CURRENT_USER_ID");
-
-    var fromMsg = await firebaseStore
-        .collection(FirestoreConstants.pathMessageCollection)
-        .withConverter(
-            fromFirestore: ((snapshot, _) =>
-                MessageData.fromDocument(snapshot)),
-            toFirestore: (MessageData msg, options) => msg.toJson())
-        .where('idFrom', isEqualTo: currentUserId.toString())
-        .get();
-
-    var toMsg = await firebaseStore
-        .collection(FirestoreConstants.pathMessageCollection)
-        .withConverter(
-            fromFirestore: ((snapshot, _) =>
-                MessageData.fromDocument(snapshot)),
-            toFirestore: (MessageData msg, options) => msg.toJson())
-        .where('idTo', isEqualTo: currentUserId.toString())
-        .get();
+    var id = await baseController.getInttoSharedPreference("CURRENT_USER_ID");
 
     setState(() {
-      if (fromMsg.docs.isNotEmpty) {
-        chatList.addAll(fromMsg.docs);
-      }
-      if (toMsg.docs.isNotEmpty) {
-        chatList.addAll(toMsg.docs);
-      }
+      currentUserId = id;
     });
+
+    // var fromMsg = await firebaseStore
+    //     .collection(FirestoreConstants.pathMessageCollection)
+    //     .withConverter(
+    //         fromFirestore: ((snapshot, _) =>
+    //             MessageData.fromDocument(snapshot)),
+    //         toFirestore: (MessageData msg, options) => msg.toJson())
+    //     .where('idFrom', isEqualTo: currentUserId.toString())
+    //     .get();
+
+    // var toMsg = await firebaseStore
+    //     .collection(FirestoreConstants.pathMessageCollection)
+    //     .withConverter(
+    //         fromFirestore: ((snapshot, _) =>
+    //             MessageData.fromDocument(snapshot)),
+    //         toFirestore: (MessageData msg, options) => msg.toJson())
+    //     .where('idTo', isEqualTo: currentUserId.toString())
+    //     .get();
+
+    // setState(() {
+    //   if (fromMsg.docs.isNotEmpty) {
+    //     chatList.addAll(fromMsg.docs);
+    //   }
+    //   if (toMsg.docs.isNotEmpty) {
+    //     chatList.addAll(toMsg.docs);
+    //   }
+    // });
   }
 
   void scrollListener() {
@@ -103,9 +109,9 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (chatList.length > 0) {
-      isLoadingList = false;
-    }
+    // if (chatList.length > 0) {
+    //   isLoadingList = false;
+    // }
     return Scaffold(
       body: Column(
         //crossAxisAlignment: CrossAxisAlignment.start,
@@ -143,162 +149,77 @@ class _ChatScreenState extends State<ChatScreen> {
             ),
           ),
           buildSearchBar(),
-          // FutureBuilder(
-          //   future: _loadData(),
-          //   builder: ((context, snapshot) {
-          //     if (snapshot.connectionState == ConnectionState.waiting) {
-          //       return Center(
-          //         child: LoadingAnimationWidget.prograssiveDots(
-          //             color: kPrimaryColor, size: 50),
-          //       );
-          //     } else if (snapshot.hasData) {
-          //       return Expanded(
-          //         child: ListView.builder(
-          //           itemCount: chatList.length,
-          //           itemBuilder: (context, index) {
-          //             var item = chatList[index];
-          //             return buildMsgListItem(item);
-          //           },
-          //         ),
-          //       );
-          //     }
-          //     // else if (snapshot.hasError) {
-          //     //   return Column(
-          //     //     crossAxisAlignment: CrossAxisAlignment.center,
-          //     //     children: const [
-          //     //       SizedBox(height: 150),
-          //     //       Text(
-          //     //         'Oops',
-          //     //         style: TextStyle(
-          //     //             color: textBoldColor,
-          //     //             fontSize: 22,
-          //     //             fontWeight: FontWeight.bold),
-          //     //       ),
-          //     //       SizedBox(height: 10),
-          //     //       Text(
-          //     //         'Có lỗi xảy ra rồi!',
-          //     //         style: TextStyle(
-          //     //             color: textBoldColor,
-          //     //             fontSize: 18,
-          //     //             fontWeight: FontWeight.w400),
-          //     //       ),
-          //     //     ],
-          //     //   );
-          //     // }
-          //     return Column(
-          //       children: [
-          //         const SizedBox(height: 150),
-          //         SizedBox(
-          //           height: 150,
-          //           width: 150,
-          //           child: Image.asset('assets/images/sticker/app_icon.png'),
-          //         ),
-          //         const SizedBox(height: 15),
-          //         const Text(
-          //           'Chưa có đoạn chat nào.',
-          //           style: TextStyle(fontSize: 18, color: textColor),
-          //         )
-          //       ],
-          //     );
-          //   }),
-          // ),
-          Expanded(
-            child: Skeleton(
-              isLoading: isLoadingList,
-              skeleton: CircularProgressIndicator(),
-              child: ListView.builder(
-                itemCount: chatList.length,
-                itemBuilder: (context, index) {
-                  var item = chatList[index];
-                  return buildMsgListItem(item);
-                },
-              ),
-            ),
-          ),
-
           // Expanded(
-          //   child: StreamBuilder<QuerySnapshot>(
-          //     stream: chatProvider.getStreamFireStore(
-          //         FirestoreConstants.pathListChatCollection,
-          //         _limit,
-          //         _textSearch,
-          //         currentUserId.toString()).asBroadcastStream(),
-          //     builder: (BuildContext context,
-          //         AsyncSnapshot<QuerySnapshot> snapshot) {
-          //       if (snapshot.hasData) {
-          //         if ((snapshot.data?.docs.length ?? 0) > 0) {
-          //           return ListView.builder(
-          //             padding: EdgeInsets.all(10),
-          //             itemBuilder: (context, index) =>
-          //                 buildItem(context, snapshot.data?.docs[index]),
-          //             itemCount: snapshot.data?.docs.length,
-          //             controller: listScrollController,
-          //           );
-          //         } else {
-          //           return Padding(
-          //             padding: const EdgeInsets.only(top: 60),
-          //             child: Column(
-          //               crossAxisAlignment: CrossAxisAlignment.center,
-          //               children: [
-          //                 Container(
-          //                   height: 150,
-          //                   width: 150,
-          //                   padding: const EdgeInsets.all(10),
-          //                   decoration: BoxDecoration(
-          //                     color: const Color(0xffD4DEFE),
-          //                     borderRadius: BorderRadius.circular(100),
-          //                   ),
-          //                   child: Image.asset(
-          //                       'assets/images/sticker/app_icon.png'),
-          //                 ),
-          //                 const SizedBox(height: 15),
-          //                 const Text(
-          //                   'Không có đoạn chat nào',
-          //                   style: TextStyle(
-          //                       fontSize: 20,
-          //               crossAxisAlignment: CrossAxisAlignment.center,
-          //             children: [
-          //               Container(
-          //                 height: 150,
-          //                 width: 150,
-          //                 padding: const EdgeInsets.all(10),
-          //                 decoration: BoxDecoration(
-          //                   color: const Color(0xffD4DEFE),
-          //                   borderRadius: BorderRadius.circular(100),
-          //                 ),
-          //                 child:
-          //                     Image.asset('assets/images/sticker/app_icon.png'),
-          //               ),
-          //               const SizedBox(height: 15),
-          //               const Text(
-          //                 'Không có đoạn chat nào',
-          //                 style: TextStyle(
-          //                     fontSize: 20,
-          //                     color: textColor,
-          //                     fontWeight: FontWeight.w500),
-          //               ),
-          //             ],
-          //           ),
-          //         );
-          //       }
-          //     },
+          //   child: Skeleton(
+          //     isLoading: isLoadingList,
+          //     skeleton: CircularProgressIndicator(),
+          //     child: ListView.builder(
+          //       itemCount: chatList.length,
+          //       itemBuilder: (context, index) {
+          //         var item = chatList[index];
+          //         return buildMsgListItem(item);
+          //       },
+          //     ),
           //   ),
-          // ),         color: textColor,
-          //                       fontWeight: FontWeight.w500),
-          //                 ),
-          //               ],
-          //             ),
-          //           );
-          //         }
-          //       } else {
-          //         return Padding(
-          //           padding: const EdgeInsets.only(top: 60),
-          //           child: Column(
-          //
+          // ),
+          Flexible(
+            child: StreamBuilder<QuerySnapshot>(
+              stream: chatProvider.getStreamFireStore(
+                  _textSearch, currentUserId.toString()),
+              // stream: chatProvider.getListStream(currentUserId.toString()),
+              builder: (BuildContext context,
+                  AsyncSnapshot<QuerySnapshot> snapshot) {
+                if (snapshot.hasData) {
+                  listChat = snapshot.data!.docs;
+                  mainList = listChat;
+                  if (mainList.length > 0) {
+                    return ListView.builder(
+                      padding: const EdgeInsets.all(10),
+                      itemBuilder: (context, index) =>
+                          buildMsgListItem(mainList[index]),
+                      itemCount: mainList.length,
+                      controller: listScrollController,
+                    );
+                  } else {
+                    return Column(
+                      children: [
+                        const SizedBox(height: 100),
+                        SizedBox(
+                          height: 150,
+                          width: 150,
+                          child:
+                              Image.asset('assets/images/sticker/app_icon.png'),
+                        ),
+                        const SizedBox(height: 15),
+                        const Text(
+                          'Chưa có đoạn chat nào.',
+                          style: TextStyle(fontSize: 18, color: textColor),
+                        )
+                      ],
+                    );
+                  }
+                } else {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+              },
+            ),
+          )
         ],
       ),
     );
   }
+
+  // void getListSearch(String searchValue) {
+  //   setState(() {
+  //     listChat = mainList
+  //         .where((element) => element.categoryName!
+  //             .toLowerCase()
+  //             .contains(searchValue.toLowerCase()))
+  //         .toList();
+  //   });
+  // }
 
   Widget buildSearchBar() {
     return Container(
@@ -393,37 +314,39 @@ class _ChatScreenState extends State<ChatScreen> {
                 const EdgeInsets.only(left: 16, right: 16, top: 10, bottom: 10),
             child: Row(
               children: <Widget>[
-                Expanded(
-                  child: Row(
-                    children: <Widget>[
-                      CircleAvatar(
-                        backgroundImage: NetworkImage(userChat.photoUrl),
-                        maxRadius: 30,
-                      ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: Container(
-                          color: Colors.transparent,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Text(userChat.name),
-                              const SizedBox(height: 6),
-                              Text(
-                                userChat.type == 0
-                                    ? userChat.recentMessage
-                                    : userChat.type == 2
-                                        ? '[Sticker]'
-                                        : '[Hình ảnh]',
-                                style: TextStyle(
-                                    fontSize: 14, color: Colors.grey.shade500),
-                              )
-                            ],
-                          ),
+                Row(
+                  children: <Widget>[
+                    CircleAvatar(
+                      backgroundImage: NetworkImage(userChat.photoUrl),
+                      maxRadius: 30,
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Container(
+                        color: Colors.transparent,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              userChat.name,
+                              maxLines: 1,
+                              overflow: TextOverflow.fade,
+                            ),
+                            const SizedBox(height: 6),
+                            Text(
+                              userChat.type == 0
+                                  ? userChat.recentMessage
+                                  : userChat.type == 2
+                                      ? '[Sticker]'
+                                      : '[Hình ảnh]',
+                              style: TextStyle(
+                                  fontSize: 14, color: Colors.grey.shade500),
+                            )
+                          ],
                         ),
-                      )
-                    ],
-                  ),
+                      ),
+                    )
+                  ],
                 ),
                 Text(
                   TimeUtils().checkOver24Hours(DateFormat('yyyy-MM-dd HH:mm:ss')
@@ -445,7 +368,7 @@ class _ChatScreenState extends State<ChatScreen> {
     }
   }
 
-  Widget buildMsgListItem(DocumentSnapshot<MessageData> item) {
+  Widget buildMsgListItem(DocumentSnapshot? item) {
     if (item != null) {
       MessageData data = MessageData.fromDocument(item);
       // if (data.idTo == currentUserId.toString()) {
@@ -567,16 +490,19 @@ class _ChatScreenState extends State<ChatScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            data.idFrom == currentUserId.toString()
-                                ? data.nameTo
-                                : data.nameFrom,
-                            overflow: TextOverflow.clip,
-                            maxLines: 1,
-                            style: const TextStyle(
-                                fontSize: 15,
-                                color: Colors.black,
-                                fontWeight: FontWeight.w400),
+                          SizedBox(
+                            width: 250,
+                            child: Text(
+                              data.idFrom == currentUserId.toString()
+                                  ? data.nameTo
+                                  : data.nameFrom,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                              style: const TextStyle(
+                                  fontSize: 15,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w400),
+                            ),
                           ),
                           Text(
                             TimeUtils().checkOver24Hours(
@@ -592,16 +518,19 @@ class _ChatScreenState extends State<ChatScreen> {
                         ],
                       ),
                       const SizedBox(height: 6),
-                      Text(
-                        data.typeContent == 0
-                            ? data.lastContent
-                            : data.typeContent == 2
-                                ? '[Sticker]'
-                                : '[Hình ảnh]',
-                        overflow: TextOverflow.clip,
-                        maxLines: 1,
-                        style: TextStyle(
-                            fontSize: 15, color: Colors.grey.shade500),
+                      SizedBox(
+                        width: 260,
+                        child: Text(
+                          data.typeContent == 0
+                              ? data.lastContent
+                              : data.typeContent == 2
+                                  ? '[Sticker]'
+                                  : '[Hình ảnh]',
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                          style: TextStyle(
+                              fontSize: 15, color: Colors.grey.shade500),
+                        ),
                       )
                     ],
                   ),
