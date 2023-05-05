@@ -159,13 +159,13 @@ class AccountController {
     }
   }
 
-  Future<String> changeProfileInfo(String fullName, DateTime dob, int gender) async {
-    int userId = await baseController.getInttoSharedPreference("CURRENT_USER_ID");
-    String url = '$baseUrl/accounts/$userId/profile';
+  Future<String> changeProfileInfo(String fullName, DateTime? dob, int? gender) async {
+    String url = '$baseUrl/accounts/profile';
     Map<String, dynamic> queryParams = {};
-    Map<String, dynamic> requestBody = {"fullName": fullName, "dob": dob.toIso8601String(), "gender": gender};
+    Map<String, dynamic> requestBody = {"fullName": fullName, "dob": dob?.toIso8601String(), "gender": gender};
     http.Response response = await baseController.makeAuthenticatedPutRequest(url, queryParams, requestBody);
     if (response.statusCode == 200) {
+      print(response.body);
       return "change information success";
     } else {
       // Handle error changing password
