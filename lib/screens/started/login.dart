@@ -394,7 +394,7 @@ class _LoginState extends State<Login> {
                 //     ),
                 //   ),
                 // ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 60),
                 GestureDetector(
                   onTap: () {
                     Navigator.push(
