@@ -104,66 +104,67 @@ class CardFooter extends StatelessWidget {
                     ),
                   )
             : SizedBox.shrink(),
-        (orderItem.status!.trim().toLowerCase() == 'ready' &&
-                orderItem.isPayment == false)
-            ?
-            // GestureDetector(
-            //     onTap: () {
-            //       Navigator.push(
-            //           context,
-            //           PageTransition(
-            //               child: OrderDetailScreen(
-            //                 orderId: orderItem.orderId!,
-            //                 isPayment: orderItem.isPayment!,
-            //                 status: orderItem.status!.toLowerCase(),
-            //               ),
-            //               type: PageTransitionType.rightToLeftWithFade));
-            //     },
-            //     child: Container(
-            //       alignment: Alignment.bottomRight,
-            //       decoration: BoxDecoration(
-            //         border: Border.all(color: kPrimaryColor),
-            //         borderRadius: BorderRadius.circular(20),
-            //         color: kPrimaryColor,
-            //       ),
-            //       child: const Padding(
-            //         padding:
-            //             EdgeInsets.only(top: 9, bottom: 9, right: 20, left: 20),
-            //         child: Text(
-            //           'Thanh toán bằng ví',
-            //           style: TextStyle(color: Colors.white),
-            //         ),
-            //       ),
-            //     ),
-            //   )
-            ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      PageTransition(
-                          child: OrderDetailScreen(
-                            orderId: orderItem.orderId!,
-                            isPayment: orderItem.isPayment!,
-                            status: orderItem.status!.toLowerCase(),
-                          ),
-                          type: PageTransitionType.rightToLeftWithFade));
-                },
-                style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsetsDirectional.symmetric(
-                        horizontal: 20, vertical: 9),
-                    //foregroundColor: kPrimaryColor.withOpacity(.7),
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                      side: BorderSide(color: kPrimaryColor, width: 1),
-                    ),
-                    backgroundColor: kPrimaryColor),
-                child: const Text(
-                  'Thanh toán bằng ví',
-                  style: TextStyle(color: Colors.white),
-                ),
-              )
-            : Container(),
+        // (orderItem.status!.trim().toLowerCase() == 'ready' &&
+        //         orderItem.isPayment == false)
+        //     ?
+        //     // GestureDetector(
+        //     //     onTap: () {
+        //     //       Navigator.push(
+        //     //           context,
+        //     //           PageTransition(
+        //     //               child: OrderDetailScreen(
+        //     //                 orderId: orderItem.orderId!,
+        //     //                 isPayment: orderItem.isPayment!,
+        //     //                 status: orderItem.status!.toLowerCase(),
+        //     //               ),
+        //     //               type: PageTransitionType.rightToLeftWithFade));
+        //     //     },
+        //     //     child: Container(
+        //     //       alignment: Alignment.bottomRight,
+        //     //       decoration: BoxDecoration(
+        //     //         border: Border.all(color: kPrimaryColor),
+        //     //         borderRadius: BorderRadius.circular(20),
+        //     //         color: kPrimaryColor,
+        //     //       ),
+        //     //       child: const Padding(
+        //     //         padding:
+        //     //             EdgeInsets.only(top: 9, bottom: 9, right: 20, left: 20),
+        //     //         child: Text(
+        //     //           'Thanh toán bằng ví',
+        //     //           style: TextStyle(color: Colors.white),
+        //     //         ),
+        //     //       ),
+        //     //     ),
+        //     //   )
+        //     // ElevatedButton(
+        //     //     onPressed: () {
+        //     //       Navigator.push(
+        //     //           context,
+        //     //           PageTransition(
+        //     //               child: OrderDetailScreen(
+        //     //                 orderId: orderItem.orderId!,
+        //     //                 isPayment: orderItem.isPayment!,
+        //     //                 status: orderItem.status!.toLowerCase(),
+        //     //               ),
+        //     //               type: PageTransitionType.rightToLeftWithFade));
+        //     //     },
+        //     //     style: ElevatedButton.styleFrom(
+        //     //         padding: const EdgeInsetsDirectional.symmetric(
+        //     //             horizontal: 20, vertical: 9),
+        //     //         //foregroundColor: kPrimaryColor.withOpacity(.7),
+        //     //         elevation: 0,
+        //     //         shape: RoundedRectangleBorder(
+        //     //           borderRadius: BorderRadius.circular(20),
+        //     //           side: BorderSide(color: kPrimaryColor, width: 1),
+        //     //         ),
+        //     //         backgroundColor: kPrimaryColor),
+        //     //     child:
+        //     const Text(
+        //         'Chưa thanh toán',
+        //         style: TextStyle(color: Colors.white),
+        //       )
+        //     //)
+        //     : Container(),
         (orderItem.status!.trim().toLowerCase() == 'ready' &&
                 orderItem.isPayment == true)
             ?
@@ -193,10 +194,16 @@ class CardFooter extends StatelessWidget {
                 'Đã thanh toán',
                 style: TextStyle(color: textColor),
               )
-            //   ),
-            // ),
-            //)
-            : Container(),
+            : (orderItem.status!.trim().toLowerCase() == 'ready' &&
+                    orderItem.isPayment == false)
+                ? const Text(
+                    'Chưa thanh toán',
+                    style: TextStyle(color: textColor),
+                  )
+                //   ),
+                // ),
+                //)
+                : Container(),
         (orderItem.status!.trim().toLowerCase() == 'pending' ||
                 orderItem.status!.trim().toLowerCase() == 'confirmed')
             ?

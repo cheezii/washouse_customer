@@ -28,6 +28,16 @@ class OrderUtils {
     return paymentMethodString;
   }
 
+  static String getImageOfPaymentMethod(int paymentMethod) {
+    String paymentMethodString = 'assets/images/shipping/cash-on-delivery.png';
+    if (paymentMethod == 1) {
+      paymentMethodString = 'assets/images/shipping/vnpay-icon.png';
+    } else {
+      paymentMethodString = 'assets/images/shipping/cash-on-delivery.png';
+    }
+    return paymentMethodString;
+  }
+
   String? getTextOfFilterOrderType(String? type) {
     String? returnString = null;
     if (type == null) {

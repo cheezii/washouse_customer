@@ -119,13 +119,7 @@ class _ManageAccountScreenState extends State<ManageAccountScreen> {
                                       PageTransition(
                                           child: const Login(),
                                           type: PageTransitionType.fade));
-                                  await preferences
-                                      .remove("CURRENT_CUSTOMER_ID");
-                                  await preferences.remove("CURRENT_USER_NAME");
-                                  await preferences
-                                      .remove("CURRENT_USER_EMAIL");
-                                  await preferences
-                                      .remove("CURRENT_USER_AVATAR");
+                                  await preferences.clear();
                                 },
                                 child: const Text(
                                   'Đúng thế',

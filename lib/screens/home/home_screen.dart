@@ -231,123 +231,120 @@ class _HomescreenState extends State<Homescreen> {
                                 type: PageTransitionType.rightToLeftWithFade));
                       },
                     ),
-                    Skeleton(
-                      isLoading: isLoading,
-                      skeleton: const NearbyCentersHomeSkeleton(),
-                      child: FutureBuilder<List<LaundryCenter>>(
-                        future: centerController.getCenterNearby(),
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return const NearbyCenterHomeSkeleton();
-                          } else if (snapshot.hasData) {
-                            List<LaundryCenter> centerList = snapshot.data!;
-                            return SizedBox(
-                              height: size.height * .26,
-                              child: ListView.builder(
-                                shrinkWrap: true,
-                                scrollDirection: Axis.horizontal,
-                                itemCount: snapshot.data!.length,
-                                itemBuilder: ((context, index) {
-                                  String? fulladdress =
-                                      centerList[index].centerAddress;
-                                  List<String?> address =
-                                      fulladdress!.split(",");
-                                  String? currentAddress = address[0];
-                                  bool hasRating =
-                                      centerList[index].rating != null
-                                          ? true
-                                          : false;
-                                  return GestureDetector(
-                                    onTap: () => Navigator.pushNamed(
-                                      context,
-                                      '/centerDetails',
-                                      arguments: centerList[index],
+                    // Skeleton(
+                    //   isLoading: isLoading,
+                    //   skeleton: const NearbyCentersHomeSkeleton(),
+                    //   child:
+                    FutureBuilder<List<LaundryCenter>>(
+                      future: centerController.getCenterNearby(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const NearbyCenterHomeSkeleton();
+                        } else if (snapshot.hasData) {
+                          List<LaundryCenter> centerList = snapshot.data!;
+                          return SizedBox(
+                            height: size.height * .26,
+                            child: ListView.builder(
+                              shrinkWrap: true,
+                              scrollDirection: Axis.horizontal,
+                              itemCount: snapshot.data!.length,
+                              itemBuilder: ((context, index) {
+                                String? fulladdress =
+                                    centerList[index].centerAddress;
+                                List<String?> address = fulladdress!.split(",");
+                                String? currentAddress = address[0];
+                                bool hasRating =
+                                    centerList[index].rating != null
+                                        ? true
+                                        : false;
+                                return GestureDetector(
+                                  onTap: () => Navigator.pushNamed(
+                                    context,
+                                    '/centerDetails',
+                                    arguments: centerList[index],
+                                  ),
+                                  child: Container(
+                                    width: 170,
+                                    margin: const EdgeInsets.symmetric(
+                                        horizontal: 10),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(20),
                                     ),
-                                    child: Container(
-                                      width: 170,
-                                      margin: const EdgeInsets.symmetric(
-                                          horizontal: 10),
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(20),
-                                      ),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          AspectRatio(
-                                            aspectRatio: 1.5,
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                color: Colors.white,
-                                                borderRadius:
-                                                    BorderRadius.circular(20),
-                                              ),
-                                              child: Image.network(
-                                                  centerList[index].thumbnail!),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        AspectRatio(
+                                          aspectRatio: 1.5,
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
                                             ),
+                                            child: Image.network(
+                                                centerList[index].thumbnail!),
                                           ),
-                                          const SizedBox(height: 4),
-                                          Text(
-                                            centerList[index].title!,
-                                            style: const TextStyle(
-                                              fontWeight: FontWeight.w600,
-                                              fontSize: 18,
-                                            ),
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
+                                        ),
+                                        const SizedBox(height: 4),
+                                        Text(
+                                          centerList[index].title!,
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 18,
                                           ),
-                                          const SizedBox(height: 2),
-                                          Text(
-                                            currentAddress!,
-                                            style: TextStyle(
-                                                color: Colors.grey.shade600),
-                                          ),
-                                          const SizedBox(height: 2),
-                                          Row(
-                                            children: [
-                                              Text(
-                                                  '${centerList[index].distance} km'),
-                                              const SizedBox(width: 5),
-                                              hasRating
-                                                  ? Row(
-                                                      children: [
-                                                        const Icon(
-                                                            Icons
-                                                                .circle_rounded,
-                                                            size: 5),
-                                                        const SizedBox(
-                                                            width: 5),
-                                                        const Icon(
-                                                            Icons.star_rounded,
-                                                            color:
-                                                                kPrimaryColor),
-                                                        Text(
-                                                            '${centerList[index].rating}')
-                                                      ],
-                                                    )
-                                                  : Container(),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                        const SizedBox(height: 2),
+                                        Text(
+                                          currentAddress!,
+                                          style: TextStyle(
+                                              color: Colors.grey.shade600),
+                                        ),
+                                        const SizedBox(height: 2),
+                                        Row(
+                                          children: [
+                                            Text(
+                                                '${centerList[index].distance} km'),
+                                            const SizedBox(width: 5),
+                                            hasRating
+                                                ? Row(
+                                                    children: [
+                                                      const Icon(
+                                                          Icons.circle_rounded,
+                                                          size: 5),
+                                                      const SizedBox(width: 5),
+                                                      const Icon(
+                                                          Icons.star_rounded,
+                                                          color: kPrimaryColor),
+                                                      Text(
+                                                          '${centerList[index].rating}')
+                                                    ],
+                                                  )
+                                                : Container(),
+                                          ],
+                                        ),
+                                      ],
                                     ),
-                                  );
-                                }),
-                              ),
-                            );
-                          } else if (snapshot.hasError) {
-                            return Column(
-                              children: [
-                                Text('Oops'),
-                                Text('Có lỗi xảy ra rồi!'),
-                              ],
-                            );
-                          }
-                          return Container();
-                        },
-                      ),
+                                  ),
+                                );
+                              }),
+                            ),
+                          );
+                        } else if (snapshot.hasError) {
+                          return Column(
+                            children: [
+                              Text('Oops'),
+                              Text('Có lỗi xảy ra rồi!'),
+                            ],
+                          );
+                        }
+                        return Container();
+                      },
                     ),
+                    //),
                   ],
                 ),
               ),

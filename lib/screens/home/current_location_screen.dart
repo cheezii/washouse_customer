@@ -123,7 +123,7 @@ class _CurrentLocationScreenState extends State<CurrentLocationScreen> {
                 markers: [
                   map.Marker(
                       point: currentPoint!,
-                      builder: ((context) => Icon(
+                      builder: ((context) => const Icon(
                             Icons.location_on_rounded,
                             color: Colors.red,
                             size: 40,

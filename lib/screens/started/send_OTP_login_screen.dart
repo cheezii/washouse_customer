@@ -100,17 +100,20 @@ class _SendOTPLoginScreenState extends State<SendOTPLoginScreen> {
                       : SizedBox(
                           height: 300,
                           width: 300,
-                          child: Image.asset('assets/images/started/authenticate.png'),
+                          child: Image.asset(
+                              'assets/images/started/authenticate.png'),
                         ),
                   const SizedBox(height: 40),
                   const Text(
                     'Nhập mã xác minh',
-                    style: TextStyle(fontSize: 40.0, fontWeight: FontWeight.bold),
+                    style:
+                        TextStyle(fontSize: 40.0, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 20),
                   const Text(
                     'Nhập mã OTP được gửi đến số điện thoại của bạn.',
-                    style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w400),
+                    style:
+                        TextStyle(fontSize: 18.0, fontWeight: FontWeight.w400),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 20),
@@ -124,26 +127,48 @@ class _SendOTPLoginScreenState extends State<SendOTPLoginScreen> {
                     fieldStyle: FieldStyle.underline,
                     onCompleted: (pin) async {
                       print("Pin: " + pin);
-                      var message = await accountController.loginOTP(widget.phoneNumber, pin);
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          });
+                      var message = await accountController.loginOTP(
+                          widget.phoneNumber, pin);
                       //bool isTrue = await verifyController.checkOTPByEmail(pin);
-                      if (message.trim().toLowerCase().compareTo("success") == 0) {
-                        CurrentUser currentUserModel = await accountController.getCurrentUser();
+                      if (message.trim().toLowerCase().compareTo("success") ==
+                          0) {
+                        CurrentUser currentUserModel =
+                            await accountController.getCurrentUser();
                         if (currentUserModel != null) {
                           print(currentUserModel.toJson());
-                          baseController.saveStringtoSharedPreference("CURRENT_USER_NAME", currentUserModel.name);
-                          baseController.saveStringtoSharedPreference("CURRENT_USER_EMAIL", currentUserModel.email);
-                          baseController.saveStringtoSharedPreference("CURRENT_USER_PHONE", currentUserModel.phone);
-                          baseController.saveInttoSharedPreference("CURRENT_USER_ID", currentUserModel.accountId);
+                          baseController.saveStringtoSharedPreference(
+                              "CURRENT_USER_NAME", currentUserModel.name);
+                          baseController.saveStringtoSharedPreference(
+                              "CURRENT_USER_EMAIL", currentUserModel.email);
+                          baseController.saveStringtoSharedPreference(
+                              "CURRENT_USER_PHONE", currentUserModel.phone);
+                          baseController.saveInttoSharedPreference(
+                              "CURRENT_USER_ID", currentUserModel.accountId);
                           //baseController.saveStringtoSharedPreference("CURRENT_USER_PASSWORD", widget.password!);
                         }
-                        Customer? currentCustomer = await accountController.getCustomerInfomation(currentUserModel.accountId!);
+                        Customer? currentCustomer = await accountController
+                            .getCustomerInfomation(currentUserModel.accountId!);
                         if (currentCustomer != null) {
-                          baseController.saveInttoSharedPreference("CURRENT_CUSTOMER_ID", currentCustomer.id!);
+                          baseController.saveInttoSharedPreference(
+                              "CURRENT_CUSTOMER_ID", currentCustomer.id!);
                         }
                         Navigator.of(context).pop();
+                        Navigator.of(context).pop();
                         // ignore: use_build_context_synchronously
-                        Navigator.push(context, PageTransition(child: const BaseScreen(), type: PageTransitionType.fade));
+                        Navigator.push(
+                            context,
+                            PageTransition(
+                                child: const BaseScreen(),
+                                type: PageTransitionType.fade));
                       } else {
+                        Navigator.of(context).pop();
                         showDialog(
                           context: context,
                           builder: ((context) => AlertDialog(

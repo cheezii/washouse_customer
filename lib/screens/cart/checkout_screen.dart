@@ -6,6 +6,7 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 
 import 'package:washouse_customer/resource/controller/base_controller.dart';
+import 'package:washouse_customer/resource/models/center.dart';
 import 'package:washouse_customer/utils/price_util.dart';
 
 import '../../components/constants/color_constants.dart';
@@ -38,6 +39,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   AccountController accountController = AccountController();
   CenterController centerController = CenterController();
 
+  LaundryCenter _center = LaundryCenter();
   int payment = 0;
   int? h, m;
   int? _centerId;
@@ -91,6 +93,16 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     }
   }
 
+  Future getCenterDetails() async {
+    CenterOperatingTime centerOperatingTime;
+    var centerId = await baseController.getInttoSharedPreference("centerId");
+    LaundryCenter center = await CenterController().getCenterById(centerId);
+    setState(() {
+      _centerId = centerId;
+      _center = center;
+    });
+  }
+
   void getMyWallet() async {
     setState(() {
       isLoading = true;
@@ -120,6 +132,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     super.initState();
     getMyWallet();
     getCenterOperatingTime();
+    getCenterDetails();
   }
 
   @override
@@ -130,6 +143,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             color: kPrimaryColor, size: 50),
       );
     } else {
+      var provider = Provider.of<CartProvider>(context);
+      List<CartItem> cartItems = Provider.of<CartProvider>(context).cartItems;
       return Scaffold(
         backgroundColor: kBackgroundColor,
         appBar: AppBar(
@@ -280,7 +295,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 ),
               ),
               separateLine(),
-              const ShippingMethod(),
+              ShippingMethod(hasDelivery: _center.hasDelivery!),
               separateLine(),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),

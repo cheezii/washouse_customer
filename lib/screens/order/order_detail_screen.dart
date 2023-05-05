@@ -60,7 +60,6 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
   void initState() {
     super.initState();
     orderController = OrderController(context);
-    print('status ${widget.status}');
     if (widget.status.trim().toLowerCase() == 'pending') {
       _processIndex = 0;
     } else if (widget.status.trim().toLowerCase() == 'confirmed') {
@@ -123,6 +122,8 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
               );
             } else if (snapshot.hasData) {
               Order_Infomation info = snapshot.data!;
+              order_infomation = info;
+
               return SingleChildScrollView(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -740,7 +741,8 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                 SizedBox(
                                   width: 35,
                                   child: Image.asset(
-                                      'assets/images/shipping/cash-on-delivery.png'),
+                                      OrderUtils.getImageOfPaymentMethod(
+                                          info.orderPayment!.paymentMethod!)),
                                 ),
                                 const SizedBox(width: 8),
                                 Text(
@@ -1073,7 +1075,8 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                 ),
               ),
             )
-          : (widget.status.trim().toLowerCase() == 'ready')
+          : (widget.status.trim().toLowerCase() == 'ready' &&
+                  order_infomation.orderPayment?.paymentMethod == 1)
               ? Container(
                   padding:
                       const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
@@ -1112,6 +1115,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                     borderRadius: BorderRadius.circular(20)),
                                 backgroundColor: kPrimaryColor),
                             onPressed: () async {
+                              print('orderID: ${order_infomation.id}');
                               showDialog(
                                 context: context,
                                 builder: (BuildContext context) {

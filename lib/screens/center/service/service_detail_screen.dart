@@ -832,25 +832,36 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                                 context: context,
                                 builder: (BuildContext context) {
                                   return AlertDialog(
-                                    title: const Text('Thông báo'),
+                                    title: const Align(
+                                      alignment: Alignment.center,
+                                      child: Text('Thông báo'),
+                                    ),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(15),
+                                    ),
                                     content: Text(
                                         'Bạn đang có giỏ hàng của cửa hàng khác tồn tại! Đặt với cửa hàng mới hoặc vẫn giữ giỏ hàng cũ?'),
                                     actions: [
-                                      TextButton(
-                                        onPressed: () {
-                                          provider.removeCart();
-                                          provider.addItemToCart(cartItem);
-                                          provider
-                                              .updateCenter(cartItem.centerId);
-                                          Navigator.of(context).pop();
-                                        },
-                                        child: Text('Đặt mới'),
-                                      ),
-                                      TextButton(
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                        child: Text('Giữ lại'),
+                                      Row(
+                                        children: [
+                                          TextButton(
+                                            onPressed: () {
+                                              provider.removeCart();
+                                              provider.addItemToCart(cartItem);
+                                              provider.updateCenter(
+                                                  cartItem.centerId);
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: Text('Đặt mới'),
+                                          ),
+                                          const Spacer(),
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: Text('Giữ lại'),
+                                          ),
+                                        ],
                                       ),
                                     ],
                                   );

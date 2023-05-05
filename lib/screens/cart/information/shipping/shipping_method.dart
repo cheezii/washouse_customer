@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -6,15 +7,21 @@ import '../../../../resource/provider/cart_provider.dart';
 import 'choose_shipping_method.dart';
 
 class ShippingMethod extends StatelessWidget {
+  final bool hasDelivery;
   const ShippingMethod({
-    super.key,
-  });
+    Key? key,
+    required this.hasDelivery,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: ((context) => const ChooseShippingMethod())));
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: ((context) =>
+                    ChooseShippingMethod(hasDelivery: hasDelivery))));
       },
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -26,7 +33,10 @@ class ShippingMethod extends StatelessWidget {
               children: [
                 const Text(
                   'Phương thức vận chuyển',
-                  style: TextStyle(color: textColor, fontSize: 18, fontWeight: FontWeight.w700),
+                  style: TextStyle(
+                      color: textColor,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w700),
                 ),
                 const SizedBox(height: 16),
                 Padding(
@@ -35,7 +45,8 @@ class ShippingMethod extends StatelessWidget {
                     children: [
                       SizedBox(
                         width: 35,
-                        child: Image.asset('assets/images/shipping/ship-di.png'),
+                        child:
+                            Image.asset('assets/images/shipping/ship-di.png'),
                       ),
                       const SizedBox(width: 8),
                       Consumer<CartProvider>(
