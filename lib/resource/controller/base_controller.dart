@@ -37,8 +37,7 @@ class BaseController {
   }
 
 // Define a function to save a string to shared preferences
-  Future<void> saveStringtoSharedPreference(
-      String saveName, dynamic? saveString) async {
+  Future<void> saveStringtoSharedPreference(String saveName, dynamic? saveString) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString(saveName, saveString);
   }
@@ -48,14 +47,12 @@ class BaseController {
     await prefs.setInt(saveName, saveInt);
   }
 
-  Future<void> saveDoubletoSharedPreference(
-      String saveName, double? saveDouble) async {
+  Future<void> saveDoubletoSharedPreference(String saveName, double? saveDouble) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setDouble(saveName, saveDouble);
   }
 
-  Future<void> saveBooltoSharedPreference(
-      String saveName, bool? saveBool) async {
+  Future<void> saveBooltoSharedPreference(String saveName, bool? saveBool) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setBool(saveName, saveBool);
   }
@@ -85,9 +82,9 @@ class BaseController {
     await prefs.setString('refresh_token', token);
   }
 
-  Future<http.Response> makeAuthenticatedRequest(
-      String url, Map<String, dynamic> queryParams) async {
+  Future<http.Response> makeAuthenticatedRequest(String url, Map<String, dynamic> queryParams) async {
     String accessToken = await getAccessToken();
+    print(accessToken);
     final uri = Uri.parse(url).replace(queryParameters: queryParams);
     http.Response response = await http.get(
       uri,
@@ -140,8 +137,7 @@ class BaseController {
     }
   }
 
-  Future<http.Response> makeAuthenticatedPutRequest(
-      String url, Map<String, dynamic> queryParams, dynamic requestBody) async {
+  Future<http.Response> makeAuthenticatedPutRequest(String url, Map<String, dynamic> queryParams, dynamic requestBody) async {
     String accessToken = await getAccessToken();
     final uri = Uri.parse(url).replace(queryParameters: queryParams);
     http.Response response = await http.put(
@@ -196,8 +192,7 @@ class BaseController {
     }
   }
 
-  Future<http.Response> makeAuthenticatedPostRequest(
-      String url, Map<String, dynamic> queryParams, dynamic requestBody) async {
+  Future<http.Response> makeAuthenticatedPostRequest(String url, Map<String, dynamic> queryParams, dynamic requestBody) async {
     String accessToken = await getAccessToken();
     final uri = Uri.parse(url).replace(queryParameters: queryParams);
 
@@ -255,8 +250,7 @@ class BaseController {
     }
   }
 
-  Future<http.Response> makeAuthenticatedPostRequestWithFile(
-      String url, Map<String, dynamic> queryParams, File imageFile) async {
+  Future<http.Response> makeAuthenticatedPostRequestWithFile(String url, Map<String, dynamic> queryParams, File imageFile) async {
     String accessToken = await getAccessToken();
     final uri = Uri.parse(url).replace(queryParameters: queryParams);
 
@@ -269,8 +263,7 @@ class BaseController {
 
     // Add the image file to the request
     String fileName = imageFile.path.split('/').last;
-    request.files.add(await http.MultipartFile.fromPath('file', imageFile.path,
-        filename: fileName));
+    request.files.add(await http.MultipartFile.fromPath('file', imageFile.path, filename: fileName));
 
     // Send the request
     http.StreamedResponse response = await request.send();
@@ -310,8 +303,7 @@ class BaseController {
         await saveAccessToken(newAccessToken);
         await saveRefreshToken(newRefreshToken);
         // Make the original request again with the new access token
-        return makeAuthenticatedPostRequestWithFile(
-            url, queryParams, imageFile);
+        return makeAuthenticatedPostRequestWithFile(url, queryParams, imageFile);
       } else {
         // Handle error getting new tokens
         throw Exception('Error refreshing tokens: ${tokenResponse.statusCode}');
@@ -326,8 +318,7 @@ class BaseController {
     String url = '$baseUrl/medias';
     Map<String, dynamic> queryParams = {};
     //String filePath = '/path/to/image.jpg';
-    http.Response response =
-        await makeAuthenticatedPostRequestWithFile(url, queryParams, imageFile);
+    http.Response response = await makeAuthenticatedPostRequestWithFile(url, queryParams, imageFile);
 
     // handle response
     if (response.statusCode == 200) {

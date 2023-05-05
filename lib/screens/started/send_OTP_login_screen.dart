@@ -3,13 +3,18 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:otp_text_field/otp_field.dart';
 import 'package:otp_text_field/style.dart';
+import 'package:page_transition/page_transition.dart';
+import 'package:washouse_customer/screens/profile/information_screen.dart';
 
 import '../../components/constants/color_constants.dart';
 import '../../components/constants/size.dart';
+import '../../resource/models/current_user.dart';
+import '../../resource/models/customer.dart';
+import '../home/base_screen.dart';
 
 class SendOTPLoginScreen extends StatefulWidget {
-  const SendOTPLoginScreen({super.key});
-
+  final String phoneNumber;
+  const SendOTPLoginScreen({super.key, required this.phoneNumber});
   @override
   State<SendOTPLoginScreen> createState() => _SendOTPLoginScreenState();
 }
@@ -95,20 +100,17 @@ class _SendOTPLoginScreenState extends State<SendOTPLoginScreen> {
                       : SizedBox(
                           height: 300,
                           width: 300,
-                          child: Image.asset(
-                              'assets/images/started/authenticate.png'),
+                          child: Image.asset('assets/images/started/authenticate.png'),
                         ),
                   const SizedBox(height: 40),
                   const Text(
                     'Nhập mã xác minh',
-                    style:
-                        TextStyle(fontSize: 40.0, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 40.0, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 20),
                   const Text(
                     'Nhập mã OTP được gửi đến số điện thoại của bạn.',
-                    style:
-                        TextStyle(fontSize: 18.0, fontWeight: FontWeight.w400),
+                    style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w400),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 20),
@@ -120,7 +122,43 @@ class _SendOTPLoginScreenState extends State<SendOTPLoginScreen> {
                     style: const TextStyle(fontSize: 28),
                     textFieldAlignment: MainAxisAlignment.spaceAround,
                     fieldStyle: FieldStyle.underline,
-                    onCompleted: (pin) {},
+                    onCompleted: (pin) async {
+                      print("Pin: " + pin);
+                      var message = await accountController.loginOTP(widget.phoneNumber, pin);
+                      //bool isTrue = await verifyController.checkOTPByEmail(pin);
+                      if (message.trim().toLowerCase().compareTo("success") == 0) {
+                        CurrentUser currentUserModel = await accountController.getCurrentUser();
+                        if (currentUserModel != null) {
+                          print(currentUserModel.toJson());
+                          baseController.saveStringtoSharedPreference("CURRENT_USER_NAME", currentUserModel.name);
+                          baseController.saveStringtoSharedPreference("CURRENT_USER_EMAIL", currentUserModel.email);
+                          baseController.saveStringtoSharedPreference("CURRENT_USER_PHONE", currentUserModel.phone);
+                          baseController.saveInttoSharedPreference("CURRENT_USER_ID", currentUserModel.accountId);
+                          //baseController.saveStringtoSharedPreference("CURRENT_USER_PASSWORD", widget.password!);
+                        }
+                        Customer? currentCustomer = await accountController.getCustomerInfomation(currentUserModel.accountId!);
+                        if (currentCustomer != null) {
+                          baseController.saveInttoSharedPreference("CURRENT_CUSTOMER_ID", currentCustomer.id!);
+                        }
+                        Navigator.of(context).pop();
+                        // ignore: use_build_context_synchronously
+                        Navigator.push(context, PageTransition(child: const BaseScreen(), type: PageTransitionType.fade));
+                      } else {
+                        showDialog(
+                          context: context,
+                          builder: ((context) => AlertDialog(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                                title: const Align(
+                                  alignment: Alignment.center,
+                                  child: Text('Lỗi!!'),
+                                ),
+                                content: Text('Sai mã OTP'),
+                              )),
+                        );
+                      }
+                    },
                   ),
                   const SizedBox(height: 40),
                   isCountdowning

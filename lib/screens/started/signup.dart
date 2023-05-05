@@ -264,34 +264,34 @@ class _SignUpState extends State<SignUp> {
                   //     ),
                   //   ),
                   // ),
-                  GestureDetector(
-                    onTap: () {},
-                    child: Container(
-                      width: size.width,
-                      decoration: BoxDecoration(
-                        border: Border.all(color: kPrimaryColor),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          SizedBox(
-                            height: 30,
-                            child: Image.asset('assets/images/google.png'),
-                          ),
-                          const Text(
-                            'Đăng ký bằng Google',
-                            style: TextStyle(
-                              color: textColor,
-                              fontSize: 18.0,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
+                  // GestureDetector(
+                  //   onTap: () {},
+                  //   child: Container(
+                  //     width: size.width,
+                  //     decoration: BoxDecoration(
+                  //       border: Border.all(color: kPrimaryColor),
+                  //       borderRadius: BorderRadius.circular(10),
+                  //     ),
+                  //     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                  //     child: Row(
+                  //       mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  //       children: [
+                  //         SizedBox(
+                  //           height: 30,
+                  //           child: Image.asset('assets/images/google.png'),
+                  //         ),
+                  //         const Text(
+                  //           'Đăng ký bằng Google',
+                  //           style: TextStyle(
+                  //             color: textColor,
+                  //             fontSize: 18.0,
+                  //             fontWeight: FontWeight.w500,
+                  //           ),
+                  //         )
+                  //       ],
+                  //     ),
+                  //   ),
+                  // ),
                   const SizedBox(height: 20),
                   GestureDetector(
                     onTap: () {

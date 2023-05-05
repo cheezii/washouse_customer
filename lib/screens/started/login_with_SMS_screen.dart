@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:washouse_customer/resource/controller/account_controller.dart';
 import 'package:washouse_customer/screens/started/login.dart';
 import 'package:washouse_customer/screens/started/send_OTP_login_screen.dart';
+import 'package:washouse_customer/screens/started/signup.dart';
 
 import '../../components/constants/color_constants.dart';
 import '../../components/constants/size.dart';
@@ -14,6 +16,7 @@ class LoginWithSMSScreen extends StatefulWidget {
 }
 
 class _LoginWithSMSScreenState extends State<LoginWithSMSScreen> {
+  AccountController accountController = AccountController();
   final typePhoneNum = RegExp(r'(((\+|)84)|0)(3|5|7|8|9)+([0-9]{8})\b');
   final _formPhoneNumberKey = GlobalKey<FormState>();
   TextEditingController phoneController = TextEditingController();
@@ -77,20 +80,79 @@ class _LoginWithSMSScreenState extends State<LoginWithSMSScreen> {
                 width: MediaQuery.of(context).size.width,
                 height: 45,
                 child: ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
                     if (_formPhoneNumberKey.currentState!.validate()) {
                       _formPhoneNumberKey.currentState!.save();
-                      Navigator.push(
-                          context,
-                          PageTransition(
-                              child: const SendOTPLoginScreen(),
-                              type: PageTransitionType.fade));
+                      String? message = await accountController.sendPhoneOTPtoLogin(phoneController.text);
+                      print(message);
+                      if (message != null && message == "Invalid phone") {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              title: const Text('Thông báo'),
+                              content: Text('Số điện thoại bạn nhập không có trong hệ thống.'),
+                              actions: <Widget>[
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                      padding: const EdgeInsetsDirectional.symmetric(horizontal: 19, vertical: 10),
+                                      foregroundColor: kPrimaryColor.withOpacity(.7),
+                                      elevation: 0,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(20),
+                                        side: BorderSide(color: kPrimaryColor.withOpacity(.5), width: 1),
+                                      ),
+                                      backgroundColor: kPrimaryColor),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: const Text(
+                                    'Đóng',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                      padding: const EdgeInsetsDirectional.symmetric(horizontal: 19, vertical: 10),
+                                      foregroundColor: kPrimaryColor.withOpacity(.7),
+                                      elevation: 0,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(20),
+                                        side: BorderSide(color: kPrimaryColor.withOpacity(.5), width: 1),
+                                      ),
+                                      backgroundColor: kPrimaryColor),
+                                  onPressed: () {
+                                    Navigator.push(context, PageTransition(child: SignUp(), type: PageTransitionType.fade));
+                                  },
+                                  child: const Text(
+                                    'Đăng ký ngay',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      } else if (message == "success") {
+                        print(message);
+                        Navigator.push(
+                            context, PageTransition(child: SendOTPLoginScreen(phoneNumber: phoneController.text), type: PageTransitionType.fade));
+                      }
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0)),
-                      backgroundColor: kPrimaryColor),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)), backgroundColor: kPrimaryColor),
                   child: const Text(
                     'Tiếp tục',
                     style: TextStyle(fontSize: 18.0),
@@ -102,11 +164,7 @@ class _LoginWithSMSScreenState extends State<LoginWithSMSScreen> {
                 alignment: Alignment.centerRight,
                 child: TextButton(
                   onPressed: () {
-                    Navigator.push(
-                        context,
-                        PageTransition(
-                            child: const Login(),
-                            type: PageTransitionType.fade));
+                    Navigator.push(context, PageTransition(child: const Login(), type: PageTransitionType.fade));
                   },
                   child: const Text(
                     'Đăng nhập bằng mật khẩu',

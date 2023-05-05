@@ -68,6 +68,34 @@ class AccountController {
     return message;
   }
 
+  Future<String?> sendPhoneOTPtoLogin(String phone) async {
+    String? message;
+    try {
+      var url = '$baseUrl/verifys/send/otp-login?phoneNumber=$phone';
+      var response = await post(
+        Uri.parse(url),
+        headers: {
+          'accept': '*/*',
+        },
+        body: jsonEncode({}),
+      );
+      var jsonResponse = jsonDecode(response.body);
+      print(jsonResponse);
+      var statusCode = jsonDecode(response.body)['statusCode'] as int;
+      var message = jsonDecode(response.body)['message'] as String;
+      if (response.statusCode == 200 && statusCode == 200) {
+        message = 'success';
+        return message;
+      } else {
+        print(message);
+        return message;
+      }
+    } catch (e) {
+      print('error: $e');
+    }
+    return message;
+  }
+
   Future<CurrentUser> getCurrentUser() async {
     CurrentUser currentUser = new CurrentUser();
     try {
@@ -135,6 +163,49 @@ class AccountController {
     }
     //print('step 5: ${responseModel?.message}');
     return responseModel;
+  }
+
+  Future<String> loginOTP(String phone, String otp) async {
+    //String? message;
+    LoginResponseModel? responseModel;
+    try {
+      Map data = {"phonenumber": phone, "otp": otp};
+      String body = jsonEncode(data);
+      Response response = await post(
+        Uri.parse('$baseUrl/accounts/login/otp'),
+        body: body,
+        headers: {
+          "content-type": "application/json",
+          "accept": "application/json",
+          "access-control-allow-origin": "*",
+        },
+      );
+      print('step 1: ${response.body}');
+      var statusCode = jsonDecode(response.body)["statusCode"];
+      var message = jsonDecode(response.body)["message"];
+      //print('step 2: $statusCode + $message');
+      Token? token = jsonDecode(response.body)["data"] != null ? Token?.fromJson(jsonDecode(response.body)["data"]) : null;
+      //print('step 3: $token');
+      if (token != null) {
+        responseModel = new LoginResponseModel(statusCode: statusCode, message: message, data: token);
+      }
+      if (statusCode == 0 && token != null) {
+        var accessToken = token.accessToken;
+        // print('step 4: $accessToken');
+        var refreshToken = token.refreshToken;
+        print(accessToken);
+        if (accessToken != null && refreshToken != null) {
+          await baseController.saveAccessToken(accessToken);
+          await baseController.saveRefreshToken(refreshToken);
+        }
+        print(await baseController.getStringtoSharedPreference('access_token'));
+        return message;
+      }
+    } catch (e) {
+      print('error: $e');
+    }
+    //print('step 5: ${responseModel?.message}');
+    return responseModel!.message!;
   }
 
   Future<Customer?> getCustomerInfomation(int accountId) async {
