@@ -19,6 +19,8 @@ class ListCategoryScreen extends StatefulWidget {
 
 class _ListCategoryScreenState extends State<ListCategoryScreen> {
   List<ServiceCategory> categoryList = [];
+  List<ServiceCategory> mainList = [];
+  List<ServiceCategory> searchList = [];
   CategoryController categoryController = CategoryController();
   TextEditingController searchController = TextEditingController();
   bool isLoadingCate = true;
@@ -28,8 +30,19 @@ class _ListCategoryScreenState extends State<ListCategoryScreen> {
     if (categoryList.isNotEmpty) {
       setState(() {
         isLoadingCate = false;
+        mainList = categoryList;
       });
     }
+  }
+
+  void getListSearch(String searchValue) {
+    setState(() {
+      categoryList = mainList
+          .where((element) => element.categoryName!
+              .toLowerCase()
+              .contains(searchValue.toLowerCase()))
+          .toList();
+    });
   }
 
   @override
@@ -93,15 +106,19 @@ class _ListCategoryScreenState extends State<ListCategoryScreen> {
               ),
               style: TextStyle(
                   color: Colors.grey.shade700, height: 1.4, fontSize: 15),
+              onChanged: (value) => getListSearch(value),
             ),
-            FutureBuilder(
-              future: categoryController.getCategoriesList(),
-              builder: ((context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const ListCategoriesSkeleton();
-                } else if (snapshot.hasData) {
-                  categoryList = snapshot.data!;
-                  return ListView.builder(
+            // FutureBuilder(
+            //   future: categoryController.getCategoriesList(),
+            //   builder: ((context, snapshot) {
+            //     if (snapshot.connectionState == ConnectionState.waiting) {
+            //       return const ListCategoriesSkeleton();
+            //     } else if (snapshot.hasData) {
+            //       categoryList = snapshot.data!;
+            //       return
+            isLoadingCate
+                ? const ListCategoriesSkeleton()
+                : ListView.builder(
                     itemCount: categoryList.length,
                     shrinkWrap: true,
                     padding: const EdgeInsets.only(top: 16),
@@ -125,18 +142,19 @@ class _ListCategoryScreenState extends State<ListCategoryScreen> {
                         },
                       );
                     },
-                  );
-                } else if (snapshot.hasError) {
-                  return Column(
-                    children: [
-                      Text('Oops'),
-                      Text('Có lỗi xảy ra rồi!'),
-                    ],
-                  );
-                }
-                return Container();
-              }),
-            )
+                  )
+            //     ;
+            //   } else if (snapshot.hasError) {
+            //     return Column(
+            //       children: [
+            //         Text('Oops'),
+            //         Text('Có lỗi xảy ra rồi!'),
+            //       ],
+            //     );
+            //   }
+            //   return Container();
+            // }),
+            //)
           ],
         ),
       ),

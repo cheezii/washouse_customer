@@ -229,17 +229,20 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
           mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[
             messageChat.type == TypeMessage.text
-                // Text
-                ? Container(
-                    padding: EdgeInsets.fromLTRB(15, 10, 15, 10),
-                    //width: 200,
-                    decoration: BoxDecoration(
-                        color: Colors.grey.shade300,
-                        borderRadius: BorderRadius.circular(30)),
-                    margin: EdgeInsets.only(
-                        bottom: isLastMessageRight(index) ? 20 : 10, right: 10),
-                    child: Text(
-                      messageChat.content,
+                // Text-
+                ? Flexible(
+                    child: Container(
+                      padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
+                      width: 200,
+                      decoration: BoxDecoration(
+                          color: Colors.grey.shade300,
+                          borderRadius: BorderRadius.circular(20)),
+                      margin: EdgeInsets.only(
+                          bottom: isLastMessageRight(index) ? 20 : 10,
+                          right: 10),
+                      child: Text(
+                        messageChat.content,
+                      ),
                     ),
                   )
                 : messageChat.type == TypeMessage.image
@@ -377,7 +380,7 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
                   messageChat.type == TypeMessage.text
                       ? Container(
                           padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
-                          //width: 200,
+                          width: 200,
                           decoration: BoxDecoration(
                               color: kPrimaryColor.withOpacity(.7),
                               borderRadius: BorderRadius.circular(30)),
@@ -389,7 +392,7 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
                         )
                       : messageChat.type == TypeMessage.image
                           ? Container(
-                              margin: EdgeInsets.only(left: 10),
+                              margin: const EdgeInsets.only(left: 10),
                               child: TextButton(
                                 onPressed: () {
                                   Navigator.push(
@@ -403,10 +406,10 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
                                 style: ButtonStyle(
                                     padding:
                                         MaterialStateProperty.all<EdgeInsets>(
-                                            EdgeInsets.all(0))),
+                                            const EdgeInsets.all(0))),
                                 child: Material(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(8)),
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(8)),
                                   clipBehavior: Clip.hardEdge,
                                   child: Image.network(
                                     messageChat.content,
@@ -476,24 +479,24 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
               // Timex
               isLastMessageLeft(index)
                   ? Container(
+                      margin: EdgeInsets.only(left: 50, top: 5, bottom: 5),
                       child: Text(
                         DateFormat('dd MM HH:mm').format(
                             DateTime.fromMillisecondsSinceEpoch(
                                 int.parse(messageChat.timestamp))),
-                        style: TextStyle(
+                        style: const TextStyle(
                             color: kPrimaryColor,
                             fontSize: 12,
                             fontStyle: FontStyle.italic),
                       ),
-                      margin: EdgeInsets.only(left: 50, top: 5, bottom: 5),
                     )
-                  : SizedBox.shrink()
+                  : const SizedBox.shrink()
             ],
           ),
         );
       }
     } else {
-      return SizedBox.shrink();
+      return const SizedBox.shrink();
     }
   }
 

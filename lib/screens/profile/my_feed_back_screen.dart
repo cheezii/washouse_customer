@@ -135,11 +135,11 @@ class _MyFeedbackScreenState extends State<MyFeedbackScreen> {
             ),
             centerTitle: true,
             title: const Text('Đánh giá của tôi', style: TextStyle(color: textColor, fontSize: 25)),
-            bottom: const TabBar(
-              unselectedLabelColor: textColor,
-              labelColor: textColor,
-              tabs: [Tab(text: 'Đơn hàng'), Tab(text: 'Dịch vụ')],
-            ),
+            // bottom: const TabBar(
+            //   unselectedLabelColor: textColor,
+            //   labelColor: textColor,
+            //   tabs: [Tab(text: 'Đơn hàng'), Tab(text: 'Dịch vụ')],
+            // ),
           ),
           body: TabBarView(
             children: [

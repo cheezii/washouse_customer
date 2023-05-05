@@ -56,21 +56,28 @@ class ChatProvider {
   //   }
   // }
 
-  Stream<QuerySnapshot> getStreamFireStore(String pathCollection, int limit,
-      String? textSearch, String groupChatId) {
+  Stream<QuerySnapshot> getStreamFireStore(
+      String? textSearch, String currentId) {
     if (textSearch?.isNotEmpty == true) {
       return firebaseFirestore
-          .collection(pathCollection)
-          .limit(limit)
-          .where(FirestoreConstants.nameFrom, arrayContains: textSearch)
+          .collection(FirestoreConstants.pathMessageCollection)
+          .where(FirestoreConstants.idFrom, isEqualTo: currentId)
           .where(FirestoreConstants.nameTo, arrayContains: textSearch)
           .snapshots();
     } else {
       return firebaseFirestore
-          .collection(pathCollection)
-          .limit(limit)
+          .collection(FirestoreConstants.pathMessageCollection)
+          .where(FirestoreConstants.idFrom, isEqualTo: currentId)
           .snapshots();
     }
+  }
+
+  Stream<QuerySnapshot> getListStream(String currentId) {
+    return firebaseFirestore
+        .collection(FirestoreConstants.pathMessageCollection)
+        .where(FirestoreConstants.idFrom, isEqualTo: currentId)
+        //.where(FirestoreConstants.idTo, isEqualTo: currentId)
+        .snapshots();
   }
 
   Stream<QuerySnapshot> getChatStream(String groupChatId, int limit) {

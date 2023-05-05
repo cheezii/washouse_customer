@@ -48,32 +48,56 @@ class CardFooter extends StatelessWidget {
             //       ),
             //     ),
             //   )
-            ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      PageTransition(
-                          child: FeedbackOrderScreen(orderItem: orderItem),
-                          type: PageTransitionType.fade));
-                },
-                style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsetsDirectional.symmetric(
-                        horizontal: 20, vertical: 9),
-                    //foregroundColor: kPrimaryColor.withOpacity(.7),
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                      side: const BorderSide(color: kPrimaryColor, width: 1),
+            orderItem.isFeedback == false
+                ? ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          PageTransition(
+                              child: FeedbackOrderScreen(orderItem: orderItem),
+                              type: PageTransitionType.fade));
+                    },
+                    style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsetsDirectional.symmetric(
+                            horizontal: 20, vertical: 9),
+                        //foregroundColor: kPrimaryColor.withOpacity(.7),
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                          side:
+                              const BorderSide(color: kPrimaryColor, width: 1),
+                        ),
+                        backgroundColor: kPrimaryColor),
+                    child: Text(
+                      'Viết đánh giá',
+                      style: const TextStyle(color: Colors.white),
                     ),
-                    backgroundColor: kPrimaryColor),
-                child: Text(
-                  orderItem.isFeedback == false
-                      ? 'Viết đánh giá'
-                      : 'Xem đánh giá',
-                  style: const TextStyle(color: Colors.white),
-                ),
-              )
-            : Container(),
+                  )
+                : ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          PageTransition(
+                              child: FeedbackOrderScreen(orderItem: orderItem),
+                              type: PageTransitionType.fade));
+                    },
+                    style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsetsDirectional.symmetric(
+                            horizontal: 20, vertical: 9),
+                        //foregroundColor: kPrimaryColor.withOpacity(.7),
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                          side:
+                              const BorderSide(color: kPrimaryColor, width: 1),
+                        ),
+                        backgroundColor: Colors.white),
+                    child: Text(
+                      'Xem đánh giá',
+                      style: const TextStyle(color: kPrimaryColor),
+                    ),
+                  )
+            : SizedBox.shrink(),
         (orderItem.status!.trim().toLowerCase() == 'ready' &&
                 orderItem.isPayment == false)
             ?
