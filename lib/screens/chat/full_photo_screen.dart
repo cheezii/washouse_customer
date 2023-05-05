@@ -11,17 +11,27 @@ class FullPhotoPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Toàn bộ ảnh',
-          style: TextStyle(color: textColor),
-        ),
-        centerTitle: true,
-      ),
-      body: Container(
-        child: PhotoView(
-          imageProvider: NetworkImage(url),
-        ),
+      body: Stack(
+        children: [
+          SliverAppBar(
+            leading: GestureDetector(
+              onTap: () => Navigator.pop(context),
+              child: const Padding(
+                padding: EdgeInsets.only(left: 16),
+                child: CircleAvatar(
+                  backgroundColor: Colors.white,
+                  child: Icon(Icons.arrow_back_ios_new_rounded,
+                      color: Colors.black),
+                ),
+              ),
+            ),
+          ),
+          SliverToBoxAdapter(
+            child: PhotoView(
+              imageProvider: NetworkImage(url),
+            ),
+          ),
+        ],
       ),
     );
   }

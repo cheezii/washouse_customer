@@ -23,8 +23,10 @@ import '../current_location_screen.dart';
 import '../../center/search_center_screen.dart';
 
 class HomeHeader extends StatefulWidget {
+  final pickedLocation;
   const HomeHeader({
     super.key,
+    this.pickedLocation,
   });
 
   @override
@@ -172,7 +174,6 @@ class _HomeHeaderState extends State<HomeHeader> {
 
   @override
   Widget build(BuildContext context) {
-    print('noti length: ${notifyProvider.numOfNotifications}');
     Size size = MediaQuery.of(context).size;
     return Padding(
       padding: const EdgeInsets.only(left: 16, right: 16, top: 10),
@@ -210,7 +211,8 @@ class _HomeHeaderState extends State<HomeHeader> {
                       Navigator.push(
                         context,
                         PageTransition(
-                            child: const CurrentLocationScreen(),
+                            child: CurrentLocationScreen(
+                                currentPosition: _currentPosition!),
                             type: PageTransitionType.fade),
                       );
                     },
