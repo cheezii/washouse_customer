@@ -1,5 +1,8 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:washouse_customer/resource/controller/account_controller.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -33,7 +36,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
   bool isLoading = false;
 
   Future<void> _loadData() async {
-    final name = await baseController.getStringtoSharedPreference("CURRENT_USER_NAME");
+    final name =
+        await baseController.getStringtoSharedPreference("CURRENT_USER_NAME");
   }
 
   void getMyWallet() async {
@@ -73,7 +77,36 @@ class _PaymentScreenState extends State<PaymentScreen> {
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
-      return CircularProgressIndicator();
+      return Stack(
+        fit: StackFit.expand,
+        children: [
+          Positioned.fill(
+            child: BackdropFilter(
+              filter: ImageFilter.blur(
+                sigmaX: 10.0,
+                sigmaY: 10.0,
+              ),
+              child: Container(
+                color: Colors.black.withOpacity(0.2),
+              ),
+            ),
+          ),
+          Positioned(
+            child: Center(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                width: 100,
+                height: 100,
+                child: LoadingAnimationWidget.threeRotatingDots(
+                    color: kPrimaryColor, size: 50),
+              ),
+            ),
+          )
+        ],
+      );
     } else {
       if (_wallet != null) {
         isHaveWallet = true;
@@ -93,7 +126,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
               ),
             ),
             centerTitle: true,
-            title: const Text('Ví của tôi', style: TextStyle(color: textColor, fontSize: 25)),
+            title: const Text('Ví của tôi',
+                style: TextStyle(color: textColor, fontSize: 25)),
           ),
           body: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -122,7 +156,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
                               });
                             },
                             icon: Icon(
-                              isHidden ? Icons.visibility : Icons.visibility_off,
+                              isHidden
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
                             ),
                           )
                         ],
@@ -131,7 +167,11 @@ class _PaymentScreenState extends State<PaymentScreen> {
                         height: 5,
                       ),
                       Text(
-                        isHidden ? '******' : '${PriceUtils().convertFormatPrice(_wallet!.balance!.round())} đ',
+                        isHidden
+                            ? '******'
+                            : isHaveWallet
+                                ? '${PriceUtils().convertFormatPrice(_wallet!.balance!.round())} đ'
+                                : '0 đ',
                         style: const TextStyle(
                           fontSize: 22,
                           fontWeight: FontWeight.w500,
@@ -158,8 +198,10 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                           if (value!.isEmpty) {
                                             return 'Hãy nhập số tiền cần nạp vào tài khoản';
                                           }
-                                          final numberValue = double.tryParse(value);
-                                          if (numberValue == null || numberValue < 10000) {
+                                          final numberValue =
+                                              double.tryParse(value);
+                                          if (numberValue == null ||
+                                              numberValue < 10000) {
                                             return 'Số tiền nạp vào tài khoản tối thiểu 10.000 đồng';
                                           }
                                           return null;
@@ -182,9 +224,11 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                       ElevatedButton(
                                         child: Text('Tiếp tục'),
                                         onPressed: () async {
-                                          if (_formKey.currentState!.validate()) {
+                                          if (_formKey.currentState!
+                                              .validate()) {
                                             _formKey.currentState!.save();
-                                            String url = await paymentController.lauchVnpayLink(_value);
+                                            String url = await paymentController
+                                                .lauchVnpayLink(_value);
 
                                             if (await canLaunch(url)) {
                                               await launch(url);
@@ -210,19 +254,23 @@ class _PaymentScreenState extends State<PaymentScreen> {
                               color: Color.fromARGB(255, 27, 122, 199),
                               elevation: 10,
                               child: Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 10),
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 10),
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: <Widget>[
                                     SizedBox(
                                       width: 40,
                                       height: 40,
-                                      child: Image.asset('assets/images/transaction/wallet.png'),
+                                      child: Image.asset(
+                                          'assets/images/transaction/wallet.png'),
                                     ),
                                     const SizedBox(width: 10),
                                     const Text(
                                       'Nạp tiền vào ví',
-                                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w600),
                                     )
                                   ],
                                 ),
@@ -243,7 +291,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
                               color: Color.fromARGB(255, 175, 45, 35),
                               elevation: 10,
                               child: Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 10),
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 10),
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: const [
@@ -255,7 +304,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                     SizedBox(width: 10),
                                     Text(
                                       'Liên kết tài khoản VNPAY',
-                                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w600),
                                     )
                                   ],
                                 ),
@@ -282,18 +333,25 @@ class _PaymentScreenState extends State<PaymentScreen> {
                               itemCount: newTransList.length,
                               itemBuilder: (context, index) {
                                 newTransList.sort((a, b) {
-                                  DateTime aDate = DateFormat('dd-MM-yyyy HH:mm:ss').parse(a.timeStamp!);
-                                  DateTime bDate = DateFormat('dd-MM-yyyy HH:mm:ss').parse(b.timeStamp!);
+                                  DateTime aDate =
+                                      DateFormat('dd-MM-yyyy HH:mm:ss')
+                                          .parse(a.timeStamp!);
+                                  DateTime bDate =
+                                      DateFormat('dd-MM-yyyy HH:mm:ss')
+                                          .parse(b.timeStamp!);
                                   return bDate.compareTo(aDate);
                                 });
                                 return TransactionWidget(
-                                  isAdd: newTransList[index].plusOrMinus!.toLowerCase(),
+                                  isAdd: newTransList[index]
+                                      .plusOrMinus!
+                                      .toLowerCase(),
                                   time: newTransList[index].timeStamp!,
                                   price: newTransList[index].amount!,
                                 );
                               })
                           : Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 90, horizontal: 80),
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 90, horizontal: 80),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -301,18 +359,23 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                   SizedBox(
                                     width: 100,
                                     height: 100,
-                                    child: Image.asset('assets/images/transaction/transaction-history.png'),
+                                    child: Image.asset(
+                                        'assets/images/transaction/transaction-history.png'),
                                   ),
                                   const SizedBox(height: 15),
                                   Text(
                                     'Bạn chưa có giao dịch nào',
-                                    style: TextStyle(color: Colors.grey.shade500, fontSize: 18, fontWeight: FontWeight.w400),
+                                    style: TextStyle(
+                                        color: Colors.grey.shade500,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w400),
                                   )
                                 ],
                               ),
                             )
                       : Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 90, horizontal: 80),
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 90, horizontal: 80),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -320,12 +383,16 @@ class _PaymentScreenState extends State<PaymentScreen> {
                               SizedBox(
                                 width: 100,
                                 height: 100,
-                                child: Image.asset('assets/images/transaction/transaction-history.png'),
+                                child: Image.asset(
+                                    'assets/images/transaction/transaction-history.png'),
                               ),
                               const SizedBox(height: 15),
                               Text(
                                 'Bạn chưa có giao dịch nào',
-                                style: TextStyle(color: Colors.grey.shade500, fontSize: 18, fontWeight: FontWeight.w400),
+                                style: TextStyle(
+                                    color: Colors.grey.shade500,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w400),
                               )
                             ],
                           ),

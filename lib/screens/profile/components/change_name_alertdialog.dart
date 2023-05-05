@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:washouse_customer/resource/controller/account_controller.dart';
 
 import '../../../components/constants/color_constants.dart';
 
@@ -11,7 +12,7 @@ class ChangeNameAlertDialog extends StatefulWidget {
 
 class _ChangeNameAlertDialogState extends State<ChangeNameAlertDialog> {
   final _formNameKey = GlobalKey<FormState>();
-
+  AccountController accountController = AccountController();
   late String newName;
 
   @override
@@ -62,10 +63,10 @@ class _ChangeNameAlertDialogState extends State<ChangeNameAlertDialog> {
         SizedBox(
           width: MediaQuery.of(context).size.width,
           child: ElevatedButton(
-            onPressed: () {
+            onPressed: () async {
               if (_formNameKey.currentState!.validate()) {
                 _formNameKey.currentState!.save();
-                //change name
+                String message = await accountController.changeProfileInfo(newName, null, null);
               }
             },
             style: ElevatedButton.styleFrom(

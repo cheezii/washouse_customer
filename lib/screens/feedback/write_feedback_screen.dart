@@ -20,9 +20,17 @@ class FeedbackOrderScreen extends StatefulWidget {
 class _FeedbackOrderScreen extends State<FeedbackOrderScreen> {
   FeedbackController feedbackController = FeedbackController();
   int _rating = 0;
-  int _serviceRating = 0;
+  late List<Map<int, int>> _serviceRatings;
   String content = "";
   TextEditingController _textEditingController = TextEditingController();
+  @override
+  void initState() {
+    super.initState();
+    _serviceRatings = widget.orderItem.orderedServices!.map((service) {
+      return {service.serviceId!: 0};
+    }).toList();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,7 +68,7 @@ class _FeedbackOrderScreen extends State<FeedbackOrderScreen> {
             RatingBar.builder(
               itemBuilder: (context, _) => const Icon(
                 Icons.star_rounded,
-                color: kPrimaryColor,
+                color: Colors.yellow,
               ),
               updateOnDrag: true,
               unratedColor: Colors.grey.shade300,
@@ -101,6 +109,11 @@ class _FeedbackOrderScreen extends State<FeedbackOrderScreen> {
                         color: Colors.grey.shade600,
                       ),
                     ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Colors.grey.shade600,
+                      ),
+                    ),
                   ),
                   onChanged: (value) {
                     setState(() {
@@ -109,7 +122,68 @@ class _FeedbackOrderScreen extends State<FeedbackOrderScreen> {
                   },
                 ),
               ],
-            )
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Dịch vụ đã đặt',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+                ),
+                const SizedBox(height: 10),
+                ListView.separated(
+                  padding: const EdgeInsets.only(bottom: 8.0, top: 8.0),
+                  itemCount: widget.orderItem.orderedServices!.length,
+                  shrinkWrap: true,
+                  itemBuilder: ((context, index) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 6, vertical: 4),
+                      child: Row(
+                        children: [
+                          Text(
+                            '${widget.orderItem.orderedServices![index].serviceName}',
+                            style: const TextStyle(fontSize: 17),
+                          ),
+                          const Spacer(),
+                          RatingBar.builder(
+                            itemBuilder: (context, _) => const Icon(
+                              Icons.star_rounded,
+                              color: Colors.yellow,
+                            ),
+                            updateOnDrag: true,
+                            unratedColor: Colors.grey.shade300,
+                            minRating: 1,
+                            maxRating: 5,
+                            itemCount: 5,
+                            itemSize: 25,
+                            itemPadding:
+                                const EdgeInsets.symmetric(horizontal: 4),
+                            initialRating: 0,
+                            allowHalfRating:
+                                false, // Set this to false to allow integer ratings only
+                            onRatingUpdate: (rating) {
+                              setState(() {
+                                _serviceRatings[index][
+                                    widget.orderItem.orderedServices![index]
+                                        .serviceId!] = rating
+                                    .round(); // Round the rating to the nearest integer
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                    );
+                  }),
+                  separatorBuilder: (context, index) {
+                    return Divider(
+                      thickness: 1,
+                      color: Colors.grey.shade300,
+                    );
+                  },
+                ),
+              ],
+            ),
           ],
         ),
       ),
@@ -134,9 +208,11 @@ class _FeedbackOrderScreen extends State<FeedbackOrderScreen> {
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0)),
+                    borderRadius: BorderRadius.circular(20)),
                 backgroundColor: kPrimaryColor),
-            onPressed: (_rating == 0 || content.trim() == "")
+            onPressed: (_rating == 0 ||
+                    content.trim() == "" ||
+                    _serviceRatings.any((element) => (element.values == 0)))
                 ? null
                 : () async {
                     String message =
@@ -145,14 +221,33 @@ class _FeedbackOrderScreen extends State<FeedbackOrderScreen> {
                             widget.orderItem.centerId!,
                             content,
                             _rating);
-                    if (message == "success") {
+                    String message_services = "success";
+                    for (var element in widget.orderItem.orderedServices!) {
+                      String message_service =
+                          await feedbackController.createFeedbackService(
+                              element.serviceId!,
+                              widget.orderItem.centerId!,
+                              content,
+                              _rating);
+                      if (message_service != "success") {
+                        message_services = "fail";
+                        return;
+                      }
+                    }
+                    print(message_services);
+                    if (message == "success" && message_services == "success") {
                       // ignore: use_build_context_synchronously
                       showDialog(
                         context: context,
                         builder: (BuildContext context) {
                           return AlertDialog(
-                            title: const Text(
-                                'Bạn đã đánh giá đơn hàng thành công'),
+                            title: const Align(
+                              alignment: Alignment.center,
+                              child: Text('Đánh giá đơn hàng thành công'),
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15),
+                            ),
                             content: Column(
                               mainAxisSize: MainAxisSize.min,
                               children: [
@@ -181,7 +276,10 @@ class _FeedbackOrderScreen extends State<FeedbackOrderScreen> {
                                           ),
                                           type: PageTransitionType.fade));
                                 },
-                                child: Text('Quay lại'),
+                                child: const Text(
+                                  'Quay lại',
+                                  style: TextStyle(color: kPrimaryColor),
+                                ),
                               ),
                             ],
                           );

@@ -1,19 +1,18 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:http/http.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:washouse_customer/resource/controller/notification_controller.dart';
 import 'package:http/http.dart' as http;
 import '../../components/constants/color_constants.dart';
 import '../../components/constants/text_constants.dart';
 import '../../resource/models/response_models/notification_item_response.dart';
 import '../../resource/models/response_models/notification.dart';
+import '../../resource/provider/notify_provider.dart';
 import 'component/notification_list.dart';
 import 'package:flutter/material.dart';
-import 'package:signalr_client/signalr_client.dart';
+import 'package:signalr_client/signalr_client.dart' as singlr;
 
 class ListNotificationScreen extends StatefulWidget {
   const ListNotificationScreen({
@@ -24,12 +23,14 @@ class ListNotificationScreen extends StatefulWidget {
   State<ListNotificationScreen> createState() => _ListNotificationScreenState();
 }
 
+NotifyProvider notifyProvider = NotifyProvider();
+
 class _ListNotificationScreenState extends State<ListNotificationScreen> {
   NotificationController notificationController = NotificationController();
   List<NotificationItem> notifications = [];
   int countUnread = 0;
   bool isLoading = false;
-  late HubConnection hubConnection;
+  late singlr.HubConnection hubConnection;
   String message = "";
   @override
   void initState() {
@@ -37,12 +38,24 @@ class _ListNotificationScreenState extends State<ListNotificationScreen> {
     // centerArgs = widget.orderId;
     //getNotifications();
     initSignalR();
+    notifyProvider.addListener(() => mounted ? setState(() {}) : null);
+    notifyProvider.getNoti();
+  }
+
+  @override
+  void dispose() {
+    hubConnection.stop();
+    notifyProvider.removeListener(() {});
+    super.dispose();
   }
 
   void initSignalR() async {
-    hubConnection = HubConnectionBuilder().withUrl(serverUrl).build();
+    hubConnection = singlr.HubConnectionBuilder().withUrl(serverUrl).build();
     //await hubConnection.invoke('SubscribeToNotifications');
-    hubConnection.on('UpdateOrderStatus', (notification) => onNotificationReceived(notification as NotificationItem));
+    hubConnection.on(
+        'UpdateOrderStatus',
+        (notification) =>
+            onNotificationReceived(notification as NotificationItem));
     print(1);
     await hubConnection.start();
   }
@@ -56,23 +69,19 @@ class _ListNotificationScreenState extends State<ListNotificationScreen> {
     });
   }
 
-  @override
-  void dispose() {
-    hubConnection.stop();
-    super.dispose();
-  }
-
   Future<NotificationResponse> getNotifications() async {
     NotificationResponse notificationResponse = NotificationResponse();
     try {
       String url = '$baseUrl/notifications/me-noti';
-      Response response = await baseController.makeAuthenticatedRequest(url, {});
+      Response response =
+          await baseController.makeAuthenticatedRequest(url, {});
 
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body)["data"];
         notificationResponse = NotificationResponse.fromJson(data);
       } else {
-        throw Exception('Error fetching getNotifications: ${response.statusCode}');
+        throw Exception(
+            'Error fetching getNotifications: ${response.statusCode}');
       }
     } catch (e) {
       print('error: getNotifications-$e');
@@ -124,17 +133,18 @@ class _ListNotificationScreenState extends State<ListNotificationScreen> {
           ),
         ),
         centerTitle: true,
-        title: const Text('Thông báo', style: TextStyle(color: Colors.white, fontSize: 27)),
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(
-              Icons.check_circle_outline_outlined,
-              color: Colors.white,
-              size: 24,
-            ),
-          ),
-        ],
+        title: const Text('Thông báo',
+            style: TextStyle(color: Colors.white, fontSize: 27)),
+        // actions: [
+        //   IconButton(
+        //     onPressed: () {},
+        //     icon: const Icon(
+        //       Icons.check_circle_outline_outlined,
+        //       color: Colors.white,
+        //       size: 24,
+        //     ),
+        //   ),
+        // ],
       ),
       // body: Column(
       //   children: [
@@ -163,7 +173,13 @@ class _ListNotificationScreenState extends State<ListNotificationScreen> {
         child: FutureBuilder<NotificationResponse>(
           future: getNotifications(),
           builder: (context, snapshot) {
-            if (snapshot.hasData && snapshot.data!.notifications != null) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(
+                child: LoadingAnimationWidget.prograssiveDots(
+                    color: kPrimaryColor, size: 50),
+              );
+            } else if (snapshot.hasData &&
+                snapshot.data!.notifications != null) {
               notifications = snapshot.data!.notifications!;
               return ListView.builder(
                 itemCount: notifications.length,
@@ -171,6 +187,7 @@ class _ListNotificationScreenState extends State<ListNotificationScreen> {
                   return Padding(
                     padding: const EdgeInsets.symmetric(vertical: 5),
                     child: NotificationList(
+                      id: notifications[index].id!,
                       title: notifications[index].title!,
                       content: notifications[index].content!,
                       image: 'assets/images/logo/washouse-favicon.png',
@@ -183,7 +200,21 @@ class _ListNotificationScreenState extends State<ListNotificationScreen> {
             } else if (snapshot.hasError) {
               return Text('${snapshot.error}');
             }
-            return CircularProgressIndicator();
+            return Column(
+              children: [
+                const SizedBox(height: 150),
+                SizedBox(
+                  height: 150,
+                  width: 150,
+                  child: Image.asset('assets/images/empty/empty-data.png'),
+                ),
+                const SizedBox(height: 15),
+                const Text(
+                  'Chưa có thông báo nào.',
+                  style: TextStyle(fontSize: 18, color: textColor),
+                )
+              ],
+            );
           },
         ),
       ),

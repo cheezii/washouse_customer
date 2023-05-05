@@ -34,4 +34,32 @@ class VerifyController {
     }
     return false;
   }
+
+  Future<bool> checkOTPByPhone(String phone, String otp) async {
+    try {
+      Map data = {"otp": otp, "phonenumber": phone};
+      String body = json.encode(data);
+      var url = '$baseUrl/verifys/sms/check';
+      var response = await post(
+        Uri.parse(url),
+        body: body,
+        headers: {
+          'accept': '*/*',
+          'Content-Type': 'application/json',
+        },
+      );
+      var jsonResponse = jsonDecode(response.body);
+      print(jsonResponse);
+      if (response.statusCode == 200) {
+        //message = 'success';
+        print("success");
+        return true;
+      } else {
+        throw Exception('Lỗi khi load json');
+      }
+    } catch (e) {
+      print('error: $e');
+      return false;
+    }
+  }
 }

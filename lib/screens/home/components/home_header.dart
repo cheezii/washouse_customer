@@ -1,15 +1,21 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:http/http.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:provider/provider.dart';
 import 'package:skeletons/skeletons.dart';
 import 'package:washouse_customer/resource/controller/center_controller.dart';
 import 'package:washouse_customer/resource/models/center.dart';
 
 import '../../../components/constants/color_constants.dart';
+import '../../../components/constants/text_constants.dart';
 import '../../../resource/controller/map_controller.dart';
+import '../../../resource/models/response_models/notification_item_response.dart';
+import '../../../resource/provider/notify_provider.dart';
 import '../../center/component/list_center_skeleton.dart';
 import '../../center/list_center.dart';
 import '../../notification/list_notification_screen.dart';
@@ -25,6 +31,8 @@ class HomeHeader extends StatefulWidget {
   State<HomeHeader> createState() => _HomeHeaderState();
 }
 
+NotifyProvider notifyProvider = NotifyProvider();
+
 class _HomeHeaderState extends State<HomeHeader> {
   final mapController = MapUserController();
   CenterController centerController = CenterController();
@@ -34,9 +42,52 @@ class _HomeHeaderState extends State<HomeHeader> {
   Position? _currentPosition;
   String _currentAddress = "";
   bool isLoading = true;
+  bool isLoadingNoti = true;
 
   List<LaundryCenter>? centers;
   List<LaundryCenter>? suggestion;
+
+  int numOfNotifications = 0;
+
+  // Stream<NotificationResponse> getNotis() async* {
+  //   NotificationResponse notificationResponse = NotificationResponse();
+  //   try {
+  //     String url = '$baseUrl/notifications/me-noti';
+  //     Response response =
+  //         await baseController.makeAuthenticatedRequest(url, {});
+
+  //     if (response.statusCode == 200) {
+  //       var data = jsonDecode(response.body)["data"];
+  //       notificationResponse = NotificationResponse.fromJson(data);
+  //     } else {
+  //       throw Exception(
+  //           'Error fetching getNotifications: ${response.statusCode}');
+  //     }
+  //   } catch (e) {
+  //     print('error: getNotifications-$e');
+  //   }
+  //   yield notificationResponse;
+  // }
+
+  Future<NotificationResponse> getNotifications() async {
+    NotificationResponse notificationResponse = NotificationResponse();
+    try {
+      String url = '$baseUrl/notifications/me-noti';
+      Response response =
+          await baseController.makeAuthenticatedRequest(url, {});
+
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body)["data"];
+        notificationResponse = NotificationResponse.fromJson(data);
+      } else {
+        throw Exception(
+            'Error fetching getNotifications: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('error: getNotifications-$e');
+    }
+    return notificationResponse;
+  }
 
   Future<bool> _handleLocationPermission() async {
     bool serviceEnabled;
@@ -44,20 +95,24 @@ class _HomeHeaderState extends State<HomeHeader> {
 
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Location services are disabled. Please enable the services')));
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text(
+              'Location services are disabled. Please enable the services')));
       return false;
     }
     permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Location permissions are denied')));
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Location permissions are denied')));
         return false;
       }
     }
     if (permission == LocationPermission.deniedForever) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('Location permissions are permanently denied, we cannot request permissions.')));
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text(
+              'Location permissions are permanently denied, we cannot request permissions.')));
       return false;
     }
     return true;
@@ -67,7 +122,8 @@ class _HomeHeaderState extends State<HomeHeader> {
     final hasPermission = await _handleLocationPermission();
 
     if (!hasPermission) return;
-    await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high).then((Position position) {
+    await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
+        .then((Position position) {
       setState(() {
         _currentPosition = position;
         isLoading = false;
@@ -79,7 +135,9 @@ class _HomeHeaderState extends State<HomeHeader> {
   }
 
   Future<void> _getAddressFromLatLng(Position position) async {
-    await placemarkFromCoordinates(_currentPosition!.latitude, _currentPosition!.longitude).then((List<Placemark> placemarks) {
+    await placemarkFromCoordinates(
+            _currentPosition!.latitude, _currentPosition!.longitude)
+        .then((List<Placemark> placemarks) {
       Placemark place = placemarks[0];
       setState(() {
         _currentAddress = '${place.street}';
@@ -89,14 +147,32 @@ class _HomeHeaderState extends State<HomeHeader> {
     });
   }
 
+  // void getNotify() async {
+  //   NotificationResponse notis = await getNotifications();
+  //   setState(() {
+  //     numOfNotifications = notis.numOfUnread!;
+  //     isLoadingNoti = false;
+  //   });
+  // }
+
   @override
   void initState() {
     super.initState();
     _getCurrentPosition();
+    notifyProvider.addListener(() => mounted ? setState(() {}) : null);
+    notifyProvider.getNoti();
+    //getNotify();
+  }
+
+  @override
+  void dispose() {
+    notifyProvider.removeListener(() {});
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    print('noti length: ${notifyProvider.numOfNotifications}');
     Size size = MediaQuery.of(context).size;
     return Padding(
       padding: const EdgeInsets.only(left: 16, right: 16, top: 10),
@@ -133,7 +209,9 @@ class _HomeHeaderState extends State<HomeHeader> {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        PageTransition(child: const CurrentLocationScreen(), type: PageTransitionType.fade),
+                        PageTransition(
+                            child: const CurrentLocationScreen(),
+                            type: PageTransitionType.fade),
                       );
                     },
                     icon: const Icon(
@@ -145,12 +223,43 @@ class _HomeHeaderState extends State<HomeHeader> {
               ),
               IconButton(
                 onPressed: () {
-                  Navigator.push(context, PageTransition(child: const ListNotificationScreen(), type: PageTransitionType.rightToLeftWithFade));
+                  Navigator.push(
+                      context,
+                      PageTransition(
+                          child: const ListNotificationScreen(),
+                          type: PageTransitionType.rightToLeftWithFade));
                 },
-                icon: const Icon(
-                  Icons.notifications,
-                  color: textColor,
-                  size: 30.0,
+                icon: Stack(
+                  children: [
+                    const Icon(
+                      Icons.notifications,
+                      color: textColor,
+                      size: 30.0,
+                    ),
+                    if (notifyProvider.numOfNotifications > 0)
+                      Positioned(
+                        right: 0,
+                        child: Container(
+                          padding: const EdgeInsets.all(2),
+                          decoration: BoxDecoration(
+                            color: Colors.red,
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          constraints: const BoxConstraints(
+                            minWidth: 16,
+                            minHeight: 16,
+                          ),
+                          child: Text(
+                            '${notifyProvider.numOfNotifications}',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 10,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ),
+                  ],
                 ),
               )
             ],
@@ -161,10 +270,16 @@ class _HomeHeaderState extends State<HomeHeader> {
             height: 45,
             child: ElevatedButton(
               onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => const SearchCenterScreen()));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const SearchCenterScreen()));
               },
               style: ElevatedButton.styleFrom(
-                  elevation: 0, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)), backgroundColor: Colors.grey.shade200),
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30)),
+                  backgroundColor: Colors.grey.shade200),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -175,7 +290,10 @@ class _HomeHeaderState extends State<HomeHeader> {
                   SizedBox(width: 10),
                   Text(
                     'Tìm tiệm giặt',
-                    style: TextStyle(fontSize: 18.0, color: Colors.grey.shade700, fontWeight: FontWeight.w400),
+                    style: TextStyle(
+                        fontSize: 18.0,
+                        color: Colors.grey.shade700,
+                        fontWeight: FontWeight.w400),
                   ),
                 ],
               ),

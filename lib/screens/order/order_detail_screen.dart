@@ -60,17 +60,18 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
   void initState() {
     super.initState();
     orderController = OrderController(context);
-    if (widget.status == 'pending') {
+    print('status ${widget.status}');
+    if (widget.status.trim().toLowerCase() == 'pending') {
       _processIndex = 0;
-    } else if (widget.status == 'confirmed') {
+    } else if (widget.status.trim().toLowerCase() == 'confirmed') {
       _processIndex = 1;
-    } else if (widget.status == 'received') {
+    } else if (widget.status.trim().toLowerCase() == 'received') {
       _processIndex = 2;
-    } else if (widget.status == 'processing') {
+    } else if (widget.status.trim().toLowerCase() == 'processing') {
       _processIndex = 3;
-    } else if (widget.status == 'ready') {
+    } else if (widget.status.trim().toLowerCase() == 'ready') {
       _processIndex = 4;
-    } else if (widget.status == 'completed') {
+    } else if (widget.status.trim().toLowerCase() == 'completed') {
       _processIndex = 5;
     }
   }
@@ -907,7 +908,13 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                       context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
-                          title: const Text('Thông báo'),
+                          title: const Align(
+                            alignment: Alignment.center,
+                            child: Text('Thông báo'),
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15),
+                          ),
                           content: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
@@ -945,10 +952,6 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                           ),
                           actions: [
                             ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(30)),
-                                  backgroundColor: cancelledColor),
                               onPressed: () async {
                                 String result =
                                     await trackingController.cancelledOrder(
@@ -987,7 +990,14 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                     context: context,
                                     builder: (BuildContext context) {
                                       return AlertDialog(
-                                        title: const Text('Thông báo'),
+                                        title: const Align(
+                                          alignment: Alignment.center,
+                                          child: Text('Thông báo'),
+                                        ),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(15),
+                                        ),
                                         content: Text(
                                             'Có lỗi xảy ra trong quá trình xử lý hoặc đơn hàng của bạn không thể hủy! Bạn vui lòng thử lại sau'),
                                         actions: [
@@ -1003,17 +1013,53 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                   );
                                 }
                               },
-                              child: Text('Xác nhận hủy'),
+                              style: ElevatedButton.styleFrom(
+                                  padding:
+                                      const EdgeInsetsDirectional.symmetric(
+                                          horizontal: 19, vertical: 10),
+                                  elevation: 0,
+                                  foregroundColor:
+                                      cancelledColor.withOpacity(.5),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                    side: BorderSide(
+                                        color: cancelledColor, width: 1),
+                                  ),
+                                  backgroundColor: cancelledColor),
+                              child: const Text(
+                                'Xác nhận hủy',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
                             ),
                             ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(30)),
-                                  backgroundColor: kPrimaryColor),
                               onPressed: () {
                                 Navigator.of(context).pop();
                               },
-                              child: Text('Giữ lại'),
+                              style: ElevatedButton.styleFrom(
+                                  padding:
+                                      const EdgeInsetsDirectional.symmetric(
+                                          horizontal: 19, vertical: 10),
+                                  foregroundColor:
+                                      kPrimaryColor.withOpacity(.7),
+                                  elevation: 0,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                    side: BorderSide(
+                                        color: kPrimaryColor, width: 1),
+                                  ),
+                                  backgroundColor: kPrimaryColor),
+                              child: const Text(
+                                'Giữ lại',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
                             ),
                           ],
                         );
@@ -1063,89 +1109,177 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                         : ElevatedButton(
                             style: ElevatedButton.styleFrom(
                                 shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10.0)),
+                                    borderRadius: BorderRadius.circular(20)),
                                 backgroundColor: kPrimaryColor),
                             onPressed: () async {
                               showDialog(
                                 context: context,
                                 builder: (BuildContext context) {
                                   return AlertDialog(
-                                    title: const Text('Thông báo'),
+                                    title: const Align(
+                                      alignment: Alignment.center,
+                                      child: Text('Thông báo'),
+                                    ),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(15),
+                                    ),
                                     content: Text(
                                         'Bạn có chắn chắn muốn thanh toán đơn hàng ${widget.orderId} qua ví?'),
                                     actions: [
-                                      TextButton(
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                        child: Text('Hủy bỏ'),
-                                      ),
-                                      TextButton(
-                                        onPressed: () async {
-                                          String result = await orderController
-                                              .paymentOrder(widget.orderId);
-                                          if (result.compareTo("success") ==
-                                              0) {
-                                            Navigator.of(context).pop();
-                                            showDialog(
-                                              context: context,
-                                              builder: (BuildContext context) {
-                                                return AlertDialog(
-                                                  title:
-                                                      const Text('Thông báo'),
-                                                  content: Text(
-                                                      'Đơn hàng của bạn đã được thanh toán thành công!'),
-                                                  actions: [
-                                                    TextButton(
-                                                      onPressed: () {
-                                                        Navigator.of(context)
-                                                            .pop();
-                                                        Navigator.push(
-                                                            context,
-                                                            PageTransition(
-                                                                child:
-                                                                    OrderDetailScreen(
-                                                                  orderId: widget
-                                                                      .orderId,
-                                                                  isPayment:
-                                                                      true,
-                                                                  status:
-                                                                      'ready',
-                                                                ),
-                                                                type: PageTransitionType
-                                                                    .rightToLeftWithFade));
-                                                      },
-                                                      child: Text('OK'),
-                                                    ),
-                                                  ],
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          ElevatedButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            style: ElevatedButton.styleFrom(
+                                                padding:
+                                                    const EdgeInsetsDirectional
+                                                            .symmetric(
+                                                        horizontal: 19,
+                                                        vertical: 10),
+                                                elevation: 0,
+                                                foregroundColor: cancelledColor
+                                                    .withOpacity(.5),
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(20),
+                                                  side: BorderSide(
+                                                      color: cancelledColor,
+                                                      width: 1),
+                                                ),
+                                                backgroundColor:
+                                                    cancelledColor),
+                                            child: const Text(
+                                              'Hủy',
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ),
+                                          TextButton(
+                                            onPressed: () async {
+                                              String result =
+                                                  await orderController
+                                                      .paymentOrder(
+                                                          widget.orderId);
+                                              if (result.compareTo("success") ==
+                                                  0) {
+                                                Navigator.of(context).pop();
+                                                showDialog(
+                                                  context: context,
+                                                  builder:
+                                                      (BuildContext context) {
+                                                    return AlertDialog(
+                                                      title: const Align(
+                                                        alignment:
+                                                            Alignment.center,
+                                                        child:
+                                                            Text('Thông báo'),
+                                                      ),
+                                                      shape:
+                                                          RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(15),
+                                                      ),
+                                                      content: Text(
+                                                          'Đơn hàng của bạn đã được thanh toán thành công!'),
+                                                      actions: [
+                                                        TextButton(
+                                                          onPressed: () {
+                                                            Navigator.of(
+                                                                    context)
+                                                                .pop();
+                                                            Navigator.push(
+                                                                context,
+                                                                PageTransition(
+                                                                    child:
+                                                                        OrderDetailScreen(
+                                                                      orderId:
+                                                                          widget
+                                                                              .orderId,
+                                                                      isPayment:
+                                                                          true,
+                                                                      status:
+                                                                          'ready',
+                                                                    ),
+                                                                    type: PageTransitionType
+                                                                        .rightToLeftWithFade));
+                                                          },
+                                                          child: Text('OK'),
+                                                        ),
+                                                      ],
+                                                    );
+                                                  },
                                                 );
-                                              },
-                                            );
-                                          } else {
-                                            Navigator.of(context).pop();
-                                            showDialog(
-                                              context: context,
-                                              builder: (BuildContext context) {
-                                                return AlertDialog(
-                                                  title:
-                                                      const Text('Thông báo'),
-                                                  content: Text(
-                                                      'Có lỗi xảy ra trong quá trình xử lý thanh toán! Bạn vui lòng thử lại sau. $result'),
-                                                  actions: [
-                                                    TextButton(
-                                                      onPressed: () {
-                                                        Navigator.of(context)
-                                                            .pop();
-                                                      },
-                                                      child: Text('OK'),
-                                                    ),
-                                                  ],
+                                              } else {
+                                                Navigator.of(context).pop();
+                                                showDialog(
+                                                  context: context,
+                                                  builder:
+                                                      (BuildContext context) {
+                                                    return AlertDialog(
+                                                      title: const Align(
+                                                        alignment:
+                                                            Alignment.center,
+                                                        child:
+                                                            Text('Thông báo'),
+                                                      ),
+                                                      shape:
+                                                          RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(15),
+                                                      ),
+                                                      content: Text(
+                                                          'Có lỗi xảy ra trong quá trình xử lý thanh toán! Bạn vui lòng thử lại sau. $result'),
+                                                      actions: [
+                                                        TextButton(
+                                                          onPressed: () {
+                                                            Navigator.of(
+                                                                    context)
+                                                                .pop();
+                                                          },
+                                                          child: Text('OK'),
+                                                        ),
+                                                      ],
+                                                    );
+                                                  },
                                                 );
-                                              },
-                                            );
-                                          }
-                                        },
-                                        child: Text('Xác nhận thanh toán'),
+                                              }
+                                            },
+                                            style: ElevatedButton.styleFrom(
+                                                padding:
+                                                    const EdgeInsetsDirectional
+                                                            .symmetric(
+                                                        horizontal: 19,
+                                                        vertical: 10),
+                                                foregroundColor: kPrimaryColor
+                                                    .withOpacity(.7),
+                                                elevation: 0,
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(20),
+                                                  side: BorderSide(
+                                                      color: kPrimaryColor,
+                                                      width: 1),
+                                                ),
+                                                backgroundColor: kPrimaryColor),
+                                            child: const Text(
+                                              'Xác nhận thanh toán',
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ],
                                   );

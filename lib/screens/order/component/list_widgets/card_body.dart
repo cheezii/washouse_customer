@@ -23,18 +23,42 @@ class CardBody extends StatelessWidget {
     // }
     return Row(
       children: [
-        SizedBox(
-          width: 70,
-          child: AspectRatio(
-            aspectRatio: 0.88,
-            child: Container(
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: const Color(0xfff5f6f9),
-                borderRadius: BorderRadius.circular(15),
-              ),
-              child: Image.asset('assets/images/category/shirt.png'),
-              //child: Image.network(orderItem.orderedServices!.first.image!),
+        // SizedBox(
+        //   width: 70,
+        //   child: AspectRatio(
+        //     aspectRatio: 0.88,
+        //     child: Container(
+        //       padding: const EdgeInsets.all(10),
+        //       decoration: BoxDecoration(
+        //         color: const Color(0xfff5f6f9),
+        //         borderRadius: BorderRadius.circular(15),
+        //       ),
+        //       //child: Image.asset('assets/images/category/shirt.png'),
+        //       child: Image.network(orderItem.orderedServices!.first.image!),
+        //     ),
+        //   ),
+        // ),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(10),
+          child: Image.network(
+            orderItem.orderedServices!.first.image!,
+            width: 80,
+            height: 80,
+            fit: BoxFit.cover,
+            loadingBuilder: (context, child, loadingProgress) {
+              if (loadingProgress == null) return child;
+              return Center(
+                child: CircularProgressIndicator(
+                    value: loadingProgress.expectedTotalBytes != null
+                        ? loadingProgress.cumulativeBytesLoaded.toDouble() /
+                            loadingProgress.expectedTotalBytes!.toDouble()
+                        : null),
+              );
+            },
+            errorBuilder: (context, error, stackTrace) => const SizedBox(
+              width: 80,
+              height: 80,
+              child: Icon(Icons.error),
             ),
           ),
         ),

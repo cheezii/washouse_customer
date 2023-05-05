@@ -12,21 +12,23 @@ class NoFeedbackScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        const SizedBox(height: 150),
-        Icon(
-          Icons.star_rounded,
-          color: kPrimaryColor,
-          size: 60,
-        ),
-        const SizedBox(height: 15),
-        Text(
-          'Bạn chưa đánh giá $type nào',
-          style: TextStyle(fontSize: 20, color: Colors.black),
-        ),
-      ],
+    return Center(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          const SizedBox(height: 150),
+          const Icon(
+            Icons.star_rounded,
+            color: kPrimaryColor,
+            size: 60,
+          ),
+          const SizedBox(height: 15),
+          Text(
+            'Bạn chưa đánh giá $type nào',
+            style: TextStyle(fontSize: 20, color: Colors.black),
+          ),
+        ],
+      ),
     );
   }
 }

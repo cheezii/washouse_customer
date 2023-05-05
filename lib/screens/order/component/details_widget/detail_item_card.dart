@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:washouse_customer/resource/models/response_models/order_detail_information.dart';
+import 'package:washouse_customer/utils/order_util.dart';
 import 'package:washouse_customer/utils/price_util.dart';
 import 'package:flutter/src/widgets/basic.dart' as basic;
 
@@ -73,15 +74,15 @@ class DetailItemCard extends StatelessWidget {
                       Row(
                         children: [
                           Text(
-                            cart.unit!.compareTo('Kg') == 0
+                            cart.unit!.compareTo('kg') == 0
                                 ? 'KL: x${cart.measurement} kg'
                                 : 'SL: x${cart.measurement!.round()} ${cart.unit!.toLowerCase()}',
                             style:
                                 const TextStyle(color: textColor, fontSize: 16),
                           ),
                           const Spacer(),
-                          const Text(
-                            'Trạng thái',
+                          Text(
+                            '${(cart.status == null) ? 'Chưa có' : OrderUtils().mapVietnameseOrderDetailStatus(cart.status!)}',
                             style: TextStyle(
                                 color: kPrimaryColor,
                                 fontSize: 16,
@@ -122,7 +123,7 @@ class DetailItemCard extends StatelessWidget {
                       Row(
                         children: [
                           Text(
-                            cart.unit!.compareTo('Kg') == 0
+                            cart.unit!.compareTo('kg') == 0
                                 ? 'KL: x${cart.measurement} kg'
                                 : 'SL: x${cart.measurement!.round()} ${cart.unit!.toLowerCase()}',
                             style:

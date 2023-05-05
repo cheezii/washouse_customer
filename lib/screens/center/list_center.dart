@@ -83,7 +83,10 @@ class _ListCenterScreenState extends State<ListCenterScreen> {
 
   void suggestionList(String value) {
     setState(() {
-      suggesCenter = allCenter.where((element) => element.title!.toLowerCase().contains(value.toLowerCase())).toList();
+      suggesCenter = allCenter
+          .where((element) =>
+              element.title!.toLowerCase().contains(value.toLowerCase()))
+          .toList();
     });
   }
 
@@ -139,7 +142,7 @@ class _ListCenterScreenState extends State<ListCenterScreen> {
     Size size = MediaQuery.of(context).size;
     searchController.text = widget.pageName!;
     _filter.searchString = widget.pageName!;
-    //_filter.categoryServices = widget.CategoryServices;
+    _filter.categoryServices = widget.CategoryServices;
     if (widget.pageName! == "Tiệm giặt gần đây") {
       _filter.searchString = null;
       //_filter.sort = "location";
@@ -155,7 +158,7 @@ class _ListCenterScreenState extends State<ListCenterScreen> {
     // }
     //if (isAcceptLocation) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(
         elevation: 1,
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -163,7 +166,11 @@ class _ListCenterScreenState extends State<ListCenterScreen> {
           onPressed: () {
             widget.isNearby
                 ? Navigator.pop(context)
-                : Navigator.push(context, PageTransition(child: const BaseScreen(), type: PageTransitionType.leftToRightWithFade));
+                : Navigator.push(
+                    context,
+                    PageTransition(
+                        child: const BaseScreen(),
+                        type: PageTransitionType.leftToRightWithFade));
           },
           icon: const Icon(
             Icons.arrow_back_rounded,
@@ -182,16 +189,25 @@ class _ListCenterScreenState extends State<ListCenterScreen> {
                 ),
                 onSubmitted: (value) {
                   Navigator.push(
-                      context, MaterialPageRoute(builder: (context) => ListCenterScreen(pageName: value, isNearby: false, isSearch: true)));
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ListCenterScreen(
+                              pageName: value,
+                              isNearby: false,
+                              isSearch: true)));
                 },
               )
-            : Text(widget.pageName!, style: const TextStyle(color: textColor, fontSize: 23)),
+            : Text(widget.pageName!,
+                style: const TextStyle(color: textColor, fontSize: 23)),
         actions: [
           widget.isSearch
               ? IconButton(
                   onPressed: () {
                     if (searchController.text.isEmpty) {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => const BaseScreen()));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const BaseScreen()));
                     } else {
                       searchController.text = '';
                     }
@@ -204,272 +220,286 @@ class _ListCenterScreenState extends State<ListCenterScreen> {
                 )
               : IconButton(
                   onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => const SearchCenterScreen()));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const SearchCenterScreen()));
                   },
-                  icon: const Icon(Icons.search_rounded, color: textColor, size: 30),
+                  icon: const Icon(Icons.search_rounded,
+                      color: textColor, size: 30),
                 ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.only(left: 16, right: 16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 15),
-            SizedBox(
-              height: 40,
-              width: size.width,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          showSortModalBottomSheet(context);
-                        },
-                        child: AnimatedContainer(
-                          duration: const Duration(milliseconds: 200),
-                          width: 124,
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey.shade300),
-                            borderRadius: BorderRadius.circular(20),
-                            color: boxSortColor,
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(6),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  sortChoosen,
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.w600,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.only(left: 16, right: 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 15),
+              SizedBox(
+                height: 40,
+                width: size.width,
+                child: ListView(
+                  scrollDirection: Axis.horizontal,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            showSortModalBottomSheet(context);
+                          },
+                          child: AnimatedContainer(
+                            duration: const Duration(milliseconds: 200),
+                            width: 124,
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.grey.shade300),
+                              borderRadius: BorderRadius.circular(20),
+                              color: boxSortColor,
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(6),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    sortChoosen,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                    ),
                                   ),
-                                ),
-                                const SizedBox(width: 4),
-                                const Icon(Icons.keyboard_arrow_down_rounded)
-                              ],
+                                  const SizedBox(width: 4),
+                                  const Icon(Icons.keyboard_arrow_down_rounded)
+                                ],
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      const SizedBox(width: 15),
-                      Text(
-                        'Lọc theo:',
-                        style: TextStyle(fontWeight: FontWeight.w600, color: Colors.grey.shade600),
-                      ),
-                      const SizedBox(width: 15),
-                      GestureDetector(
-                        onTap: () {
-                          showFilterCateModalBottomSheet(context, size);
-                        },
-                        child: AnimatedContainer(
-                          duration: const Duration(milliseconds: 200),
-                          width: 140,
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey.shade300),
-                            borderRadius: BorderRadius.circular(20),
-                            color: boxCateColor,
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(6),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  filterCate,
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                                const SizedBox(width: 5),
-                                const Icon(Icons.keyboard_arrow_down_rounded)
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 15),
-                      GestureDetector(
-                        onTap: () {
-                          showBudgetRangeModalBottomSheet(context);
-                        },
-                        child: AnimatedContainer(
-                          duration: const Duration(milliseconds: 200),
-                          width: 150,
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey.shade300),
-                            borderRadius: BorderRadius.circular(20),
-                            color: boxRangeColor,
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(6),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  budgetRange,
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                                const SizedBox(width: 4),
-                                const Icon(Icons.keyboard_arrow_down_rounded)
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 15),
-                      GestureDetector(
-                        onTap: () {
-                          if (boxDeliveryColor.value == selectedColor.value) {
-                            setState(() {
-                              boxDeliveryColor = Colors.white;
-                              _filter.hasDelivery = false;
-                            });
-                          } else {
-                            setState(() {
-                              boxDeliveryColor = selectedColor;
-                              _filter.hasDelivery = true;
-                            });
-                          }
-                        },
-                        child: AnimatedContainer(
-                          duration: const Duration(milliseconds: 200),
-                          width: 100,
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey.shade300),
-                            borderRadius: BorderRadius.circular(20),
-                            color: boxDeliveryColor,
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(10),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: const [
-                                Text(
-                                  'Vận chuyển',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                                //SizedBox(width: 4),
-                                //Icon(Icons.keyboard_arrow_down_rounded)
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 15),
-                      GestureDetector(
-                        onTap: () {
-                          if (boxOnlinePaymentColor.value == selectedColor.value) {
-                            setState(() {
-                              boxOnlinePaymentColor = Colors.white;
-                              _filter.hasOnlinePayment = false;
-                            });
-                          } else {
-                            setState(() {
-                              boxOnlinePaymentColor = selectedColor;
-                              _filter.hasOnlinePayment = true;
-                            });
-                          }
-                        },
-                        child: AnimatedContainer(
-                          duration: const Duration(milliseconds: 200),
-                          width: 200,
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey.shade300),
-                            borderRadius: BorderRadius.circular(20),
-                            color: boxOnlinePaymentColor,
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(10),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: const [
-                                Text(
-                                  'Thanh toán trực tuyến',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                                //SizedBox(width: 4),
-                                //Icon(Icons.keyboard_arrow_down_rounded)
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 10),
-            Skeleton(
-              isLoading: isLoadingLocation,
-              skeleton: const ListCentersSkeleton(),
-              child: FutureBuilder<List<LaundryCenter>>(
-                future: listAction,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const ListCentersSkeleton();
-                  } else if (snapshot.data != null) {
-                    List<LaundryCenter> centerList = snapshot.data!;
-                    return ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: centerList.length,
-                      itemBuilder: ((context, index) {
-                        var centerCategoriesName = centerList[index].centerServices!.toList().map((service) => service.serviceCategoryName);
-                        bool hasRating = centerList[index].rating != null ? true : false;
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10),
-                          child: CenterContainer(
-                            thumbnail: centerList[index].thumbnail!,
-                            name: centerList[index].title!,
-                            address: centerList[index].centerAddress,
-                            distance: centerList[index].distance!,
-                            // rating: hasRating ? centerList[index].rating! : null,
-                            // hasRating: hasRating,
-                            rating: centerList[index].rating,
-                            hasRating: (centerList[index].rating != null),
-                            isOpening: centerList[index].isOpening!,
-                            centerCategoriesName: centerCategoriesName,
-                            press: () => Navigator.pushNamed(
-                              context,
-                              '/centerDetails',
-                              arguments: centerList[index],
-                            ),
-                          ),
-                        );
-                      }),
-                    );
-                  } else if (snapshot.hasError) {
-                    //return Container();
-                    return Column(
-                      children: const [
-                        SizedBox(height: 20),
+                        const SizedBox(width: 15),
                         Text(
-                          'Oops',
-                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                          'Lọc theo:',
+                          style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              color: Colors.grey.shade600),
                         ),
-                        SizedBox(height: 7),
-                        Text(
-                          'Có lỗi xảy ra rồi!',
-                          style: TextStyle(fontSize: 16),
+                        const SizedBox(width: 15),
+                        GestureDetector(
+                          onTap: () {
+                            showFilterCateModalBottomSheet(context, size);
+                          },
+                          child: AnimatedContainer(
+                            duration: const Duration(milliseconds: 200),
+                            width: 140,
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.grey.shade300),
+                              borderRadius: BorderRadius.circular(20),
+                              color: boxCateColor,
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(6),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    filterCate,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 5),
+                                  const Icon(Icons.keyboard_arrow_down_rounded)
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 15),
+                        GestureDetector(
+                          onTap: () {
+                            showBudgetRangeModalBottomSheet(context);
+                          },
+                          child: AnimatedContainer(
+                            duration: const Duration(milliseconds: 200),
+                            width: 150,
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.grey.shade300),
+                              borderRadius: BorderRadius.circular(20),
+                              color: boxRangeColor,
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(6),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    budgetRange,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 4),
+                                  const Icon(Icons.keyboard_arrow_down_rounded)
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 15),
+                        GestureDetector(
+                          onTap: () {
+                            if (boxDeliveryColor.value == selectedColor.value) {
+                              setState(() {
+                                boxDeliveryColor = Colors.white;
+                                _filter.hasDelivery = false;
+                              });
+                            } else {
+                              setState(() {
+                                boxDeliveryColor = selectedColor;
+                                _filter.hasDelivery = true;
+                              });
+                            }
+                          },
+                          child: AnimatedContainer(
+                            duration: const Duration(milliseconds: 200),
+                            width: 100,
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.grey.shade300),
+                              borderRadius: BorderRadius.circular(20),
+                              color: boxDeliveryColor,
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(10),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: const [
+                                  Text(
+                                    'Vận chuyển',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                  //SizedBox(width: 4),
+                                  //Icon(Icons.keyboard_arrow_down_rounded)
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 15),
+                        GestureDetector(
+                          onTap: () {
+                            if (boxOnlinePaymentColor.value ==
+                                selectedColor.value) {
+                              setState(() {
+                                boxOnlinePaymentColor = Colors.white;
+                                _filter.hasOnlinePayment = false;
+                              });
+                            } else {
+                              setState(() {
+                                boxOnlinePaymentColor = selectedColor;
+                                _filter.hasOnlinePayment = true;
+                              });
+                            }
+                          },
+                          child: AnimatedContainer(
+                            duration: const Duration(milliseconds: 200),
+                            width: 200,
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.grey.shade300),
+                              borderRadius: BorderRadius.circular(20),
+                              color: boxOnlinePaymentColor,
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(10),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: const [
+                                  Text(
+                                    'Thanh toán trực tuyến',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                  //SizedBox(width: 4),
+                                  //Icon(Icons.keyboard_arrow_down_rounded)
+                                ],
+                              ),
+                            ),
+                          ),
                         ),
                       ],
-                    );
-                  }
-                  return Container();
-                },
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+              const SizedBox(height: 10),
+              Skeleton(
+                isLoading: isLoadingLocation,
+                skeleton: const ListCentersSkeleton(),
+                child: FutureBuilder<List<LaundryCenter>>(
+                  future: listAction,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const ListCentersSkeleton();
+                    } else if (snapshot.data != null) {
+                      List<LaundryCenter> centerList = snapshot.data!;
+                      return ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: centerList.length,
+                        itemBuilder: ((context, index) {
+                          var centerCategoriesName = centerList[index]
+                              .centerServices!
+                              .toList()
+                              .map((service) => service.serviceCategoryName);
+                          bool hasRating =
+                              centerList[index].rating != null ? true : false;
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 15),
+                            child: CenterContainer(
+                              thumbnail: centerList[index].thumbnail!,
+                              name: centerList[index].title!,
+                              address: centerList[index].centerAddress,
+                              distance: centerList[index].distance!,
+                              // rating: hasRating ? centerList[index].rating! : null,
+                              // hasRating: hasRating,
+                              rating: centerList[index].rating,
+                              hasRating: (centerList[index].rating != null),
+                              isOpening: centerList[index].isOpening!,
+                              centerCategoriesName: centerCategoriesName,
+                              press: () => Navigator.pushNamed(
+                                context,
+                                '/centerDetails',
+                                arguments: centerList[index],
+                              ),
+                            ),
+                          );
+                        }),
+                      );
+                    } else if (snapshot.hasError) {
+                      //return Container();
+                      return Column(
+                        children: const [
+                          SizedBox(height: 20),
+                          Text(
+                            'Oops',
+                            style: TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.bold),
+                          ),
+                          SizedBox(height: 7),
+                          Text(
+                            'Có lỗi xảy ra rồi!',
+                            style: TextStyle(fontSize: 16),
+                          ),
+                        ],
+                      );
+                    }
+                    return Container();
+                  },
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -535,7 +565,8 @@ class _ListCenterScreenState extends State<ListCenterScreen> {
                     SizedBox(height: 17),
                     Text(
                       ' - ',
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
                     ),
                   ],
                 ),
@@ -582,7 +613,8 @@ class _ListCenterScreenState extends State<ListCenterScreen> {
                   height: 45,
                   child: ElevatedButton(
                     onPressed: () {
-                      if (minBudgetController.text.isNotEmpty || maxBudgetController.text.isNotEmpty) {
+                      if (minBudgetController.text.isNotEmpty ||
+                          maxBudgetController.text.isNotEmpty) {
                         minBudgetController.clear();
                         maxBudgetController.clear();
                         _filter.budgetRange = null;
@@ -598,9 +630,11 @@ class _ListCenterScreenState extends State<ListCenterScreen> {
                     style: ElevatedButton.styleFrom(
                         side: const BorderSide(color: kPrimaryColor),
                         elevation: 0,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30)),
                         backgroundColor: Colors.white),
-                    child: const Text('Hủy', style: TextStyle(fontSize: 17, color: kPrimaryColor)),
+                    child: const Text('Hủy',
+                        style: TextStyle(fontSize: 17, color: kPrimaryColor)),
                   ),
                 ),
                 SizedBox(
@@ -636,7 +670,8 @@ class _ListCenterScreenState extends State<ListCenterScreen> {
                               actions: <Widget>[
                                 TextButton(
                                   style: TextButton.styleFrom(
-                                    textStyle: Theme.of(context).textTheme.labelLarge,
+                                    textStyle:
+                                        Theme.of(context).textTheme.labelLarge,
                                   ),
                                   child: const Text('Tôi hiểu rồi'),
                                   onPressed: () {
@@ -649,14 +684,18 @@ class _ListCenterScreenState extends State<ListCenterScreen> {
                         );
                       } else {
                         setState(() {
-                          budgetRange = '${minBudgetController.text} - ${maxBudgetController.text}';
+                          budgetRange =
+                              '${minBudgetController.text} - ${maxBudgetController.text}';
                           boxRangeColor = selectedColor;
                         });
                         Navigator.pop(context);
                       }
                     },
                     style: ElevatedButton.styleFrom(
-                        elevation: 0, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)), backgroundColor: kPrimaryColor),
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30)),
+                        backgroundColor: kPrimaryColor),
                     child: const Text('Đồng ý', style: TextStyle(fontSize: 17)),
                   ),
                 ),
@@ -668,7 +707,8 @@ class _ListCenterScreenState extends State<ListCenterScreen> {
     );
   }
 
-  Future<dynamic> showFilterCateModalBottomSheet(BuildContext context, Size size) {
+  Future<dynamic> showFilterCateModalBottomSheet(
+      BuildContext context, Size size) {
     return showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -704,7 +744,10 @@ class _ListCenterScreenState extends State<ListCenterScreen> {
                     centerTitle: true,
                     title: Text(
                       'Loại dịch vụ',
-                      style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.w600),
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w600),
                     ),
                   ),
                 ),
@@ -719,8 +762,11 @@ class _ListCenterScreenState extends State<ListCenterScreen> {
                                 setState(() {
                                   Navigator.pop(context);
                                   cateListChoose.add(cateList[index]);
-                                  filterCate = 'Loại dịch vụ (${cateListChoose.length})';
-                                  _filter.categoryServices = cateListChoose.map((cate) => cate.id.toString()).join(',');
+                                  filterCate =
+                                      'Loại dịch vụ (${cateListChoose.length})';
+                                  _filter.categoryServices = cateListChoose
+                                      .map((cate) => cate.id.toString())
+                                      .join(',');
                                 });
                                 this.setState(() {
                                   boxCateColor = selectedColor;
@@ -730,8 +776,11 @@ class _ListCenterScreenState extends State<ListCenterScreen> {
                                   Navigator.pop(context);
                                   cateListChoose.remove(cateList[index]);
                                   this.setState(() {
-                                    filterCate = 'Loại dịch vụ (${cateListChoose.length})';
-                                    _filter.categoryServices = cateListChoose.map((cate) => cate.id.toString()).join(',');
+                                    filterCate =
+                                        'Loại dịch vụ (${cateListChoose.length})';
+                                    _filter.categoryServices = cateListChoose
+                                        .map((cate) => cate.id.toString())
+                                        .join(',');
 
                                     print(_filter.categoryServices);
                                     if (cateListChoose.length == 0) {
@@ -815,8 +864,12 @@ class _ListCenterScreenState extends State<ListCenterScreen> {
                       });
                     },
                     style: ElevatedButton.styleFrom(
-                        elevation: 0, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)), backgroundColor: kPrimaryColor),
-                    child: const Text('Làm mới', style: TextStyle(fontSize: 17)),
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30)),
+                        backgroundColor: kPrimaryColor),
+                    child:
+                        const Text('Làm mới', style: TextStyle(fontSize: 17)),
                   ),
                 ),
               ),
@@ -849,7 +902,8 @@ class _ListCenterScreenState extends State<ListCenterScreen> {
                       const Text(
                         'Sắp xếp theo',
                         textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.w600),
                       ),
                     ],
                   ),
@@ -908,8 +962,12 @@ class _ListCenterScreenState extends State<ListCenterScreen> {
                         });
                       },
                       style: ElevatedButton.styleFrom(
-                          elevation: 0, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)), backgroundColor: kPrimaryColor),
-                      child: const Text('Làm mới', style: TextStyle(fontSize: 17)),
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30)),
+                          backgroundColor: kPrimaryColor),
+                      child:
+                          const Text('Làm mới', style: TextStyle(fontSize: 17)),
                     ),
                   ),
                 ],

@@ -84,6 +84,7 @@ class BaseController {
 
   Future<http.Response> makeAuthenticatedRequest(String url, Map<String, dynamic> queryParams) async {
     String accessToken = await getAccessToken();
+    print(accessToken);
     final uri = Uri.parse(url).replace(queryParameters: queryParams);
     http.Response response = await http.get(
       uri,

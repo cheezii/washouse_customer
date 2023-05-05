@@ -62,18 +62,22 @@ class _CartBodyScreenState extends State<CartBodyScreen> {
                         color: kPrimaryColor,
                         size: 28,
                       ),
-                      SizedBox(width: 6),
+                      const SizedBox(width: 6),
                       (center.title != null)
-                          ? Text(
-                              //'The Clean House', //lấy name của center, mà chưa nghĩ ra :)
-                              center.title!,
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 22),
+                          ? SizedBox(
+                              width: 330,
+                              child: Text(
+                                center.title!,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 20),
+                              ),
                             )
                           : CircularProgressIndicator()
                     ],
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 8),
                   ListView.builder(
                       shrinkWrap: true,
                       itemCount: value.cartItems.length,
@@ -103,10 +107,11 @@ class _CartBodyScreenState extends State<CartBodyScreen> {
                         //    text: value.cartItems[index].measurement.toString());
                         // kilogramController.selection = TextSelection.fromPosition(
                         //    TextPosition(offset: kilogramController.text.length));
-                        if ('Kg'.compareTo(unit) == 0) {
+                        if ('kg'.compareTo(unit) == 0) {
                           checkUnit = true;
                         } else {
                           checkUnit = false;
+                          measurement = measurement.round();
                         }
 
                         return Padding(
@@ -179,7 +184,7 @@ class _CartBodyScreenState extends State<CartBodyScreen> {
                                         children: [
                                           checkUnit
                                               ? SizedBox(
-                                                  width: 100,
+                                                  width: 120,
                                                   child: Row(
                                                     children: [
                                                       GestureDetector(
@@ -194,11 +199,7 @@ class _CartBodyScreenState extends State<CartBodyScreen> {
                                                               provider.removeItemFromCart(
                                                                   value.cartItems[
                                                                       index]);
-                                                              // provider
-                                                              //     .removerCounter();
                                                             }
-                                                            // provider.removeTotalPrice(
-                                                            //     productPrice);
                                                           });
                                                         },
                                                         child: Container(
@@ -220,48 +221,62 @@ class _CartBodyScreenState extends State<CartBodyScreen> {
                                                               size: 15),
                                                         ),
                                                       ),
-                                                      Flexible(
-                                                        child: SizedBox(
-                                                          height: 40,
-                                                          width: 60,
-                                                          child: TextField(
-                                                            controller:
-                                                                kilogramController,
-                                                            textAlign: TextAlign
-                                                                .center,
-                                                            keyboardType:
-                                                                TextInputType
-                                                                    .number,
-                                                            inputFormatters: [
-                                                              MaxValueFormatter(
-                                                                  _maxMeasurementValue)
-                                                            ],
-                                                            onChanged: (value) {
-                                                              setState(() {
-                                                                measurement = double
-                                                                    .parse(value
-                                                                        .toString());
-                                                                //kilogramController.text = value.toString();
-                                                              });
-                                                            },
-                                                            decoration:
-                                                                const InputDecoration(
-                                                              enabledBorder:
-                                                                  InputBorder
-                                                                      .none,
-                                                              contentPadding:
-                                                                  EdgeInsets
-                                                                      .all(0),
-                                                            ),
-                                                            style:
-                                                                const TextStyle(
-                                                              height: 1.4,
-                                                              fontSize: 18,
+                                                      // Flexible(
+                                                      //   child: SizedBox(
+                                                      //     height: 40,
+                                                      //     width: 60,
+                                                      //     child: TextField(
+                                                      //       controller:
+                                                      //           kilogramController,
+                                                      //       textAlign: TextAlign
+                                                      //           .center,
+                                                      //       keyboardType:
+                                                      //           TextInputType
+                                                      //               .number,
+                                                      //       inputFormatters: [
+                                                      //         MaxValueFormatter(
+                                                      //             _maxMeasurementValue)
+                                                      //       ],
+                                                      //       onChanged: (value) {
+                                                      //         setState(() {
+                                                      //           measurement = double
+                                                      //               .parse(value
+                                                      //                   .toString());
+                                                      //           //kilogramController.text = value.toString();
+                                                      //         });
+                                                      //       },
+                                                      //       decoration:
+                                                      //           const InputDecoration(
+                                                      //         enabledBorder:
+                                                      //             InputBorder
+                                                      //                 .none,
+                                                      //         contentPadding:
+                                                      //             EdgeInsets
+                                                      //                 .all(0),
+                                                      //       ),
+                                                      //       style:
+                                                      //           const TextStyle(
+                                                      //         height: 1.4,
+                                                      //         fontSize: 18,
+                                                      //         fontWeight:
+                                                      //             FontWeight
+                                                      //                 .w500,
+                                                      //       ),
+                                                      //     ),
+                                                      //   ),
+                                                      // ),
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .symmetric(
+                                                                horizontal:
+                                                                    8.0),
+                                                        child: Text(
+                                                          '$measurement',
+                                                          style: const TextStyle(
                                                               fontWeight:
                                                                   FontWeight
-                                                                      .w500,
-                                                            ),
-                                                          ),
+                                                                      .bold),
                                                         ),
                                                       ),
                                                       GestureDetector(
@@ -347,9 +362,9 @@ class _CartBodyScreenState extends State<CartBodyScreen> {
                                                       ),
                                                       const SizedBox(width: 5),
                                                       Text(
-                                                        'kg',
-                                                        style: TextStyle(
-                                                            fontSize: 17),
+                                                        unit,
+                                                        style: const TextStyle(
+                                                            fontSize: 16),
                                                       ),
                                                     ],
                                                   ),
@@ -358,8 +373,6 @@ class _CartBodyScreenState extends State<CartBodyScreen> {
                                                   children: [
                                                     GestureDetector(
                                                       onTap: () {
-                                                        print(
-                                                            'MESUREMENT-${measurement}');
                                                         if (measurement > 1) {
                                                           provider
                                                               .removeFromCartWithQuantity(
@@ -471,6 +484,12 @@ class _CartBodyScreenState extends State<CartBodyScreen> {
                                                             color: Colors.white,
                                                             size: 15),
                                                       ),
+                                                    ),
+                                                    const SizedBox(width: 5),
+                                                    Text(
+                                                      unit,
+                                                      style: const TextStyle(
+                                                          fontSize: 16),
                                                     ),
                                                   ],
                                                 ),

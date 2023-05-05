@@ -92,7 +92,17 @@ class _ResetWithPhoneState extends State<ResetWithPhone> {
                       onPressed: () {
                         if (_formPhoneNumKey.currentState!.validate()) {
                           _formPhoneNumKey.currentState!.save();
-                          Navigator.push(context, PageTransition(child: const OTPScreen(isSignUp: false), type: PageTransitionType.fade));
+                          Navigator.push(
+                              context,
+                              PageTransition(
+                                  child: OTPScreen(
+                                    isSignUp: false,
+                                    phoneNumber: phoneController.text,
+                                    email: null,
+                                    password: null,
+                                    confirmPassword: null,
+                                  ),
+                                  type: PageTransitionType.fade));
                         }
                       },
                       style: ElevatedButton.styleFrom(

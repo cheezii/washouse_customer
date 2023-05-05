@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:skeletons/skeletons.dart';
 import 'package:washouse_customer/screens/center/center_details_screen.dart';
 
 import '../../components/constants/color_constants.dart';
@@ -7,6 +8,7 @@ import '../../resource/controller/category_controller.dart';
 import '../../resource/models/category.dart';
 import '../center/list_center.dart';
 import 'component/list_category.dart';
+import 'component/list_category_skeleton.dart';
 
 class ListCategoryScreen extends StatefulWidget {
   const ListCategoryScreen({super.key});
@@ -17,6 +19,8 @@ class ListCategoryScreen extends StatefulWidget {
 
 class _ListCategoryScreenState extends State<ListCategoryScreen> {
   List<ServiceCategory> categoryList = [];
+  List<ServiceCategory> mainList = [];
+  List<ServiceCategory> searchList = [];
   CategoryController categoryController = CategoryController();
   TextEditingController searchController = TextEditingController();
   bool isLoadingCate = true;
@@ -26,8 +30,19 @@ class _ListCategoryScreenState extends State<ListCategoryScreen> {
     if (categoryList.isNotEmpty) {
       setState(() {
         isLoadingCate = false;
+        mainList = categoryList;
       });
     }
+  }
+
+  void getListSearch(String searchValue) {
+    setState(() {
+      categoryList = mainList
+          .where((element) => element.categoryName!
+              .toLowerCase()
+              .contains(searchValue.toLowerCase()))
+          .toList();
+    });
   }
 
   @override
@@ -54,7 +69,8 @@ class _ListCategoryScreenState extends State<ListCategoryScreen> {
           ),
         ),
         centerTitle: true,
-        title: Text('Các loại dịch vụ', style: TextStyle(color: textColor, fontSize: 27)),
+        title: Text('Các loại dịch vụ',
+            style: TextStyle(color: textColor, fontSize: 27)),
       ),
       body: Container(
         padding: const EdgeInsets.only(top: 10, left: 16, right: 16),
@@ -65,7 +81,8 @@ class _ListCategoryScreenState extends State<ListCategoryScreen> {
               controller: searchController,
               decoration: InputDecoration(
                 hintText: 'Tìm kiếm',
-                hintStyle: TextStyle(color: Colors.grey.shade500, height: 1, fontSize: 15),
+                hintStyle: TextStyle(
+                    color: Colors.grey.shade500, height: 1, fontSize: 15),
                 prefixIcon: Icon(
                   Icons.search_rounded,
                   color: Colors.grey.shade500,
@@ -87,18 +104,21 @@ class _ListCategoryScreenState extends State<ListCategoryScreen> {
                   ),
                 ),
               ),
-              style: TextStyle(color: Colors.grey.shade700, height: 1, fontSize: 15),
+              style: TextStyle(
+                  color: Colors.grey.shade700, height: 1.4, fontSize: 15),
+              onChanged: (value) => getListSearch(value),
             ),
-            FutureBuilder(
-              future: categoryController.getCategoriesList(),
-              builder: ((context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                } else if (snapshot.hasData) {
-                  categoryList = snapshot.data!;
-                  return ListView.builder(
+            // FutureBuilder(
+            //   future: categoryController.getCategoriesList(),
+            //   builder: ((context, snapshot) {
+            //     if (snapshot.connectionState == ConnectionState.waiting) {
+            //       return const ListCategoriesSkeleton();
+            //     } else if (snapshot.hasData) {
+            //       categoryList = snapshot.data!;
+            //       return
+            isLoadingCate
+                ? const ListCategoriesSkeleton()
+                : ListView.builder(
                     itemCount: categoryList.length,
                     shrinkWrap: true,
                     padding: const EdgeInsets.only(top: 16),
@@ -112,23 +132,29 @@ class _ListCategoryScreenState extends State<ListCategoryScreen> {
                           Navigator.push(
                               context,
                               PageTransition(
-                                  child: ListCenterScreen(CategoryServices: "$categoryId", pageName: "", isNearby: false, isSearch: false),
-                                  type: PageTransitionType.rightToLeftWithFade));
+                                  child: ListCenterScreen(
+                                      CategoryServices: "$categoryId",
+                                      pageName: "",
+                                      isNearby: false,
+                                      isSearch: false),
+                                  type:
+                                      PageTransitionType.rightToLeftWithFade));
                         },
                       );
                     },
-                  );
-                } else if (snapshot.hasError) {
-                  return Column(
-                    children: [
-                      Text('Oops'),
-                      Text('Có lỗi xảy ra rồi!'),
-                    ],
-                  );
-                }
-                return Container();
-              }),
-            )
+                  )
+            //     ;
+            //   } else if (snapshot.hasError) {
+            //     return Column(
+            //       children: [
+            //         Text('Oops'),
+            //         Text('Có lỗi xảy ra rồi!'),
+            //       ],
+            //     );
+            //   }
+            //   return Container();
+            // }),
+            //)
           ],
         ),
       ),

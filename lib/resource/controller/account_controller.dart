@@ -16,12 +16,12 @@ import '../../components/constants/text_constants.dart';
 BaseController baseController = BaseController();
 
 class AccountController {
-  Future register(String phone, pass, conpass) async {
-    //String? message;
+  Future<String?> register(String phone, email, pass, conpass) async {
+    String? message;
     try {
-      Map data = {"phone": phone, "email": "", "password": pass, "confirmPass": conpass};
-
+      Map data = {"phone": phone, "email": email, "password": pass, "confirmPass": conpass};
       String body = json.encode(data);
+      print(body.toString());
       var url = '$baseUrl/accounts/customers';
       var response = await post(
         Uri.parse(url),
@@ -31,7 +31,33 @@ class AccountController {
       var jsonResponse = jsonDecode(response.body);
       print(jsonResponse);
       if (response.statusCode == 200) {
-        //message = 'success';
+        message = 'success';
+        print(message);
+      } else {
+        throw Exception('Lỗi khi load json');
+      }
+    } catch (e) {
+      print('error: $e');
+    }
+    print(message);
+    return message;
+  }
+
+  Future<String?> sendPhoneOTP(String phone) async {
+    String? message;
+    try {
+      var url = '$baseUrl/verifys/send/otp?phoneNumber=$phone';
+      var response = await post(
+        Uri.parse(url),
+        headers: {
+          'accept': '*/*',
+        },
+        body: jsonEncode({}),
+      );
+      var jsonResponse = jsonDecode(response.body);
+      print(jsonResponse);
+      if (response.statusCode == 200) {
+        message = 'success';
         print("success");
       } else {
         throw Exception('Lỗi khi load json');
@@ -39,7 +65,35 @@ class AccountController {
     } catch (e) {
       print('error: $e');
     }
-    //return message;
+    return message;
+  }
+
+  Future<String?> sendPhoneOTPtoLogin(String phone) async {
+    String? message;
+    try {
+      var url = '$baseUrl/verifys/send/otp-login?phoneNumber=$phone';
+      var response = await post(
+        Uri.parse(url),
+        headers: {
+          'accept': '*/*',
+        },
+        body: jsonEncode({}),
+      );
+      var jsonResponse = jsonDecode(response.body);
+      print(jsonResponse);
+      var statusCode = jsonDecode(response.body)['statusCode'] as int;
+      var message = jsonDecode(response.body)['message'] as String;
+      if (response.statusCode == 200 && statusCode == 200) {
+        message = 'success';
+        return message;
+      } else {
+        print(message);
+        return message;
+      }
+    } catch (e) {
+      print('error: $e');
+    }
+    return message;
   }
 
   Future<CurrentUser> getCurrentUser() async {
@@ -111,6 +165,49 @@ class AccountController {
     return responseModel;
   }
 
+  Future<String> loginOTP(String phone, String otp) async {
+    //String? message;
+    LoginResponseModel? responseModel;
+    try {
+      Map data = {"phonenumber": phone, "otp": otp};
+      String body = jsonEncode(data);
+      Response response = await post(
+        Uri.parse('$baseUrl/accounts/login/otp'),
+        body: body,
+        headers: {
+          "content-type": "application/json",
+          "accept": "application/json",
+          "access-control-allow-origin": "*",
+        },
+      );
+      print('step 1: ${response.body}');
+      var statusCode = jsonDecode(response.body)["statusCode"];
+      var message = jsonDecode(response.body)["message"];
+      //print('step 2: $statusCode + $message');
+      Token? token = jsonDecode(response.body)["data"] != null ? Token?.fromJson(jsonDecode(response.body)["data"]) : null;
+      //print('step 3: $token');
+      if (token != null) {
+        responseModel = new LoginResponseModel(statusCode: statusCode, message: message, data: token);
+      }
+      if (statusCode == 0 && token != null) {
+        var accessToken = token.accessToken;
+        // print('step 4: $accessToken');
+        var refreshToken = token.refreshToken;
+        print(accessToken);
+        if (accessToken != null && refreshToken != null) {
+          await baseController.saveAccessToken(accessToken);
+          await baseController.saveRefreshToken(refreshToken);
+        }
+        print(await baseController.getStringtoSharedPreference('access_token'));
+        return message;
+      }
+    } catch (e) {
+      print('error: $e');
+    }
+    //print('step 5: ${responseModel?.message}');
+    return responseModel!.message!;
+  }
+
   Future<Customer?> getCustomerInfomation(int accountId) async {
     Customer? currentCustomer = Customer();
     try {
@@ -133,13 +230,13 @@ class AccountController {
     }
   }
 
-  Future<String> changeProfileInfo(String fullName, DateTime dob, int gender) async {
-    int userId = await baseController.getInttoSharedPreference("CURRENT_USER_ID");
-    String url = '$baseUrl/accounts/$userId/profile';
+  Future<String> changeProfileInfo(String fullName, DateTime? dob, int? gender) async {
+    String url = '$baseUrl/accounts/profile';
     Map<String, dynamic> queryParams = {};
-    Map<String, dynamic> requestBody = {"fullName": fullName, "dob": dob.toIso8601String(), "gender": gender};
+    Map<String, dynamic> requestBody = {"fullName": fullName, "dob": dob?.toIso8601String(), "gender": gender};
     http.Response response = await baseController.makeAuthenticatedPutRequest(url, queryParams, requestBody);
     if (response.statusCode == 200) {
+      print(response.body);
       return "change information success";
     } else {
       // Handle error changing password
@@ -148,11 +245,12 @@ class AccountController {
   }
 
   Future<String> changePassword(String oldPassword, String newPassword) async {
-    int userId = await baseController.getInttoSharedPreference("CURRENT_USER_ID");
-    String url = '$baseUrl/accounts/$userId/change-password';
+    String url = '$baseUrl/accounts/me/change-password';
     Map<String, dynamic> queryParams = {};
     Map<String, dynamic> requestBody = {'oldPass': oldPassword, 'newPass': newPassword};
+
     http.Response response = await baseController.makeAuthenticatedPutRequest(url, queryParams, requestBody);
+
     if (response.statusCode == 200) {
       return "change password success";
     } else {
@@ -162,12 +260,13 @@ class AccountController {
   }
 
   Future<String> changeProfilePicture(String SavedFileName, int accountId) async {
-    String url = '$baseUrl/accounts/$accountId/profile-picture';
+    String url = '$baseUrl/accounts/profile-picture';
     Map<String, dynamic> queryParams = {'SavedFileName': SavedFileName};
     Map<String, dynamic> requestBody = {};
     print(SavedFileName);
     print(accountId);
     http.Response response = await baseController.makeAuthenticatedPutRequest(url, queryParams, requestBody);
+    print(response.body);
     if (response.statusCode == 200) {
       return "update profile picture success";
     } else {

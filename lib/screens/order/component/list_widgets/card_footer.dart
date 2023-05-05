@@ -2,9 +2,10 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:washouse_customer/resource/models/response_models/order_item_list.dart';
+import 'package:washouse_customer/screens/profile/my_feed_back_screen.dart';
 
 import '../../../../components/constants/color_constants.dart';
-import '../../../feedback/feedback_screen.dart';
+import '../../../feedback/write_feedback_screen.dart';
 import '../../cancel_detail_screen.dart';
 import '../../order_detail_screen.dart';
 
@@ -48,32 +49,61 @@ class CardFooter extends StatelessWidget {
             //       ),
             //     ),
             //   )
-            ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      PageTransition(
-                          child: FeedbackOrderScreen(orderItem: orderItem),
-                          type: PageTransitionType.fade));
-                },
-                style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsetsDirectional.symmetric(
-                        horizontal: 20, vertical: 9),
-                    //foregroundColor: kPrimaryColor.withOpacity(.7),
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                      side: const BorderSide(color: kPrimaryColor, width: 1),
+            orderItem.isFeedback == false
+                ? ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          PageTransition(
+                              child: FeedbackOrderScreen(orderItem: orderItem),
+                              type: PageTransitionType.fade));
+                    },
+                    style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsetsDirectional.symmetric(
+                            horizontal: 20, vertical: 9),
+                        //foregroundColor: kPrimaryColor.withOpacity(.7),
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                          side:
+                              const BorderSide(color: kPrimaryColor, width: 1),
+                        ),
+                        backgroundColor: kPrimaryColor),
+                    child: const Text(
+                      'Viết đánh giá',
+                      style: TextStyle(color: Colors.white),
                     ),
-                    backgroundColor: kPrimaryColor),
-                child: Text(
-                  orderItem.isFeedback == false
-                      ? 'Viết đánh giá'
-                      : 'Xem đánh giá',
-                  style: const TextStyle(color: Colors.white),
-                ),
-              )
-            : Container(),
+                  )
+                : ElevatedButton(
+                    onPressed: () {
+                      // Navigator.push(
+                      //     context,
+                      //     PageTransition(
+                      //         child: FeedbackOrderScreen(orderItem: orderItem),
+                      //         type: PageTransitionType.fade));
+                      Navigator.push(
+                          context,
+                          PageTransition(
+                              child: MyFeedbackScreen(),
+                              type: PageTransitionType.fade));
+                    },
+                    style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsetsDirectional.symmetric(
+                            horizontal: 20, vertical: 9),
+                        //foregroundColor: kPrimaryColor.withOpacity(.7),
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                          side:
+                              const BorderSide(color: kPrimaryColor, width: 1),
+                        ),
+                        backgroundColor: Colors.white),
+                    child: Text(
+                      'Xem đánh giá',
+                      style: const TextStyle(color: kPrimaryColor),
+                    ),
+                  )
+            : SizedBox.shrink(),
         (orderItem.status!.trim().toLowerCase() == 'ready' &&
                 orderItem.isPayment == false)
             ?
@@ -222,7 +252,7 @@ class CardFooter extends StatelessWidget {
                     ),
                     backgroundColor: cancelledColor),
                 child: const Text(
-                  'Hủy đơn',
+                  'Hủy dịch vụ',
                   style: TextStyle(color: Colors.white),
                 ),
               )
