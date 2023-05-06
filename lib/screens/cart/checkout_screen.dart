@@ -49,7 +49,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   TimeOfDay? minTomorrow;
   TimeOfDay? maxTomorrow;
 
-  bool isLoading = false;
+  bool isLoadingWallet = false;
+  bool isLoadingCenterDetails = false;
   bool checkSendOrder = false;
   bool isHidden = true;
   bool isHaveTransaction = true;
@@ -94,18 +95,30 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   }
 
   Future getCenterDetails() async {
-    CenterOperatingTime centerOperatingTime;
-    var centerId = await baseController.getInttoSharedPreference("centerId");
-    LaundryCenter center = await CenterController().getCenterById(centerId);
     setState(() {
-      _centerId = centerId;
-      _center = center;
+      isLoadingCenterDetails = true;
     });
+    try {
+      CenterOperatingTime centerOperatingTime;
+      var centerId = await baseController.getInttoSharedPreference("centerId");
+      LaundryCenter center = await CenterController().getCenterById(centerId);
+      if (center != null) {
+        setState(() {
+          _center = center;
+        });
+      }
+    } catch (e) {
+      // Handle error
+      setState(() {
+        isLoadingCenterDetails = false;
+      });
+      print('Error loading center details: $e');
+    }
   }
 
   void getMyWallet() async {
     setState(() {
-      isLoading = true;
+      isLoadingWallet = true;
     });
 
     try {
@@ -114,13 +127,13 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         setState(() {
           _wallet = wallet;
           isHaveWallet = true;
-          isLoading = false;
+          isLoadingWallet = false;
         });
       }
     } catch (e) {
       // Handle error
       setState(() {
-        isLoading = false;
+        isLoadingWallet = false;
       });
       print('Error loading wallet: $e');
     }
@@ -137,7 +150,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (isLoading) {
+    if (isLoadingWallet == true && isLoadingCenterDetails == true) {
       return Center(
         child: LoadingAnimationWidget.prograssiveDots(
             color: kPrimaryColor, size: 50),
