@@ -23,7 +23,12 @@ class OTPScreen extends StatefulWidget {
   final String? password;
   final String? confirmPassword;
   const OTPScreen(
-      {super.key, required this.isSignUp, required this.phoneNumber, required this.email, required this.password, required this.confirmPassword});
+      {super.key,
+      required this.isSignUp,
+      required this.phoneNumber,
+      required this.email,
+      required this.password,
+      required this.confirmPassword});
 
   @override
   State<OTPScreen> createState() => _OTPScreenState();
@@ -114,17 +119,22 @@ class _OTPScreenState extends State<OTPScreen> {
                       : SizedBox(
                           height: 300,
                           width: 300,
-                          child: Image.asset('assets/images/started/authenticate.png'),
+                          child: Image.asset(
+                              'assets/images/started/authenticate.png'),
                         ),
                   const SizedBox(height: 40),
                   const Text(
                     'Nhập mã xác minh',
-                    style: TextStyle(fontSize: 40.0, fontWeight: FontWeight.bold),
+                    style:
+                        TextStyle(fontSize: 40.0, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 20),
                   Text(
-                    widget.isSignUp ? 'Nhập mã OTP được gửi đến số điện thoại của bạn.' : 'Nhập mã OTP được gửi đến email/số điện thoại của bạn.',
-                    style: const TextStyle(fontSize: 18.0, fontWeight: FontWeight.w400),
+                    widget.isSignUp
+                        ? 'Nhập mã OTP được gửi đến số điện thoại của bạn.'
+                        : 'Nhập mã OTP được gửi đến email/số điện thoại của bạn.',
+                    style: const TextStyle(
+                        fontSize: 18.0, fontWeight: FontWeight.w400),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 20),
@@ -138,38 +148,75 @@ class _OTPScreenState extends State<OTPScreen> {
                     fieldStyle: FieldStyle.underline,
                     onCompleted: (pin) async {
                       print("Pin: " + pin);
-                      bool isTrue = await verifyController.checkOTPByPhone(widget.phoneNumber, pin);
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          });
+                      bool isTrue = await verifyController.checkOTPByPhone(
+                          widget.phoneNumber, pin);
                       //bool isTrue = await verifyController.checkOTPByEmail(pin);
                       if (isTrue) {
                         if (widget.isSignUp) {
-                          String? message =
-                              await accountController.register(widget.phoneNumber, widget.email, widget.password, widget.confirmPassword);
+                          String? message = await accountController.register(
+                              widget.phoneNumber,
+                              widget.email,
+                              widget.password,
+                              widget.confirmPassword);
                           print("OK");
                           print(message);
                           if (message?.compareTo("success") == 0) {
-                            LoginResponseModel? responseModel = await accountController.login(widget.phoneNumber, widget.password!);
+                            LoginResponseModel? responseModel =
+                                await accountController.login(
+                                    widget.phoneNumber, widget.password!);
                             if (responseModel != null) {
-                              CurrentUser currentUserModel = await accountController.getCurrentUser();
+                              CurrentUser currentUserModel =
+                                  await accountController.getCurrentUser();
                               if (currentUserModel != null) {
-                                baseController.saveStringtoSharedPreference("CURRENT_USER_NAME", currentUserModel.name);
-                                baseController.saveStringtoSharedPreference("CURRENT_USER_EMAIL", currentUserModel.email);
-                                baseController.saveStringtoSharedPreference("CURRENT_USER_PHONE", currentUserModel.phone);
-                                baseController.saveInttoSharedPreference("CURRENT_USER_ID", currentUserModel.accountId!);
-                                baseController.saveStringtoSharedPreference("CURRENT_USER_PASSWORD", widget.password!);
+                                baseController.saveStringtoSharedPreference(
+                                    "CURRENT_USER_NAME", currentUserModel.name);
+                                baseController.saveStringtoSharedPreference(
+                                    "CURRENT_USER_EMAIL",
+                                    currentUserModel.email);
+                                baseController.saveStringtoSharedPreference(
+                                    "CURRENT_USER_PHONE",
+                                    currentUserModel.phone);
+                                baseController.saveInttoSharedPreference(
+                                    "CURRENT_USER_ID",
+                                    currentUserModel.accountId!);
+                                baseController.saveStringtoSharedPreference(
+                                    "CURRENT_USER_PASSWORD", widget.password!);
                               }
-                              Customer? currentCustomer = await accountController.getCustomerInfomation(currentUserModel.accountId!);
+                              Customer? currentCustomer =
+                                  await accountController.getCustomerInfomation(
+                                      currentUserModel.accountId!);
                               if (currentCustomer != null) {
-                                baseController.saveInttoSharedPreference("CURRENT_CUSTOMER_ID", currentCustomer.id!);
+                                baseController.saveInttoSharedPreference(
+                                    "CURRENT_CUSTOMER_ID", currentCustomer.id!);
                               }
                               Navigator.of(context).pop();
+                              Navigator.of(context).pop();
                               // ignore: use_build_context_synchronously
-                              Navigator.push(context, PageTransition(child: const BaseScreen(), type: PageTransitionType.fade));
+                              Navigator.push(
+                                  context,
+                                  PageTransition(
+                                      child: const BaseScreen(),
+                                      type: PageTransitionType.fade));
                             }
                             //Navigator.push(context, PageTransition(child: const Homescreen(), type: PageTransitionType.fade));
                           }
-                        } else if (!widget.isSignUp)
-                          Navigator.push(context, PageTransition(child: const ChangePwdScreen(), type: PageTransitionType.fade));
+                        } else if (!widget.isSignUp) {
+                          Navigator.of(context).pop();
+                          Navigator.push(
+                              context,
+                              PageTransition(
+                                  child: const ChangePwdScreen(),
+                                  type: PageTransitionType.fade));
+                        }
                       } else {
+                        Navigator.of(context).pop();
                         showDialog(
                           context: context,
                           builder: ((context) => AlertDialog(

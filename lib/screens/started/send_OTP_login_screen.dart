@@ -126,7 +126,6 @@ class _SendOTPLoginScreenState extends State<SendOTPLoginScreen> {
                     textFieldAlignment: MainAxisAlignment.spaceAround,
                     fieldStyle: FieldStyle.underline,
                     onCompleted: (pin) async {
-                      print("Pin: " + pin);
                       showDialog(
                           context: context,
                           builder: (context) {
